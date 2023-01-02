@@ -4,6 +4,7 @@
     "description": "Grapher element for data visualization",
     "main": "dist/lib/index.js",
     "types": "dist/lib/index.d.ts",
+    "type": "module",
     "files": [
         "/dist/lib"
     ],
