@@ -1,5 +1,25 @@
 import { Graph2D } from "../dist/lib/index.js";
+const Graph = Graph2D(document.querySelector(".graph"));
 
-const graphContainer = document.querySelector(".graph");
+function changeBackgroundColor(e){
+    const color = e.target.value;
+    Graph.backgroundColor(color);
+}
 
-Graph2D(graphContainer, {background:{opacity:0}});
+function changeOpacity(e){
+    const opacity = parseFloat(e.target.value);
+    Graph.opacity(opacity);
+}
+
+
+
+
+
+//---------------------------------------------
+
+function main(){
+    document.querySelector("#bgcolor").addEventListener("input", changeBackgroundColor);
+    document.querySelector("#bgopacity").addEventListener("input", changeOpacity);
+}
+
+main();
