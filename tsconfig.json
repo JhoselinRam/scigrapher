@@ -14,6 +14,7 @@
       "watch": true
     },
     "include": [
-      "src/**/*"
+      "src/**/*",
+      "dist/package.json"
     ]
   }

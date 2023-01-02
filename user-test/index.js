@@ -1,5 +1,5 @@
-import { Graph2D } from "../dist/lib/Graph2D/Graph2D.js"
+import { Graph2D } from "../dist/lib/index.js";
 
-const graphContainer = document.querySelector(".container");
+const graphContainer = document.querySelector(".graph");
 
-Graph2D(graphContainer);
+Graph2D(graphContainer, {background:{opacity:0}});
