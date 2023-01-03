@@ -22,8 +22,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
 
     const state : Graph2D_State = { //State of the whole graph
         container,
-        id : crypto.randomUUID(),
         render,
+        id : crypto.randomUUID(),
         background : Object.assign(defaultOptions.background, options.background),
         scale : Object.assign(defaultOptions.scale, options.scale)
     };
