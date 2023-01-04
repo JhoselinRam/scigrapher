@@ -1,6 +1,6 @@
-import { Scale, Scale_Props } from "./Scale_Types";
+import { Mapping, Mapping_Props } from "./Mapping_Types";
 
-function Scale({from, to, type, base=10}:Scale_Props) : Scale{
+function Mapping({from, to, type="linear", base=10}:Mapping_Props) : Mapping{
     let map : (value:number)=>number;
     let invert : (value:number)=>number;
     let m : number;
@@ -32,4 +32,4 @@ function Scale({from, to, type, base=10}:Scale_Props) : Scale{
 }
 
 
-export default Scale;
+export default Mapping;
