@@ -1,4 +1,4 @@
-import { Graph2D, Graph2D_Options, Graph2D_State, RecursivePartial, RecursiveRequired, RequiredExept } from "./Graph2D_Types";
+import { Graph2D, Graph2D_Options, Graph2D_State, RecursivePartial, RequiredExept } from "./Graph2D_Types";
 import Background from "./resourses/background/Background.js";
 
 const defaultOptions : Graph2D_Options = {
@@ -6,7 +6,7 @@ const defaultOptions : Graph2D_Options = {
         color : "#ffffff",
         opacity : 1
     },
-    scale : {
+    canvas : {
         xStart : -5,
         xEnd : 5,
         yStart : -5,
@@ -22,12 +22,12 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
 type test = {compute:{
     scale:()=>void
 }}
-    const state : RecursiveRequired<Graph2D_State> = { //State of the whole graph
+    const state : RequiredExept<Graph2D_State, "compute"> = { //State of the whole graph
         container,
         render,
         id : crypto.randomUUID(),
         background : Object.assign(defaultOptions.background, options.background),
-        scale : Object.assign(defaultOptions.scale, options.scale)
+        canvas : Object.assign(defaultOptions.canvas, options.canvas)
     };
 
     const graphHandler : RecursivePartial<Graph2D> = {}; //Main graph object
@@ -36,6 +36,7 @@ type test = {compute:{
     const background = Background({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //Main object population
+
     graphHandler.backgroundColor = background.backgroundColor;
     graphHandler.getBackgroundColor = background.getBackgroundColor;
     graphHandler.opacity = background.opacity;

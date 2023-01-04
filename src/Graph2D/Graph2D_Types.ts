@@ -10,7 +10,7 @@ export interface Graph2D_Options{
         color : string,
         opacity : number
     },
-    scale : {
+    canvas : {
         xStart : number,
         xEnd : number,
         yStart : number,
@@ -38,10 +38,6 @@ export interface Method_Generator{
 
 export type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;
-};
-
-export type RecursiveRequired<T> = {
-    [P in keyof T]-?: RecursiveRequired<T[P]>;
 }
 
-export type RequiredExept<T, K extends keyof T> = RecursiveRequired<T> & RecursivePartial<Pick<T,K>>
+export type RequiredExept<T, K extends keyof T> = Pick<RecursivePartial<T>,K> & Omit<T,K>
