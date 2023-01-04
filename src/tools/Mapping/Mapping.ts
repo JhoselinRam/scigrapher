@@ -1,6 +1,6 @@
 import { Mapping, Mapping_Props } from "./Mapping_Types";
 
-function Mapping({from, to, type="linear", base=10}:Mapping_Props) : Mapping{
+function mapping({from, to, type="linear", base=10}:Mapping_Props) : Mapping{
     let map : (value:number)=>number;
     let invert : (value:number)=>number;
     let m : number;
@@ -32,4 +32,4 @@ function Mapping({from, to, type="linear", base=10}:Mapping_Props) : Mapping{
 }
 
 
-export default Mapping;
+export default mapping;

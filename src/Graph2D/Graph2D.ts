@@ -1,5 +1,7 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, RecursivePartial, RequiredExept } from "./Graph2D_Types";
-import Background from "./resourses/background/Background.js";
+import Axis from "./resourses/Axis/Axis";
+import Background from "./resourses/Background/Background.js";
+import Scale from "./resourses/Scale/Scale.js";
 
 const defaultOptions : Graph2D_Options = {
     background : {
@@ -15,28 +17,44 @@ const defaultOptions : Graph2D_Options = {
         marginEnd : 5,
         marginTop : 5,
         marginBottom : 5
+    },
+    axis : {
+        position : "center",
+        type : "rectangular"
     }
 }
 
 export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
-type test = {compute:{
-    scale:()=>void
-}}
-    const state : RequiredExept<Graph2D_State, "compute"> = { //State of the whole graph
+    //State of the whole graph
+    const state : RequiredExept<Graph2D_State, "compute" | "scale"> = { 
         container,
         render,
+        fullCompute,
         id : crypto.randomUUID(),
+        scale : {},
+        compute:{},
         background : Object.assign(defaultOptions.background, options.background),
-        canvas : Object.assign(defaultOptions.canvas, options.canvas)
+        canvas : Object.assign(defaultOptions.canvas, options.canvas),
+        axis : Object.assign(defaultOptions.axis, options.axis)
     };
 
-    const graphHandler : RecursivePartial<Graph2D> = {}; //Main graph object
+    //Main graph object
+    const graphHandler : RecursivePartial<Graph2D> = {}; 
 
     //Method generators
     const background = Background({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const scale  = Scale({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const axis = Axis({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+
+    //State optional properties population
+    state.compute.scale = scale.compute;
+    state.compute.axis = axis.compute;
+    state.scale.primary = scale.primary;
+    state.scale.secondary = scale.secondary;
+    state.scale.reference = scale.reference;
+
 
     //Main object population
-
     graphHandler.backgroundColor = background.backgroundColor;
     graphHandler.getBackgroundColor = background.getBackgroundColor;
     graphHandler.opacity = background.opacity;
@@ -49,6 +67,14 @@ type test = {compute:{
     function render(){
         state.container.style.backgroundColor = state.background.color;
         state.container.style.opacity = `${state.background.opacity}`;
+    }
+
+    //Aux Function, help compute all properties
+    function fullCompute(){
+        const fullState = state as Graph2D_State;
+
+        fullState.compute.scale();
+        fullState.compute.axis();
     }
 
 
