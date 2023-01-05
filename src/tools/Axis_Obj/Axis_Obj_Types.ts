@@ -13,5 +13,7 @@ export interface CreateAxis_Props {
 }
 
 export interface Axis_Obj {
-
+    positions : Array<number>,
+    labels : Array<string>,
+    draw : ()=>void
 }

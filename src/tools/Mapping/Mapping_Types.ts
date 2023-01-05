@@ -7,5 +7,7 @@ export interface Mapping_Props {
 
 export interface Mapping{
     map : (value:number)=>number,
-    invert : (value:number)=>number
+    invert : (value:number)=>number,
+    domain : [number, number],
+    range : [number, number]
 }
