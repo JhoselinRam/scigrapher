@@ -1,6 +1,6 @@
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
-import { Background } from "./resourses/Background/Background_Types";
+import { Background } from "./resourses/background/Background_Types";
 
 export interface Graph2D extends Background, Omit<Axis, "compute">{
 

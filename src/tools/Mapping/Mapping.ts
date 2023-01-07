@@ -29,7 +29,9 @@ function mapping({from, to, type="linear", base=10}:Mapping_Props) : Mapping{
         map,
         invert,
         domain : [from[0], from[1]],
-        range : [to[0], to[1]]
+        range : [to[0], to[1]],
+        type,
+        base : type==="log"?base:undefined
     }
 }
 

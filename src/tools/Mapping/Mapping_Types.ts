@@ -9,5 +9,7 @@ export interface Mapping{
     map : (value:number)=>number,
     invert : (value:number)=>number,
     domain : [number, number],
-    range : [number, number]
+    range : [number, number],
+    type : "linear" | "log",
+    base ?: number
 }
