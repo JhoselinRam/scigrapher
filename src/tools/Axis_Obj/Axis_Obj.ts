@@ -63,27 +63,34 @@ function autoCompute(scale:Mapping):Array<number>{
 
     if(scale.type==="linear"){
         const minPartition = Math.ceil(fullRange/minSpacing);
+        if(minPartition<1){
+            positions.push(scale.domain[0]);
+            positions.push(scale.domain[1]);
+            return positions;
+        }
+
         const minDomainSpacing = Math.abs(scale.invert(fullRange/minPartition));
         const tickMultiplier = [5,2,1]; //Order is important!!
-        let magnitudeOrder = 0;
-        let multiplier : number;
-
-        //Determine the order of magnitude of the minimum domain spacing
-        while(true){ 
-            if(minDomainSpacing/Math.pow(10,magnitudeOrder)<10 && minDomainSpacing/Math.pow(10,magnitudeOrder)>=1)
-                break;
-            if(minDomainSpacing>=1) 
-                magnitudeOrder++;
-            else
-                magnitudeOrder--;
-        }
+        let magnitudeOrder = Math.floor(Math.log10(minDomainSpacing));
+        let multiplier : number = 1;
 
         tickMultiplier.forEach(item=>{
             if(minDomainSpacing/Math.pow(10,magnitudeOrder) > item)
                 multiplier = item;
         });
 
+        const start = scale.domain[0]<scale.domain[1]?scale.domain[0]:scale.domain[1];
+        const end = scale.domain[1]>scale.domain[0]?scale.domain[1]:scale.domain[0];
+        let tickCounter = Math.ceil(start / (minDomainSpacing*Math.pow(10,magnitudeOrder)));
 
+        while(true){
+            const newPosition = tickCounter * minDomainSpacing * Math.pow(10, magnitudeOrder);
+            if(newPosition >end)
+                break;
+            
+            positions.push(newPosition);
+            tickCounter++;
+        }
     }
     else{
 
