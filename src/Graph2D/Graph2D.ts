@@ -1,6 +1,6 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, RecursivePartial, RequiredExept } from "./Graph2D_Types";
-import Axis from "./resourses/Axis/Axis";
-import Background from "./resourses/Background/Background.js";
+import Axis from "./resourses/Axis/Axis.js";
+import Background from "./resourses/background/Background.js";
 import Scale from "./resourses/Scale/Scale.js";
 
 const defaultOptions : Graph2D_Options = {
@@ -67,6 +67,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     function render(){
         state.container.style.backgroundColor = state.background.color;
         state.container.style.opacity = `${state.background.opacity}`;
+
+        fullCompute();
     }
 
     //Aux Function, help compute all properties

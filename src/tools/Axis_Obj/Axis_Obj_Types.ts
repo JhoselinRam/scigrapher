@@ -4,12 +4,6 @@ export interface CreateAxis_Props {
     scale : Mapping,
     type : "bottom" | "top" | "left" | "right",
     suffix ?: string,
-    baseColor ?: string,
-    baseOpacity ?: number,
-    tickColor ?: string,
-    tickOpacity ?: number,
-    labelColor ?: string,
-    labelOpacity ?: number,
     ticks ?: "auto" | number | Array<number>
 }
 
