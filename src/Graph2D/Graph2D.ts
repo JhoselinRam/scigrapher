@@ -1,41 +1,62 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, RecursivePartial, RequiredExept } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
-import Background from "./resourses/background/Background.js";
+import Background from "./resourses/Background/Background.js";
 import Scale from "./resourses/Scale/Scale.js";
 
-const defaultOptions : Graph2D_Options = {
+const defaultOptions : RequiredExept<Graph2D_Options, "secondary"> = {
     background : {
         color : "#ffffff",
         opacity : 1
     },
     canvas : {
-        xStart : -5,
-        xEnd : 5,
-        yStart : -5,
-        yEnd : 5,
         marginStart : 5,
         marginEnd : 5,
         marginTop : 5,
         marginBottom : 5
     },
     axis : {
+        xStart : -5,
+        xEnd : 5,
+        yStart : -5,
+        yEnd : 5,
         position : "center",
-        type : "rectangular"
-    }
+        type : "rectangular",
+        xUnit : "",
+        yUnit : "",
+        xBaseColor : "#ffffff",
+        xBaseOpacity : 1,
+        xTickColor : "#ffffff",
+        xTickOpacity : 1,
+        xLabelColor : "#ffffff",
+        xLabelOpacity : 1,
+        yBaseColor : "#ffffff",
+        yBaseOpacity : 1,
+        yTickColor : "#ffffff",
+        yTickOpacity : 1,
+        yLabelColor : "#ffffff",
+        yLabelOpacity : 1,
+        xContained : false,
+        xDynamic : true,
+        yContained : false,
+        yDynamic : true,
+    },
+    secondary : {}
 }
 
 export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
     //State of the whole graph
-    const state : RequiredExept<Graph2D_State, "compute" | "scale"> = { 
+    const state : RequiredExept<Graph2D_State, "compute" | "scale" | "secondary"> = { 
         container,
         render,
         fullCompute,
+        secondaryEnabled: {x:false, y:false},
         id : crypto.randomUUID(),
         scale : {},
         compute:{},
         background : Object.assign(defaultOptions.background, options.background),
         canvas : Object.assign(defaultOptions.canvas, options.canvas),
-        axis : Object.assign(defaultOptions.axis, options.axis)
+        axis : Object.assign(defaultOptions.axis, options.axis),
+        secondary : Object.assign(defaultOptions.secondary, options.secondary)
     };
 
     //Main graph object
