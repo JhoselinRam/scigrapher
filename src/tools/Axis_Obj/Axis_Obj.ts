@@ -48,9 +48,7 @@ function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>)
             });
             break;
     }
-    
-    
-    
+
     return positions;
 }
 

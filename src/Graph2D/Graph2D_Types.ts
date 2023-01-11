@@ -81,7 +81,8 @@ export interface Graph2D_State extends Graph2D_Options {
     id  : string,
     render : ()=>void,
     fullCompute : ()=>void,
-    secondaryEnabled : Axis_Modifier<boolean>
+    secondaryEnabled : Axis_Modifier<boolean>,
+    
     scale : {
         primary : Axis_Modifier<Mapping>
         secondary : Axis_Modifier<Mapping>

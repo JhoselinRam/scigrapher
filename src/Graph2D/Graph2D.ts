@@ -81,7 +81,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.opacity = background.opacity;
     graphHandler.getOpacity = background.getOpacity;
 
-    //First graph render
+    //Setup configurations
+    setup();
     render();
 
     //Main render function
@@ -92,12 +93,24 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         fullCompute();
     }
 
-    //Aux Function, help compute all properties
+    //Helper function, help compute all properties
     function fullCompute(){
         const fullState = state as Graph2D_State;
 
         fullState.compute.scale();
         fullState.compute.axis();
+    }
+
+    //Helper function, set the container properties and adds the canvas element
+    function setup(){
+        const width = state.container.clientWidth;
+        const height = state.container.clientHeight;
+        const newCanvas = document.createElement("canvas");
+        
+        newCanvas.width = width;
+        newCanvas.height = height;
+
+        const context = newCanvas.getContext("2d");
     }
 
 
