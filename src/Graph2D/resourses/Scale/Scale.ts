@@ -1,13 +1,13 @@
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
-import { Axis_Modifier, Method_Generator } from "../../Graph2D_Types";
+import { Axis_Property, Method_Generator } from "../../Graph2D_Types";
 import { MinMaxCoords, Scale } from "./Scale_Types";
 
 function Scale({state}:Method_Generator) : Scale{
-    const defaultScale : Axis_Modifier<Mapping> = {x:mapping({from:[0,1],to:[0,1]}),y:mapping({from:[0,1],to:[0,1]})};
-    const primary : Axis_Modifier<Mapping> = defaultScale;
-    const secondary : Axis_Modifier<Mapping> = defaultScale;
-    const reference : Axis_Modifier<Mapping> = defaultScale;
+    const defaultScale : Axis_Property<Mapping> = {x:mapping({from:[0,1],to:[0,1]}),y:mapping({from:[0,1],to:[0,1]})};
+    const primary : Axis_Property<Mapping> = defaultScale;
+    const secondary : Axis_Property<Mapping> = defaultScale;
+    const reference : Axis_Property<Mapping> = defaultScale;
 
 //--------------- Compute Scale ---------------
 
@@ -16,8 +16,8 @@ function Scale({state}:Method_Generator) : Scale{
 
         switch(state.axis.type){
             case "rectangular":
-                primary.x = mapping({from:[state.canvas.xStart, state.canvas.xEnd], to:[xMin, xMax]});
-                primary.y = mapping({from:[state.canvas.yStart, state.canvas.yEnd], to:[yMin, yMax]});
+                primary.x = mapping({from:[state.axis.xStart, state.axis.xEnd], to:[xMin, xMax]});
+                primary.y = mapping({from:[state.axis.yStart, state.axis.yEnd], to:[yMin, yMax]});
                 break;
 
             case "polar":

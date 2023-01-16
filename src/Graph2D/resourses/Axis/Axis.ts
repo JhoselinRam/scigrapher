@@ -8,7 +8,6 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
     function compute(){
         const sc = mapping({from:[1, 20],to:[0,600]});
         const ax = CreateAxis({type:"bottom", scale:sc, suffix:"m"});
-        console.log(ax.labels);
     }
 
     return {

@@ -50,20 +50,20 @@ export interface Graph2D_Options{
         yDynamic : boolean
     },
     secondary : {
-        x : Secondary_Axis<"top" | "bottom">,
-        y : Secondary_Axis<"left" | "right">
+        x : Secondary_Axis,
+        y : Secondary_Axis
     },
     labels : {
-        title : LabelProperties,
-        subtitle : LabelProperties,
-        xPrimary :LabelProperties,
-        yPrimary :LabelProperties,
-        xSecondary : LabelProperties,
-        ySecondary : LabelProperties
+        title ?: LabelProperties,
+        subtitle ?: LabelProperties,
+        xPrimary ?:LabelProperties,
+        yPrimary ?:LabelProperties,
+        xSecondary ?: LabelProperties,
+        ySecondary ?: LabelProperties
     }
 }
 
-type LabelProperties = {
+export type LabelProperties = {
     text : string,
     font : string,
     color : string,
@@ -72,10 +72,9 @@ type LabelProperties = {
     position : "start" | "center" | "end"
 }
 
-type Secondary_Axis<T> = {
+type Secondary_Axis = {
     start : number,
     end : number,
-    position : T,
     type : Omit<Axis_Type, "polar">,
     unit : string,
     baseColor : string,

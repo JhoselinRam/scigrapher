@@ -1,7 +1,7 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, RecursivePartial, RequiredExept } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
-import Labels from "./resourses/Labels/Labels";
+import Labels from "./resourses/Labels/Labels.js";
 import Scale from "./resourses/Scale/Scale.js";
 
 const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = {
@@ -42,7 +42,32 @@ const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = 
         yDynamic : true,
     },
     secondary : {},
-    labels : {}
+    labels : {
+        title : {
+            text : "Graph Title",
+            font : "25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+            color : "#000000",
+            filled : true,
+            opacity : 1,
+            position : "start"
+        },
+        subtitle : {
+            text : "Graph Subtitle",
+            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+            color : "#000000",
+            filled : true,
+            opacity : 1,
+            position : "start"
+        },
+        xPrimary : {
+            text : "Primary X Label",
+            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+            color : "#000000",
+            filled : true,
+            opacity : 1,
+            position : "center"
+        }
+    }
 }
 
 export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
@@ -55,7 +80,9 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         compute:{
             full : fullCompute
         },
-        draw : {},
+        draw : {
+            full : fullDraw
+        },
         context : {
             drawRect : {
                 x : 0,
@@ -105,14 +132,22 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         state.container.style.opacity = `${state.background.opacity}`;
 
         fullCompute();
+        fullDraw();
     }
 
-    //Helper function, help compute all properties
+    //Helper function, compute all properties
     function fullCompute(){
         const fullState = state as Graph2D_State;
 
         fullState.compute.scale();
         fullState.compute.axis();
+    }
+
+    //Helper function, draws all elements.
+    function fullDraw(){
+        const fullState = state as Graph2D_State;
+
+        fullState.draw.labels();
     }
 
     //Helper function, set the container properties and adds the canvas element

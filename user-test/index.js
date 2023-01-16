@@ -8,7 +8,7 @@ function changeBackgroundColor(e){
 
 function changeOpacity(e){
     const opacity = parseFloat(e.target.value);
-    Graph.opacity(opacity);
+    Graph.backgroundOpacity(opacity);
 }
 
 
