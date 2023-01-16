@@ -20,7 +20,7 @@ const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = 
         xEnd : 5,
         yStart : -5,
         yEnd : 5,
-        position : "center",
+        position : "bottomLeft",
         type : "rectangular",
         xUnit : "",
         yUnit : "",
@@ -61,6 +61,14 @@ const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = 
         },
         xPrimary : {
             text : "Primary X Label",
+            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+            color : "#000000",
+            filled : true,
+            opacity : 1,
+            position : "center"
+        },
+        yPrimary : {
+            text : "Primary Y Label",
             font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
             color : "#000000",
             filled : true,

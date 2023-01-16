@@ -11,3 +11,16 @@ export interface Draw_Text_Props {
     y : number,
     angle : number
 }
+
+export interface Get_Coords_Props {
+    heights : {
+        title : number,
+        subtitle : number,
+        xPrimary : number,
+        yPrimary : number,
+        xSecondary : number,
+        ySecondary : number,
+    },
+    position : "start" | "center" | "end",
+    label : "title" | "subtitle" | "xPrimary" | "yPrimary" | "xSecondary" | "ySecondary"
+}

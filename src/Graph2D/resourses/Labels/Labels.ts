@@ -1,8 +1,8 @@
 import { Method_Generator } from "../../Graph2D_Types";
-import { Draw_Text_Props, Labels } from "./Labels_Types";
+import { Draw_Text_Props, Get_Coords_Props, Labels } from "./Labels_Types";
 
 function Labels({state, graphHandler}:Method_Generator) : Labels{
-    const heightOffset = 4;
+    const offset = 5;
 //------------- Compute Labels ----------------
 
     function compute(){
@@ -31,7 +31,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function getTextHeight(text:string, font:string) : number {
         state.context.canvas.font = font;
         const metrics = state.context.canvas.measureText(text);
-        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent+heightOffset;
+        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
         
         return height;
     }
@@ -40,42 +40,61 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 
     function draw(){
-        let titleHeight = 0;
-        let subtitleHeight = 0;
-        let xPrimaryHeight = 0;
-        let yPrimaryHeight = 0;
-        let xSecondaryHeight = 0;
-        let ySecondaryHeight = 0;
-        let x = 0;
-        let y = 0;
-        let angle = 0;
+        const heights = {
+            title : 0,
+            subtitle : 0,
+            xPrimary : 0,
+            yPrimary : 0,
+            xSecondary : 0,
+            ySecondary : 0,
+
+        };
 
         if(state.labels.title != null){
-            titleHeight = getTextHeight(state.labels.title.text, state.labels.title.font);
-            x = state.labels.title.position === "start" ? state.canvas.marginStart : 
-               (state.labels.title.position === "center" ? state.canvas.marginStart+(state.container.clientWidth-state.canvas.marginStart-state.canvas.marginEnd)/2 :
-               state.container.clientWidth-state.canvas.marginEnd);
-            y = titleHeight+state.canvas.marginTop-heightOffset;
+            heights.title = getTextHeight(state.labels.title.text, state.labels.title.font);
+            const position = state.labels.title.position;
+            const [x, y, angle] = getCoords({heights, position, label:"title"});
+            
             drawText({params:state.labels.title, x, y, angle});
         }
         if(state.labels.subtitle != null){
-            subtitleHeight = getTextHeight(state.labels.subtitle.text, state.labels.subtitle.font);
-            x = state.labels.subtitle.position === "start" ? state.canvas.marginStart : 
-               (state.labels.subtitle.position === "center" ? state.canvas.marginStart+(state.container.clientWidth-state.canvas.marginStart-state.canvas.marginEnd)/2 :
-                state.container.clientWidth-state.canvas.marginEnd);
-            y = titleHeight+subtitleHeight+state.canvas.marginTop-heightOffset;
+            heights.subtitle = getTextHeight(state.labels.subtitle.text, state.labels.subtitle.font);
+            const position = state.labels.subtitle.position;
+            const [x, y, angle] = getCoords({heights, position, label:"subtitle"});
+
             drawText({params:state.labels.subtitle, x, y, angle});
         }
         if(state.labels.xPrimary != null){
-            xPrimaryHeight = getTextHeight(state.labels.xPrimary.text, state.labels.xPrimary.font);
-            x = state.canvas.marginStart+xPrimaryHeight-heightOffset;
-            y = state.labels.xPrimary.position === "start" ? state.container.clientHeight-state.canvas.marginBottom : 
-               (state.labels.xPrimary.position === "center" ? state.container.clientHeight-state.canvas.marginBottom-(state.container.clientHeight-state.canvas.marginTop-state.canvas.marginBottom-titleHeight-subtitleHeight)/2 :
-               titleHeight+subtitleHeight+state.canvas.marginTop+heightOffset);
-            angle = -Math.PI/2;
+            heights.xPrimary = getTextHeight(state.labels.xPrimary.text, state.labels.xPrimary.font);
+            const position = state.labels.xPrimary.position;
+            const [x, y, angle] = getCoords({heights, position, label:"xPrimary"});
+            
             drawText({params:state.labels.xPrimary, x, y, angle});
         }
+        if(state.labels.yPrimary != null){
+            heights.yPrimary = getTextHeight(state.labels.yPrimary.text, state.labels.yPrimary.font);
+            const position = state.labels.yPrimary.position;
+            const [x, y, angle] = getCoords({heights, position, label:"yPrimary"});
+            
+            drawText({params:state.labels.yPrimary, x, y, angle});
+        }
+        if(state.labels.xSecondary != null){
+            heights.xSecondary = getTextHeight(state.labels.xSecondary.text, state.labels.xSecondary.font);
+            const position = state.labels.xSecondary.position;
+            const [x, y, angle] = getCoords({heights, position, label:"xSecondary"});
+            
+            drawText({params:state.labels.xSecondary, x, y, angle});
+        }
+        if(state.labels.ySecondary != null){
+            heights.ySecondary = getTextHeight(state.labels.ySecondary.text, state.labels.ySecondary.font);
+            const position = state.labels.ySecondary.position;
+            const [x, y, angle] = getCoords({heights, position, label:"ySecondary"});
+            
+            drawText({params:state.labels.ySecondary, x, y, angle});
+        }
     }
+
+//---------------------------------------------
 
     function drawText({params, x, y, angle} : Draw_Text_Props){
         state.context.canvas.save();
@@ -93,6 +112,66 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         }
         state.context.canvas.restore();
     }
+
+//---------------------------------------------
+
+    function getCoords({heights, label, position}:Get_Coords_Props) : [number, number, number]{
+        let x : number = 0;
+        let y : number = 0;
+        let angle : number = 0;
+
+        switch(label){
+            case "title":
+                x = position === "start" ? offset : 
+                    (position === "center" ? state.container.clientWidth / 2 :
+                    state.container.clientWidth - offset);
+                y = heights.title + offset;
+                
+                break;
+
+            case "subtitle":
+                x = position === "start" ? offset : 
+                    (position === "center" ? state.container.clientWidth / 2 :
+                    state.container.clientWidth - offset);
+                y = heights.title + heights.subtitle + 2*offset;
+                break;
+
+            case "xPrimary":
+                if(state.axis.position === "bottomLeft" || state.axis.position === "topLeft"){
+                    x = heights.xPrimary + offset;
+                    y = position === "start" ? state.container.clientHeight - offset : 
+                        (position === "center" ? state.container.clientHeight - (state.container.clientHeight - heights.title - heights.subtitle) / 2 :
+                        heights.title + heights.subtitle + 2*offset);
+                    angle = -Math.PI/2;
+                }
+                if(state.axis.position === "bottomRight" || state.axis.position === "topRight"){
+                    x = state.container.clientWidth - heights.xPrimary - offset;
+                    y = position === "start" ? heights.title + heights.subtitle + 2*offset : 
+                        (position === "center" ? state.container.clientHeight - (state.container.clientHeight - heights.title - heights.subtitle) / 2 : 
+                        state.container.clientHeight - offset);
+                    angle = Math.PI/2;
+                }
+                break;
+
+            case "yPrimary":
+                if(state.axis.position === "bottomLeft" || state.axis.position === "bottomRight"){
+                    
+                }
+                break;
+
+            case "xSecondary":
+                break;
+
+            case "ySecondary":
+                break;
+        }
+        
+
+        
+        return [x, y, angle];
+    }
+
+//---------------------------------------------
 
     return {
         compute,
