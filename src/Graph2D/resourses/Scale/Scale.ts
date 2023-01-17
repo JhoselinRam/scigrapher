@@ -53,28 +53,28 @@ function Scale({state}:Method_Generator) : Scale{
                 yMax = state.canvas.marginTop;
                 break;
 
-            case "bottomLeft":
+            case "bottom-left":
                 xMin = state.canvas.marginStart;
                 xMax= containerWidth - state.canvas.marginEnd;
                 yMin = containerHeight - state.canvas.marginBottom;
                 yMax = state.canvas.marginTop;
                 break;
 
-            case "bottomRight":
+            case "bottom-right":
                 xMin = state.canvas.marginStart;
                 xMax= containerWidth - state.canvas.marginEnd;
                 yMin = containerHeight - state.canvas.marginBottom;
                 yMax = state.canvas.marginTop;
                 break;
 
-            case "topLeft":
+            case "top-left":
                 xMin = state.canvas.marginStart;
                 xMax= containerWidth - state.canvas.marginEnd;
                 yMin = containerHeight - state.canvas.marginBottom;
                 yMax = state.canvas.marginTop;
                 break;
 
-            case "topRight":
+            case "top-right":
                 xMin = state.canvas.marginStart;
                 xMax= containerWidth - state.canvas.marginEnd;
                 yMin = containerHeight - state.canvas.marginBottom;

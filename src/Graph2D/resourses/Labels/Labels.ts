@@ -2,7 +2,7 @@ import { Method_Generator } from "../../Graph2D_Types";
 import { Draw_Text_Props, Get_Coords_Props, Labels } from "./Labels_Types";
 
 function Labels({state, graphHandler}:Method_Generator) : Labels{
-    const offset = 5;
+    const offset = 4;
 //------------- Compute Labels ----------------
 
     function compute(){
@@ -12,10 +12,6 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         let yPrimaryHeight = 0;
         let xSecondaryHeight = 0;
         let ySecondaryHeight = 0;
-        let x = 0;
-        let y = 0;
-        let width = state.container.clientWidth;
-        let height = state.container.clientHeight;
         
         if(state.labels.title != null) titleHeight = getTextHeight(state.labels.title.text, state.labels.title.font);
         if(state.labels.subtitle != null) subtitleHeight = getTextHeight(state.labels.subtitle.text, state.labels.subtitle.font);
@@ -23,7 +19,36 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         if(state.labels.yPrimary != null) yPrimaryHeight = getTextHeight(state.labels.yPrimary.text, state.labels.yPrimary.font);
         if(state.labels.xSecondary != null) xSecondaryHeight = getTextHeight(state.labels.xSecondary.text, state.labels.xSecondary.font);
         if(state.labels.ySecondary != null) ySecondaryHeight = getTextHeight(state.labels.ySecondary.text, state.labels.ySecondary.font);
+        
+        state.context.drawRect.width = state.container.clientWidth - yPrimaryHeight - ySecondaryHeight;
+        state.context.drawRect.height = state.container.clientHeight - titleHeight - subtitleHeight - xPrimaryHeight - xSecondaryHeight;
+        switch (state.axis.position) {
+            case "bottom-left":
+                state.context.drawRect.x = yPrimaryHeight;
+                state.context.drawRect.y = titleHeight + subtitleHeight + xSecondaryHeight;
+                break;
+                
+            case "bottom-right":
+                state.context.drawRect.x = ySecondaryHeight;
+                state.context.drawRect.y = titleHeight + subtitleHeight + xSecondaryHeight;
+                break;
+                
+            case "top-left": 
+                state.context.drawRect.x = yPrimaryHeight;
+                state.context.drawRect.y = titleHeight + subtitleHeight + xPrimaryHeight;
+                break;
+                
+            case "top-right":
+                state.context.drawRect.x = ySecondaryHeight;
+                state.context.drawRect.y = titleHeight + subtitleHeight + xPrimaryHeight;
+                break;
+        }
 
+
+
+
+        state.context.canvas.strokeStyle = "#ff0000";
+        state.context.canvas.strokeRect(state.context.drawRect.x, state.context.drawRect.y, state.context.drawRect.width, state.context.drawRect.height);
         
 
     }
@@ -31,7 +56,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function getTextHeight(text:string, font:string) : number {
         state.context.canvas.font = font;
         const metrics = state.context.canvas.measureText(text);
-        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + 2*offset;
         
         return height;
     }
@@ -125,7 +150,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
                 x = position === "start" ? offset : 
                     (position === "center" ? state.container.clientWidth / 2 :
                     state.container.clientWidth - offset);
-                y = heights.title + offset;
+                y = heights.title - offset;
                 
                 break;
 
@@ -133,36 +158,71 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
                 x = position === "start" ? offset : 
                     (position === "center" ? state.container.clientWidth / 2 :
                     state.container.clientWidth - offset);
-                y = heights.title + heights.subtitle + 2*offset;
+                y = heights.title + heights.subtitle -2*offset;
                 break;
 
             case "xPrimary":
-                if(state.axis.position === "bottomLeft" || state.axis.position === "topLeft"){
-                    x = heights.xPrimary + offset;
-                    y = position === "start" ? state.container.clientHeight - offset : 
-                        (position === "center" ? state.container.clientHeight - (state.container.clientHeight - heights.title - heights.subtitle) / 2 :
-                        heights.title + heights.subtitle + 2*offset);
-                    angle = -Math.PI/2;
+                if(state.axis.position === "bottom-left" || state.axis.position === "bottom-right"){
+                    x = position === "start" ? state.context.drawRect.x + offset :
+                        (position === "center" ? state.context.drawRect.x + state.context.drawRect.width/2 : 
+                        state.context.drawRect.x + state.context.drawRect.width - offset);
+                    y = state.container.clientHeight - offset;
                 }
-                if(state.axis.position === "bottomRight" || state.axis.position === "topRight"){
-                    x = state.container.clientWidth - heights.xPrimary - offset;
-                    y = position === "start" ? heights.title + heights.subtitle + 2*offset : 
-                        (position === "center" ? state.container.clientHeight - (state.container.clientHeight - heights.title - heights.subtitle) / 2 : 
-                        state.container.clientHeight - offset);
-                    angle = Math.PI/2;
+                if(state.axis.position === "top-left" || state.axis.position === "top-right"){
+                    x = position === "start" ? state.context.drawRect.x + offset :
+                        (position === "center" ? state.context.drawRect.x + state.context.drawRect.width/2 : 
+                        state.context.drawRect.x + state.context.drawRect.width - offset);
+                    y = state.context.drawRect.y - offset;
                 }
                 break;
 
             case "yPrimary":
-                if(state.axis.position === "bottomLeft" || state.axis.position === "bottomRight"){
-                    
+                if(state.axis.position === "bottom-left" || state.axis.position === "top-left"){
+                    x = state.context.drawRect.x - offset;
+                    y = position === "start" ? state.context.drawRect.y + state.context.drawRect.height - offset : 
+                        (position === "center" ? state.context.drawRect.y + state.context.drawRect.height/2 :
+                        state.context.drawRect.y + offset);
+                    angle = -Math.PI/2;
+                }
+                if(state.axis.position === "bottom-right" || state.axis.position === "top-right"){
+                    x = state.context.drawRect.x + state.context.drawRect.width + offset;
+                    y = position === "start" ? state.context.drawRect.y + offset : 
+                        (position === "center" ? state.context.drawRect.y + state.context.drawRect.height/2 : 
+                        state.context.drawRect.y + state.context.drawRect.height - offset);
+                    angle = Math.PI/2;
                 }
                 break;
 
             case "xSecondary":
+                if(state.axis.position === "bottom-left" || state.axis.position === "bottom-right"){
+                    x = position === "start" ? state.context.drawRect.x + offset :
+                        (position === "center" ? state.context.drawRect.x + state.context.drawRect.width/2 : 
+                        state.context.drawRect.x + state.context.drawRect.width - offset);
+                    y = state.context.drawRect.y - offset;
+                }
+                if(state.axis.position === "top-left" || state.axis.position === "top-right"){
+                    x = position === "start" ? state.context.drawRect.x + offset :
+                        (position === "center" ? state.context.drawRect.x + state.context.drawRect.width/2 : 
+                        state.context.drawRect.x + state.context.drawRect.width - offset);
+                    y = state.container.clientHeight - offset;
+                }
                 break;
 
             case "ySecondary":
+                if(state.axis.position === "bottom-left" || state.axis.position === "top-left"){
+                    x = state.context.drawRect.x + state.context.drawRect.width + offset;
+                    y = position === "start" ? state.context.drawRect.y + offset : 
+                        (position === "center" ? state.context.drawRect.y + state.context.drawRect.height/2 : 
+                        state.context.drawRect.y + state.context.drawRect.height - offset);
+                    angle = Math.PI/2;
+                }
+                if(state.axis.position === "bottom-right" || state.axis.position === "top-right"){
+                    x = state.context.drawRect.x - offset;
+                    y = position === "start" ? state.context.drawRect.y + state.context.drawRect.height - offset : 
+                        (position === "center" ? state.context.drawRect.y + state.context.drawRect.height/2 :
+                        state.context.drawRect.y + offset);
+                    angle = -Math.PI/2;
+                }
                 break;
         }
         

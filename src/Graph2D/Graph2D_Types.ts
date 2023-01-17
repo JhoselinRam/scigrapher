@@ -9,7 +9,7 @@ export interface Graph2D extends
     Omit<Labels,"compute" | "draw">{
 }
 
-export type Axis_Position = "center" | "bottomLeft" | "bottomRight" | "topLeft" | "topRight";
+export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
 export type Axis_Type = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
 
 export interface Graph2D_Options{
