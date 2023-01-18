@@ -60,3 +60,8 @@ body{
 .select-input{
     width : 100px
 }
+
+.number-input{
+    width : 80px;
+    margin-right: 3px;
+}

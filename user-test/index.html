@@ -20,6 +20,8 @@
                     <label for="bgopacity">Bg Opacity: </label>
                     <input type="number" id="bgopacity" class="number-input" value="1" min="0" max="1" step="0.02">
                 </div>
+               
+               
                 <div class="flex-control">
                     <div>
                         <label for="enableTitle">Title</label>
@@ -29,6 +31,57 @@
                     </div>
                     <input type="text" id="title" class="titleObj text-input">
                 </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="enableSubtitle">Subtitle</label>
+                        <input type="checkbox" name="enableSubtitle" id="enableSubtitle" class="subtitleObj">
+                        <label for="fillSubtitle">fill</label>
+                        <input type="checkbox" name="fillSubtitle" id="fillSubtitle" class="subtitleObj" checked>
+                    </div>
+                    <input type="text" id="subtitle" class="subtitleObj text-input">
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="enableXPrimary">Label x</label>
+                        <input type="checkbox" name="enableXPrimary" id="enableXPrimary" class="xPrimaryObj">
+                        <label for="fillXPrimary">fill</label>
+                        <input type="checkbox" name="fillXPrimary" id="fillXPrimary" class="xPrimaryObj" checked>
+                    </div>
+                    <input type="text" id="xPrimary" class="xPrimaryObj text-input">
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="enableYPrimary">Label y</label>
+                        <input type="checkbox" name="enableYPrimary" id="enableYPrimary" class="yPrimaryObj">
+                        <label for="fillYPrimary">fill</label>
+                        <input type="checkbox" name="fillYPrimary" id="fillYPrimary" class="yPrimaryObj" checked>
+                    </div>
+                    <input type="text" id="yPrimary" class="yPrimaryObj text-input">
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="enableXSecondary">Label x (2ry)</label>
+                        <input type="checkbox" name="enableXSecondary" id="enableXSecondary" class="xSecondaryObj">
+                        <label for="fillXSecondary">fill</label>
+                        <input type="checkbox" name="fillXSecondary" id="fillXSecondary" class="xSecondaryObj" checked>
+                    </div>
+                    <input type="text" id="xSecondary" class="xSecondaryObj text-input">
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="enableYSecondary">Label y (2ry)</label>
+                        <input type="checkbox" name="enableYSecondary" id="enableYSecondary" class="ySecondaryObj">
+                        <label for="fillYSecondary">fill</label>
+                        <input type="checkbox" name="fillYSecondary" id="fillYSecondary" class="ySecondaryObj" checked>
+                    </div>
+                    <input type="text" id="ySecondary" class="ySecondaryObj text-input">
+                </div>
+               
+
+
+            </div>
+
+            <div class="control-row">
                 <div class="flex-control">
                     <div>
                         <label for="selectLabel">Customize label:</label>
@@ -61,7 +114,21 @@
                     </div>
                     <div>
                         <label for="labelSize">Label size:</label>
-                        <input type="number" name="labelSize" id="labelSize" min="0" step="1" value="15">px
+                        <input type="number" name="labelSize" id="labelSize" min="0" step="1" value="15" class="number-input">px
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="labelPosition">Label position:</label>
+                        <select name="labelPosition" id="labelPosition" value="start" class="number-input">
+                            <option value="start">Start</option>
+                            <option value="center">Center</option>
+                            <option value="end">End</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="labelOpacity">Label opacity:</label>
+                        <input type="number" name="labelOpacity" id="labelOpacity" min="0" max="1" step="0.02" value="1">
                     </div>
                 </div>
             </div>

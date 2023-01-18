@@ -77,7 +77,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.title = getTextHeight(state.labels.title.text, state.labels.title.font);
             const position = state.labels.title.position;
             const [x, y, angle] = getCoords({heights, position, label:"title"});
-    console.dir(state.labels.title)        
+   
             drawText({params:state.labels.title, x, y, angle});
         }
         if(state.labels.subtitle != null){
@@ -267,7 +267,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             }
             const labelArg = Object.assign({}, label);
             delete labelArg.enable;
-            state.labels.title = Object.assign(defaultLabel, labelArg, {font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif", position:"start"});
+            state.labels.title = Object.assign({}, defaultLabel, {font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif", position:"start"}, labelArg);
 
             state.render();
 
@@ -277,9 +277,137 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     }
 
 //---------------------------------------------
+//--------------- Subtitle --------------------
 
+    function subtitle(label : Label_Props) : Graph2D;
+    function subtitle(arg : void) : LabelProperties;
+    function subtitle(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null)
+            return state.labels.subtitle;
+            
+        if(typeof label === "object"){
+            if(label.enable!==null && !label.enable){
+                delete state.labels.subtitle;
+                state.render();
+                return graphHandler;
+            }
+            const labelArg = Object.assign({}, label);
+            delete labelArg.enable;
+            state.labels.subtitle = Object.assign({}, defaultLabel, {position:"start"}, labelArg);
 
+            state.render();
 
+            return graphHandler;
+
+        }
+    }
+
+//---------------------------------------------
+//--------------- Label x --------------------
+
+    function xLabel(label : Label_Props) : Graph2D;
+    function xLabel(arg : void) : LabelProperties;
+    function xLabel(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null)
+            return state.labels.xPrimary;
+            
+        if(typeof label === "object"){
+            if(label.enable!==null && !label.enable){
+                delete state.labels.xPrimary;
+                state.render();
+                return graphHandler;
+            }
+            const labelArg = Object.assign({}, label);
+            delete labelArg.enable;
+            state.labels.xPrimary = Object.assign({}, defaultLabel, labelArg);
+
+            state.render();
+
+            return graphHandler;
+
+        }
+    }
+
+//---------------------------------------------
+//--------------- Label y --------------------
+
+    function yLabel(label : Label_Props) : Graph2D;
+    function yLabel(arg : void) : LabelProperties;
+    function yLabel(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null)
+            return state.labels.yPrimary;
+            
+        if(typeof label === "object"){
+            if(label.enable!==null && !label.enable){
+                delete state.labels.yPrimary;
+                state.render();
+                return graphHandler;
+            }
+            const labelArg = Object.assign({}, label);
+            delete labelArg.enable;
+            state.labels.yPrimary = Object.assign({}, defaultLabel, labelArg);
+
+            state.render();
+
+            return graphHandler;
+
+        }
+    }
+
+//---------------------------------------------
+//--------------- Label x secondary --------------------
+
+    function xLabelSecondary(label : Label_Props) : Graph2D;
+    function xLabelSecondary(arg : void) : LabelProperties;
+    function xLabelSecondary(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null)
+            return state.labels.xSecondary;
+            
+        if(typeof label === "object"){
+            if(label.enable!==null && !label.enable){
+                delete state.labels.xSecondary;
+                state.render();
+                return graphHandler;
+            }
+            const labelArg = Object.assign({}, label);
+            delete labelArg.enable;
+            state.labels.xSecondary = Object.assign({}, defaultLabel, labelArg);
+
+            state.render();
+
+            return graphHandler;
+
+        }
+    }
+
+//---------------------------------------------
+//--------------- Label y secondary --------------------
+
+    function yLabelSecondary(label : Label_Props) : Graph2D;
+    function yLabelSecondary(arg : void) : LabelProperties;
+    function yLabelSecondary(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null)
+            return state.labels.ySecondary;
+            
+        if(typeof label === "object"){
+            if(label.enable!==null && !label.enable){
+                delete state.labels.ySecondary;
+                state.render();
+                return graphHandler;
+            }
+            const labelArg = Object.assign({}, label);
+            delete labelArg.enable;
+            state.labels.ySecondary = Object.assign({}, defaultLabel, labelArg);
+
+            state.render();
+
+            return graphHandler;
+
+        }
+    }
+
+//---------------------------------------------
+//---------------------------------------------
 
 
 
@@ -287,7 +415,12 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     return {
         compute,
         draw,
-        title
+        title,
+        subtitle,
+        xLabel,
+        yLabel,
+        xLabelSecondary,
+        yLabelSecondary
     }
 }
 

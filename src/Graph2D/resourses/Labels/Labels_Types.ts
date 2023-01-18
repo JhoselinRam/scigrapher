@@ -6,7 +6,27 @@ export interface Labels {
     title : {
         (label:Label_Props):Graph2D,
         (arg:void):LabelProperties
-    }
+    },
+    subtitle : {
+        (label:Label_Props):Graph2D,
+        (arg:void):LabelProperties
+    },
+    xLabel : {
+        (label:Label_Props):Graph2D,
+        (arg:void):LabelProperties
+    },
+    yLabel : {
+        (label:Label_Props):Graph2D,
+        (arg:void):LabelProperties
+    },
+    xLabelSecondary : {
+        (label:Label_Props):Graph2D,
+        (arg:void):LabelProperties
+    },
+    yLabelSecondary : {
+        (label:Label_Props):Graph2D,
+        (arg:void):LabelProperties
+    },
 }
 
 export interface Draw_Text_Props {

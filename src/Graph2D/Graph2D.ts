@@ -42,48 +42,7 @@ const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = 
         yDynamic : true,
     },
     secondary : {},
-    labels : {
-        subtitle : {
-            text : "Graph Subtitle",
-            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
-            color : "#000000",
-            filled : true,
-            opacity : 1,
-            position : "start"
-        },
-        xPrimary : {
-            text : "Primary X Label",
-            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
-            color : "#000000",
-            filled : true,
-            opacity : 1,
-            position : "center"
-        },
-        yPrimary : {
-            text : "Primary Y Label",
-            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
-            color : "#000000",
-            filled : true,
-            opacity : 1,
-            position : "center"
-        },
-        xSecondary : {
-            text : "Secondary X Label",
-            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
-            color : "#000000",
-            filled : true,
-            opacity : 1,
-            position : "center"
-        },
-        ySecondary : {
-            text : "Secondary Y Label",
-            font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
-            color : "#000000",
-            filled : true,
-            opacity : 1,
-            position : "center"
-        }
-    }
+    labels : {}
 }
 
 export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
@@ -138,6 +97,11 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.backgroundColor = background.backgroundColor;
     graphHandler.backgroundOpacity = background.backgroundOpacity;
     graphHandler.title = labels.title;
+    graphHandler.subtitle = labels.subtitle;
+    graphHandler.xLabel = labels.xLabel;
+    graphHandler.yLabel = labels.yLabel;
+    graphHandler.xLabelSecondary = labels.xLabelSecondary;
+    graphHandler.yLabelSecondary = labels.yLabelSecondary;
 
 
     //Setup configurations
