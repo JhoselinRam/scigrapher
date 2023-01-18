@@ -2,6 +2,19 @@ import { Graph2D, Method_Generator } from "../../Graph2D_Types";
 import { Background } from "./Background_Types";
 
 function Background({state, graphHandler} : Method_Generator) : Background{
+    
+    function draw(){
+        const width = state.container.clientWidth;
+        const height = state.container.clientHeight;
+  
+        state.context.canvas.save();
+        state.context.canvas.clearRect(0, 0, width, height);
+        state.context.canvas.fillStyle = state.background.color;
+        state.context.canvas.globalAlpha = state.background.opacity;
+        state.context.canvas.fillRect(0, 0, width, height);
+        state.context.canvas.restore();
+    }
+    
     //------------------- Color -------------------
     
     function backgroundColor(color:string):Graph2D;
@@ -14,7 +27,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
             if(color === state.background.color) return graphHandler;
 
             state.background.color = color;
-            state.container.style.backgroundColor = color;
+            state.draw.full();
 
             return graphHandler;    
         }
@@ -32,7 +45,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
             if(opacity === state.background.opacity) return graphHandler;
 
             state.background.opacity = opacity<0?0:(opacity>1?1:opacity);   //Opacity must be a number between 0 and 1
-            state.container.style.opacity = `${state.background.opacity}`;
+            state.draw.full();
 
             return graphHandler;    
         }
@@ -43,6 +56,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
 
 
     return {
+        draw,
         backgroundColor,
         backgroundOpacity
     }

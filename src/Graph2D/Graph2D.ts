@@ -43,14 +43,6 @@ const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = 
     },
     secondary : {},
     labels : {
-        title : {
-            text : "Graph Title",
-            font : "25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
-            color : "#000000",
-            filled : true,
-            opacity : 1,
-            position : "start"
-        },
         subtitle : {
             text : "Graph Subtitle",
             font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
@@ -135,6 +127,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     state.compute.scale = scale.compute;
     state.compute.axis = axis.compute;
     state.compute.labels = labels.compute;
+    state.draw.background = background.draw;
     state.draw.labels = labels.draw;
     state.scale.primary = scale.primary;
     state.scale.secondary = scale.secondary;
@@ -144,6 +137,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     //Main object population
     graphHandler.backgroundColor = background.backgroundColor;
     graphHandler.backgroundOpacity = background.backgroundOpacity;
+    graphHandler.title = labels.title;
 
 
     //Setup configurations
@@ -152,9 +146,6 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
 
     //Main render function
     function render(){
-        state.container.style.backgroundColor = state.background.color;
-        state.container.style.opacity = `${state.background.opacity}`;
-
         fullCompute();
         fullDraw();
     }
@@ -172,6 +163,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     function fullDraw(){
         const fullState = state as Graph2D_State;
 
+        fullState.draw.background();
         fullState.draw.labels();
     }
 

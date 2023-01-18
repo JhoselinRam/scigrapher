@@ -11,6 +11,26 @@ function changeOpacity(e){
     Graph.backgroundOpacity(opacity);
 }
 
+const titleObj = {
+    text : "",
+    font : "",
+    color : "",
+    opacity : 1,
+    filled : true,
+    position : "start",
+    enabled : false
+}
+
+function toggleTitle(){
+    titleObj.enabled = !titleObj.enabled;
+    Graph.title(titleObj);
+}
+
+function changeTitle(e){
+    const text =  e.target.value;
+    titleObj.text = text;
+    Graph.title(titleObj);
+}
 
 
 
@@ -20,6 +40,8 @@ function changeOpacity(e){
 function main(){
     document.querySelector("#bgcolor").addEventListener("input", changeBackgroundColor);
     document.querySelector("#bgopacity").addEventListener("input", changeOpacity);
+    document.querySelector("#enableTitle").addEventListener("change", toggleTitle);
+    document.querySelector("#title").addEventListener("input", changeTitle);
 }
 
 main();

@@ -1,5 +1,5 @@
-import { Method_Generator } from "../../Graph2D_Types";
-import { Draw_Text_Props, Get_Coords_Props, Labels } from "./Labels_Types";
+import { Graph2D, LabelProperties, Method_Generator } from "../../Graph2D_Types";
+import { Draw_Text_Props, Get_Coords_Props, Labels, Label_Props } from "./Labels_Types";
 
 function Labels({state, graphHandler}:Method_Generator) : Labels{
     const offset = 4;
@@ -43,12 +43,6 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
                 state.context.drawRect.y = titleHeight + subtitleHeight + xPrimaryHeight;
                 break;
         }
-
-
-
-
-        state.context.canvas.strokeStyle = "#ff0000";
-        state.context.canvas.strokeRect(state.context.drawRect.x, state.context.drawRect.y, state.context.drawRect.width, state.context.drawRect.height);
         
 
     }
@@ -62,7 +56,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     }
 
 //---------------------------------------------
-//---------------------------------------------
+//-------------- Draw Labels ------------------
 
     function draw(){
         const heights = {
@@ -74,6 +68,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             ySecondary : 0,
 
         };
+
+        state.context.canvas.strokeStyle = "#ff0000";
+        state.context.canvas.strokeRect(state.context.drawRect.x, state.context.drawRect.y, state.context.drawRect.width, state.context.drawRect.height);
 
         if(state.labels.title != null){
             heights.title = getTextHeight(state.labels.title.text, state.labels.title.font);
@@ -127,6 +124,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         state.context.canvas.rotate(angle);
         state.context.canvas.font = params.font;
         state.context.canvas.textAlign = params.position;
+        state.context.canvas.globalAlpha = params.opacity;
         if(params.filled){
             state.context.canvas.fillStyle = params.color;
             state.context.canvas.fillText(params.text, 0, 0);
@@ -225,17 +223,71 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
                 }
                 break;
         }
-        
-
-        
+    
         return [x, y, angle];
     }
 
 //---------------------------------------------
+//---------------------------------------------
+
+
+
+
+
+
+
+
+
+
+    const defaultLabel : LabelProperties = {
+        font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        color : "#000000",
+        filled : true,
+        opacity : 1,
+        position : "center",
+        text : ""
+    }
+
+//---------- Customization Methods ------------
+
+//----------------- Title ---------------------
+
+    function title(label : Label_Props) : Graph2D;
+    function title(arg : void) : LabelProperties;
+    function title(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null)
+            return state.labels.title;
+
+        if(typeof label === "object"){
+            if(label.enable!=null && !label.enable){
+                delete state.labels.title;
+                state.render();
+                return graphHandler;
+            }
+
+            const labelArg = Object.assign(label);
+            delete labelArg.enable;
+            state.labels.title = Object.assign(defaultLabel, labelArg, {font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif", position:"start"});
+
+            state.render();
+
+            return graphHandler;
+
+        }
+    }
+
+//---------------------------------------------
+
+
+
+
+
+
 
     return {
         compute,
-        draw
+        draw,
+        title
     }
 }
 

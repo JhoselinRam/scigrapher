@@ -4,7 +4,7 @@ import { Background } from "./resourses/Background/Background_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
 
 export interface Graph2D extends 
-    Background, 
+    Omit<Background, "draw">, 
     Omit<Axis,"compute" | "draw">, 
     Omit<Labels,"compute" | "draw">{
 }
@@ -111,6 +111,7 @@ export interface Graph2D_State extends Graph2D_Options {
     },
     draw : {
         full : ()=>void,
+        background : ()=>void,
         axis : ()=>void,
         labels : ()=>void
     }
