@@ -11,25 +11,35 @@ function changeOpacity(e){
     Graph.backgroundOpacity(opacity);
 }
 
-const titleObj = {
-    text : "",
-    font : "",
-    color : "",
-    opacity : 1,
-    filled : true,
-    position : "start",
-    enabled : false
+const labels = {
+    titleObj : {
+        text : "",
+        font : "",
+        color : "#000000",
+        opacity : 1,
+        filled : true,
+        position : "start",
+        enable : false    
+    }
 }
 
-function toggleTitle(){
-    titleObj.enabled = !titleObj.enabled;
-    Graph.title(titleObj);
+function toggleLabel(e){
+    const target = labels[`${e.target.className.split(" ")[0]}`];
+    target.enable = e.target.checked;
+    Graph.title(target);
 }
 
-function changeTitle(e){
+function changeLabelText(e){
+    const target = labels[`${e.target.className.split(" ")[0]}`];
     const text =  e.target.value;
-    titleObj.text = text;
-    Graph.title(titleObj);
+    target.text = text;
+    Graph.title(target);
+}
+
+function toggleLabelFilled(e){
+    const target = labels[`${e.target.className.split(" ")[0]}`];
+    target.filled = e.target.checked;
+    Graph.title(target);
 }
 
 
@@ -40,8 +50,9 @@ function changeTitle(e){
 function main(){
     document.querySelector("#bgcolor").addEventListener("input", changeBackgroundColor);
     document.querySelector("#bgopacity").addEventListener("input", changeOpacity);
-    document.querySelector("#enableTitle").addEventListener("change", toggleTitle);
-    document.querySelector("#title").addEventListener("input", changeTitle);
+    document.querySelector("#enableTitle").addEventListener("change", toggleLabel);
+    document.querySelector("#title").addEventListener("input", changeLabelText);
+    document.querySelector("#fillTitle").addEventListener("change", toggleLabelFilled);
 }
 
 main();

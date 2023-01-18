@@ -76,7 +76,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.title = getTextHeight(state.labels.title.text, state.labels.title.font);
             const position = state.labels.title.position;
             const [x, y, angle] = getCoords({heights, position, label:"title"});
-            
+    console.dir(state.labels.title)        
             drawText({params:state.labels.title, x, y, angle});
         }
         if(state.labels.subtitle != null){
@@ -257,15 +257,14 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function title(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
             return state.labels.title;
-
+            
         if(typeof label === "object"){
-            if(label.enable!=null && !label.enable){
+            if(label.enable!==null && !label.enable){
                 delete state.labels.title;
                 state.render();
                 return graphHandler;
             }
-
-            const labelArg = Object.assign(label);
+            const labelArg = Object.assign({}, label);
             delete labelArg.enable;
             state.labels.title = Object.assign(defaultLabel, labelArg, {font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif", position:"start"});
 
