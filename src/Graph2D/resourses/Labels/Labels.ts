@@ -50,9 +50,10 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function getTextHeight(text:string, font:string) : number {
         state.context.canvas.font = font;
         const metrics = state.context.canvas.measureText(text);
-        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + 2*offset;
+        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
         
-        return height;
+
+        return height>0?height+2*offset:0;
     }
 
 //---------------------------------------------

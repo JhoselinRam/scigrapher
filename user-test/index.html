@@ -29,6 +29,41 @@
                     </div>
                     <input type="text" id="title" class="titleObj text-input">
                 </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="selectLabel">Customize label:</label>
+                        <select name="selectLabel" id="selectLabel" class="select-input" value="titleObj">
+                            <option value="titleObj">Title</option>
+                            <option value="subtitleObj">Subtitle</option>
+                            <option value="xPrimaryObj">Label x (primary)</option>
+                            <option value="yPrimaryObj">Label y (primary)</option>
+                            <option value="xSecondaryObj">Label x (secondary)</option>
+                            <option value="ySecondaryObj">Label y (secondary)</option>
+                            
+                        </select>
+                    </div>
+                    <div>
+                        <label for="labelColor">Label Color:</label>
+                        <input type="color" name="labelColor" id="labelColor" class="color-input">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="labelFont">Label font:</label>
+                        <select name="labelFont" id="labelFont" value="Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif">
+                            <option value="Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif">Auto</option>
+                            <option value="Arial, Helvetica Neue, Helvetica, sans-serif">Arial</option>
+                            <option value="Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif">Calibri</option>
+                            <option value="Century Gothic, CenturyGothic, AppleGothic, sans-serif">Century</option>
+                            <option value="Consolas, monaco, monospace">Consolas</option>
+                            <option value="Georgia, Times, Times New Roman, serif">Times Roman</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="labelSize">Label size:</label>
+                        <input type="number" name="labelSize" id="labelSize" min="0" step="1" value="15">px
+                    </div>
+                </div>
             </div>
     
         </header>

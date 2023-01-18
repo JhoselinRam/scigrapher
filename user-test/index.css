@@ -52,12 +52,11 @@ body{
 .color-input{
     border: 0;
     inset: 0;
+    align-self: center;
 }
 
-.number-input{
-    width : 100px
-}
-
-.text-input{
+.number-input,
+.text-input,
+.select-input{
     width : 100px
 }
