@@ -312,6 +312,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             return state.labels.xPrimary;
             
         if(typeof label === "object"){
+            if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
             if(label.enable!==null && !label.enable){
                 delete state.labels.xPrimary;
                 state.render();
@@ -338,6 +339,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             return state.labels.yPrimary;
             
         if(typeof label === "object"){
+            if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
             if(label.enable!==null && !label.enable){
                 delete state.labels.yPrimary;
                 state.render();
