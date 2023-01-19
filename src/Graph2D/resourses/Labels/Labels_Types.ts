@@ -4,28 +4,28 @@ export interface Labels {
     compute : ()=>void,
     draw : ()=>void,
     title : {
-        (label:Label_Props):Graph2D,
-        (arg:void):LabelProperties
+        (label:Partial<LabelProperties>):Graph2D,
+        (arg:void):LabelProperties | undefined
     },
     subtitle : {
-        (label:Label_Props):Graph2D,
-        (arg:void):LabelProperties
+        (label:Partial<LabelProperties>):Graph2D,
+        (arg:void):LabelProperties | undefined
     },
     xLabel : {
-        (label:Label_Props):Graph2D,
-        (arg:void):LabelProperties
+        (label:Partial<LabelProperties>):Graph2D,
+        (arg:void):LabelProperties | undefined
     },
     yLabel : {
-        (label:Label_Props):Graph2D,
-        (arg:void):LabelProperties
+        (label:Partial<LabelProperties>):Graph2D,
+        (arg:void):LabelProperties | undefined
     },
     xLabelSecondary : {
-        (label:Label_Props):Graph2D,
-        (arg:void):LabelProperties
+        (label:Partial<LabelProperties>):Graph2D,
+        (arg:void):LabelProperties | undefined
     },
     yLabelSecondary : {
-        (label:Label_Props):Graph2D,
-        (arg:void):LabelProperties
+        (label:Partial<LabelProperties>):Graph2D,
+        (arg:void):LabelProperties | undefined
     },
 }
 
@@ -47,8 +47,4 @@ export interface Get_Coords_Props {
     },
     position : "start" | "center" | "end",
     label : "title" | "subtitle" | "xPrimary" | "yPrimary" | "xSecondary" | "ySecondary"
-}
-
-export interface Label_Props extends Partial<LabelProperties> {
-    enable ?: boolean
 }

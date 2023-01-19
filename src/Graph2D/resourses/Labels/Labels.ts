@@ -1,5 +1,5 @@
 import { Graph2D, LabelProperties, Method_Generator } from "../../Graph2D_Types";
-import { Draw_Text_Props, Get_Coords_Props, Labels, Label_Props } from "./Labels_Types";
+import { Draw_Text_Props, Get_Coords_Props, Labels } from "./Labels_Types";
 
 function Labels({state, graphHandler}:Method_Generator) : Labels{
     const offset = 4;
@@ -13,13 +13,15 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         let xSecondaryHeight = 0;
         let ySecondaryHeight = 0;
         
-        if(state.labels.title != null) titleHeight = getTextHeight(state.labels.title.text, state.labels.title.font);
-        if(state.labels.subtitle != null) subtitleHeight = getTextHeight(state.labels.subtitle.text, state.labels.subtitle.font);
-        if(state.labels.xPrimary != null) xPrimaryHeight = getTextHeight(state.labels.xPrimary.text, state.labels.xPrimary.font);
-        if(state.labels.yPrimary != null) yPrimaryHeight = getTextHeight(state.labels.yPrimary.text, state.labels.yPrimary.font);
-        if(state.labels.xSecondary != null) xSecondaryHeight = getTextHeight(state.labels.xSecondary.text, state.labels.xSecondary.font);
-        if(state.labels.ySecondary != null) ySecondaryHeight = getTextHeight(state.labels.ySecondary.text, state.labels.ySecondary.font);
+        //Calculate the label height if necessary
+        if(state.labels.title != null && state.labels.title.enable) titleHeight = getTextHeight(state.labels.title.text, state.labels.title.font);
+        if(state.labels.subtitle != null && state.labels.subtitle.enable) subtitleHeight = getTextHeight(state.labels.subtitle.text, state.labels.subtitle.font);
+        if(state.labels.xPrimary != null && state.labels.xPrimary.enable) xPrimaryHeight = getTextHeight(state.labels.xPrimary.text, state.labels.xPrimary.font);
+        if(state.labels.yPrimary != null && state.labels.yPrimary.enable) yPrimaryHeight = getTextHeight(state.labels.yPrimary.text, state.labels.yPrimary.font);
+        if(state.labels.xSecondary != null && state.labels.xSecondary.enable) xSecondaryHeight = getTextHeight(state.labels.xSecondary.text, state.labels.xSecondary.font);
+        if(state.labels.ySecondary != null && state.labels.ySecondary.enable) ySecondaryHeight = getTextHeight(state.labels.ySecondary.text, state.labels.ySecondary.font);
         
+        //Compute the graph area
         state.context.drawRect.width = state.container.clientWidth - yPrimaryHeight - ySecondaryHeight;
         state.context.drawRect.height = state.container.clientHeight - titleHeight - subtitleHeight - xPrimaryHeight - xSecondaryHeight;
         switch (state.axis.position) {
@@ -73,42 +75,42 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         state.context.canvas.strokeStyle = "#ff0000";
         state.context.canvas.strokeRect(state.context.drawRect.x, state.context.drawRect.y, state.context.drawRect.width, state.context.drawRect.height);
 
-        if(state.labels.title != null){
+        if(state.labels.title != null && state.labels.title.enable){
             heights.title = getTextHeight(state.labels.title.text, state.labels.title.font);
             const position = state.labels.title.position;
             const [x, y, angle] = getCoords({heights, position, label:"title"});
    
             drawText({params:state.labels.title, x, y, angle});
         }
-        if(state.labels.subtitle != null){
+        if(state.labels.subtitle != null && state.labels.subtitle.enable){
             heights.subtitle = getTextHeight(state.labels.subtitle.text, state.labels.subtitle.font);
             const position = state.labels.subtitle.position;
             const [x, y, angle] = getCoords({heights, position, label:"subtitle"});
 
             drawText({params:state.labels.subtitle, x, y, angle});
         }
-        if(state.labels.xPrimary != null){
+        if(state.labels.xPrimary != null && state.labels.xPrimary.enable){
             heights.xPrimary = getTextHeight(state.labels.xPrimary.text, state.labels.xPrimary.font);
             const position = state.labels.xPrimary.position;
             const [x, y, angle] = getCoords({heights, position, label:"xPrimary"});
             
             drawText({params:state.labels.xPrimary, x, y, angle});
         }
-        if(state.labels.yPrimary != null){
+        if(state.labels.yPrimary != null && state.labels.yPrimary.enable){
             heights.yPrimary = getTextHeight(state.labels.yPrimary.text, state.labels.yPrimary.font);
             const position = state.labels.yPrimary.position;
             const [x, y, angle] = getCoords({heights, position, label:"yPrimary"});
             
             drawText({params:state.labels.yPrimary, x, y, angle});
         }
-        if(state.labels.xSecondary != null){
+        if(state.labels.xSecondary != null && state.labels.xSecondary.enable){
             heights.xSecondary = getTextHeight(state.labels.xSecondary.text, state.labels.xSecondary.font);
             const position = state.labels.xSecondary.position;
             const [x, y, angle] = getCoords({heights, position, label:"xSecondary"});
             
             drawText({params:state.labels.xSecondary, x, y, angle});
         }
-        if(state.labels.ySecondary != null){
+        if(state.labels.ySecondary != null && state.labels.ySecondary.enable){
             heights.ySecondary = getTextHeight(state.labels.ySecondary.text, state.labels.ySecondary.font);
             const position = state.labels.ySecondary.position;
             const [x, y, angle] = getCoords({heights, position, label:"ySecondary"});
@@ -246,29 +248,24 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         filled : true,
         opacity : 1,
         position : "center",
-        text : ""
+        text : "",
+        enable : true
     }
 
 //---------- Customization Methods ------------
 
 //----------------- Title ---------------------
 
-    function title(label : Label_Props) : Graph2D;
-    function title(arg : void) : LabelProperties;
-    function title(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+    function title(label : Partial<LabelProperties>) : Graph2D;
+    function title(arg : void) : LabelProperties | undefined;
+    function title(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
             return state.labels.title;
             
         if(typeof label === "object"){
-            if(label.enable!==null && !label.enable){
-                delete state.labels.title;
-                state.render();
-                return graphHandler;
-            }
-            const labelArg = Object.assign({}, label);
-            delete labelArg.enable;
-            state.labels.title = Object.assign({}, defaultLabel, {font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif", position:"start"}, labelArg);
+            const labelArg : LabelProperties = Object.assign({}, defaultLabel, {font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif", position:"start"}, label);
 
+            state.labels.title = labelArg;
             state.render();
 
             return graphHandler;
@@ -279,22 +276,16 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Subtitle --------------------
 
-    function subtitle(label : Label_Props) : Graph2D;
-    function subtitle(arg : void) : LabelProperties;
-    function subtitle(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+    function subtitle(label : Partial<LabelProperties>) : Graph2D;
+    function subtitle(arg : void) : LabelProperties | undefined;
+    function subtitle(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
             return state.labels.subtitle;
             
         if(typeof label === "object"){
-            if(label.enable!==null && !label.enable){
-                delete state.labels.subtitle;
-                state.render();
-                return graphHandler;
-            }
-            const labelArg = Object.assign({}, label);
-            delete labelArg.enable;
-            state.labels.subtitle = Object.assign({}, defaultLabel, {position:"start"}, labelArg);
-
+            const labelArg : LabelProperties = Object.assign({}, defaultLabel, {position:"start"}, label);
+            
+            state.labels.subtitle = labelArg;
             state.render();
 
             return graphHandler;
@@ -305,23 +296,18 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label x --------------------
 
-    function xLabel(label : Label_Props) : Graph2D;
-    function xLabel(arg : void) : LabelProperties;
-    function xLabel(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+    function xLabel(label : Partial<LabelProperties>) : Graph2D;
+    function xLabel(arg : void) : LabelProperties | undefined;
+    function xLabel(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
             return state.labels.xPrimary;
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
-            if(label.enable!==null && !label.enable){
-                delete state.labels.xPrimary;
-                state.render();
-                return graphHandler;
-            }
-            const labelArg = Object.assign({}, label);
-            delete labelArg.enable;
-            state.labels.xPrimary = Object.assign({}, defaultLabel, labelArg);
-
+            
+            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
+        
+            state.labels.xPrimary = labelArg;
             state.render();
 
             return graphHandler;
@@ -332,23 +318,18 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label y --------------------
 
-    function yLabel(label : Label_Props) : Graph2D;
-    function yLabel(arg : void) : LabelProperties;
-    function yLabel(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+    function yLabel(label : Partial<LabelProperties>) : Graph2D;
+    function yLabel(arg : void) : LabelProperties | undefined;
+    function yLabel(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
             return state.labels.yPrimary;
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
-            if(label.enable!==null && !label.enable){
-                delete state.labels.yPrimary;
-                state.render();
-                return graphHandler;
-            }
-            const labelArg = Object.assign({}, label);
-            delete labelArg.enable;
-            state.labels.yPrimary = Object.assign({}, defaultLabel, labelArg);
+            
+            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
 
+            state.labels.yPrimary = labelArg;
             state.render();
 
             return graphHandler;
@@ -359,22 +340,19 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label x secondary --------------------
 
-    function xLabelSecondary(label : Label_Props) : Graph2D;
-    function xLabelSecondary(arg : void) : LabelProperties;
-    function xLabelSecondary(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+    function xLabelSecondary(label : Partial<LabelProperties>) : Graph2D;
+    function xLabelSecondary(arg : void) : LabelProperties | undefined;
+    function xLabelSecondary(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
             return state.labels.xSecondary;
             
         if(typeof label === "object"){
-            if(label.enable!==null && !label.enable){
-                delete state.labels.xSecondary;
-                state.render();
-                return graphHandler;
-            }
-            const labelArg = Object.assign({}, label);
-            delete labelArg.enable;
-            state.labels.xSecondary = Object.assign({}, defaultLabel, labelArg);
+            if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels
+            if(state.secondary.x == null || !state.secondary.x.enable) return graphHandler; //If secondary axis dont exist or is disabled
 
+            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
+
+            state.labels.xSecondary = labelArg;
             state.render();
 
             return graphHandler;
@@ -385,22 +363,19 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label y secondary --------------------
 
-    function yLabelSecondary(label : Label_Props) : Graph2D;
-    function yLabelSecondary(arg : void) : LabelProperties;
-    function yLabelSecondary(label : Label_Props | void) : Graph2D | LabelProperties | undefined{
+    function yLabelSecondary(label : Partial<LabelProperties>) : Graph2D;
+    function yLabelSecondary(arg : void) : LabelProperties | undefined;
+    function yLabelSecondary(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
             return state.labels.ySecondary;
             
         if(typeof label === "object"){
-            if(label.enable!==null && !label.enable){
-                delete state.labels.ySecondary;
-                state.render();
-                return graphHandler;
-            }
-            const labelArg = Object.assign({}, label);
-            delete labelArg.enable;
-            state.labels.ySecondary = Object.assign({}, defaultLabel, labelArg);
+            if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels
+            if(state.secondary.y == null || !state.secondary.y.enable) return graphHandler; //If secondary axis dont exist or is disabled
 
+            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
+
+            state.labels.ySecondary = labelArg;
             state.render();
 
             return graphHandler;
@@ -410,8 +385,6 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
 //---------------------------------------------
 //---------------------------------------------
-
-
 
 
     return {

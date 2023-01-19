@@ -50,8 +50,8 @@ export interface Graph2D_Options{
         yDynamic : boolean
     },
     secondary : {
-        x : Secondary_Axis,
-        y : Secondary_Axis
+        x ?: Secondary_Axis,
+        y ?: Secondary_Axis
     },
     labels : {
         title ?: LabelProperties,
@@ -64,6 +64,7 @@ export interface Graph2D_Options{
 }
 
 export type LabelProperties = {
+    enable : boolean,
     text : string,
     font : string,
     color : string,
@@ -73,6 +74,7 @@ export type LabelProperties = {
 }
 
 type Secondary_Axis = {
+    enable : boolean,
     start : number,
     end : number,
     type : Omit<Axis_Type, "polar">,
