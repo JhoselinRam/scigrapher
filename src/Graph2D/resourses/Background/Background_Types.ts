@@ -2,6 +2,7 @@ import { Graph2D } from "../../Graph2D_Types";
 
 export interface Background{
     draw : ()=>void,
+    drawClientRect : ()=>void,
     backgroundColor : {
         (color:string):Graph2D,
         (arg:void):string

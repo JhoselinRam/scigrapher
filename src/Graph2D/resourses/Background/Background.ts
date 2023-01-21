@@ -3,6 +3,8 @@ import { Background } from "./Background_Types";
 
 function Background({state, graphHandler} : Method_Generator) : Background{
     
+    //----------------- Draw ---------------------
+
     function draw(){
         const width = state.container.clientWidth;
         const height = state.container.clientHeight;
@@ -14,8 +16,24 @@ function Background({state, graphHandler} : Method_Generator) : Background{
         state.context.canvas.fillRect(0, 0, width, height);
         state.context.canvas.restore();
     }
+
+    //---------------------------------------------
+    //------------ Draw Client Rect ---------------
+    
+    function drawClientRect(){
+        const width = state.context.clientRect.width;
+        const height = state.context.clientRect.height;
+        
+        state.context.canvas.save();
+        state.context.canvas.clearRect(0, 0, width, height);
+        state.context.canvas.fillStyle = state.background.color;
+        state.context.canvas.globalAlpha = state.background.opacity;
+        state.context.canvas.fillRect(0, 0, width, height);
+        state.context.canvas.restore();
+    }
     
     //------------------- Color -------------------
+    //---------------------------------------------
     
     function backgroundColor(color:string):Graph2D;
     function backgroundColor(arg:void):string;
@@ -51,12 +69,12 @@ function Background({state, graphHandler} : Method_Generator) : Background{
         }
     }
 
-    //---------------------------------------------
-    
 
+    //---------------------------------------------
 
     return {
         draw,
+        drawClientRect,
         backgroundColor,
         backgroundOpacity
     }

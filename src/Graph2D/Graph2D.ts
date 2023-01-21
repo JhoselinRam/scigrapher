@@ -20,7 +20,7 @@ const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = 
         xEnd : 5,
         yStart : -5,
         yEnd : 5,
-        position : "bottom-left",
+        position : "center",
         type : "rectangular",
         xUnit : "",
         yUnit : "",
@@ -56,10 +56,11 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             full : fullCompute
         },
         draw : {
-            full : fullDraw
+            full : fullDraw,
+            client : drawClientArea
         },
         context : {
-            drawRect : {
+            clientRect : {
                 x : 0,
                 y : 0,
                 width  : container.clientWidth,
@@ -87,6 +88,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     state.compute.axis = axis.compute;
     state.compute.labels = labels.compute;
     state.draw.background = background.draw;
+    state.draw.backgroundClientRect = background.drawClientRect;
     state.draw.labels = labels.draw;
     state.scale.primary = scale.primary;
     state.scale.secondary = scale.secondary;
@@ -129,6 +131,14 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
 
         fullState.draw.background();
         fullState.draw.labels();
+        fullState.draw.client();
+    }
+
+    //Helper function, draws only the client area
+    function drawClientArea(){
+        const fullState = state as Graph2D_State;
+
+        fullState.draw.backgroundClientRect();
     }
 
     //Helper function, set the container properties and adds the canvas element
@@ -143,6 +153,9 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         state.container.appendChild(newCanvas);
         state.context.canvas = newCanvas.getContext("2d") as CanvasRenderingContext2D;
     }
+
+
+    //---------------------------------------------
 
 
     return graphHandler as Graph2D

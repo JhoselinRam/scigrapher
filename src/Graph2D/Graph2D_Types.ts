@@ -4,7 +4,7 @@ import { Background } from "./resourses/Background/Background_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
 
 export interface Graph2D extends 
-    Omit<Background, "draw">, 
+    Omit<Background, "draw" | "drawClientRect">, 
     Omit<Axis,"compute" | "draw">, 
     Omit<Labels,"compute" | "draw">{
 }
@@ -92,7 +92,7 @@ export interface Graph2D_State extends Graph2D_Options {
     render : ()=>void,
     secondaryEnabled : Axis_Property<boolean>,
     context : {
-        drawRect : {
+        clientRect : {
             x : number,
             y : number,
             width : number,
@@ -113,7 +113,9 @@ export interface Graph2D_State extends Graph2D_Options {
     },
     draw : {
         full : ()=>void,
+        client : ()=>void,
         background : ()=>void,
+        backgroundClientRect : ()=>void,
         axis : ()=>void,
         labels : ()=>void
     }
