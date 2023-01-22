@@ -264,7 +264,12 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             return state.labels.title;
             
         if(typeof label === "object"){
-            const labelArg : LabelProperties = Object.assign({}, defaultLabel, {font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif", position:"start"}, label);
+            const labelArg : LabelProperties = {
+                ...defaultLabel,
+                font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+                position:"start",
+                ...label
+            };
 
             state.labels.title = labelArg;
             state.render();
@@ -284,7 +289,11 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             return state.labels.subtitle;
             
         if(typeof label === "object"){
-            const labelArg : LabelProperties = Object.assign({}, defaultLabel, {position:"start"}, label);
+            const labelArg : LabelProperties = {
+                ...defaultLabel,
+                position : "start",
+                ...label
+            };
             
             state.labels.subtitle = labelArg;
             state.render();
@@ -306,7 +315,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
             
-            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
+            const labelArg : LabelProperties = {...defaultLabel, ...label};
         
             state.labels.xPrimary = labelArg;
             state.render();
@@ -328,7 +337,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
             
-            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
+            const labelArg : LabelProperties = {...defaultLabel, ...label};
 
             state.labels.yPrimary = labelArg;
             state.render();
@@ -351,7 +360,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels
             if(state.secondary.x == null || !state.secondary.x.enable) return graphHandler; //If secondary axis dont exist or is disabled
 
-            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
+            const labelArg : LabelProperties = {...defaultLabel, ...label};
 
             state.labels.xSecondary = labelArg;
             state.render();
@@ -374,7 +383,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels
             if(state.secondary.y == null || !state.secondary.y.enable) return graphHandler; //If secondary axis dont exist or is disabled
 
-            const labelArg : LabelProperties = Object.assign({}, defaultLabel, label);
+            const labelArg : LabelProperties = {...defaultLabel, ...label};
 
             state.labels.ySecondary = labelArg;
             state.render();

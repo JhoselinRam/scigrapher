@@ -21,14 +21,16 @@ function Background({state, graphHandler} : Method_Generator) : Background{
     //------------ Draw Client Rect ---------------
     
     function drawClientRect(){
+        const x = state.context.clientRect.x;
+        const y = state.context.clientRect.y;
         const width = state.context.clientRect.width;
         const height = state.context.clientRect.height;
         
         state.context.canvas.save();
-        state.context.canvas.clearRect(0, 0, width, height);
+        state.context.canvas.clearRect(x, y, width, height);
         state.context.canvas.fillStyle = state.background.color;
         state.context.canvas.globalAlpha = state.background.opacity;
-        state.context.canvas.fillRect(0, 0, width, height);
+        state.context.canvas.fillRect(x, y, width, height);
         state.context.canvas.restore();
     }
     

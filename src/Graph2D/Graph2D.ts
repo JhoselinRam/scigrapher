@@ -1,10 +1,10 @@
-import { Graph2D, Graph2D_Options, Graph2D_State, RecursivePartial, RequiredExept } from "./Graph2D_Types";
+import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
 import Labels from "./resourses/Labels/Labels.js";
 import Scale from "./resourses/Scale/Scale.js";
 
-const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = {
+const defaultOptions : Graph2D_Options = {
     background : {
         color : "#ffffff",
         opacity : 1
@@ -16,41 +16,68 @@ const defaultOptions : RequiredExept<Graph2D_Options, "secondary" | "labels"> = 
         marginBottom : 5
     },
     axis : {
-        xStart : -5,
-        xEnd : 5,
-        yStart : -5,
-        yEnd : 5,
         position : "center",
         type : "rectangular",
-        xUnit : "",
-        yUnit : "",
-        xBaseColor : "#ffffff",
-        xBaseOpacity : 1,
-        xTickColor : "#ffffff",
-        xTickOpacity : 1,
-        xTextColor : "#ffffff",
-        xTextOpacity : 1,
-        yBaseColor : "#ffffff",
-        yBaseOpacity : 1,
-        yTickColor : "#ffffff",
-        yTickOpacity : 1,
-        yTextColor : "#ffffff",
-        yTextOpacity : 1,
-        xContained : false,
-        xDynamic : true,
-        yContained : false,
-        yDynamic : true,
+        x : {
+            start : -5,
+            end: 5,
+            unit : "",
+            baseColor : "#000000",
+            baseOpacity : 1,
+            tickColor : "#000000",
+            tickOpacity : 1,
+            textColor : "#000000",
+            textOpacity : 1,
+            dynamic : true,
+            contained : false
+        },
+        y : {
+            start : -5,
+            end: 5,
+            unit : "",
+            baseColor : "#000000",
+            baseOpacity : 1,
+            tickColor : "#000000",
+            tickOpacity : 1,
+            textColor : "#000000",
+            textOpacity : 1,
+            dynamic : true,
+            contained : false
+        },
     },
     secondary : {},
     labels : {}
+};
+
+const defaultSecondaryAxis : Secondary_Axis = {
+    enable : true,
+    type : "rectangular",
+    unit : "",
+    start : -5,
+    end : 5,
+    baseColor : "#000000",
+    baseOpacity : 1,
+    tickColor : "#000000",
+    tickOpacity : 1,
+    textColor : "#000000",
+    textOpacity : 1
+};
+
+const defaultLabel : LabelProperties = {
+    font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+    color : "#000000",
+    filled : true,
+    opacity : 1,
+    position : "center",
+    text : "",
+    enable : true
 }
 
 export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
-    //Graph state
-    const state : RequiredExept<Graph2D_State, "compute" | "scale" | "secondary" | "context" | "labels" | "draw"> = { 
+    //Combines the options object with the default options
+    const state : RequiredExept<Graph2D_State, "compute" | "scale" | "secondary" | "labels" | "context" | "draw" | "axisObj"> = { 
         container,
         render,
-        secondaryEnabled: {x:false, y:false},
         scale : {},
         compute:{
             full : fullCompute
@@ -67,11 +94,42 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 height : container.clientHeight
             }
         },
-        background : Object.assign(defaultOptions.background, options.background),
-        canvas : Object.assign(defaultOptions.canvas, options.canvas),
-        axis : Object.assign(defaultOptions.axis, options.axis),
-        secondary : Object.assign(defaultOptions.secondary, options.secondary),
-        labels : Object.assign(defaultOptions.labels, options.labels)
+        axisObj : {},
+        background : {...defaultOptions.background, ...options.background},
+        canvas : {...defaultOptions.canvas, ...options.canvas},
+        axis : {
+            ...defaultOptions.axis,
+            ...options.axis,
+            x : {
+                ...defaultOptions.axis.x,
+                ...options.axis?.x
+            },
+            y : {
+                ...defaultOptions.axis.y,
+                ...options.axis?.y
+            },
+        },
+        secondary : {
+            x : options.secondary?.x === null ? undefined : {...defaultSecondaryAxis, ...options.secondary?.x},
+            y : options.secondary?.y === null ? undefined : {...defaultSecondaryAxis, ...options.secondary?.y}
+        },
+        labels : {
+            title : options.labels?.title === null ? undefined : {
+                ...defaultLabel, 
+                font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+                position:"start", 
+                ...options.labels?.title
+            },
+            subtitle : options.labels?.subtitle === null ? undefined : {
+                ...defaultLabel, 
+                position:"start", 
+                ...options.labels?.subtitle
+            },
+            xPrimary : options.labels?.xPrimary === null ? undefined : {...defaultLabel, ...options.labels?.xPrimary},
+            yPrimary : options.labels?.yPrimary === null ? undefined : {...defaultLabel, ...options.labels?.yPrimary},
+            xSecondary : options.labels?.xSecondary === null ? undefined : {...defaultLabel, ...options.labels?.xSecondary},
+            ySecondary : options.labels?.ySecondary === null ? undefined : {...defaultLabel, ...options.labels?.ySecondary},
+        }
     };
 
     //Main graph object
@@ -90,9 +148,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     state.draw.background = background.draw;
     state.draw.backgroundClientRect = background.drawClientRect;
     state.draw.labels = labels.draw;
-    state.scale.primary = scale.primary;
-    state.scale.secondary = scale.secondary;
-    state.scale.reference = scale.reference;
+    state.draw.axis = axis.draw;
 
 
     //Main object population
@@ -139,6 +195,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         const fullState = state as Graph2D_State;
 
         fullState.draw.backgroundClientRect();
+        fullState.draw.axis();
     }
 
     //Helper function, set the container properties and adds the canvas element

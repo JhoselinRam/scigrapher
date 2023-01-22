@@ -1,6 +1,5 @@
-import { Mapping } from "../Mapping/Mapping_Types";
-import { Axis_Obj, CreateAxis_Props } from "./Axis_Obj_Types";
-const black = "#ffffff";
+import { Mapping } from "../Mapping/Mapping_Types.js";
+import { Axis_Obj, CreateAxis_Props, Draw_Axis_Props } from "./Axis_Obj_Types";
 
 const minSpacing = 70;  //Minimun space between ticks in pixels
 
@@ -8,13 +7,14 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     const positions = computePositions(scale, ticks);
     const labels = createLabels(positions, suffix);
     
+//----------------- Draw ----------------------
     
-    
-    function draw(){
-
+    function draw({type, color, opacity, position, dynamic, contained} : Draw_Axis_Props){
+        
     }
     
-    
+//---------------------------------------------    
+
     return {
         positions,
         labels,

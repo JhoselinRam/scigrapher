@@ -1,3 +1,4 @@
+import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
 import { Background } from "./resourses/Background/Background_Types";
@@ -24,35 +25,10 @@ export interface Graph2D_Options{
         marginBottom : number
     },
     axis : {
-        xStart : number,
-        xEnd : number,
-        yStart : number,
-        yEnd : number,
-        position : Axis_Position,
         type : Axis_Type,
-        xUnit : string,
-        yUnit : string,
-        xBaseColor : string,
-        xBaseOpacity : number,
-        xTickColor : string,
-        xTickOpacity : number,
-        xTextColor : string,
-        xTextOpacity : number
-        yBaseColor : string,
-        yBaseOpacity : number,
-        yTickColor : string,
-        yTickOpacity : number,
-        yTextColor : string,
-        yTextOpacity : number,
-        xContained : boolean,
-        xDynamic : boolean,
-        yContained : boolean,
-        yDynamic : boolean
-    },
-    secondary : {
-        x ?: Secondary_Axis,
-        y ?: Secondary_Axis
-    },
+        position : Axis_Position
+    } & Axis_Property<Primary_Axis>,
+    secondary : Partial<Axis_Property<Secondary_Axis>>,
     labels : {
         title ?: LabelProperties,
         subtitle ?: LabelProperties,
@@ -73,24 +49,28 @@ export type LabelProperties = {
     position : "start" | "center" | "end"
 }
 
-type Secondary_Axis = {
-    enable : boolean,
+interface Primary_Axis {
     start : number,
     end : number,
-    type : Omit<Axis_Type, "polar">,
     unit : string,
     baseColor : string,
     baseOpacity : number,
     tickColor : string,
     tickOpacity : number,
     textColor : string,
-    textOpacity : number
+    textOpacity : number,
+    dynamic : boolean,
+    contained : boolean
+}
+
+export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"> {
+    enable : boolean,
+    type : "rectangular" | "log"
 } 
 
 export interface Graph2D_State extends Graph2D_Options {
     container : HTMLDivElement,
     render : ()=>void,
-    secondaryEnabled : Axis_Property<boolean>,
     context : {
         clientRect : {
             x : number,
@@ -102,8 +82,7 @@ export interface Graph2D_State extends Graph2D_Options {
     },
     scale : {
         primary : Axis_Property<Mapping>
-        secondary : Axis_Property<Mapping>
-        reference : Axis_Property<Mapping>
+        secondary ?: Axis_Property<Mapping>
     }
     compute : {
         full : ()=>void,
@@ -116,8 +95,12 @@ export interface Graph2D_State extends Graph2D_Options {
         client : ()=>void,
         background : ()=>void,
         backgroundClientRect : ()=>void,
-        axis : ()=>void,
         labels : ()=>void
+        axis : ()=>void,
+    },
+    axisObj : {
+        primary : Axis_Property<Axis_Obj>,
+        secondary ?: Axis_Property<Axis_Obj>
     }
 }
 

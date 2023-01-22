@@ -1,3 +1,4 @@
 export interface Axis{
-    compute : ()=>void
+    compute : ()=>void,
+    draw : ()=>void
 }
