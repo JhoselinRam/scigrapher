@@ -31,6 +31,10 @@ const defaultOptions : Graph2D_Options = {
             tickSize : 5,
             textColor : "#000000",
             textOpacity : 1,
+            textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
+            textSize : "10px",
+            textFill : true,
+            textOffset : 4,
             dynamic : true,
             contained : false
         },
@@ -47,6 +51,10 @@ const defaultOptions : Graph2D_Options = {
             tickSize : 5,
             textColor : "#000000",
             textOpacity : 1,
+            textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
+            textSize : "10px",
+            textFill : true,
+            textOffset : 4,
             dynamic : true,
             contained : false
         },
@@ -69,11 +77,16 @@ const defaultSecondaryAxis : Secondary_Axis = {
     tickWidth : 1,
     tickSize : 5,
     textColor : "#000000",
-    textOpacity : 1
+    textOpacity : 1,
+    textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
+    textSize : "10px",
+    textFill : true,
+    textOffset : 4
 };
 
 const defaultLabel : LabelProperties = {
-    font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+    font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+    size : "15px",
     color : "#000000",
     filled : true,
     opacity : 1,
@@ -125,7 +138,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         labels : {
             title : options.labels?.title === null ? undefined : {
                 ...defaultLabel, 
-                font:"25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+                size:"25px",
                 position:"start", 
                 ...options.labels?.title
             },

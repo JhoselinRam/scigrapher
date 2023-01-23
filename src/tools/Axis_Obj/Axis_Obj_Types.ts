@@ -27,6 +27,12 @@ export interface Draw_Axis_Props {
     opacity : Draw_Axis_Properties<number>,
     width : Omit<Draw_Axis_Properties<number>, "text">,
     tickSize : number,
+    text : {
+        font : string,
+        size : string,
+        offset : number,
+        filled : boolean
+    },
     position ?: number,
     dynamic ?: boolean,
     contained ?: boolean

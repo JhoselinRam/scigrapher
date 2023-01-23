@@ -14,7 +14,8 @@ function changeOpacity(e){
 const labels = {
     titleObj : {
         text : "",
-        font : "25px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        size : "25px",
         color : "#000000",
         opacity : 1,
         filled : true,
@@ -23,7 +24,8 @@ const labels = {
     },
     subtitleObj :{
         text : "",
-        font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        size : "15px",
         color : "#000000",
         opacity : 1,
         filled : true,
@@ -32,7 +34,8 @@ const labels = {
     },
     xPrimaryObj : {
         text : "",
-        font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        size : "15px",
         color : "#000000",
         opacity : 1,
         filled : true,
@@ -41,7 +44,8 @@ const labels = {
     },
     yPrimaryObj : {
         text : "",
-        font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        size : "15px",
         color : "#000000",
         opacity : 1,
         filled : true,
@@ -50,7 +54,8 @@ const labels = {
     },
     xSecondaryObj : {
         text : "",
-        font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        size : "15px",
         color : "#000000",
         opacity : 1,
         filled : true,
@@ -59,7 +64,8 @@ const labels = {
     },
     ySecondaryObj : {
         text : "",
-        font : "15px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+        size : "15px",
         color : "#000000",
         opacity : 1,
         filled : true,
@@ -126,15 +132,13 @@ function changeLabelColor(e){
 
 function changeLabelFont(e){
     const font = e.target.value;
-    const size = document.querySelector("#labelSize").value;
-    labels[labelSelected].font = `${size}px ${font}`;
+    labels[labelSelected].font = font;
     updateLabel();
 }
 
 function changeLabelSize(e){
     const size = e.target.value;
-    const font = document.querySelector("#labelFont").value;
-    labels[labelSelected].font = `${size}px ${font}`;
+    labels[labelSelected].size = `${size}px`;
     updateLabel();
 }
 

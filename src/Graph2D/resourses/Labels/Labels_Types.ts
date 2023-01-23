@@ -29,6 +29,12 @@ export interface Labels {
     },
 }
 
+export interface Text_Height_Props{
+    text : string,
+    size : string,
+    font : string
+}
+
 export interface Draw_Text_Props {
     params : LabelProperties,
     x : number,

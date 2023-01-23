@@ -43,6 +43,7 @@ export type LabelProperties = {
     enable : boolean,
     text : string,
     font : string,
+    size : string,
     color : string,
     opacity : number,
     filled : boolean,
@@ -62,6 +63,10 @@ interface Primary_Axis {
     tickSize :number,
     textColor : string,
     textOpacity : number,
+    textFont : string,
+    textSize : string,
+    textFill : boolean,
+    textOffset : number,
     dynamic : boolean,
     contained : boolean
 }

@@ -44,8 +44,9 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.textBaseline = "top";
                 context.canvas.fillStyle = color.text;
                 context.canvas.globalAlpha = opacity.text;
-                context.canvas.font = "10px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif";
+                context.canvas.font = "10px Arial, Helvetica Neue, Helvetica, sans-serif";
                 labels.forEach((item, index)=>{
+                    if(positions[index] === 0) return;
                     const coor = scale.map(positions[index]);
                     context.canvas.fillText(item, coor, translation+tickSize+4);
                 });
@@ -83,8 +84,9 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.textBaseline = "middle";
                 context.canvas.fillStyle = color.text;
                 context.canvas.globalAlpha = opacity.text;
-                context.canvas.font = "10px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif";
+                context.canvas.font = "10px Arial, Helvetica Neue, Helvetica, sans-serif";
                 labels.forEach((item, index)=>{
+                    if(positions[index] === 0) return;
                     const coor = scale.map(positions[index]);
                     context.canvas.fillText(item, translation-tickSize-4, coor);
                 });
@@ -199,15 +201,18 @@ function createLabels(positions:Array<number>, suffix?:string) : Array<string>{
      
         if(magnitudeOrder<-2 || magnitudeOrder>3){
             const fixed = Number.isInteger(position/Math.pow(10,magnitudeOrder)) ? 0 : 2;
-            label = position.toExponential(fixed);
-            label = label.replace("e","x10");
+            const temp = position.toExponential(fixed).split("e");
+            label = (fixed===2 && temp[0].endsWith("0")) ? [temp[0].slice(0,-1),temp[1]].join("e") : temp.join("e");
+            label = label.replace("e","x10").replace("-", "– ");
         }
         else{
             const fixed = Number.isInteger(position) ? 0 : 2;
-            label = position.toFixed(fixed);
+            const temp = position.toFixed(fixed);
+            label = (fixed===2 && temp.endsWith("0")) ? temp.slice(0,-1) : temp;
+            label = label.replace("-", "– ");
             if(Math.abs(position)>999){
                 const caracteres = label.split("");
-                caracteres.splice(label.indexOf("-")+2,0,",");
+                caracteres.splice(label.indexOf("– ")+2,0,",");
                 label = caracteres.join("");
             }
         }

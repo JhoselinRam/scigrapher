@@ -27,13 +27,13 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                     context : state.context,
                     type : "centerX",
                     position : state.scale.primary.y.map(0),
-                    dynamic : state.axis.x.dynamic,                    
+                    dynamic : state.axis.x.dynamic,
                     contained : state.axis.x.contained,
                     color : {
                         base : state.axis.x.baseColor,
                         tick : state.axis.x.tickColor,
                         text : state.axis.x.textColor,
-                    },                    
+                    },
                     opacity : {
                         base : state.axis.x.baseOpacity,
                         tick : state.axis.x.tickOpacity,
@@ -43,7 +43,13 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                         base : state.axis.x.baseWidth,
                         tick : state.axis.x.tickWidth,
                     },
-                    tickSize : state.axis.x.tickSize                 
+                    tickSize : state.axis.x.tickSize,
+                    text : {
+                        font : state.axis.x.textFont,
+                        size : state.axis.x.textSize,
+                        filled : state.axis.x.textFill,
+                        offset : state.axis.x.textOffset
+                    }
                 });
                 
                 state.axisObj.primary.y.draw({
@@ -66,7 +72,13 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                         base : state.axis.y.baseWidth,
                         tick : state.axis.y.tickWidth,
                     },
-                    tickSize : state.axis.y.tickSize
+                    tickSize : state.axis.y.tickSize,
+                    text : {
+                        font : state.axis.y.textFont,
+                        size : state.axis.y.textSize,
+                        filled : state.axis.y.textFill,
+                        offset : state.axis.y.textOffset
+                    }
                 });
 
                 break;
