@@ -24,8 +24,11 @@ const defaultOptions : Graph2D_Options = {
             unit : "",
             baseColor : "#000000",
             baseOpacity : 1,
+            baseWidth : 1,
             tickColor : "#000000",
             tickOpacity : 1,
+            tickWidth : 1,
+            tickSize : 5,
             textColor : "#000000",
             textOpacity : 1,
             dynamic : true,
@@ -37,8 +40,11 @@ const defaultOptions : Graph2D_Options = {
             unit : "",
             baseColor : "#000000",
             baseOpacity : 1,
+            baseWidth : 1,
             tickColor : "#000000",
             tickOpacity : 1,
+            tickWidth : 1,
+            tickSize : 5,
             textColor : "#000000",
             textOpacity : 1,
             dynamic : true,
@@ -57,8 +63,11 @@ const defaultSecondaryAxis : Secondary_Axis = {
     end : 5,
     baseColor : "#000000",
     baseOpacity : 1,
+    baseWidth : 1,
     tickColor : "#000000",
     tickOpacity : 1,
+    tickWidth : 1,
+    tickSize : 5,
     textColor : "#000000",
     textOpacity : 1
 };
@@ -203,12 +212,17 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         const width = state.container.clientWidth;
         const height = state.container.clientHeight;
         const newCanvas = document.createElement("canvas");
+        const dpi = window.devicePixelRatio;
         
-        newCanvas.width = width;
-        newCanvas.height = height;
+        newCanvas.style.width = `${width}px`;
+        newCanvas.style.height = `${height}px`;
+        newCanvas.width = width*dpi;
+        newCanvas.height = height*dpi;
 
         state.container.appendChild(newCanvas);
         state.context.canvas = newCanvas.getContext("2d") as CanvasRenderingContext2D;
+        state.context.canvas.scale(dpi, dpi);
+        state.context.canvas.imageSmoothingEnabled = false;
     }
 
 

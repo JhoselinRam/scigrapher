@@ -46,6 +46,12 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
                 state.context.clientRect.y += xPrimaryHeight;
                 break;
         }
+
+        //Adjust to work with integer values
+        state.context.clientRect.x = Math.ceil(state.context.clientRect.x);
+        state.context.clientRect.y = Math.ceil(state.context.clientRect.y);
+        state.context.clientRect.width = Math.floor(state.context.clientRect.width);
+        state.context.clientRect.height = Math.floor(state.context.clientRect.height);
         
 
     }

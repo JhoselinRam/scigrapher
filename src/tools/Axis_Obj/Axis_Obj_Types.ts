@@ -13,9 +13,20 @@ export interface Axis_Obj {
 }
 
 export interface Draw_Axis_Props {
+    context : {
+        clientRect : {
+            x : number,
+            y : number,
+            width : number,
+            height : number
+        },
+        canvas : CanvasRenderingContext2D
+    },
     type : "centerX" | "centerY" | "left" | "right" | "top" | "bottom",
     color : Draw_Axis_Properties<string>,
-    opacity : Draw_Axis_Properties<number>
+    opacity : Draw_Axis_Properties<number>,
+    width : Omit<Draw_Axis_Properties<number>, "text">,
+    tickSize : number,
     position ?: number,
     dynamic ?: boolean,
     contained ?: boolean

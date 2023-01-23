@@ -24,6 +24,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
         switch(state.axis.position){
             case "center":
                 state.axisObj.primary.x.draw({
+                    context : state.context,
                     type : "centerX",
                     position : state.scale.primary.y.map(0),
                     dynamic : state.axis.x.dynamic,                    
@@ -37,10 +38,16 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                         base : state.axis.x.baseOpacity,
                         tick : state.axis.x.tickOpacity,
                         text : state.axis.x.textOpacity,
-                    }                    
+                    },
+                    width : {
+                        base : state.axis.x.baseWidth,
+                        tick : state.axis.x.tickWidth,
+                    },
+                    tickSize : state.axis.x.tickSize                 
                 });
                 
                 state.axisObj.primary.y.draw({
+                    context : state.context,
                     type : "centerY",
                     position : state.scale.primary.x.map(0),
                     dynamic : state.axis.y.dynamic,                    
@@ -54,7 +61,12 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                         base : state.axis.y.baseOpacity,
                         tick : state.axis.y.tickOpacity,
                         text : state.axis.y.textOpacity,
-                    }                    
+                    },
+                    width : {
+                        base : state.axis.y.baseWidth,
+                        tick : state.axis.y.tickWidth,
+                    },
+                    tickSize : state.axis.y.tickSize
                 });
 
                 break;

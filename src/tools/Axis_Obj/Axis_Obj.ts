@@ -1,7 +1,7 @@
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, CreateAxis_Props, Draw_Axis_Props } from "./Axis_Obj_Types";
 
-const minSpacing = 70;  //Minimun space between ticks in pixels
+const minSpacing = 45;  //Minimun space between ticks in pixels
 
 function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     const positions = computePositions(scale, ticks);
@@ -9,8 +9,103 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     
 //----------------- Draw ----------------------
     
-    function draw({type, color, opacity, position, dynamic, contained} : Draw_Axis_Props){
+    function draw({context, type, color, opacity, width, position=0, tickSize, dynamic=true, contained=false} : Draw_Axis_Props){
+        context.canvas.save();
+        context.canvas.translate(context.clientRect.x, context.clientRect.y);
+
+        switch(type){
+            case "centerX":{
+                let translation = position;
+
+                //Base
+                translation = Math.round(translation) + width.base%2 * 0.5;
+                context.canvas.beginPath();
+                context.canvas.strokeStyle = color.base;
+                context.canvas.globalAlpha = opacity.base;
+                context.canvas.lineWidth = width.base;
+                context.canvas.moveTo(0, translation);
+                context.canvas.lineTo(context.clientRect.width, translation);
+                context.canvas.stroke();
+
+                //Ticks
+                context.canvas.beginPath();
+                context.canvas.strokeStyle = color.tick;
+                context.canvas.globalAlpha = opacity.tick;
+                context.canvas.lineWidth = width.tick;
+                positions.forEach(item=>{
+                    const coor = Math.round(scale.map(item)) + width.tick%2 * 0.5;
+                    context.canvas.moveTo(coor, translation-tickSize);
+                    context.canvas.lineTo(coor, translation+tickSize);
+                });
+                context.canvas.stroke();
+
+                //text
+                context.canvas.textAlign = "center";
+                context.canvas.textBaseline = "top";
+                context.canvas.fillStyle = color.text;
+                context.canvas.globalAlpha = opacity.text;
+                context.canvas.font = "10px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif";
+                labels.forEach((item, index)=>{
+                    const coor = scale.map(positions[index]);
+                    context.canvas.fillText(item, coor, translation+tickSize+4);
+                });
+
+                }
+                break;
+                
+            case "centerY":{
+                let translation = position;
         
+                //Base
+                translation = Math.round(translation) + width.base%2 * 0.5;
+                context.canvas.beginPath();
+                context.canvas.strokeStyle = color.base;
+                context.canvas.globalAlpha = opacity.base;
+                context.canvas.lineWidth = width.base;
+                context.canvas.moveTo(translation, 0);
+                context.canvas.lineTo(translation, context.clientRect.height);
+                context.canvas.stroke();
+
+                //Ticks
+                context.canvas.beginPath();
+                context.canvas.strokeStyle = color.tick;
+                context.canvas.globalAlpha = opacity.tick;
+                context.canvas.lineWidth = width.tick;
+                positions.forEach(item=>{
+                    const coor = Math.round(scale.map(item)) + width.tick%2 * 0.5;
+                    context.canvas.moveTo(translation-tickSize, coor);
+                    context.canvas.lineTo(translation+tickSize, coor);
+                });
+                context.canvas.stroke();
+
+                //text
+                context.canvas.textAlign = "end";
+                context.canvas.textBaseline = "middle";
+                context.canvas.fillStyle = color.text;
+                context.canvas.globalAlpha = opacity.text;
+                context.canvas.font = "10px Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif";
+                labels.forEach((item, index)=>{
+                    const coor = scale.map(positions[index]);
+                    context.canvas.fillText(item, translation-tickSize-4, coor);
+                });
+
+                }
+                break;
+                
+            case "left":
+                break;
+
+            case "right":
+                break;
+                
+            case "top":
+                break;
+                
+            case "bottom":
+                break;
+            }
+        
+        context.canvas.restore();
     }
     
 //---------------------------------------------    
