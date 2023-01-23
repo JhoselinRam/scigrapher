@@ -77,7 +77,27 @@
                     <input type="text" id="ySecondary" class="ySecondaryObj text-input">
                 </div>
                
-
+                <div class="flex-control">
+                    <div>
+                        <label for="xStart">x start:</label>
+                        <input type="number" class="number-input" name="xStart" id="xStart" value="-5" step="0.1">
+                    </div>
+                    <div>
+                        <label for="xEnd">x end:</label>
+                        <input type="number" class="number-input" name="xEnd" id="xEnd" value="5" step="0.1">
+                    </div>
+                </div>
+                
+                <div class="flex-control">
+                    <div>
+                        <label for="yStart">y start:</label>
+                        <input type="number" class="number-input" name="yStart" id="yStart" value="-5" step="0.1">
+                    </div>
+                    <div>
+                        <label for="yEnd">y end:</label>
+                        <input type="number" class="number-input" name="yEnd" id="yEnd" value="5" step="0.1">
+                    </div>
+                </div>
 
             </div>
 
@@ -131,6 +151,28 @@
                         <input type="number" name="labelOpacity" id="labelOpacity" min="0" max="1" step="0.02" value="1">
                     </div>
                 </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="colorTo">Color to:</label>
+                        <select name="colorTo" id="colorTo" value="All">
+                            <option value="All">All</option>
+                            <option value="xAxis">X Axis</option>
+                            <option value="yAxis">Y Axis</option>
+                            <option value="xBase">X Base</option>
+                            <option value="yBase">Y Base</option>
+                            <option value="xTick">X Tick</option>
+                            <option value="yTick">Y Tick</option>
+                            <option value="xText">X Text</option>
+                            <option value="yText">Y Text</option>
+                        </select>
+                    </div>
+                    <input type="color" id="axisColor" value="#000000" class="color-input">
+                </div>
+
+
+
+
+
             </div>
     
         </header>

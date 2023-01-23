@@ -1,6 +1,6 @@
 import CreateAxis from "../../../tools/Axis_Obj/Axis_Obj.js";
-import { Method_Generator } from "../../Graph2D_Types";
-import { Axis } from "./Axis_Types";
+import { Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Axis, Axis_Modifier, Axis_Modifier_Props, Domain_Props } from "./Axis_Types";
 
 function Axis({state, graphHandler}:Method_Generator) : Axis{
 
@@ -99,9 +99,133 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 
 //---------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------- Customization Methods ------------
+
+//----------------- Domain --------------------
+
+function domain(domain:RecursivePartial<Domain_Props>) : Graph2D;
+function domain(arg:void) : Domain_Props;
+function domain(domain:RecursivePartial<Domain_Props> | void) : Graph2D | Domain_Props | undefined{
+    if(typeof domain === "undefined")
+        return {
+            x : {
+                start : state.axis.x.start,
+                end : state.axis.x.end
+            },
+            y : {
+                start : state.axis.y.start,
+                end : state.axis.y.end
+            }
+        }
+    
+    if(typeof domain === "object"){
+        if(domain.x == null && domain.y == null) return graphHandler;
+        if(domain.x?.start === state.axis.x.start &&
+           domain.x.end === state.axis.x.end &&
+           domain.y?.start === state.axis.y.start &&
+           domain.y.end === state.axis.y.end) return graphHandler;
+
+        if(domain.x != null){
+            if(domain.x.start != null) state.axis.x.start = domain.x.start;
+            if(domain.x.end != null) state.axis.x.end = domain.x.end;
+        }
+        if(domain.y != null){
+            if(domain.y.start != null) state.axis.y.start = domain.y.start;
+            if(domain.y.end != null) state.axis.y.end = domain.y.end;
+        }
+
+        state.compute.client();
+        state.draw.client();
+        return graphHandler;
+
+    }
+    
+}
+
+//---------------------------------------------
+//-------------- Axis Color -------------------
+
+    function axisColor(colors : Axis_Modifier_Props<string>) : Graph2D;
+    function axisColor(arg : void) : Axis_Modifier<string>;
+    function axisColor(colors : Axis_Modifier_Props<string> | void) : Graph2D | Axis_Modifier<string> | undefined{
+        if(typeof colors == "undefined")
+            return {
+                base : {
+                    x : state.axis.x.baseColor,
+                    y : state.axis.y.baseColor,
+                },
+                tick : {
+                    x : state.axis.x.tickColor,
+                    y : state.axis.y.tickColor,
+                },
+                text : {
+                    x : state.axis.x.textColor,
+                    y : state.axis.y.textColor,
+                }
+            }
+        
+        if(typeof colors == "object"){
+            if(colors.axis==null && colors.xAxis==null && colors.yAxis==null && colors.base==null && colors.tick==null && colors.text==null) return graphHandler;
+
+            //Cascade the properties
+            if(colors.axis != null){
+                state.axis.x.baseColor = colors.axis;
+                state.axis.x.tickColor = colors.axis;
+                state.axis.x.textColor = colors.axis;
+                state.axis.y.baseColor = colors.axis;
+                state.axis.y.tickColor = colors.axis;
+                state.axis.y.textColor = colors.axis;
+            }
+            if(colors.xAxis != null){
+                state.axis.x.baseColor = colors.xAxis;
+                state.axis.x.tickColor = colors.xAxis;
+                state.axis.x.textColor = colors.xAxis;    
+            }
+            if(colors.yAxis != null){
+                state.axis.y.baseColor = colors.yAxis;
+                state.axis.y.tickColor = colors.yAxis;
+                state.axis.y.textColor = colors.yAxis;    
+            }
+            if(colors.base?.x != null) state.axis.x.baseColor = colors.base.x;
+            if(colors.base?.y != null) state.axis.y.baseColor = colors.base.y;
+            if(colors.tick?.x != null) state.axis.x.tickColor = colors.tick.x;
+            if(colors.tick?.y != null) state.axis.y.tickColor = colors.tick.y;
+            if(colors.text?.x != null) state.axis.x.textColor = colors.text.x;
+            if(colors.text?.y != null) state.axis.y.textColor = colors.text.y;
+
+            state.draw.client();
+            return graphHandler;
+        }
+
+    }
+
+
+//---------------------------------------------
+
+
+
+
+
+
+
     return {
         compute,
-        draw
+        draw,
+        domain,
+        axisColor
     }
 }
 

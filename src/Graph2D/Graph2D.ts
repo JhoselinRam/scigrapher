@@ -102,7 +102,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         render,
         scale : {},
         compute:{
-            full : fullCompute
+            full : fullCompute,
+            client : computeClient
         },
         draw : {
             full : fullDraw,
@@ -182,6 +183,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.yLabel = labels.yLabel;
     graphHandler.xLabelSecondary = labels.xLabelSecondary;
     graphHandler.yLabelSecondary = labels.yLabelSecondary;
+    graphHandler.domain = axis.domain;
+    graphHandler.axisColor = axis.axisColor;
 
 
     //Setup configurations
@@ -199,8 +202,14 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         const fullState = state as Graph2D_State;
 
         fullState.compute.labels();
+        fullState.compute.client();
+    }
+    
+    function computeClient(){
+        const fullState = state as Graph2D_State;
+
         fullState.compute.scale();
-        fullState.compute.axis();
+        fullState.compute.axis();    
     }
 
     //Helper function, draws all elements.

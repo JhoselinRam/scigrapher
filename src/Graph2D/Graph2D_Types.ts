@@ -94,6 +94,7 @@ export interface Graph2D_State extends Graph2D_Options {
     }
     compute : {
         full : ()=>void,
+        client : ()=>void,
         scale : ()=>void,
         axis : ()=>void,
         labels : ()=>void

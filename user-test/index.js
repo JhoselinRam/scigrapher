@@ -154,6 +154,60 @@ function changeLabelOpacity(e){
     updateLabel();
 }
 
+const domain = {
+    x : {
+        start : -5,
+        end : 5
+    },
+    y : {
+        start : -5,
+        end : 5
+    }
+}
+
+function changeDomain(e){
+    const axis = e.target.id[0];
+    const prop = e.target.id.slice(1).toLowerCase();
+
+    domain[axis][prop] = parseFloat(e.target.value);
+
+    Graph.domain(domain);
+}
+
+function changeAxisColor(e){
+    const target = document.querySelector("#colorTo").value;
+    const color = e.target.value;
+    switch(target){
+        case "All":
+            Graph.axisColor({axis:color});
+            break;
+        case "xAxis":
+            Graph.axisColor({xAxis:color});
+            break;
+        case "yAxis":
+            Graph.axisColor({yAxis:color});
+            break;
+        case "xBase":
+            Graph.axisColor({base:{x:color}});
+            break;
+        case "yBase":
+            Graph.axisColor({base:{y:color}});
+            break;
+        case "xTick":
+            Graph.axisColor({tick:{x:color}});
+            break;
+        case "yTick":
+            Graph.axisColor({tick:{y:color}});
+            break;
+        case "xText":
+            Graph.axisColor({text:{x:color}});
+            break;
+        case "yText":
+            Graph.axisColor({text:{y:color}});
+            break;
+    }
+}
+
 
 
 
@@ -186,6 +240,11 @@ function main(){
     document.querySelector("#labelSize").addEventListener("input", changeLabelSize);
     document.querySelector("#labelPosition").addEventListener("input", changeLabelPosition);
     document.querySelector("#labelOpacity").addEventListener("input", changeLabelOpacity);
+    document.querySelector("#xStart").addEventListener("input", changeDomain);
+    document.querySelector("#yStart").addEventListener("input", changeDomain);
+    document.querySelector("#xEnd").addEventListener("input", changeDomain);
+    document.querySelector("#yEnd").addEventListener("input", changeDomain);
+    document.querySelector("#axisColor").addEventListener("input", changeAxisColor);
 
 }
 

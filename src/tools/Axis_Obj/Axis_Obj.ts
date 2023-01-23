@@ -9,7 +9,7 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     
 //----------------- Draw ----------------------
     
-    function draw({context, type, color, opacity, width, position=0, tickSize, dynamic=true, contained=false} : Draw_Axis_Props){
+    function draw({context, type, color, opacity, text, width, position=0, tickSize, dynamic=true, contained=false} : Draw_Axis_Props){
         context.canvas.save();
         context.canvas.translate(context.clientRect.x, context.clientRect.y);
 
@@ -43,12 +43,16 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.textAlign = "center";
                 context.canvas.textBaseline = "top";
                 context.canvas.fillStyle = color.text;
+                context.canvas.strokeStyle = color.text;
                 context.canvas.globalAlpha = opacity.text;
-                context.canvas.font = "10px Arial, Helvetica Neue, Helvetica, sans-serif";
+                context.canvas.font = `${text.size} ${text.font}`;
                 labels.forEach((item, index)=>{
                     if(positions[index] === 0) return;
                     const coor = scale.map(positions[index]);
-                    context.canvas.fillText(item, coor, translation+tickSize+4);
+                    if(text.filled)
+                        context.canvas.fillText(item, coor, translation+tickSize+text.offset);
+                    else
+                    context.canvas.strokeText(item, coor, translation+tickSize+text.offset);
                 });
 
                 }
@@ -83,12 +87,17 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.textAlign = "end";
                 context.canvas.textBaseline = "middle";
                 context.canvas.fillStyle = color.text;
+                context.canvas.font = `${text.size} ${text.font}`;
                 context.canvas.globalAlpha = opacity.text;
-                context.canvas.font = "10px Arial, Helvetica Neue, Helvetica, sans-serif";
+                context.canvas.font = `${text.size} ${text.font}`;
                 labels.forEach((item, index)=>{
                     if(positions[index] === 0) return;
                     const coor = scale.map(positions[index]);
-                    context.canvas.fillText(item, translation-tickSize-4, coor);
+                    if(text.filled)
+                        context.canvas.fillText(item, translation-tickSize-text.offset, coor);
+                    else
+                        context.canvas.strokeText(item, translation-tickSize-text.offset, coor);
+
                 });
 
                 }
