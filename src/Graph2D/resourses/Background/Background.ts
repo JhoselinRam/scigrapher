@@ -40,7 +40,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
     function backgroundColor(color:string):Graph2D;
     function backgroundColor(arg:void):string;
     function backgroundColor(color : string | void): Graph2D | string | undefined{
-        if(typeof color === null)
+        if(typeof color === "undefined")
             return state.background.color;
         
         if(typeof color === "string"){
@@ -58,7 +58,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
     function backgroundOpacity(opacity:number):Graph2D;
     function backgroundOpacity(arg:void):number;
     function backgroundOpacity(opacity : number | void): Graph2D | number | undefined{
-        if(typeof opacity === null)
+        if(typeof opacity === "undefined")
             return state.background.opacity;
         
         if(typeof opacity === "number"){

@@ -242,6 +242,21 @@ function changeAxisOpacity(e){
     }
 }
 
+function changeUnits(e){
+    const axis = e.target.id;
+    const unit = e.target.value;
+
+    switch(axis){
+        case "xUnits":
+            Graph.axisUnits({x:unit});
+            break;
+        
+        case "yUnits":
+            Graph.axisUnits({y:unit});
+            break;
+    }
+}
+
 
 
 
@@ -288,6 +303,8 @@ function main(){
     document.querySelector("#yEnd").addEventListener("input", changeDomain);
     document.querySelector("#axisColor").addEventListener("input", changeAxisColor);
     document.querySelector("#axisOpacity").addEventListener("input", changeAxisOpacity);
+    document.querySelector("#xUnits").addEventListener("input", changeUnits);
+    document.querySelector("#yUnits").addEventListener("input", changeUnits);
 
 }
 

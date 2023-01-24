@@ -14,7 +14,24 @@ export interface Axis{
     axisOpacity : {
         (opacity:Axis_Modifier_Props<number>):Graph2D,
         (arg:void):Axis_Modifier<number>
-    }
+    },
+    axisUnits : {
+        (units:RecursivePartial<Axis_Property<string>>):Graph2D,
+        (arg:void):Axis_Property<string>
+    },
+    axisBase : {
+        (base:RecursivePartial<Base_Props>):Graph2D,
+        (arg:void):Base_Props
+    },
+    axisTicks : {
+        (base:RecursivePartial<Ticks_Props>):Graph2D,
+        (arg:void):Ticks_Props
+    },
+    axisText : {
+        (base:RecursivePartial<Text_Props>):Graph2D,
+        (arg:void):Text_Props
+    },
+
 }
 
 export type Domain_Props = Axis_Property<{
@@ -34,3 +51,28 @@ export interface Axis_Modifier_Props<T> extends RecursivePartial<Axis_Modifier<T
     yAxis ?: T
 }
 
+export type Base_Props = Axis_Property<{
+    color : string,
+    opacity : number,
+    width : number
+}>
+
+export type Ticks_Props = Axis_Property<{
+    color : string,
+    opacity : number,
+    width : number,
+    size : number
+}>
+
+export type Text_Props = Axis_Property<{
+    color : string,
+    opacity : number,
+    font : string,
+    size : string,
+    fill : boolean,
+    offset : number
+}>
+
+export interface Create_Modifier_Props {
+    type : "base" | "ticks" | "text"
+}

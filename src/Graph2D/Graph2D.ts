@@ -186,6 +186,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.domain = axis.domain;
     graphHandler.axisColor = axis.axisColor;
     graphHandler.axisOpacity = axis.axisOpacity;
+    graphHandler.axisUnits = axis.axisUnits;
+    graphHandler.axisBase = axis.axisBase;
+    graphHandler.axisTicks = axis.axisTicks;
+    graphHandler.axisText = axis.axisText;
 
 
     //Setup configurations
