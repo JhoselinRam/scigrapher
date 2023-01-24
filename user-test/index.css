@@ -57,7 +57,8 @@ body{
 
 .number-input,
 .text-input,
-.select-input{
+.select-input,
+.range-input{
     width : 100px
 }
 

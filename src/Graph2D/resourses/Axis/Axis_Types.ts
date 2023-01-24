@@ -10,6 +10,10 @@ export interface Axis{
     axisColor : {
         (colors:Axis_Modifier_Props<string>):Graph2D,
         (arg:void):Axis_Modifier<string>
+    },
+    axisOpacity : {
+        (opacity:Axis_Modifier_Props<number>):Graph2D,
+        (arg:void):Axis_Modifier<number>
     }
 }
 
@@ -25,8 +29,8 @@ export interface Axis_Modifier<T>{
 }
 
 export interface Axis_Modifier_Props<T> extends RecursivePartial<Axis_Modifier<T>> {
-    axis ?: string,
-    xAxis ?: string,
-    yAxis ?: string
+    axis ?: T,
+    xAxis ?: T,
+    yAxis ?: T
 }
 

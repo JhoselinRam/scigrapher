@@ -185,6 +185,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.yLabelSecondary = labels.yLabelSecondary;
     graphHandler.domain = axis.domain;
     graphHandler.axisColor = axis.axisColor;
+    graphHandler.axisOpacity = axis.axisOpacity;
 
 
     //Setup configurations

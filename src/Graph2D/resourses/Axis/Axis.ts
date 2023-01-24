@@ -214,7 +214,67 @@ function domain(domain:RecursivePartial<Domain_Props> | void) : Graph2D | Domain
 
 
 //---------------------------------------------
+//-------------- Axis Color -------------------
 
+function axisOpacity(opacity : Axis_Modifier_Props<number>) : Graph2D;
+function axisOpacity(arg : void) : Axis_Modifier<number>;
+function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | Axis_Modifier<number> | undefined{
+    if(typeof opacity == "undefined")
+        return {
+            base : {
+                x : state.axis.x.baseOpacity,
+                y : state.axis.y.baseOpacity,
+            },
+            tick : {
+                x : state.axis.x.tickOpacity,
+                y : state.axis.y.tickOpacity,
+            },
+            text : {
+                x : state.axis.x.textOpacity,
+                y : state.axis.y.textOpacity,
+            }
+        }
+    
+    if(typeof opacity == "object"){
+        if(opacity.axis==null && opacity.xAxis==null && opacity.yAxis==null && opacity.base==null && opacity.tick==null && opacity.text==null) return graphHandler;
+
+        //Cascade the properties
+        if(opacity.axis != null){
+            const newOpacity = opacity.axis < 0 ? 0 : (opacity.axis > 1 ? 1 : opacity.axis);
+            state.axis.x.baseOpacity = newOpacity;
+            state.axis.x.tickOpacity = newOpacity;
+            state.axis.x.textOpacity = newOpacity;
+            state.axis.y.baseOpacity = newOpacity;
+            state.axis.y.tickOpacity = newOpacity;
+            state.axis.y.textOpacity = newOpacity;
+        }
+        if(opacity.xAxis != null){
+            const newOpacity = opacity.xAxis < 0 ? 0 : (opacity.xAxis > 1 ? 1 : opacity.xAxis);
+            state.axis.x.baseOpacity = newOpacity;
+            state.axis.x.tickOpacity = newOpacity;
+            state.axis.x.textOpacity = newOpacity;    
+        }
+        if(opacity.yAxis != null){
+            const newOpacity = opacity.yAxis < 0 ? 0 : (opacity.yAxis > 1 ? 1 : opacity.yAxis);
+            state.axis.y.baseOpacity = newOpacity;
+            state.axis.y.tickOpacity = newOpacity;
+            state.axis.y.textOpacity = newOpacity;    
+        }
+        if(opacity.base?.x != null) state.axis.x.baseOpacity = opacity.base.x < 0 ? 0 : (opacity.base.x > 1 ? 1 : opacity.base.x);
+        if(opacity.base?.y != null) state.axis.y.baseOpacity = opacity.base.y < 0 ? 0 : (opacity.base.y > 1 ? 1 : opacity.base.y);
+        if(opacity.tick?.x != null) state.axis.x.tickOpacity = opacity.tick.x < 0 ? 0 : (opacity.tick.x > 1 ? 1 : opacity.tick.x);
+        if(opacity.tick?.y != null) state.axis.y.tickOpacity = opacity.tick.y < 0 ? 0 : (opacity.tick.y > 1 ? 1 : opacity.tick.y);
+        if(opacity.text?.x != null) state.axis.x.textOpacity = opacity.text.x < 0 ? 0 : (opacity.text.x > 1 ? 1 : opacity.text.x);
+        if(opacity.text?.y != null) state.axis.y.textOpacity = opacity.text.y < 0 ? 0 : (opacity.text.y > 1 ? 1 : opacity.text.y);
+
+        state.draw.client();
+        return graphHandler;
+    }
+
+}
+
+
+//---------------------------------------------
 
 
 
@@ -225,7 +285,8 @@ function domain(domain:RecursivePartial<Domain_Props> | void) : Graph2D | Domain
         compute,
         draw,
         domain,
-        axisColor
+        axisColor,
+        axisOpacity
     }
 }
 

@@ -208,6 +208,48 @@ function changeAxisColor(e){
     }
 }
 
+function changeAxisOpacity(e){
+    const target = document.querySelector("#opacityTo").value;
+    const opacity = e.target.value;
+    switch(target){
+        case "All":
+            Graph.axisOpacity({axis:opacity});
+            break;
+        case "xAxis":
+            Graph.axisOpacity({xAxis:opacity});
+            break;
+        case "yAxis":
+            Graph.axisOpacity({yAxis:opacity});
+            break;
+        case "xBase":
+            Graph.axisOpacity({base:{x:opacity}});
+            break;
+        case "yBase":
+            Graph.axisOpacity({base:{y:opacity}});
+            break;
+        case "xTick":
+            Graph.axisOpacity({tick:{x:opacity}});
+            break;
+        case "yTick":
+            Graph.axisOpacity({tick:{y:opacity}});
+            break;
+        case "xText":
+            Graph.axisOpacity({text:{x:opacity}});
+            break;
+        case "yText":
+            Graph.axisOpacity({text:{y:opacity}});
+            break;
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -245,6 +287,7 @@ function main(){
     document.querySelector("#xEnd").addEventListener("input", changeDomain);
     document.querySelector("#yEnd").addEventListener("input", changeDomain);
     document.querySelector("#axisColor").addEventListener("input", changeAxisColor);
+    document.querySelector("#axisOpacity").addEventListener("input", changeAxisOpacity);
 
 }
 

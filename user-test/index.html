@@ -18,7 +18,7 @@
                 </div>
                 <div class="flex-control">
                     <label for="bgopacity">Bg Opacity: </label>
-                    <input type="number" id="bgopacity" class="number-input" value="1" min="0" max="1" step="0.02">
+                    <input type="range" class="range-input" id="bgopacity" value="1" min="0" max="1" step="0.05">
                 </div>
                
                
@@ -167,6 +167,23 @@
                         </select>
                     </div>
                     <input type="color" id="axisColor" value="#000000" class="color-input">
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="opacityTo">Opacity to:</label>
+                        <select name="opacityTo" id="opacityTo" value="All">
+                            <option value="All">All</option>
+                            <option value="xAxis">X Axis</option>
+                            <option value="yAxis">Y Axis</option>
+                            <option value="xBase">X Base</option>
+                            <option value="yBase">Y Base</option>
+                            <option value="xTick">X Tick</option>
+                            <option value="yTick">Y Tick</option>
+                            <option value="xText">X Text</option>
+                            <option value="yText">Y Text</option>
+                        </select>
+                    </div>
+                    <input type="range" class="range-input" id="axisOpacity" value="1" min="0" max="1" step="0.05">
                 </div>
 
 
