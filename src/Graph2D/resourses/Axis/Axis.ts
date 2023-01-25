@@ -48,7 +48,6 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                         font : state.axis.x.textFont,
                         size : state.axis.x.textSize,
                         filled : state.axis.x.textFill,
-                        offset : state.axis.x.textOffset
                     }
                 });
                 
@@ -76,8 +75,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                     text : {
                         font : state.axis.y.textFont,
                         size : state.axis.y.textSize,
-                        filled : state.axis.y.textFill,
-                        offset : state.axis.y.textOffset
+                        filled : state.axis.y.textFill
                     }
                 });
 
@@ -408,16 +406,14 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
                     opacity : state.axis.x.textOpacity,
                     font : state.axis.x.textFont,
                     size : state.axis.x.textSize,
-                    fill : state.axis.x.textFill,
-                    offset : state.axis.x.textOffset
+                    fill : state.axis.x.textFill
                 },
                 y : {
                     color : state.axis.y.textColor,
                     opacity : state.axis.y.textOpacity,
                     font : state.axis.y.textFont,
                     size : state.axis.y.textSize,
-                    fill : state.axis.y.textFill,
-                    offset : state.axis.y.textOffset
+                    fill : state.axis.y.textFill
                 },
             }
 
@@ -426,27 +422,23 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
             if(text.x?.color === state.axis.x.textColor && 
                 text.x?.fill === state.axis.x.textFill &&
                 text.x?.font === state.axis.x.textFont &&
-                text.x?.offset === state.axis.x.textOffset &&
                 text.x?.opacity === state.axis.x.textOpacity &&
                 text.x?.size === state.axis.x.textSize &&
                 text.y?.color === state.axis.y.textColor && 
                 text.y?.fill === state.axis.y.textFill &&
                 text.y?.font === state.axis.y.textFont &&
-                text.y?.offset === state.axis.y.textOffset &&
                 text.y?.opacity === state.axis.y.textOpacity &&
                 text.y?.size === state.axis.y.textSize) return graphHandler;
 
             if(text.x?.color != null) state.axis.x.textColor = text.x.color;
             if(text.x?.fill != null) state.axis.x.textFill = text.x.fill;
             if(text.x?.font != null) state.axis.x.textFont = text.x.font;
-            if(text.x?.offset != null) state.axis.x.textOffset = text.x.offset;
             if(text.x?.opacity != null)
                 state.axis.x.textOpacity = text.x.opacity<0?0:(text.x.opacity>1?1:text.x?.opacity);
             if(text.x?.size != null) state.axis.x.textSize = text.x.size;
             if(text.y?.color != null) state.axis.y.textColor = text.y.color;
             if(text.y?.fill != null) state.axis.y.textFill = text.y.fill;
             if(text.y?.font != null) state.axis.y.textFont = text.y.font;
-            if(text.y?.offset != null) state.axis.y.textOffset = text.y.offset;
             if(text.y?.opacity != null)
                 state.axis.y.textOpacity = text.y.opacity<0?0:(text.y.opacity>1?1:text.y?.opacity);
             if(text.y?.size != null) state.axis.y.textSize = text.y.size;

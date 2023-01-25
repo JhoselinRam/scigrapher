@@ -66,7 +66,6 @@ interface Primary_Axis {
     textFont : string,
     textSize : string,
     textFill : boolean,
-    textOffset : number,
     dynamic : boolean,
     contained : boolean
 }

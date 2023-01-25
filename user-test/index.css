@@ -66,3 +66,7 @@ body{
     width : 60px;
     margin-right: 3px;
 }
+
+.number-input{
+    align-self: center;
+}

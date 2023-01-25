@@ -257,6 +257,70 @@ function changeUnits(e){
     }
 }
 
+function changeUnitFill(e){
+    const target = e.target.id;
+    const checked = e.target.checked;
+
+    if(target === "xUnitFill")
+        Graph.axisText({x:{fill:checked}});
+    if(target === "yUnitFill")
+        Graph.axisText({y:{fill:checked}});
+
+}
+
+function changeAxisWidth(e){
+    const target = document.querySelector("#widthTo").value;
+    const value = e.target.value;
+
+    switch(target){
+        case "xBase":
+            Graph.axisBase({x:{width:value}});
+            break;
+
+        case "yBase":
+            Graph.axisBase({y:{width:value}});
+            break;
+
+        case "xTicks":
+            Graph.axisTicks({x:{width:value}});
+            break;
+
+        case "yTicks":
+            Graph.axisTicks({y:{width:value}});
+            break;
+    }
+}
+
+function changeTickSize(e){
+    const target = e.target.id;
+    const value = parseFloat(e.target.value);
+
+    if(target === "xTickSize")
+        Graph.axisTicks({x:{size:value}});
+    if(target === "yTickSize")
+        Graph.axisTicks({y:{size:value}});
+}
+
+function changeTickFont(e){
+    const target = document.querySelector("#tickFontFor").value;
+    const font = e.target.value;
+
+    if(target === "x")
+        Graph.axisText({x:{font}});
+    if(target === "y")
+        Graph.axisText({y:{font}});
+}
+
+function changeAxisTextSize(e){
+    const size = `${e.target.value}px`;
+    const target = e.target.id;
+
+    if(target === "xTextSize")
+        Graph.axisText({x:{size}});
+    if(target === "yTextSize")
+        Graph.axisText({y:{size}});
+}
+
 
 
 
@@ -305,7 +369,14 @@ function main(){
     document.querySelector("#axisOpacity").addEventListener("input", changeAxisOpacity);
     document.querySelector("#xUnits").addEventListener("input", changeUnits);
     document.querySelector("#yUnits").addEventListener("input", changeUnits);
-
+    document.querySelector("#xUnitFill").addEventListener("change", changeUnitFill);
+    document.querySelector("#yUnitFill").addEventListener("change", changeUnitFill);
+    document.querySelector("#widthInput").addEventListener("input", changeAxisWidth);
+    document.querySelector("#xTickSize").addEventListener("input", changeTickSize);
+    document.querySelector("#yTickSize").addEventListener("input", changeTickSize);
+    document.querySelector("#tickFont").addEventListener("change", changeTickFont);
+    document.querySelector("#xTextSize").addEventListener("input", changeAxisTextSize);
+    document.querySelector("#yTextSize").addEventListener("input", changeAxisTextSize);
 }
 
 main();

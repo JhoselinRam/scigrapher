@@ -69,8 +69,7 @@ export type Text_Props = Axis_Property<{
     opacity : number,
     font : string,
     size : string,
-    fill : boolean,
-    offset : number
+    fill : boolean
 }>
 
 export interface Create_Modifier_Props {

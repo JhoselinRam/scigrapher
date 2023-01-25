@@ -185,18 +185,74 @@
                     </div>
                     <input type="range" class="range-input" id="axisOpacity" value="1" min="0" max="1" step="0.05">
                 </div>
-
                 <div  class="flex-control">
                     <div>
                         <label for="xUnits">X Units:</label>
                         <input type="text" name="xUnits" id="xUnits" class="text-input">
+                        <label for="xUnitFill">Fill</label>
+                        <input type="checkbox" name="xUnitFilll" id="xUnitFill" checked>
                     </div>
                     <div>
                         <label for="yUnits">Y Units:</label>
                         <input type="text" name="yUnits" id="yUnits" class="text-input">
+                        <label for="yUnitFill">Fill</label>
+                        <input type="checkbox" name="yUnitFill" id="yUnitFill" checked>
                     </div>
                 </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="widthTo">Width to:</label>
+                        <select name="widthTo" id="widthTo" value="xBase">
+                            <option value="xBase">X Base</option>
+                            <option value="yBase">Y Base</option>
+                            <option value="xTicks">X Ticks</option>
+                            <option value="yTicks">Y Ticks</option>
+                        </select>
+                    </div>
+                    <input type="number" id="widthInput" min="1" step="1" value="1" class="number-input">
+                </div>
+                
+                
+            </div>
+            
 
+            <div class="control-row">
+                <div class="flex-control">
+                    <div>
+                        <label for="xTickSize">X Tick Size</label>
+                        <input type="number" name="xTickSize" id="xTickSize" min="0" step="1" value="5" class="number-input">
+                    </div>
+                    <div>
+                        <label for="yTickSize">Y Tick Size</label>
+                        <input type="number" name="yTickSize" id="yTickSize" min="0" step="1" value="5" class="number-input">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="tickFontFor">Font for:</label>
+                        <select name="tickFontFor" id="tickFontFor" value="x">
+                            <option value="x">X Text</option>
+                            <option value="y">Y Text</option>
+                        </select>
+                    </div>
+                    <select id="tickFont" value="Arial, Helvetica Neue, Helvetica, sans-serif">
+                        <option value="Arial, Helvetica Neue, Helvetica, sans-serif">Auto</option>
+                            <option value="Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif">Calibri</option>
+                            <option value="Century Gothic, CenturyGothic, AppleGothic, sans-serif">Century</option>
+                            <option value="Consolas, monaco, monospace">Consolas</option>
+                            <option value="Georgia, Times, Times New Roman, serif">Times Roman</option>
+                    </select>
+                </div>
+                <div class="flex-input">
+                    <div>
+                        <label for="xTextSize">X Text Size</label>
+                        <input type="number" class="number-input" name="xTextSize" id="xTextSize" min="0" step="1" value="10">
+                    </div>
+                    <div>
+                        <label for="yTextSize">Y Text Size</label>
+                        <input type="number" class="number-input" name="yTextSize" id="yTextSize" min="0" step="1" value="10">
+                    </div>
+                </div>
 
 
 

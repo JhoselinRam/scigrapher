@@ -30,7 +30,6 @@ export interface Draw_Axis_Props {
     text : {
         font : string,
         size : string,
-        offset : number,
         filled : boolean
     },
     position ?: number,

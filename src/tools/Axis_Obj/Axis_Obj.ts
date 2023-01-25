@@ -33,6 +33,7 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.globalAlpha = opacity.tick;
                 context.canvas.lineWidth = width.tick;
                 positions.forEach(item=>{
+                    if(item === 0) return;
                     const coor = Math.round(scale.map(item)) + width.tick%2 * 0.5;
                     context.canvas.moveTo(coor, translation-tickSize);
                     context.canvas.lineTo(coor, translation+tickSize);
@@ -50,9 +51,9 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                     if(positions[index] === 0) return;
                     const coor = scale.map(positions[index]);
                     if(text.filled)
-                        context.canvas.fillText(item, coor, translation+tickSize+text.offset);
+                        context.canvas.fillText(item, coor, translation+tickSize+4);
                     else
-                    context.canvas.strokeText(item, coor, translation+tickSize+text.offset);
+                    context.canvas.strokeText(item, coor, translation+tickSize+4);
                 });
 
                 }
@@ -77,6 +78,7 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.globalAlpha = opacity.tick;
                 context.canvas.lineWidth = width.tick;
                 positions.forEach(item=>{
+                    if(item === 0) return;
                     const coor = Math.round(scale.map(item)) + width.tick%2 * 0.5;
                     context.canvas.moveTo(translation-tickSize, coor);
                     context.canvas.lineTo(translation+tickSize, coor);
@@ -94,9 +96,9 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                     if(positions[index] === 0) return;
                     const coor = scale.map(positions[index]);
                     if(text.filled)
-                        context.canvas.fillText(item, translation-tickSize-text.offset, coor);
+                        context.canvas.fillText(item, translation-tickSize-4, coor);
                     else
-                        context.canvas.strokeText(item, translation-tickSize-text.offset, coor);
+                        context.canvas.strokeText(item, translation-tickSize-4, coor);
 
                 });
 

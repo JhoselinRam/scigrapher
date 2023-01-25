@@ -34,7 +34,6 @@ const defaultOptions : Graph2D_Options = {
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
             textFill : true,
-            textOffset : 4,
             dynamic : true,
             contained : false
         },
@@ -54,7 +53,6 @@ const defaultOptions : Graph2D_Options = {
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
             textFill : true,
-            textOffset : 4,
             dynamic : true,
             contained : false
         },
@@ -81,7 +79,6 @@ const defaultSecondaryAxis : Secondary_Axis = {
     textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
     textSize : "10px",
     textFill : true,
-    textOffset : 4
 };
 
 const defaultLabel : LabelProperties = {
