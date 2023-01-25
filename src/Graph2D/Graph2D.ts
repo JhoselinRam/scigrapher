@@ -33,9 +33,8 @@ const defaultOptions : Graph2D_Options = {
             textOpacity : 1,
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
-            textFill : true,
             dynamic : true,
-            contained : false
+            contained : true
         },
         y : {
             start : -5,
@@ -52,9 +51,8 @@ const defaultOptions : Graph2D_Options = {
             textOpacity : 1,
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
-            textFill : true,
             dynamic : true,
-            contained : false
+            contained : true
         },
     },
     secondary : {},
@@ -77,8 +75,7 @@ const defaultSecondaryAxis : Secondary_Axis = {
     textColor : "#000000",
     textOpacity : 1,
     textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
-    textSize : "10px",
-    textFill : true,
+    textSize : "10px"
 };
 
 const defaultLabel : LabelProperties = {
@@ -187,6 +184,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.axisBase = axis.axisBase;
     graphHandler.axisTicks = axis.axisTicks;
     graphHandler.axisText = axis.axisText;
+    graphHandler.axisDynamic = axis.axisDynamic;
 
 
     //Setup configurations

@@ -20,7 +20,13 @@ export interface Draw_Axis_Props {
             width : number,
             height : number
         },
-        canvas : CanvasRenderingContext2D
+        canvas : CanvasRenderingContext2D,
+        margin : {
+            start : number,
+            end : number,
+            top: number,
+            bottom : number
+        }
     },
     type : "centerX" | "centerY" | "left" | "right" | "top" | "bottom",
     color : Draw_Axis_Properties<string>,
@@ -29,8 +35,7 @@ export interface Draw_Axis_Props {
     tickSize : number,
     text : {
         font : string,
-        size : string,
-        filled : boolean
+        size : string
     },
     position ?: number,
     dynamic ?: boolean,

@@ -1,3 +1,4 @@
+import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, CreateAxis_Props, Draw_Axis_Props } from "./Axis_Obj_Types";
 
@@ -6,16 +7,25 @@ const minSpacing = 45;  //Minimun space between ticks in pixels
 function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     const positions = computePositions(scale, ticks);
     const labels = createLabels(positions, suffix);
-    
+    const labelOffset = 4;
+
 //----------------- Draw ----------------------
     
-    function draw({context, type, color, opacity, text, width, position=0, tickSize, dynamic=true, contained=false} : Draw_Axis_Props){
+    function draw({context, type, color, opacity, text, width, position=0, tickSize, dynamic=true, contained=true} : Draw_Axis_Props){
         context.canvas.save();
         context.canvas.translate(context.clientRect.x, context.clientRect.y);
 
         switch(type){
             case "centerX":{
                 let translation = position;
+
+                if(contained){
+                    if(translation < context.margin.top)
+                        translation = context.margin.top;
+
+                    if(translation > context.clientRect.height - context.margin.bottom)
+                        translation = context.clientRect.height - context.margin.bottom;
+                }
 
                 //Base
                 translation = Math.round(translation) + width.base%2 * 0.5;
@@ -44,16 +54,29 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.textAlign = "center";
                 context.canvas.textBaseline = "top";
                 context.canvas.fillStyle = color.text;
-                context.canvas.strokeStyle = color.text;
                 context.canvas.globalAlpha = opacity.text;
                 context.canvas.font = `${text.size} ${text.font}`;
                 labels.forEach((item, index)=>{
                     if(positions[index] === 0) return;
-                    const coor = scale.map(positions[index]);
-                    if(text.filled)
-                        context.canvas.fillText(item, coor, translation+tickSize+4);
-                    else
-                    context.canvas.strokeText(item, coor, translation+tickSize+4);
+
+                    const xCoor = scale.map(positions[index]);
+                    let yCord = translation+tickSize+labelOffset;
+                    
+                    if(dynamic){
+                        const metrics = context.canvas.measureText(item);
+                        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+                        
+                        if(translation > context.clientRect.height - context.margin.bottom - height - labelOffset - tickSize){
+                            const maxOffset = 2*labelOffset+2*tickSize+height;
+                            const offset = mapping({
+                                from : [context.clientRect.height-context.margin.bottom-height-labelOffset-tickSize, context.clientRect.height-context.margin.bottom],
+                                to : [0, maxOffset]
+                            }).map(translation);
+                            yCord -= offset > maxOffset ? maxOffset : offset;
+                        }
+                    }
+                    
+                    context.canvas.fillText(item, xCoor, yCord);
                 });
 
                 }
@@ -61,6 +84,14 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 
             case "centerY":{
                 let translation = position;
+
+                if(contained){
+                    if(translation < context.margin.start)
+                        translation = context.margin.start;
+
+                    if(translation > context.clientRect.width - context.margin.end)
+                        translation = context.clientRect.width - context.margin.end;
+                }
         
                 //Base
                 translation = Math.round(translation) + width.base%2 * 0.5;
@@ -91,14 +122,26 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
                 context.canvas.fillStyle = color.text;
                 context.canvas.font = `${text.size} ${text.font}`;
                 context.canvas.globalAlpha = opacity.text;
-                context.canvas.font = `${text.size} ${text.font}`;
                 labels.forEach((item, index)=>{
                     if(positions[index] === 0) return;
-                    const coor = scale.map(positions[index]);
-                    if(text.filled)
-                        context.canvas.fillText(item, translation-tickSize-4, coor);
-                    else
-                        context.canvas.strokeText(item, translation-tickSize-4, coor);
+
+                    const yCoor = scale.map(positions[index]);
+                    let xCord = translation-tickSize-labelOffset;
+
+                    if(dynamic){
+                        const width = context.canvas.measureText(item).width;
+                        
+                        if(translation < context.margin.start + width + labelOffset + tickSize){
+                            const maxOffset = 2*labelOffset+2*tickSize+width;
+                            const offset = mapping({
+                                from : [context.margin.start + width + labelOffset + tickSize, context.margin.start],
+                                to : [0, maxOffset]
+                            }).map(translation);
+                            xCord += offset > maxOffset ? maxOffset : offset;
+                        }
+                    }
+
+                    context.canvas.fillText(item, xCord, yCoor);
 
                 });
 

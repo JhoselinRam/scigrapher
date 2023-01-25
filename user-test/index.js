@@ -257,17 +257,6 @@ function changeUnits(e){
     }
 }
 
-function changeUnitFill(e){
-    const target = e.target.id;
-    const checked = e.target.checked;
-
-    if(target === "xUnitFill")
-        Graph.axisText({x:{fill:checked}});
-    if(target === "yUnitFill")
-        Graph.axisText({y:{fill:checked}});
-
-}
-
 function changeAxisWidth(e){
     const target = document.querySelector("#widthTo").value;
     const value = e.target.value;
@@ -321,6 +310,29 @@ function changeAxisTextSize(e){
         Graph.axisText({y:{size}});
 }
 
+function changeAxisDynamic(e){
+    const target = e.target.id;
+    const checked = e.target.checked;
+
+    switch(target){
+        case "xDynamic":
+            Graph.axisDynamic({x:{dynamic:checked}});
+            break;
+            
+        case "yDynamic":
+            Graph.axisDynamic({y:{dynamic:checked}});
+            break;
+            
+        case "xContained":
+            Graph.axisDynamic({x:{contained:checked}});
+            break;
+            
+        case "yContained":
+            Graph.axisDynamic({y:{contained:checked}});
+            break;
+    }
+}
+
 
 
 
@@ -369,14 +381,16 @@ function main(){
     document.querySelector("#axisOpacity").addEventListener("input", changeAxisOpacity);
     document.querySelector("#xUnits").addEventListener("input", changeUnits);
     document.querySelector("#yUnits").addEventListener("input", changeUnits);
-    document.querySelector("#xUnitFill").addEventListener("change", changeUnitFill);
-    document.querySelector("#yUnitFill").addEventListener("change", changeUnitFill);
     document.querySelector("#widthInput").addEventListener("input", changeAxisWidth);
     document.querySelector("#xTickSize").addEventListener("input", changeTickSize);
     document.querySelector("#yTickSize").addEventListener("input", changeTickSize);
     document.querySelector("#tickFont").addEventListener("change", changeTickFont);
     document.querySelector("#xTextSize").addEventListener("input", changeAxisTextSize);
     document.querySelector("#yTextSize").addEventListener("input", changeAxisTextSize);
+    document.querySelector("#xDynamic").addEventListener("change", changeAxisDynamic);
+    document.querySelector("#yDynamic").addEventListener("change", changeAxisDynamic);
+    document.querySelector("#xContained").addEventListener("change", changeAxisDynamic);
+    document.querySelector("#yContained").addEventListener("change", changeAxisDynamic);
 }
 
 main();

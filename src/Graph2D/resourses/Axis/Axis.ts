@@ -1,6 +1,6 @@
 import CreateAxis from "../../../tools/Axis_Obj/Axis_Obj.js";
 import { Axis_Property, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
-import { Axis, Axis_Modifier, Axis_Modifier_Props, Base_Props, Create_Modifier_Props, Domain_Props, Text_Props, Ticks_Props } from "./Axis_Types";
+import { Axis, Axis_Modifier, Axis_Modifier_Props, Base_Props, Domain_Props, Dynamic_Props, Text_Props, Ticks_Props } from "./Axis_Types";
 
 function Axis({state, graphHandler}:Method_Generator) : Axis{
 
@@ -24,7 +24,15 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
         switch(state.axis.position){
             case "center":
                 state.axisObj.primary.x.draw({
-                    context : state.context,
+                    context : {
+                        ...state.context,
+                        margin : {
+                            top : state.canvas.marginTop,
+                            bottom : state.canvas.marginBottom,
+                            start : state.canvas.marginStart,
+                            end : state.canvas.marginEnd
+                        }
+                    },
                     type : "centerX",
                     position : state.scale.primary.y.map(0),
                     dynamic : state.axis.x.dynamic,
@@ -46,13 +54,20 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                     tickSize : state.axis.x.tickSize,
                     text : {
                         font : state.axis.x.textFont,
-                        size : state.axis.x.textSize,
-                        filled : state.axis.x.textFill,
+                        size : state.axis.x.textSize
                     }
                 });
                 
                 state.axisObj.primary.y.draw({
-                    context : state.context,
+                    context : {
+                        ...state.context,
+                        margin : {
+                            top : state.canvas.marginTop,
+                            bottom : state.canvas.marginBottom,
+                            start : state.canvas.marginStart,
+                            end : state.canvas.marginEnd
+                        }
+                    },
                     type : "centerY",
                     position : state.scale.primary.x.map(0),
                     dynamic : state.axis.y.dynamic,                    
@@ -74,8 +89,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
                     tickSize : state.axis.y.tickSize,
                     text : {
                         font : state.axis.y.textFont,
-                        size : state.axis.y.textSize,
-                        filled : state.axis.y.textFill
+                        size : state.axis.y.textSize
                     }
                 });
 
@@ -405,39 +419,33 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
                     color : state.axis.x.textColor,
                     opacity : state.axis.x.textOpacity,
                     font : state.axis.x.textFont,
-                    size : state.axis.x.textSize,
-                    fill : state.axis.x.textFill
+                    size : state.axis.x.textSize
                 },
                 y : {
                     color : state.axis.y.textColor,
                     opacity : state.axis.y.textOpacity,
                     font : state.axis.y.textFont,
-                    size : state.axis.y.textSize,
-                    fill : state.axis.y.textFill
+                    size : state.axis.y.textSize
                 },
             }
 
         if(typeof text === "object"){
             if(text.x == null && text.y == null) return graphHandler;
             if(text.x?.color === state.axis.x.textColor && 
-                text.x?.fill === state.axis.x.textFill &&
                 text.x?.font === state.axis.x.textFont &&
                 text.x?.opacity === state.axis.x.textOpacity &&
                 text.x?.size === state.axis.x.textSize &&
                 text.y?.color === state.axis.y.textColor && 
-                text.y?.fill === state.axis.y.textFill &&
                 text.y?.font === state.axis.y.textFont &&
                 text.y?.opacity === state.axis.y.textOpacity &&
                 text.y?.size === state.axis.y.textSize) return graphHandler;
 
             if(text.x?.color != null) state.axis.x.textColor = text.x.color;
-            if(text.x?.fill != null) state.axis.x.textFill = text.x.fill;
             if(text.x?.font != null) state.axis.x.textFont = text.x.font;
             if(text.x?.opacity != null)
                 state.axis.x.textOpacity = text.x.opacity<0?0:(text.x.opacity>1?1:text.x?.opacity);
             if(text.x?.size != null) state.axis.x.textSize = text.x.size;
             if(text.y?.color != null) state.axis.y.textColor = text.y.color;
-            if(text.y?.fill != null) state.axis.y.textFill = text.y.fill;
             if(text.y?.font != null) state.axis.y.textFont = text.y.font;
             if(text.y?.opacity != null)
                 state.axis.y.textOpacity = text.y.opacity<0?0:(text.y.opacity>1?1:text.y?.opacity);
@@ -451,9 +459,43 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
     }
 
 //---------------------------------------------
+//----------------- Dynamic -------------------
+
+    function axisDynamic(options : RecursivePartial<Dynamic_Props>) : Graph2D;
+    function axisDynamic(arg : void) : Dynamic_Props;
+    function axisDynamic(options : RecursivePartial<Dynamic_Props> | void) : Graph2D | Dynamic_Props | undefined{
+        if(typeof options === "undefined")
+            return {
+                x : {
+                    dynamic : state.axis.x.dynamic,
+                    contained : state.axis.x.contained
+                },
+                y : {
+                    dynamic : state.axis.y.dynamic,
+                    contained : state.axis.y.contained
+                }
+            }
+
+        if(typeof options === "object"){
+            if(options.x == null && options.y == null) return graphHandler;
+            if(options.x?.dynamic === state.axis.x.dynamic && options.x?.contained === state.axis.x.contained &&
+                options.y?.dynamic === state.axis.y.dynamic && options.y?.contained === state.axis.y.contained) 
+                return graphHandler;
+
+            if(options.x?.dynamic != null) state.axis.x.dynamic = options.x.dynamic;
+            if(options.x?.contained != null) state.axis.x.contained = options.x.contained;
+            if(options.y?.dynamic != null) state.axis.y.dynamic = options.y.dynamic;
+            if(options.y?.contained != null) state.axis.y.contained = options.y.contained;
+
+            state.compute.client();
+            state.draw.client();
+
+            return graphHandler;
+        }
+    }
 
 
-
+//---------------------------------------------
 
 
     return {
@@ -465,7 +507,8 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
         axisUnits,
         axisBase,
         axisTicks,
-        axisText
+        axisText,
+        axisDynamic
     }
 }
 

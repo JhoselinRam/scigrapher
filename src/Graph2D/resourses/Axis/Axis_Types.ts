@@ -31,7 +31,10 @@ export interface Axis{
         (base:RecursivePartial<Text_Props>):Graph2D,
         (arg:void):Text_Props
     },
-
+    axisDynamic : {
+        (options:RecursivePartial<Dynamic_Props>):Graph2D,
+        (arg:void):Dynamic_Props
+    }
 }
 
 export type Domain_Props = Axis_Property<{
@@ -68,10 +71,10 @@ export type Text_Props = Axis_Property<{
     color : string,
     opacity : number,
     font : string,
-    size : string,
-    fill : boolean
+    size : string
 }>
 
-export interface Create_Modifier_Props {
-    type : "base" | "ticks" | "text"
-}
+export type Dynamic_Props = Axis_Property<{
+    dynamic : boolean,
+    contained : boolean
+}>
