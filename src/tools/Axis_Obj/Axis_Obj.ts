@@ -1,12 +1,15 @@
+import { Graph2D_State, Primary_Axis } from "../../Graph2D/Graph2D_Types.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
-import { Axis_Obj, CreateAxis_Props, Draw_Axis_Props } from "./Axis_Obj_Types";
+import { Axis_Obj, CreateAxis_Props, Draw_Axis_Props, Label_Rect } from "./Axis_Obj_Types";
 
 const minSpacing = 45;  //Minimun space between ticks in pixels
 
-function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
-    const positions = computePositions(scale, ticks);
-    const labels = createLabels(positions, suffix);
+function CreateAxis({state, axis, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
+    const positions = computePositions(state.scale.primary[axis], ticks);
+    const labels = createLabels(positions, state.axis[axis].unit);
+    const rects =  computeRects(labels, axis, state);
+    const translation = computeTranslation(state, axis);
     const labelOffset = 4;
 
 //----------------- Draw ----------------------
@@ -169,12 +172,15 @@ function CreateAxis({scale, suffix, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     return {
         positions,
         labels,
-        draw
+        draw,
+        rects
     };
 }
 
+
+
 //---------------------------------------------
-//---------------------------------------------
+//----------- Compute Positions ---------------
 
 function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>) : Array<number>{
     const fullDomain = Math.abs(scale.domain[1] - scale.domain[0]);
@@ -204,7 +210,7 @@ function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>)
 }
 
 //---------------------------------------------
-//---------------------------------------------
+//------------- Auto Compute ------------------
 
 function autoCompute(scale:Mapping):Array<number>{
     const fullRange = Math.abs(scale.range[1] - scale.range[0]);
@@ -246,7 +252,7 @@ function autoCompute(scale:Mapping):Array<number>{
 }
 
 //---------------------------------------------
-//---------------------------------------------
+//------------- Create Labels -----------------
 
 function createLabels(positions:Array<number>, suffix?:string) : Array<string>{
     return positions.map(position=>{
@@ -279,5 +285,33 @@ function createLabels(positions:Array<number>, suffix?:string) : Array<string>{
 }
 
 //---------------------------------------------
+//--------------- Compute rects ---------------
+
+function computeRects(labels:Array<string>, axis:"x"|"y", state:Graph2D_State) : Array<Label_Rect> | undefined{
+    if(state.axis.position !== "center") return;
+    
+    let rects : Array<Label_Rect>;
+    const complementary = axis==="x"?"y":"x";
+    const translation = state.scale.primary[complementary].map(0);
+
+    
+
+    return rects;
+}
+
+//---------------------------------------------
+//----------- Compute Translation -------------
+
+    function computeTranslation(state:Graph2D_State, axis:"x"|"y"){
+
+    }
+
+//---------------------------------------------
+
+
+
+
+
+
 
 export default CreateAxis;

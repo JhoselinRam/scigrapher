@@ -50,7 +50,7 @@ export type LabelProperties = {
     position : "start" | "center" | "end"
 }
 
-interface Primary_Axis {
+export interface Primary_Axis {
     start : number,
     end : number,
     unit : string,

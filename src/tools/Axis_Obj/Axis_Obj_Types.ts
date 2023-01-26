@@ -1,8 +1,9 @@
+import { Graph2D_State, Primary_Axis } from "../../Graph2D/Graph2D_Types";
 import { Mapping } from "../Mapping/Mapping_Types";
 
 export interface CreateAxis_Props {
-    scale : Mapping,
-    suffix ?: string,
+    state : Graph2D_State,
+    axis : "x" | "y",
     ticks ?: "auto" | number | Array<number>
 }
 
@@ -10,6 +11,14 @@ export interface Axis_Obj {
     positions : Array<number>,
     labels : Array<string>,
     draw : (options:Draw_Axis_Props)=>void
+    rects ?: Array<Label_Rect>
+}
+
+export interface Label_Rect {
+    x : number,
+    y : number,
+    width : number,
+    height : number
 }
 
 export interface Draw_Axis_Props {

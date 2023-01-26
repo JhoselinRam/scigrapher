@@ -7,8 +7,8 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 //---------------- Compute --------------------
 
     function compute(){
-        const primaryAxisX = CreateAxis({scale:state.scale.primary.x, suffix:state.axis.x.unit});
-        const primaryAxisY = CreateAxis({scale:state.scale.primary.y, suffix:state.axis.y.unit});
+        const primaryAxisX = CreateAxis({state, axis:"x"});
+        const primaryAxisY = CreateAxis({state, axis:"y"});
 
         state.axisObj.primary = {
             x : primaryAxisX,
