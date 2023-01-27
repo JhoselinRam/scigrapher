@@ -23,75 +23,8 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
     function draw(){
         switch(state.axis.position){
             case "center":
-                state.axisObj.primary.x.draw({
-                    context : {
-                        ...state.context,
-                        margin : {
-                            top : state.canvas.marginTop,
-                            bottom : state.canvas.marginBottom,
-                            start : state.canvas.marginStart,
-                            end : state.canvas.marginEnd
-                        }
-                    },
-                    type : "centerX",
-                    position : state.scale.primary.y.map(0),
-                    dynamic : state.axis.x.dynamic,
-                    contained : state.axis.x.contained,
-                    color : {
-                        base : state.axis.x.baseColor,
-                        tick : state.axis.x.tickColor,
-                        text : state.axis.x.textColor,
-                    },
-                    opacity : {
-                        base : state.axis.x.baseOpacity,
-                        tick : state.axis.x.tickOpacity,
-                        text : state.axis.x.textOpacity,
-                    },
-                    width : {
-                        base : state.axis.x.baseWidth,
-                        tick : state.axis.x.tickWidth,
-                    },
-                    tickSize : state.axis.x.tickSize,
-                    text : {
-                        font : state.axis.x.textFont,
-                        size : state.axis.x.textSize
-                    }
-                });
-                
-                state.axisObj.primary.y.draw({
-                    context : {
-                        ...state.context,
-                        margin : {
-                            top : state.canvas.marginTop,
-                            bottom : state.canvas.marginBottom,
-                            start : state.canvas.marginStart,
-                            end : state.canvas.marginEnd
-                        }
-                    },
-                    type : "centerY",
-                    position : state.scale.primary.x.map(0),
-                    dynamic : state.axis.y.dynamic,                    
-                    contained : state.axis.y.contained,
-                    color : {
-                        base : state.axis.y.baseColor,
-                        tick : state.axis.y.tickColor,
-                        text : state.axis.y.textColor,
-                    },                    
-                    opacity : {
-                        base : state.axis.y.baseOpacity,
-                        tick : state.axis.y.tickOpacity,
-                        text : state.axis.y.textOpacity,
-                    },
-                    width : {
-                        base : state.axis.y.baseWidth,
-                        tick : state.axis.y.tickWidth,
-                    },
-                    tickSize : state.axis.y.tickSize,
-                    text : {
-                        font : state.axis.y.textFont,
-                        size : state.axis.y.textSize
-                    }
-                });
+                state.axisObj.primary.x.draw();
+                state.axisObj.primary.y.draw();
 
                 break;
             

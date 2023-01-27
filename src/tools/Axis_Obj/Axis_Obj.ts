@@ -1,171 +1,73 @@
 import { Graph2D_State } from "../../Graph2D/Graph2D_Types.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
-import { Axis_Obj, CreateAxis_Props, Draw_Axis_Props, Label_Rect } from "./Axis_Obj_Types";
+import { Axis_Obj, CreateAxis_Props, Label_Rect } from "./Axis_Obj_Types";
 
 const minSpacing = 45;  //Minimun space between ticks in pixels
+const labelOffset = 4;
 
 function CreateAxis({state, axis, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     const positions = computePositions(state.scale.primary[axis], ticks);
     const labels = createLabels(positions, state.axis[axis].unit);
     const translation = computeTranslation(state, axis);
-    const rects =  computeRects(positions, labels, axis, state);
-    const labelOffset = 4;
+    const rects =  computeRects(positions, labels, axis, state, translation);
 
 //----------------- Draw ----------------------
     
-    function draw({context, type, color, opacity, text, width, position=0, tickSize, dynamic=true, contained=true} : Draw_Axis_Props){
-        context.canvas.save();
-        context.canvas.translate(context.clientRect.x, context.clientRect.y);
+    function draw(){
+        state.context.canvas.save();
+        state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
 
-        switch(type){
-            case "centerX":{
-                let translation = position;
+        //Base
+        state.context.canvas.beginPath();
+        state.context.canvas.strokeStyle = state.axis[axis].baseColor;
+        state.context.canvas.globalAlpha = state.axis[axis].baseOpacity;
+        state.context.canvas.lineWidth = state.axis[axis].baseWidth;
+        if(axis === "x"){
+            state.context.canvas.moveTo(0, translation);
+            state.context.canvas.lineTo(state.context.clientRect.width, translation);
+        }
+        if(axis === "y"){
+            state.context.canvas.moveTo(translation, 0);
+            state.context.canvas.lineTo(translation, state.context.clientRect.height);
+        }
+        state.context.canvas.stroke();
 
-                if(contained){
-                    if(translation < context.margin.top)
-                        translation = context.margin.top;
-
-                    if(translation > context.clientRect.height - context.margin.bottom)
-                        translation = context.clientRect.height - context.margin.bottom;
-                }
-
-                //Base
-                translation = Math.round(translation) + width.base%2 * 0.5;
-                context.canvas.beginPath();
-                context.canvas.strokeStyle = color.base;
-                context.canvas.globalAlpha = opacity.base;
-                context.canvas.lineWidth = width.base;
-                context.canvas.moveTo(0, translation);
-                context.canvas.lineTo(context.clientRect.width, translation);
-                context.canvas.stroke();
-
-                //Ticks
-                context.canvas.beginPath();
-                context.canvas.strokeStyle = color.tick;
-                context.canvas.globalAlpha = opacity.tick;
-                context.canvas.lineWidth = width.tick;
-                positions.forEach(item=>{
-                    if(item === 0) return;
-                    const coor = Math.round(scale.map(item)) + width.tick%2 * 0.5;
-                    context.canvas.moveTo(coor, translation-tickSize);
-                    context.canvas.lineTo(coor, translation+tickSize);
-                });
-                context.canvas.stroke();
-
-                //text
-                context.canvas.textAlign = "center";
-                context.canvas.textBaseline = "top";
-                context.canvas.fillStyle = color.text;
-                context.canvas.globalAlpha = opacity.text;
-                context.canvas.font = `${text.size} ${text.font}`;
-                labels.forEach((item, index)=>{
-                    if(positions[index] === 0) return;
-
-                    const xCoor = scale.map(positions[index]);
-                    let yCord = translation+tickSize+labelOffset;
-                    
-                    if(dynamic){
-                        const metrics = context.canvas.measureText(item);
-                        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-                        
-                        if(translation > context.clientRect.height - context.margin.bottom - height - labelOffset - tickSize){
-                            const maxOffset = 2*labelOffset+2*tickSize+height;
-                            const offset = mapping({
-                                from : [context.clientRect.height-context.margin.bottom-height-labelOffset-tickSize, context.clientRect.height-context.margin.bottom],
-                                to : [0, maxOffset]
-                            }).map(translation);
-                            yCord -= offset > maxOffset ? maxOffset : offset;
-                        }
-                    }
-                    
-                    context.canvas.fillText(item, xCoor, yCord);
-                });
-
-                }
-                break;
-                
-            case "centerY":{
-                let translation = position;
-
-                if(contained){
-                    if(translation < context.margin.start)
-                        translation = context.margin.start;
-
-                    if(translation > context.clientRect.width - context.margin.end)
-                        translation = context.clientRect.width - context.margin.end;
-                }
-        
-                //Base
-                translation = Math.round(translation) + width.base%2 * 0.5;
-                context.canvas.beginPath();
-                context.canvas.strokeStyle = color.base;
-                context.canvas.globalAlpha = opacity.base;
-                context.canvas.lineWidth = width.base;
-                context.canvas.moveTo(translation, 0);
-                context.canvas.lineTo(translation, context.clientRect.height);
-                context.canvas.stroke();
-
-                //Ticks
-                context.canvas.beginPath();
-                context.canvas.strokeStyle = color.tick;
-                context.canvas.globalAlpha = opacity.tick;
-                context.canvas.lineWidth = width.tick;
-                positions.forEach(item=>{
-                    if(item === 0) return;
-                    const coor = Math.round(scale.map(item)) + width.tick%2 * 0.5;
-                    context.canvas.moveTo(translation-tickSize, coor);
-                    context.canvas.lineTo(translation+tickSize, coor);
-                });
-                context.canvas.stroke();
-
-                //text
-                context.canvas.textAlign = "end";
-                context.canvas.textBaseline = "middle";
-                context.canvas.fillStyle = color.text;
-                context.canvas.font = `${text.size} ${text.font}`;
-                context.canvas.globalAlpha = opacity.text;
-                labels.forEach((item, index)=>{
-                    if(positions[index] === 0) return;
-
-                    const yCoor = scale.map(positions[index]);
-                    let xCord = translation-tickSize-labelOffset;
-
-                    if(dynamic){
-                        const width = context.canvas.measureText(item).width;
-                        
-                        if(translation < context.margin.start + width + labelOffset + tickSize){
-                            const maxOffset = 2*labelOffset+2*tickSize+width;
-                            const offset = mapping({
-                                from : [context.margin.start + width + labelOffset + tickSize, context.margin.start],
-                                to : [0, maxOffset]
-                            }).map(translation);
-                            xCord += offset > maxOffset ? maxOffset : offset;
-                        }
-                    }
-
-                    context.canvas.fillText(item, xCord, yCoor);
-
-                });
-
-                }
-                break;
-                
-            case "left":
-                break;
-
-            case "right":
-                break;
-                
-            case "top":
-                break;
-                
-            case "bottom":
-                break;
+        //Ticks
+        state.context.canvas.beginPath();
+        state.context.canvas.strokeStyle = state.axis[axis].textColor;
+        state.context.canvas.globalAlpha = state.axis[axis].tickOpacity;
+        state.context.canvas.lineWidth = state.axis[axis].tickWidth;
+        positions.forEach(item=>{
+            if(item === 0) return;
+            const coor = Math.round(state.scale.primary[axis].map(item)) + state.axis[axis].tickWidth%2 * 0.5;
+            if(axis==="x"){
+                state.context.canvas.moveTo(coor, translation-state.axis[axis].tickSize);
+                state.context.canvas.lineTo(coor, translation+state.axis[axis].tickSize);
             }
-        
-        context.canvas.restore();
+            if(axis==="y"){
+                state.context.canvas.moveTo(translation-state.axis[axis].tickSize, coor);
+                state.context.canvas.lineTo(translation+state.axis[axis].tickSize, coor);
+            }
+        });
+        state.context.canvas.stroke();
+
+        //text
+        state.context.canvas.textBaseline = "top";
+        state.context.canvas.fillStyle = state.axis[axis].textColor;
+        state.context.canvas.globalAlpha = state.axis[axis].textOpacity;
+        state.context.canvas.font = `${state.axis[axis].textSize} ${state.axis[axis].textFont}`;
+        rects?.forEach((item, index)=>{
+            if(positions[index] === 0) return;
+
+            state.context.canvas.fillText(labels[index], item.x, item.y);
+
+            state.context.canvas.strokeStyle="black";
+            state.context.canvas.strokeRect(item.x, item.y, item.width, item.height)
+        });
+
     }
+               
     
 //---------------------------------------------    
 
@@ -287,16 +189,36 @@ function createLabels(positions:Array<number>, suffix?:string) : Array<string>{
 //---------------------------------------------
 //--------------- Compute rects ---------------
 
-function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State) : Array<Label_Rect> | undefined{
+function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number) : Array<Label_Rect> | undefined{
     if(state.axis.position !== "center") return;
     
-    let rects : Array<Label_Rect>;
-    const complementary = axis==="x"?"y":"x";
+    let rects : Array<Label_Rect> = [];
 
     positions.forEach((item, index)=>{
-        if(item === 0) return;
+        const coord1 = state.scale.primary[axis].map(item); //coordinate 1
+        const textSize = getTextSize(labels[index], axis, state);
+        let coord2 = translation;       //coordinate 2
 
-        const coordinate = state.scale.primary[axis].map(item);
+        if(state.axis[axis].dynamic){
+            const textDistance = axis==="x" ? textSize.height : textSize.width;
+            const margin = axis==="x" ? state.margin.y.end : state.margin.x.start;
+            let threshold = -margin -textDistance -labelOffset -state.axis[axis].tickSize;
+            threshold = axis==="x" ? threshold + state.context.clientRect.height : -threshold;
+            
+            if(translation > threshold){
+                const maxOffset = 2*labelOffset + 2*state.axis[axis].tickSize + textDistance;
+                const offset = mapping({
+                    from : [threshold, threshold + textDistance + labelOffset + state.axis[axis].tickSize],
+                    to : [0, maxOffset]
+                }).map(translation);
+                coord2 -= offset > maxOffset ? maxOffset : offset;
+            }
+        }
+
+        const x = axis==="x" ? coord1 - textSize.width/2 : coord2 + state.axis[axis].tickSize + labelOffset;
+        const y = axis==="x" ? coord2 + state.axis[axis].tickSize + labelOffset : coord1 - textSize.height/2;
+
+        rects.push({ x, y, width : textSize.width, height: textSize.height});
 
     });
     
@@ -344,9 +266,21 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
     }
 
 //---------------------------------------------
+//----------------- Text Size -----------------
 
+    function getTextSize(text:string, axis:"x"|"y", state:Graph2D_State) : {width:number, height:number}{
+        state.context.canvas.save();
+        state.context.canvas.font = `${state.axis[axis].textSize}px ${state.axis[axis].textFont}`;
+        const metrics = state.context.canvas.measureText(text);
+        state.context.canvas.restore();
 
+        return {
+            width : metrics.width,
+            height : metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+        }
+    }
 
+//---------------------------------------------
 
 
 

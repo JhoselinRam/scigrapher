@@ -12,7 +12,7 @@ function Scale({state}:Method_Generator) : Scale{
         switch(state.axis.type){
             case "rectangular":
                 const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax]});
-                const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.start], to:[yMin, yMax]});
+                const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax]});
 
                 state.scale.primary = {
                     x : primaryScaleX,
