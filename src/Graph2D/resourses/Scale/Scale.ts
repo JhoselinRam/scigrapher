@@ -12,7 +12,7 @@ function Scale({state}:Method_Generator) : Scale{
         switch(state.axis.type){
             case "rectangular":
                 const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax]});
-                const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax]});
+                const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.start], to:[yMin, yMax]});
 
                 state.scale.primary = {
                     x : primaryScaleX,
@@ -46,38 +46,38 @@ function Scale({state}:Method_Generator) : Scale{
         
         switch(state.axis.position){
             case "center":
-                xMin = state.canvas.marginStart;
-                xMax = state.context.clientRect.width - state.canvas.marginEnd;
-                yMin = state.context.clientRect.height - state.canvas.marginBottom;
-                yMax = state.canvas.marginTop;
+                xMin = state.margin.x.start;
+                xMax = state.context.clientRect.width - state.margin.x.end;
+                yMin = state.context.clientRect.height - state.margin.y.start;
+                yMax = state.margin.y.end;
                 break;
 
             case "bottom-left":
-                xMin = state.canvas.marginStart;
-                xMax= state.context.clientRect.width - state.canvas.marginEnd;
-                yMin = state.context.clientRect.height - state.canvas.marginBottom;
-                yMax = state.canvas.marginTop;
+                xMin = state.margin.x.start;
+                xMax= state.context.clientRect.width - state.margin.x.end;
+                yMin = state.context.clientRect.height - state.margin.y.start;
+                yMax = state.margin.y.end;
                 break;
 
             case "bottom-right":
-                xMin = state.canvas.marginStart;
-                xMax= state.context.clientRect.width - state.canvas.marginEnd;
-                yMin = state.context.clientRect.height - state.canvas.marginBottom;
-                yMax = state.canvas.marginTop;
+                xMin = state.margin.x.start;
+                xMax= state.context.clientRect.width - state.margin.x.end;
+                yMin = state.context.clientRect.height - state.margin.y.start;
+                yMax = state.margin.y.end;
                 break;
 
             case "top-left":
-                xMin = state.canvas.marginStart;
-                xMax= state.context.clientRect.width - state.canvas.marginEnd;
-                yMin = state.context.clientRect.height - state.canvas.marginBottom;
-                yMax = state.canvas.marginTop;
+                xMin = state.margin.x.start;
+                xMax= state.context.clientRect.width - state.margin.x.end;
+                yMin = state.context.clientRect.height - state.margin.y.start;
+                yMax = state.margin.y.end;
                 break;
 
             case "top-right":
-                xMin = state.canvas.marginStart;
-                xMax= state.context.clientRect.width - state.canvas.marginEnd;
-                yMin = state.context.clientRect.height - state.canvas.marginBottom;
-                yMax = state.canvas.marginTop;
+                xMin = state.margin.x.start;
+                xMax= state.context.clientRect.width - state.margin.x.end;
+                yMin = state.context.clientRect.height - state.margin.y.start;
+                yMax = state.margin.y.end;
                 break;
         }
 

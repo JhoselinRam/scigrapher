@@ -1,4 +1,4 @@
-import { Graph2D_State, Primary_Axis } from "../../Graph2D/Graph2D_Types.js";
+import { Graph2D_State } from "../../Graph2D/Graph2D_Types.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, CreateAxis_Props, Draw_Axis_Props, Label_Rect } from "./Axis_Obj_Types";
@@ -8,8 +8,8 @@ const minSpacing = 45;  //Minimun space between ticks in pixels
 function CreateAxis({state, axis, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
     const positions = computePositions(state.scale.primary[axis], ticks);
     const labels = createLabels(positions, state.axis[axis].unit);
-    const rects =  computeRects(labels, axis, state);
     const translation = computeTranslation(state, axis);
+    const rects =  computeRects(positions, labels, axis, state);
     const labelOffset = 4;
 
 //----------------- Draw ----------------------
@@ -287,13 +287,18 @@ function createLabels(positions:Array<number>, suffix?:string) : Array<string>{
 //---------------------------------------------
 //--------------- Compute rects ---------------
 
-function computeRects(labels:Array<string>, axis:"x"|"y", state:Graph2D_State) : Array<Label_Rect> | undefined{
+function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State) : Array<Label_Rect> | undefined{
     if(state.axis.position !== "center") return;
     
     let rects : Array<Label_Rect>;
     const complementary = axis==="x"?"y":"x";
-    const translation = state.scale.primary[complementary].map(0);
 
+    positions.forEach((item, index)=>{
+        if(item === 0) return;
+
+        const coordinate = state.scale.primary[axis].map(item);
+
+    });
     
 
     return rects;
@@ -302,7 +307,39 @@ function computeRects(labels:Array<string>, axis:"x"|"y", state:Graph2D_State) :
 //---------------------------------------------
 //----------- Compute Translation -------------
 
-    function computeTranslation(state:Graph2D_State, axis:"x"|"y"){
+    function computeTranslation(state:Graph2D_State, axis:"x"|"y") : number{
+        let translation : number = 0;
+        const complementary = axis==="x"?"y":"x";
+        const clientSize = axis==="x" ? state.context.clientRect.height : state.context.clientRect.width;
+
+        switch(state.axis.position){
+            case "center":
+                translation = state.scale.primary[complementary].map(0);
+
+                if(state.axis[axis].contained){
+                    if(translation < state.margin[complementary].start)
+                        translation = state.margin[complementary].start;
+                    
+                    if(translation > clientSize - state.margin[complementary].end)
+                        translation = clientSize - state.margin[complementary].end;
+                }
+                break;
+
+            case "bottom-left":
+                break;
+
+            case "bottom-right":
+                break;
+
+            case "top-left":
+                break;
+
+            case "top-right":
+                break;
+        }
+
+        translation = Math.round(translation) + state.axis[axis].baseWidth%2 * 0.5;
+        return translation;
 
     }
 

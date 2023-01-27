@@ -9,11 +9,15 @@ const defaultOptions : Graph2D_Options = {
         color : "#ffffff",
         opacity : 1
     },
-    canvas : {
-        marginStart : 5,
-        marginEnd : 5,
-        marginTop : 5,
-        marginBottom : 5
+    margin : {
+        x : {
+            start : 5,
+            end : 5
+        },
+        y : {
+            start : 5,
+            end : 5
+        }
     },
     axis : {
         position : "center",
@@ -113,7 +117,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         },
         axisObj : {},
         background : {...defaultOptions.background, ...options.background},
-        canvas : {...defaultOptions.canvas, ...options.canvas},
+        margin : {
+            x : {...defaultOptions.margin.x, ...options.margin?.x},
+            y : {...defaultOptions.margin.y, ...options.margin?.y}
+        },
         axis : {
             ...defaultOptions.axis,
             ...options.axis,

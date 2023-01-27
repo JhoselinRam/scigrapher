@@ -18,12 +18,10 @@ export interface Graph2D_Options{
         color : string,
         opacity : number
     },
-    canvas : {
-        marginStart : number,
-        marginEnd : number,
-        marginTop : number,
-        marginBottom : number
-    },
+    margin : Axis_Property<{
+        start : number,
+        end : number
+    }>,
     axis : {
         type : Axis_Type,
         position : Axis_Position
