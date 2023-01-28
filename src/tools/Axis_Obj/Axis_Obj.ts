@@ -35,7 +35,7 @@ function CreateAxis({state, axis, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
 
         //Ticks
         state.context.canvas.beginPath();
-        state.context.canvas.strokeStyle = state.axis[axis].textColor;
+        state.context.canvas.strokeStyle = state.axis[axis].tickColor;
         state.context.canvas.globalAlpha = state.axis[axis].tickOpacity;
         state.context.canvas.lineWidth = state.axis[axis].tickWidth;
         positions.forEach(item=>{
@@ -61,10 +61,9 @@ function CreateAxis({state, axis, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
             if(positions[index] === 0) return;
 
             state.context.canvas.fillText(labels[index], item.x, item.y);
-
-            state.context.canvas.strokeStyle="black";
-            state.context.canvas.strokeRect(item.x, item.y, item.width, item.height)
         });
+
+        state.context.canvas.restore();
 
     }
                
@@ -197,25 +196,35 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
     positions.forEach((item, index)=>{
         const coord1 = state.scale.primary[axis].map(item); //coordinate 1
         const textSize = getTextSize(labels[index], axis, state);
-        let coord2 = translation;       //coordinate 2
+        let coord2 = translation; //coordinate 2
 
         if(state.axis[axis].dynamic){
             const textDistance = axis==="x" ? textSize.height : textSize.width;
             const margin = axis==="x" ? state.margin.y.end : state.margin.x.start;
             let threshold = -margin -textDistance -labelOffset -state.axis[axis].tickSize;
-            threshold = axis==="x" ? threshold + state.context.clientRect.height : -threshold;
+            threshold = axis==="x" ? threshold + state.context.clientRect.height : threshold;
+            const auxTranslation = axis==="x"? translation : -translation
             
-            if(translation > threshold){
+            if(auxTranslation > threshold){
                 const maxOffset = 2*labelOffset + 2*state.axis[axis].tickSize + textDistance;
-                const offset = mapping({
-                    from : [threshold, threshold + textDistance + labelOffset + state.axis[axis].tickSize],
-                    to : [0, maxOffset]
-                }).map(translation);
-                coord2 -= offset > maxOffset ? maxOffset : offset;
+                if(axis==="x"){
+                    const offset = mapping({
+                        from : [threshold, threshold+textDistance+labelOffset+state.axis[axis].tickSize],
+                        to : [0, maxOffset]
+                    }).map(translation);
+                    coord2 -= offset > maxOffset ? maxOffset : offset;    
+                }
+                if(axis==="y"){
+                    const offset = mapping({
+                        from : [-threshold, -threshold-textDistance-labelOffset-state.axis[axis].tickSize],
+                        to : [0, maxOffset]
+                    }).map(translation);
+                    coord2 += offset > maxOffset ? maxOffset : offset;
+                }
             }
         }
 
-        const x = axis==="x" ? coord1 - textSize.width/2 : coord2 + state.axis[axis].tickSize + labelOffset;
+        const x = axis==="x" ? coord1 - textSize.width/2 : coord2 - state.axis[axis].tickSize - labelOffset - textSize.width;
         const y = axis==="x" ? coord2 + state.axis[axis].tickSize + labelOffset : coord1 - textSize.height/2;
 
         rects.push({ x, y, width : textSize.width, height: textSize.height});

@@ -83,7 +83,6 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         state.context.clientRect.width = Math.floor(state.context.clientRect.width);
         state.context.clientRect.height = Math.floor(state.context.clientRect.height);
         
-
     }
 
     function getTextHeight({text, size, font} : Text_Height_Props) : number {
