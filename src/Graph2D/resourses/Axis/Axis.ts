@@ -7,8 +7,18 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 //---------------- Compute --------------------
 
     function compute(){
-        const primaryAxisX = CreateAxis({state, axis:"x"});
-        const primaryAxisY = CreateAxis({state, axis:"y"});
+        const primaryAxisX = CreateAxis({
+            state, 
+            axis : "x", 
+            ticks : state.axis.x.ticks,
+            minSpacing : state.axis.x.minSpacing
+        });
+        const primaryAxisY = CreateAxis({
+            state, 
+            axis : "y",
+            ticks : state.axis.y.ticks,
+            minSpacing : state.axis.y.minSpacing
+        });
 
         state.axisObj.primary = {
             x : primaryAxisX,
@@ -300,13 +310,17 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
                     color : state.axis.x.tickColor,
                     opacity : state.axis.x.tickOpacity,
                     width : state.axis.x.tickWidth,
-                    size : state.axis.x.tickSize
+                    size : state.axis.x.tickSize,
+                    ticks : state.axis.x.ticks,
+                    minSpacing : state.axis.x.minSpacing
                 },
                 y : {
                     color : state.axis.y.tickColor,
                     opacity : state.axis.y.tickOpacity,
                     width : state.axis.y.tickWidth,
-                    size : state.axis.y.tickSize
+                    size : state.axis.y.tickSize,
+                    ticks : state.axis.y.ticks,
+                    minSpacing : state.axis.y.minSpacing
                 }
             }
 
@@ -316,10 +330,14 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
                 ticks.x?.opacity === state.axis.x.tickOpacity &&
                 ticks.x?.size === state.axis.x.tickSize &&
                 ticks.x?.width === state.axis.x.tickWidth &&
+                ticks.x?.ticks === state.axis.x.ticks &&
+                ticks.x?.minSpacing === state.axis.x.minSpacing &&
                 ticks.y?.color === state.axis.y.tickColor &&
                 ticks.y?.opacity === state.axis.y.tickOpacity &&
                 ticks.y?.size === state.axis.y.tickSize &&
-                ticks.y?.width === state.axis.y.tickWidth) return graphHandler;
+                ticks.y?.width === state.axis.y.tickWidth &&
+                ticks.y?.ticks === state.axis.y.ticks &&
+                ticks.y?.minSpacing === state.axis.y.minSpacing) return graphHandler;
 
 
             if(ticks.x?.color != null) state.axis.x.tickColor = ticks.x.color;
@@ -327,11 +345,15 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
                 state.axis.x.tickOpacity = ticks.x.opacity<0?0:(ticks.x.opacity>1?1:ticks.x.opacity);
             if(ticks.x?.size != null) state.axis.x.tickSize = ticks.x.size;
             if(ticks.x?.width != null) state.axis.x.tickWidth = ticks.x.width;
+            if(ticks.x?.ticks != null) state.axis.x.ticks = ticks.x.ticks as "auto"|number|number[];
+            if(ticks.x?.minSpacing != null) state.axis.x.minSpacing = ticks.x.minSpacing;
             if(ticks.y?.color != null) state.axis.y.tickColor = ticks.y.color;
             if(ticks.y?.opacity != null)
                 state.axis.y.tickOpacity = ticks.y.opacity<0?0:(ticks.y.opacity>1?1:ticks.y.opacity);
             if(ticks.y?.size != null) state.axis.y.tickSize = ticks.y.size;
             if(ticks.y?.width != null) state.axis.y.tickWidth = ticks.y.width;
+            if(ticks.y?.ticks != null) state.axis.y.ticks = ticks.y.ticks as "auto"|number|number[];
+            if(ticks.y?.minSpacing != null) state.axis.y.minSpacing = ticks.y.minSpacing;
 
             state.compute.client();
             state.draw.client();

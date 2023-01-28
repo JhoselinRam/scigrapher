@@ -333,6 +333,50 @@ function changeAxisDynamic(e){
     }
 }
 
+function changeMargin(e){
+    const target = e.target.id;
+    const value = e.target.value;
+
+    switch(target){
+        case "marginStart":
+            Graph.margin({x:{start:value}});
+            break;
+            
+        case "marginEnd":
+            Graph.margin({x:{end:value}});
+            break;
+                
+        case "marginTop":
+            Graph.margin({y:{end:value}});
+            break;
+        
+        case "marginBottom":
+            Graph.margin({y:{start:value}});
+            break;
+
+    }
+}
+
+function changeTicks(e){
+    const target = e.target.id;
+    const value = parseInt(e.target.value);
+
+    if(target === "xTicks")
+        Graph.axisTicks({x:{ticks:value===-1?"auto":value}});
+    if(target === "yTicks")
+        Graph.axisTicks({y:{ticks:value===-1?"auto":value}});
+}
+
+function changeSpacing(e){
+    const target = e.target.id;
+    const value = parseInt(e.target.value);
+
+    if(target === "xSpacing")
+        Graph.axisTicks({x:{minSpacing : value}});
+    if(target === "ySpacing")
+        Graph.axisTicks({y:{minSpacing : value}});
+}
+
 
 
 
@@ -391,6 +435,14 @@ function main(){
     document.querySelector("#yDynamic").addEventListener("change", changeAxisDynamic);
     document.querySelector("#xContained").addEventListener("change", changeAxisDynamic);
     document.querySelector("#yContained").addEventListener("change", changeAxisDynamic);
+    document.querySelector("#marginStart").addEventListener("input", changeMargin);
+    document.querySelector("#marginEnd").addEventListener("input", changeMargin);
+    document.querySelector("#marginTop").addEventListener("input", changeMargin);
+    document.querySelector("#marginBottom").addEventListener("input", changeMargin);
+    document.querySelector("#xTicks").addEventListener("input", changeTicks);
+    document.querySelector("#yTicks").addEventListener("input", changeTicks);
+    document.querySelector("#xSpacing").addEventListener("input", changeSpacing);
+    document.querySelector("#ySpacing").addEventListener("input", changeSpacing);
 }
 
 main();

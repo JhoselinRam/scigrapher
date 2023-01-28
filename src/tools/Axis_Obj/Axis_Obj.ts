@@ -3,11 +3,10 @@ import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, CreateAxis_Props, Label_Rect } from "./Axis_Obj_Types";
 
-const minSpacing = 45;  //Minimun space between ticks in pixels
 const labelOffset = 4;
 
-function CreateAxis({state, axis, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
-    const positions = computePositions(state.scale.primary[axis], ticks);
+function CreateAxis({state, axis, ticks="auto", minSpacing}:CreateAxis_Props) : Axis_Obj{
+    const positions = computePositions(state.scale.primary[axis], ticks, minSpacing);
     const labels = createLabels(positions, state.axis[axis].unit);
     const translation = computeTranslation(state, axis);
     const rects =  computeRects(positions, labels, axis, state, translation);
@@ -83,13 +82,13 @@ function CreateAxis({state, axis, ticks="auto"}:CreateAxis_Props) : Axis_Obj{
 //---------------------------------------------
 //----------- Compute Positions ---------------
 
-function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>) : Array<number>{
+function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>, minSpacing:number) : Array<number>{
     const fullDomain = Math.abs(scale.domain[1] - scale.domain[0]);
     let positions : Array<number> = [];
 
     switch(typeof(ticks)){
         case "string":
-            positions = autoCompute(scale);
+            positions = autoCompute(scale, minSpacing);
             break;
 
         case "number":
@@ -113,7 +112,7 @@ function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>)
 //---------------------------------------------
 //------------- Auto Compute ------------------
 
-function autoCompute(scale:Mapping):Array<number>{
+function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
     const fullRange = Math.abs(scale.range[1] - scale.range[0]);
     let positions : Array<number> = [];
 

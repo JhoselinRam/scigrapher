@@ -64,7 +64,9 @@ export type Ticks_Props = Axis_Property<{
     color : string,
     opacity : number,
     width : number,
-    size : number
+    size : number,
+    ticks : "auto" | number | Array<number>,
+    minSpacing : number
 }>
 
 export type Text_Props = Axis_Property<{

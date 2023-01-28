@@ -2,6 +2,7 @@ import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, RecursivePart
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
 import Labels from "./resourses/Labels/Labels.js";
+import Margin from "./resourses/Margin/Margin.js";
 import Scale from "./resourses/Scale/Scale.js";
 
 const defaultOptions : Graph2D_Options = {
@@ -38,7 +39,9 @@ const defaultOptions : Graph2D_Options = {
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
             dynamic : true,
-            contained : true
+            contained : true,
+            ticks : "auto",
+            minSpacing : 45
         },
         y : {
             start : -5,
@@ -56,7 +59,9 @@ const defaultOptions : Graph2D_Options = {
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
             dynamic : true,
-            contained : true
+            contained : true,
+            ticks : "auto",
+            minSpacing : 45
         },
     },
     secondary : {},
@@ -79,7 +84,9 @@ const defaultSecondaryAxis : Secondary_Axis = {
     textColor : "#000000",
     textOpacity : 1,
     textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
-    textSize : "10px"
+    textSize : "10px",
+    ticks : "auto",
+    minSpacing : 45
 };
 
 const defaultLabel : LabelProperties = {
@@ -126,16 +133,26 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             ...options.axis,
             x : {
                 ...defaultOptions.axis.x,
-                ...options.axis?.x
+                ...options.axis?.x,
+                ticks : options.axis?.x?.ticks!=undefined ? options.axis.x.ticks as "auto"|number|number[] : defaultOptions.axis.x.ticks
             },
             y : {
                 ...defaultOptions.axis.y,
-                ...options.axis?.y
+                ...options.axis?.y,
+                ticks : options.axis?.y?.ticks!=undefined ? options.axis.y.ticks as "auto"|number|number[] : defaultOptions.axis.y.ticks
             },
         },
         secondary : {
-            x : options.secondary?.x === null ? undefined : {...defaultSecondaryAxis, ...options.secondary?.x},
-            y : options.secondary?.y === null ? undefined : {...defaultSecondaryAxis, ...options.secondary?.y}
+            x : options.secondary?.x === null ? undefined : {
+                ...defaultSecondaryAxis, 
+                ...options.secondary?.x,
+                ticks : options.secondary?.x?.ticks!=undefined ? options.secondary.x.ticks as "auto"|number|number[] : defaultSecondaryAxis.ticks
+            },
+            y : options.secondary?.y === null ? undefined : {
+                ...defaultSecondaryAxis, 
+                ...options.secondary?.y,
+                ticks : options.secondary?.y?.ticks!=undefined ? options.secondary.y.ticks as "auto"|number|number[] : defaultSecondaryAxis.ticks
+            }
         },
         labels : {
             title : options.labels?.title === null ? undefined : {
@@ -164,6 +181,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const scale  = Scale({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const axis = Axis({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const labels = Labels({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const margin = Margin({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -192,6 +210,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.axisTicks = axis.axisTicks;
     graphHandler.axisText = axis.axisText;
     graphHandler.axisDynamic = axis.axisDynamic;
+    graphHandler.margin = margin.margin;
 
 
     //Setup configurations

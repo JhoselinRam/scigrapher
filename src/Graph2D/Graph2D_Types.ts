@@ -3,12 +3,13 @@ import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
 import { Background } from "./resourses/Background/Background_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
+import { Margin } from "./resourses/Margin/Margin_Types";
 
 export interface Graph2D extends 
     Omit<Background, "draw" | "drawClientRect">, 
     Omit<Axis,"compute" | "draw">, 
-    Omit<Labels,"compute" | "draw">{
-}
+    Omit<Labels,"compute" | "draw">,
+    Margin{}
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
 export type Axis_Type = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -64,7 +65,9 @@ export interface Primary_Axis {
     textFont : string,
     textSize : string,
     dynamic : boolean,
-    contained : boolean
+    contained : boolean,
+    ticks : "auto" | number | Array<number>,
+    minSpacing : number
 }
 
 export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"> {
