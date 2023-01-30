@@ -105,6 +105,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const state : RequiredExept<Graph2D_State, "compute" | "scale" | "secondary" | "labels" | "context" | "draw" | "axisObj"> = { 
         container,
         render,
+        labelOffset : 4,
         scale : {},
         compute:{
             full : fullCompute,

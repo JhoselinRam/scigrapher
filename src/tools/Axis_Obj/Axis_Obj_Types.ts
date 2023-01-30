@@ -1,16 +1,15 @@
 import { Graph2D_State } from "../../Graph2D/Graph2D_Types";
+
 export interface CreateAxis_Props {
     state : Graph2D_State,
-    axis : "x" | "y",
-    ticks : "auto" | number | Array<number>,
-    minSpacing : number
+    axis : "x" | "y"
 }
 
 export interface Axis_Obj {
     positions : Array<number>,
     labels : Array<string>,
     draw : ()=>void
-    rects ?: Array<Label_Rect>
+    rects : Array<Label_Rect>
 }
 
 export interface Label_Rect {
@@ -20,8 +19,14 @@ export interface Label_Rect {
     height : number
 }
 
-type Draw_Axis_Properties<T> = {
-    base : T,
-    tick : T,
-    text : T
+export interface Create_Labels {
+    labels : Array<string>,
+    maxWidth : number,
+    maxHeight : number
 }
+
+export interface Compute_Sizes {
+    translation : number,
+    axisStart : number,
+    axisEnd : number
+} 

@@ -7,20 +7,10 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 //---------------- Compute --------------------
 
     function compute(){
-        const primaryAxisX = CreateAxis({
-            state, 
-            axis : "x", 
-            ticks : state.axis.x.ticks,
-            minSpacing : state.axis.x.minSpacing
-        });
-        const primaryAxisY = CreateAxis({
-            state, 
-            axis : "y",
-            ticks : state.axis.y.ticks,
-            minSpacing : state.axis.y.minSpacing
-        });
+        const primaryAxisX = CreateAxis({ state, axis : "x" });
+        const primaryAxisY = CreateAxis({ state, axis : "y" });
 
-        state.axisObj.primary = {
+        state.axisObj.primary.obj = {
             x : primaryAxisX,
             y : primaryAxisY
         }
@@ -31,25 +21,8 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 //----------------- Draw ----------------------
 
     function draw(){
-        switch(state.axis.position){
-            case "center":
-                state.axisObj.primary.x.draw();
-                state.axisObj.primary.y.draw();
-
-                break;
-            
-            case "bottom-left":
-                break;
-
-            case "bottom-right":
-                break;
-
-            case "top-left":
-                break;
-
-            case "top-right":
-                break;
-        }
+        state.axisObj.primary.obj?.x.draw();
+        state.axisObj.primary.obj?.y.draw();
     }
 
 //---------------------------------------------

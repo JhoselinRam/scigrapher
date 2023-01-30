@@ -78,6 +78,7 @@ export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"
 export interface Graph2D_State extends Graph2D_Options {
     container : HTMLDivElement,
     render : ()=>void,
+    labelOffset : number,
     context : {
         clientRect : {
             x : number,
@@ -107,8 +108,16 @@ export interface Graph2D_State extends Graph2D_Options {
         axis : ()=>void,
     },
     axisObj : {
-        primary : Axis_Property<Axis_Obj>,
-        secondary ?: Axis_Property<Axis_Obj>
+        primary : {
+            width : number,
+            height : number,
+            obj ?: Axis_Property<Axis_Obj>
+        },
+        secondary ?: {
+            width : number,
+            height : number,
+            obj ?: Axis_Property<Axis_Obj>
+        }
     }
 }
 

@@ -335,7 +335,7 @@ function changeAxisDynamic(e){
 
 function changeMargin(e){
     const target = e.target.id;
-    const value = e.target.value;
+    const value = parseInt(e.target.value);
 
     switch(target){
         case "marginStart":

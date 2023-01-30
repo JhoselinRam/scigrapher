@@ -1,14 +1,12 @@
 import { Graph2D_State } from "../../Graph2D/Graph2D_Types.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
-import { Axis_Obj, CreateAxis_Props, Label_Rect } from "./Axis_Obj_Types";
+import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } from "./Axis_Obj_Types";
 
-const labelOffset = 4;
-
-function CreateAxis({state, axis, ticks="auto", minSpacing}:CreateAxis_Props) : Axis_Obj{
-    const positions = computePositions(state.scale.primary[axis], ticks, minSpacing);
-    const labels = createLabels(positions, state.axis[axis].unit);
-    const translation = computeTranslation(state, axis);
+function CreateAxis({state, axis}:CreateAxis_Props) : Axis_Obj{
+    const positions = computePositions(state.scale.primary[axis], state.axis[axis].ticks, state.axis[axis].minSpacing);
+    const {labels, maxHeight, maxWidth} = createLabels(positions, axis, state);
+    const {translation, axisStart, axisEnd} = computeSizes(state, axis, maxWidth, maxHeight);
     const rects =  computeRects(positions, labels, axis, state, translation);
 
 //----------------- Draw ----------------------
@@ -23,12 +21,12 @@ function CreateAxis({state, axis, ticks="auto", minSpacing}:CreateAxis_Props) : 
         state.context.canvas.globalAlpha = state.axis[axis].baseOpacity;
         state.context.canvas.lineWidth = state.axis[axis].baseWidth;
         if(axis === "x"){
-            state.context.canvas.moveTo(0, translation);
-            state.context.canvas.lineTo(state.context.clientRect.width, translation);
+            state.context.canvas.moveTo(axisStart, translation);
+            state.context.canvas.lineTo(axisEnd, translation);
         }
         if(axis === "y"){
-            state.context.canvas.moveTo(translation, 0);
-            state.context.canvas.lineTo(translation, state.context.clientRect.height);
+            state.context.canvas.moveTo(translation, axisStart);
+            state.context.canvas.lineTo(translation, axisEnd);
         }
         state.context.canvas.stroke();
 
@@ -38,15 +36,65 @@ function CreateAxis({state, axis, ticks="auto", minSpacing}:CreateAxis_Props) : 
         state.context.canvas.globalAlpha = state.axis[axis].tickOpacity;
         state.context.canvas.lineWidth = state.axis[axis].tickWidth;
         positions.forEach(item=>{
-            if(item === 0) return;
+            if(item === 0 && state.axis.position === "center") return;
+
             const coor = Math.round(state.scale.primary[axis].map(item)) + state.axis[axis].tickWidth%2 * 0.5;
-            if(axis==="x"){
-                state.context.canvas.moveTo(coor, translation-state.axis[axis].tickSize);
-                state.context.canvas.lineTo(coor, translation+state.axis[axis].tickSize);
-            }
-            if(axis==="y"){
-                state.context.canvas.moveTo(translation-state.axis[axis].tickSize, coor);
-                state.context.canvas.lineTo(translation+state.axis[axis].tickSize, coor);
+
+            switch(state.axis.position){
+                case "center":
+                    if(axis==="x"){
+                        state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
+                        state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
+                    }
+                    if(axis==="y"){
+                        state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
+                        state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
+                    }
+                    break;
+
+                case "bottom-left":
+                    if(axis==="x"){
+                        state.context.canvas.moveTo(coor, translation);
+                        state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
+                    }
+                    if(axis==="y"){
+                        state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
+                        state.context.canvas.lineTo(translation, coor);
+                    }
+                    break;
+                
+                case "bottom-right":
+                    if(axis==="x"){
+                        state.context.canvas.moveTo(coor, translation);
+                        state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
+                    }
+                    if(axis==="y"){
+                        state.context.canvas.moveTo(translation, coor);
+                        state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
+                    }
+                    break;
+
+                case "top-left":
+                    if(axis==="x"){
+                        state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
+                        state.context.canvas.lineTo(coor, translation);
+                    }
+                    if(axis==="y"){
+                        state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
+                        state.context.canvas.lineTo(translation, coor);
+                    }
+                    break;
+
+                case "top-right":
+                    if(axis==="x"){
+                        state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
+                        state.context.canvas.lineTo(coor, translation);
+                    }
+                    if(axis==="y"){
+                        state.context.canvas.moveTo(translation, coor);
+                        state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
+                    }
+                    break;
             }
         });
         state.context.canvas.stroke();
@@ -56,8 +104,8 @@ function CreateAxis({state, axis, ticks="auto", minSpacing}:CreateAxis_Props) : 
         state.context.canvas.fillStyle = state.axis[axis].textColor;
         state.context.canvas.globalAlpha = state.axis[axis].textOpacity;
         state.context.canvas.font = `${state.axis[axis].textSize} ${state.axis[axis].textFont}`;
-        rects?.forEach((item, index)=>{
-            if(positions[index] === 0) return;
+        rects.forEach((item, index)=>{
+            if(positions[index] === 0 && state.axis.position === "center") return;
 
             state.context.canvas.fillText(labels[index], item.x, item.y);
         });
@@ -82,7 +130,7 @@ function CreateAxis({state, axis, ticks="auto", minSpacing}:CreateAxis_Props) : 
 //---------------------------------------------
 //----------- Compute Positions ---------------
 
-function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>, minSpacing:number) : Array<number>{
+export function computePositions(scale:Mapping, ticks: "auto" | number | Array<number>, minSpacing:number) : Array<number>{
     const fullDomain = Math.abs(scale.domain[1] - scale.domain[0]);
     let positions : Array<number> = [];
 
@@ -154,8 +202,14 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
 //---------------------------------------------
 //------------- Create Labels -----------------
 
-function createLabels(positions:Array<number>, suffix?:string) : Array<string>{
-    return positions.map(position=>{
+export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2D_State) : Create_Labels{
+    let maxWidth : number = 0;
+    let maxHeight : number = 0;
+
+    state.context.canvas.save();
+    state.context.canvas.font = `${state.axis[axis].textSize} ${state.axis[axis].textFont}`;
+
+    const labels = positions.map(position=>{
         let label : string = "";
         const magnitudeOrder = position===0? 0 : Math.floor(Math.log10(Math.abs(position)));
      
@@ -177,19 +231,31 @@ function createLabels(positions:Array<number>, suffix?:string) : Array<string>{
             }
         }
 
-        if(suffix != null)
-            label = `${label}${suffix}`;
+        label = `${label}${state.axis[axis].unit}`;
+        
+        const width = state.context.canvas.measureText(label).width; 
+        if(width > maxWidth)
+            maxWidth = width;
             
         return label;
     });
+    
+    const metrics = state.context.canvas.measureText(labels[0]);
+    maxHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+    state.context.canvas.restore();
+    
+    return {
+        labels,
+        maxWidth,
+        maxHeight
+    }
+
 }
 
 //---------------------------------------------
 //--------------- Compute rects ---------------
 
-function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number) : Array<Label_Rect> | undefined{
-    if(state.axis.position !== "center") return;
-    
+function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number) : Array<Label_Rect>{
     let rects : Array<Label_Rect> = [];
 
     positions.forEach((item, index)=>{
@@ -197,25 +263,25 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
         const textSize = getTextSize(labels[index], axis, state);
         let coord2 = translation; //coordinate 2
 
-        if(state.axis[axis].dynamic){
+        if(state.axis[axis].dynamic && state.axis.position==="center"){
             const textDistance = axis==="x" ? textSize.height : textSize.width;
             const margin = axis==="x" ? state.margin.y.end : state.margin.x.start;
-            let threshold = -margin -textDistance -labelOffset -state.axis[axis].tickSize;
+            let threshold = -margin -textDistance -state.labelOffset -state.axis[axis].tickSize;
             threshold = axis==="x" ? threshold + state.context.clientRect.height : threshold;
             const auxTranslation = axis==="x"? translation : -translation
             
             if(auxTranslation > threshold){
-                const maxOffset = 2*labelOffset + 2*state.axis[axis].tickSize + textDistance;
+                const maxOffset = 2*state.labelOffset + 2*state.axis[axis].tickSize + textDistance;
                 if(axis==="x"){
                     const offset = mapping({
-                        from : [threshold, threshold+textDistance+labelOffset+state.axis[axis].tickSize],
+                        from : [threshold, threshold+textDistance+state.labelOffset+state.axis[axis].tickSize],
                         to : [0, maxOffset]
                     }).map(translation);
                     coord2 -= offset > maxOffset ? maxOffset : offset;    
                 }
                 if(axis==="y"){
                     const offset = mapping({
-                        from : [-threshold, -threshold-textDistance-labelOffset-state.axis[axis].tickSize],
+                        from : [-threshold, -threshold-textDistance-state.labelOffset-state.axis[axis].tickSize],
                         to : [0, maxOffset]
                     }).map(translation);
                     coord2 += offset > maxOffset ? maxOffset : offset;
@@ -223,8 +289,20 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
             }
         }
 
-        const x = axis==="x" ? coord1 - textSize.width/2 : coord2 - state.axis[axis].tickSize - labelOffset - textSize.width;
-        const y = axis==="x" ? coord2 + state.axis[axis].tickSize + labelOffset : coord1 - textSize.height/2;
+
+        let x = axis==="x" ? coord1 - textSize.width/2 : coord2 - state.axis[axis].tickSize - state.labelOffset - textSize.width;
+        let y = axis==="x" ? coord2 + state.axis[axis].tickSize + state.labelOffset : coord1 - textSize.height/2;
+
+        if(state.axis.position === "bottom-right")
+            x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
+        
+        if(state.axis.position === "top-left")
+            y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+
+        if(state.axis.position === "top-right"){
+            x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
+            y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+        }
 
         rects.push({ x, y, width : textSize.width, height: textSize.height});
 
@@ -237,10 +315,16 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 //---------------------------------------------
 //----------- Compute Translation -------------
 
-    function computeTranslation(state:Graph2D_State, axis:"x"|"y") : number{
+    function computeSizes(state:Graph2D_State, axis:"x"|"y", textWidth:number, textHeight:number) : Compute_Sizes{
+        const complementary = axis==="x"? "y":"x";
+        const clientSize = axis==="x"? state.context.clientRect.height : state.context.clientRect.width;
+        const axisSize = axis==="x"? textHeight + state.labelOffset + state.axis[axis].tickSize : textWidth + state.labelOffset + state.axis[axis].tickSize;
+        const compAxisSize = axis==="x" ? state.axisObj.primary.width : state.axisObj.primary.height;
+
         let translation : number = 0;
-        const complementary = axis==="x"?"y":"x";
-        const clientSize = axis==="x" ? state.context.clientRect.height : state.context.clientRect.width;
+        let axisStart : number = 0;
+        let axisEnd : number = axis==="x" ? state.context.clientRect.width : state.context.clientRect.height;
+
 
         switch(state.axis.position){
             case "center":
@@ -256,20 +340,37 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
                 break;
 
             case "bottom-left":
+                translation = axis==="x"? clientSize - state.margin[complementary].start - axisSize :  
+                                          state.margin[complementary].start + axisSize;
+                axisStart = axis==="x"? state.margin[axis].start + compAxisSize : axisStart;
+                axisEnd = axis==="x"? axisEnd : axisEnd - state.margin[axis].start - compAxisSize;
                 break;
 
             case "bottom-right":
+                translation = axis==="x"? clientSize - state.margin[complementary].start - axisSize : 
+                                          clientSize - state.margin[complementary].end - axisSize;
+                axisEnd = axis==="x"? axisEnd - state.margin[axis].end - compAxisSize : axisEnd - state.margin[axis].start - compAxisSize;
                 break;
 
             case "top-left":
+                translation = axis==="x"? state.margin[complementary].end + axisSize : state.margin[complementary].start + axisSize;
+                axisStart = axis==="x"? state.margin[axis].start + compAxisSize : state.margin[axis].end + compAxisSize;
                 break;
 
             case "top-right":
+                translation = axis==="x"? state.margin[complementary].end + axisSize :
+                                          clientSize - state.margin[complementary].end - axisSize;
+                axisStart = axis==="x"? axisStart : state.margin[axis].end + compAxisSize;
+                axisEnd = axis==="x"? axisEnd - state.margin[axis].end - compAxisSize : axisEnd;
                 break;
         }
 
         translation = Math.round(translation) + state.axis[axis].baseWidth%2 * 0.5;
-        return translation;
+        return {
+            translation,
+            axisStart,
+            axisEnd
+        };
 
     }
 
@@ -278,7 +379,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 
     function getTextSize(text:string, axis:"x"|"y", state:Graph2D_State) : {width:number, height:number}{
         state.context.canvas.save();
-        state.context.canvas.font = `${state.axis[axis].textSize}px ${state.axis[axis].textFont}`;
+        state.context.canvas.font = `${state.axis[axis].textSize} ${state.axis[axis].textFont}`;
         const metrics = state.context.canvas.measureText(text);
         state.context.canvas.restore();
 

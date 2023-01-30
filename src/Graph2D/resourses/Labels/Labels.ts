@@ -108,9 +108,6 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
         };
 
-        state.context.canvas.strokeStyle = "#ff0000";
-        state.context.canvas.strokeRect(state.context.clientRect.x, state.context.clientRect.y, state.context.clientRect.width, state.context.clientRect.height);
-
         if(state.labels.title != null && state.labels.title.enable){
             heights.title = getTextHeight({
                 text : state.labels.title.text,
