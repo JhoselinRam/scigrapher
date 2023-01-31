@@ -23,6 +23,7 @@ const defaultOptions : Graph2D_Options = {
     axis : {
         position : "center",
         type : "rectangular",
+        overlapPriority : "x",
         x : {
             start : -5,
             end: 5,
@@ -41,7 +42,8 @@ const defaultOptions : Graph2D_Options = {
             dynamic : true,
             contained : true,
             ticks : "auto",
-            minSpacing : 45
+            minSpacing : 45,
+            overlap : true
         },
         y : {
             start : -5,
@@ -61,11 +63,31 @@ const defaultOptions : Graph2D_Options = {
             dynamic : true,
             contained : true,
             ticks : "auto",
-            minSpacing : 45
+            minSpacing : 45,
+            overlap : true
         },
     },
     secondary : {},
-    labels : {}
+    labels : {},
+    grid : {
+        primary : {
+            enable : true,
+            color : "#000000",
+            opacity : 0.3,
+            style : "solid",
+            width : 1
+        }, 
+        secondary : {
+            enable : true,
+            color : "#000000",
+            opacity : 0.2,
+            style : "dot",
+            width : 1,
+            density : "auto",
+            maxDensity : 5,
+            minSpacing : 20
+        }
+    }
 };
 
 const defaultSecondaryAxis : Secondary_Axis = {
@@ -171,6 +193,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             yPrimary : options.labels?.yPrimary === null ? undefined : {...defaultLabel, ...options.labels?.yPrimary},
             xSecondary : options.labels?.xSecondary === null ? undefined : {...defaultLabel, ...options.labels?.xSecondary},
             ySecondary : options.labels?.ySecondary === null ? undefined : {...defaultLabel, ...options.labels?.ySecondary},
+        },
+        grid : {
+            primary : {...defaultOptions.grid.primary, ...options.grid?.primary},
+            secondary : {...defaultOptions.grid.secondary, ...options.grid?.secondary}
         }
     };
 
@@ -203,7 +229,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.yLabel = labels.yLabel;
     graphHandler.xLabelSecondary = labels.xLabelSecondary;
     graphHandler.yLabelSecondary = labels.yLabelSecondary;
-    graphHandler.domain = axis.domain;
+    graphHandler.axisPosition = axis.axisPosition;
+    graphHandler.axisDomain = axis.axisDomain;
     graphHandler.axisColor = axis.axisColor;
     graphHandler.axisOpacity = axis.axisOpacity;
     graphHandler.axisUnits = axis.axisUnits;
@@ -211,6 +238,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.axisTicks = axis.axisTicks;
     graphHandler.axisText = axis.axisText;
     graphHandler.axisDynamic = axis.axisDynamic;
+    graphHandler.axisOverlap = axis.axisOverlap;
     graphHandler.margin = margin.margin;
 
 

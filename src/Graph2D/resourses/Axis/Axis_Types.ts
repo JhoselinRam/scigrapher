@@ -1,9 +1,13 @@
-import { Axis_Property, Graph2D, RecursivePartial } from "../../Graph2D_Types"
+import { Axis_Position, Axis_Property, Graph2D, RecursivePartial } from "../../Graph2D_Types"
 
 export interface Axis{
     compute : ()=>void,
     draw : ()=>void,
-    domain : {
+    axisPosition : {
+        (position:Axis_Position):Graph2D,
+        (arg:void):Axis_Position
+    },
+    axisDomain : {
         (domain:RecursivePartial<Domain_Props>):Graph2D,
         (arg:void):Domain_Props
     },
@@ -34,6 +38,10 @@ export interface Axis{
     axisDynamic : {
         (options:RecursivePartial<Dynamic_Props>):Graph2D,
         (arg:void):Dynamic_Props
+    },
+    axisOverlap : {
+        (overlap : RecursivePartial<Axis_Overlap>):Graph2D,
+        (arg:void):Axis_Overlap
     }
 }
 
@@ -80,3 +88,9 @@ export type Dynamic_Props = Axis_Property<{
     dynamic : boolean,
     contained : boolean
 }>
+
+export interface Axis_Overlap {
+    priority : "x" | "y",
+    x : boolean,
+    y : boolean
+}

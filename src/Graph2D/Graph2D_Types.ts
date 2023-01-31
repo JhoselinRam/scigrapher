@@ -25,7 +25,8 @@ export interface Graph2D_Options{
     }>,
     axis : {
         type : Axis_Type,
-        position : Axis_Position
+        position : Axis_Position,
+        overlapPriority : "x" | "y"
     } & Axis_Property<Primary_Axis>,
     secondary : Partial<Axis_Property<Secondary_Axis>>,
     labels : {
@@ -35,8 +36,28 @@ export interface Graph2D_Options{
         yPrimary ?:LabelProperties,
         xSecondary ?: LabelProperties,
         ySecondary ?: LabelProperties
+    },
+    grid : {
+        primary : Primary_Grid,
+        secondary : Secondary_Grid
     }
 }
+
+interface Primary_Grid {
+    enable : boolean,
+    color : string,
+    opacity : number,
+    width : number,
+    style : Grid_Style
+}
+
+interface Secondary_Grid extends Primary_Grid {
+    minSpacing : number,
+    maxDensity : number,
+    density : "auto" | number
+}
+
+export type Grid_Style = "solid" | "dot" | "dash" | "long-dash" | "dash-dot" | "dash-2dot" | string;
 
 export type LabelProperties = {
     enable : boolean,
@@ -67,10 +88,11 @@ export interface Primary_Axis {
     dynamic : boolean,
     contained : boolean,
     ticks : "auto" | number | Array<number>,
-    minSpacing : number
+    minSpacing : number,
+    overlap : boolean
 }
 
-export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"> {
+export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"|"overlap"> {
     enable : boolean,
     type : "rectangular" | "log"
 } 

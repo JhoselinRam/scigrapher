@@ -171,7 +171,7 @@ function changeDomain(e){
 
     domain[axis][prop] = parseFloat(e.target.value);
 
-    Graph.domain(domain);
+    Graph.axisDomain(domain);
 }
 
 function changeAxisColor(e){
@@ -377,6 +377,31 @@ function changeSpacing(e){
         Graph.axisTicks({y:{minSpacing : value}});
 }
 
+function changeAxisPosition(e){
+    const position = e.target.value;
+    Graph.axisPosition(position);
+}
+
+function changePriority(e){
+    const target = e.target.id;
+    const value = e.target.checked;
+console.log(target, value);
+    if(target === "xPriority" && value)
+        Graph.axisOverlap({priority:"x"});
+    if(target === "yPriority" && value)
+        Graph.axisOverlap({priority:"y"});
+}
+
+function changeOverlap(e){
+    const target = e.target.id;
+    const value = e.target.checked;
+
+    if(target === "xOverlap")
+        Graph.axisOverlap({x:value});
+    if(target === "yOverlap")
+        Graph.axisOverlap({y:value});
+}
+
 
 
 
@@ -443,6 +468,11 @@ function main(){
     document.querySelector("#yTicks").addEventListener("input", changeTicks);
     document.querySelector("#xSpacing").addEventListener("input", changeSpacing);
     document.querySelector("#ySpacing").addEventListener("input", changeSpacing);
+    document.querySelector("#axisPosition").addEventListener("change", changeAxisPosition);
+    document.querySelector("#xOverlap").addEventListener("change", changeOverlap);
+    document.querySelector("#yOverlap").addEventListener("change", changeOverlap);
+    document.querySelector("#xPriority").addEventListener("input", changePriority);
+    document.querySelector("#yPriority").addEventListener("input", changePriority);
 }
 
 main();

@@ -1,6 +1,6 @@
 import CreateAxis from "../../../tools/Axis_Obj/Axis_Obj.js";
-import { Axis_Property, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
-import { Axis, Axis_Modifier, Axis_Modifier_Props, Base_Props, Domain_Props, Dynamic_Props, Text_Props, Ticks_Props } from "./Axis_Types";
+import { Axis_Position, Axis_Property, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Axis, Axis_Modifier, Axis_Modifier_Props, Axis_Overlap, Base_Props, Domain_Props, Dynamic_Props, Text_Props, Ticks_Props } from "./Axis_Types";
 
 function Axis({state, graphHandler}:Method_Generator) : Axis{
 
@@ -21,8 +21,14 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 //----------------- Draw ----------------------
 
     function draw(){
-        state.axisObj.primary.obj?.x.draw();
-        state.axisObj.primary.obj?.y.draw();
+        if(state.axis.overlapPriority === "x"){
+            state.axisObj.primary.obj?.y.draw();
+            state.axisObj.primary.obj?.x.draw();
+        }
+        if(state.axis.overlapPriority === "y"){
+            state.axisObj.primary.obj?.x.draw();
+            state.axisObj.primary.obj?.y.draw();
+        }
     }
 
 //---------------------------------------------
@@ -42,11 +48,32 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 
 //---------- Customization Methods ------------
 
+//-------------- Axis Position ----------------
+
+    function axisPosition(position : Axis_Position) : Graph2D;
+    function axisPosition(arg : void) : Axis_Position;
+    function axisPosition(position : Axis_Position | void) : Graph2D | Axis_Position | undefined {
+        if(typeof position === "undefined")
+            return state.axis.position;
+
+        if(typeof position === "string"){
+            if(position === state.axis.position) return graphHandler;
+
+            state.axis.position = position;
+
+            state.compute.client();
+            state.draw.client();
+
+            return graphHandler;
+        }
+    }
+
+//---------------------------------------------
 //----------------- Domain --------------------
 
-function domain(domain:RecursivePartial<Domain_Props>) : Graph2D;
-function domain(arg:void) : Domain_Props;
-function domain(domain:RecursivePartial<Domain_Props> | void) : Graph2D | Domain_Props | undefined{
+function axisDomain(domain:RecursivePartial<Domain_Props>) : Graph2D;
+function axisDomain(arg:void) : Domain_Props;
+function axisDomain(domain:RecursivePartial<Domain_Props> | void) : Graph2D | Domain_Props | undefined{
     if(typeof domain === "undefined")
         return {
             x : {
@@ -422,6 +449,32 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
         }
     }
 
+//---------------------------------------------
+//-------------- Axis Overlap -----------------
+
+    function axisOverlap(overlap : RecursivePartial<Axis_Overlap>) : Graph2D;
+    function axisOverlap(arg : void) : Axis_Overlap;
+    function axisOverlap(overlap:RecursivePartial<Axis_Overlap>|void) : Graph2D|Axis_Overlap|undefined{
+        if(typeof overlap === "undefined")
+            return {
+                priority : state.axis.overlapPriority,
+                x : state.axis.x.overlap,
+                y : state.axis.y.overlap
+            };
+
+        if(typeof overlap === "object"){
+            if(overlap.priority == null && overlap.x == null && overlap.y == null) return graphHandler;
+            if(overlap.priority === state.axis.overlapPriority && overlap.x === state.axis.x.overlap && overlap.y === state.axis.y.overlap) return graphHandler;
+
+            if(overlap.priority != null) state.axis.overlapPriority = overlap.priority;
+            if(overlap.x != null) state.axis.x.overlap = overlap.x;
+            if(overlap.y != null) state.axis.y.overlap = overlap.y;
+
+            state.draw.client();
+
+            return graphHandler;
+        }
+    }
 
 //---------------------------------------------
 
@@ -429,14 +482,16 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
     return {
         compute,
         draw,
-        domain,
+        axisPosition,
+        axisDomain,
         axisColor,
         axisOpacity,
         axisUnits,
         axisBase,
         axisTicks,
         axisText,
-        axisDynamic
+        axisDynamic,
+        axisOverlap
     }
 }
 
