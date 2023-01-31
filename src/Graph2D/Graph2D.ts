@@ -1,6 +1,7 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
+import Grid from "./resourses/Grid/Grid.js";
 import Labels from "./resourses/Labels/Labels.js";
 import Margin from "./resourses/Margin/Margin.js";
 import Scale from "./resourses/Scale/Scale.js";
@@ -71,21 +72,42 @@ const defaultOptions : Graph2D_Options = {
     labels : {},
     grid : {
         primary : {
-            enable : true,
-            color : "#000000",
-            opacity : 0.3,
-            style : "solid",
-            width : 1
+            x : {
+                enable : true,
+                color : "#000000",
+                opacity : 0.3,
+                style : "solid",
+                width : 1
+            },
+            y : {
+                enable : true,
+                color : "#000000",
+                opacity : 0.3,
+                style : "solid",
+                width : 1
+            }
         }, 
         secondary : {
-            enable : true,
-            color : "#000000",
-            opacity : 0.2,
-            style : "dot",
-            width : 1,
-            density : "auto",
-            maxDensity : 5,
-            minSpacing : 20
+            x : {
+                enable : true,
+                color : "#000000",
+                opacity : 0.2,
+                style : "dot",
+                width : 1,
+                density : "auto",
+                maxDensity : 5,
+                minSpacing : 20
+            },
+            y : {
+                enable : true,
+                color : "#000000",
+                opacity : 0.2,
+                style : "dot",
+                width : 1,
+                density : "auto",
+                maxDensity : 5,
+                minSpacing : 20
+            }
         }
     }
 };
@@ -195,8 +217,14 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             ySecondary : options.labels?.ySecondary === null ? undefined : {...defaultLabel, ...options.labels?.ySecondary},
         },
         grid : {
-            primary : {...defaultOptions.grid.primary, ...options.grid?.primary},
-            secondary : {...defaultOptions.grid.secondary, ...options.grid?.secondary}
+            primary : {
+                x : {...defaultOptions.grid.primary.x, ...options.grid?.primary?.x},
+                y : {...defaultOptions.grid.primary.y, ...options.grid?.primary?.y}
+            },
+            secondary : {
+                x : {...defaultOptions.grid.secondary.x, ...options.grid?.secondary?.x},
+                y : {...defaultOptions.grid.secondary.y, ...options.grid?.secondary?.y}
+            }
         }
     };
 
@@ -209,6 +237,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const axis = Axis({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const labels = Labels({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const margin = Margin({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const grid = Grid({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -218,6 +247,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     state.draw.backgroundClientRect = background.drawClientRect;
     state.draw.labels = labels.draw;
     state.draw.axis = axis.draw;
+    state.draw.grid = grid.draw;
 
 
     //Main object population
@@ -264,7 +294,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         const fullState = state as Graph2D_State;
 
         fullState.compute.scale();
-        fullState.compute.axis();    
+        fullState.compute.axis();   
     }
 
     //Helper function, draws all elements.
@@ -280,6 +310,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     function drawClientArea(){
         const fullState = state as Graph2D_State;
 
+        fullState.draw.grid();
         fullState.draw.backgroundClientRect();
         fullState.draw.axis();
     }
