@@ -17,10 +17,10 @@ function CreateAxis({state, axis}:CreateAxis_Props) : Axis_Obj{
         state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         //Base
-        state.context.canvas.beginPath();
         state.context.canvas.strokeStyle = state.axis[axis].baseColor;
         state.context.canvas.globalAlpha = state.axis[axis].baseOpacity;
         state.context.canvas.lineWidth = state.axis[axis].baseWidth;
+        state.context.canvas.beginPath();
         if(axis === "x"){
             state.context.canvas.moveTo(axisStart, translation);
             state.context.canvas.lineTo(axisEnd, translation);
@@ -32,10 +32,10 @@ function CreateAxis({state, axis}:CreateAxis_Props) : Axis_Obj{
         state.context.canvas.stroke();
 
         //Ticks
-        state.context.canvas.beginPath();
         state.context.canvas.strokeStyle = state.axis[axis].tickColor;
         state.context.canvas.globalAlpha = state.axis[axis].tickOpacity;
         state.context.canvas.lineWidth = state.axis[axis].tickWidth;
+        state.context.canvas.beginPath();
         positions.forEach(item=>{
             if(item === 0 && state.axis.position === "center") return;
 

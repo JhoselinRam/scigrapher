@@ -50,7 +50,7 @@ interface Primary_Grid {
     color : string,
     opacity : number,
     width : number,
-    style : Grid_Style
+    style : string
 }
 
 interface Secondary_Grid extends Primary_Grid {
@@ -58,8 +58,6 @@ interface Secondary_Grid extends Primary_Grid {
     maxDensity : number,
     density : "auto" | number
 }
-
-export type Grid_Style = "solid" | "dot" | "dash" | "long-dash" | "dash-dot" | "dash-2dot" | string;
 
 export type LabelProperties = {
     enable : boolean,

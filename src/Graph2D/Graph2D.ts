@@ -75,14 +75,14 @@ const defaultOptions : Graph2D_Options = {
             x : {
                 enable : true,
                 color : "#000000",
-                opacity : 0.3,
+                opacity : 0.2,
                 style : "solid",
                 width : 1
             },
             y : {
                 enable : true,
                 color : "#000000",
-                opacity : 0.3,
+                opacity : 0.2,
                 style : "solid",
                 width : 1
             }
@@ -310,8 +310,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     function drawClientArea(){
         const fullState = state as Graph2D_State;
 
-        fullState.draw.grid();
         fullState.draw.backgroundClientRect();
+        fullState.draw.grid();
         fullState.draw.axis();
     }
 
