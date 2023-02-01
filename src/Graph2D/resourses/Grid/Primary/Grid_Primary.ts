@@ -1,8 +1,9 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
-import { Axis_Property, Method_Generator } from "../../../Graph2D_Types";
+import { Axis_Property } from "../../../Graph2D_Types";
+import { Grid_Method_Generator } from "../Grid_Types";
 import { Primary_Grid } from "./Grid_Primary_Types";
 
-function PrimaryGrid({state, graphHandler} : Method_Generator, getLineDash:(style:string)=>number[]) : Primary_Grid {
+function PrimaryGrid({state, graphHandler, getLineDash, getMinMaxCoords} : Grid_Method_Generator) : Primary_Grid {
 
 //----------------- Draw ----------------------
 
@@ -42,40 +43,6 @@ function PrimaryGrid({state, graphHandler} : Method_Generator, getLineDash:(styl
         state.context.canvas.stroke();
 
         state.context.canvas.restore();
-    }
-
-//---------------------------------------------
-//---------------------------------------------
-
-    function getMinMaxCoords(axis : "x" | "y") : [number, number]{
-        const clientSize = axis==="x"? state.context.clientRect.height : state.context.clientRect.width;
-        const axisSize = axis==="x"? state.axisObj.primary.height : state.axisObj.primary.width;
-        const marginStart = axis==="x"? state.margin.y.end : state.margin.x.start;
-        const marginEnd = axis==="x"? state.margin.y.start : state.margin.x.end;
-        let start = 0;
-        let end = clientSize;
-
-        switch(state.axis.position){
-            case "bottom-left":
-                start = axis==="x"? start : marginStart + axisSize;
-                end = axis==="x"? clientSize - marginEnd - axisSize : end;
-                break;
-
-            case "bottom-right":
-                end = clientSize - marginStart - axisSize;
-                break;
-            
-            case "top-left":
-                start = marginStart + axisSize;
-                break;
-
-            case "top-right":
-                start = axis==="x"? marginStart + axisSize : start;
-                end = axis==="x"? end : clientSize - marginEnd - axisSize;
-                break;
-        }
-
-        return [start, end];
     }
 
 //---------------------------------------------

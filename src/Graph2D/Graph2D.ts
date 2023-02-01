@@ -91,7 +91,7 @@ const defaultOptions : Graph2D_Options = {
             x : {
                 enable : true,
                 color : "#000000",
-                opacity : 0.2,
+                opacity : 0.1,
                 style : "dot",
                 width : 1,
                 density : "auto",
@@ -101,7 +101,7 @@ const defaultOptions : Graph2D_Options = {
             y : {
                 enable : true,
                 color : "#000000",
-                opacity : 0.2,
+                opacity : 0.1,
                 style : "dot",
                 width : 1,
                 density : "auto",
