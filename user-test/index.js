@@ -402,6 +402,16 @@ function changeOverlap(e){
         Graph.axisOverlap({y:value});
 }
 
+function enableGrid(e){
+    const target = e.target.id;
+    const value = e.target.checked;
+
+    switch(target){
+        case "xPrimaryGrid":
+        
+    }
+}
+
 
 
 

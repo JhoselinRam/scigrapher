@@ -270,6 +270,12 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.axisDynamic = axis.axisDynamic;
     graphHandler.axisOverlap = axis.axisOverlap;
     graphHandler.margin = margin.margin;
+    graphHandler.gridColor = grid.gridColor;
+    graphHandler.gridOpacity = grid.gridOpacity;
+    graphHandler.gridStyle = grid.gridStyle;
+    graphHandler.gridWidth = grid.gridWidth;
+    graphHandler.primaryGrid = grid.primaryGrid;
+    graphHandler.secondaryGrid = grid.secondaryGrid;
 
 
     //Setup configurations

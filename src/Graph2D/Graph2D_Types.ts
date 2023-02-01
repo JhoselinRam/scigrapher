@@ -45,7 +45,7 @@ export interface Graph2D_Options{
     }
 }
 
-interface Primary_Grid {
+export interface Primary_Grid {
     enable : boolean,
     color : string,
     opacity : number,
@@ -53,7 +53,7 @@ interface Primary_Grid {
     style : string
 }
 
-interface Secondary_Grid extends Primary_Grid {
+export interface Secondary_Grid extends Primary_Grid {
     minSpacing : number,
     maxDensity : number,
     density : "auto" | number
