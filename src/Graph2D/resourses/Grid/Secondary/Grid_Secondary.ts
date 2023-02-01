@@ -20,9 +20,9 @@ function SecondaryGrid({state, graphHandler, getLineDash, getMinMaxCoords}:Grid_
     function drawByAxis(axis:"x"|"y"){
         const [start, end] = getMinMaxCoords(axis);
         const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions;
-        const partition = getPartition(axis);
         const drawAt = positions.map(item=>state.scale.primary[axis].map(item));    //Maps to "linear space" so it works on log scales
         drawAt.push(drawAt[drawAt.length-1] + drawAt[1]-drawAt[0]); //Adds one more position at the end
+        const partition = getPartition(axis, Math.abs(drawAt[1]-drawAt[0]));
         const spacing = (drawAt[1]-drawAt[0])/partition;
 
         state.context.canvas.save();
@@ -35,7 +35,7 @@ function SecondaryGrid({state, graphHandler, getLineDash, getMinMaxCoords}:Grid_
         state.context.canvas.beginPath();
         drawAt.forEach(item=>{
             for(let i=1; i<partition; i++){
-                const coord = Math.round(item-i*spacing) + state.axis[axis].tickWidth%2 * 0.5;
+                const coord = Math.round(item-i*spacing) + state.grid.secondary[axis].width%2 * 0.5;
                 if(axis === "x"){
                     state.context.canvas.moveTo(coord, start);
                     state.context.canvas.lineTo(coord, end);
@@ -57,16 +57,16 @@ function SecondaryGrid({state, graphHandler, getLineDash, getMinMaxCoords}:Grid_
 //---------------------------------------------
 //---------------------------------------------
 
-    function getPartition(axis:"x"|"y") : number{
-        let spacing = 5;
+    function getPartition(axis:"x"|"y", interval:number) : number{
+        let spacing = 0;
 
         if(typeof state.grid.secondary[axis].density === "number")
             spacing = state.grid.secondary[axis].density as number;
 
         if(state.grid.secondary[axis].density === "auto"){
-            
+            const minPartition = Math.ceil(interval/state.grid.secondary[axis].minSpacing);
+            spacing = minPartition<state.grid.secondary[axis].maxDensity? minPartition : state.grid.secondary[axis].maxDensity;
         }
-
 
         return spacing;
     }

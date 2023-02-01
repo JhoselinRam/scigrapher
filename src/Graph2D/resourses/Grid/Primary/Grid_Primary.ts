@@ -30,7 +30,7 @@ function PrimaryGrid({state, graphHandler, getLineDash, getMinMaxCoords} : Grid_
         state.context.canvas.setLineDash(getLineDash(state.grid.primary[axis].style));
         state.context.canvas.beginPath();
         positions.forEach(item=>{
-            const coord = Math.round(state.scale.primary[axis].map(item)) + state.axis[axis].tickWidth%2 * 0.5;
+            const coord = Math.round(state.scale.primary[axis].map(item)) + state.grid.primary[axis].width%2 * 0.5;
             if(axis === "x"){
                 state.context.canvas.moveTo(coord, start);
                 state.context.canvas.lineTo(coord, end);
