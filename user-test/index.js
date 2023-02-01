@@ -408,7 +408,57 @@ function enableGrid(e){
 
     switch(target){
         case "xPrimaryGrid":
+            Graph.primaryGrid({x:{enable:value}});
+            break;
         
+        case "yPrimaryGrid":
+            Graph.primaryGrid({y:{enable:value}});
+            break;
+        
+        case "xSecondaryGrid":
+            Graph.secondaryGrid({x:{enable:value}});
+            break;
+        
+        case "ySecondaryGrid":
+            Graph.secondaryGrid({y:{enable:value}});
+            break;
+        
+    }
+}
+
+function changeGridColor(e){
+    const target = document.querySelector("#gridColorTarget").value;
+    const color = e.target.value;
+
+    switch(target){
+        case "all":
+            Graph.gridColor({grid:color});
+            break;
+            
+        case "primary":
+            Graph.gridColor({primary:color});
+            break;
+
+        case "secondary":
+            Graph.gridColor({secondary:color});
+            break;
+
+        case "xPrimary":
+            Graph.gridColor({x:{primary:color}});
+            break;
+
+        case "yPrimary":
+            Graph.gridColor({y:{primary:color}});
+            break;
+ 
+        case "xSecondary":
+            Graph.gridColor({x:{secondary:color}});
+            break;
+
+        case "ySecondary":
+            Graph.gridColor({y:{secondary:color}});
+            break;
+ 
     }
 }
 
@@ -483,6 +533,11 @@ function main(){
     document.querySelector("#yOverlap").addEventListener("change", changeOverlap);
     document.querySelector("#xPriority").addEventListener("input", changePriority);
     document.querySelector("#yPriority").addEventListener("input", changePriority);
+    document.querySelector("#xPrimaryGrid").addEventListener("change", enableGrid);
+    document.querySelector("#yPrimaryGrid").addEventListener("change", enableGrid);
+    document.querySelector("#xSecondaryGrid").addEventListener("change", enableGrid);
+    document.querySelector("#ySecondaryGrid").addEventListener("change", enableGrid);
+    document.querySelector("#gridColor").addEventListener("input", changeGridColor);
 }
 
 main();
