@@ -1,7 +1,7 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
 import { Axis_Property, Graph2D, RecursivePartial, Secondary_Grid } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
-import { Secondary_Grid_Generator } from "./Grid_Secondary_Types";
+import { Secondary_Grid_Generator, Secondary_Grid_Modifier } from "./Grid_Secondary_Types";
 
 function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator) : Secondary_Grid_Generator {
 
@@ -88,30 +88,49 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 //---------- Customization Methods ------------
 //-------------- Primary Grid -----------------
 
-function secondaryGrid(grid : RecursivePartial<Axis_Property<Secondary_Grid>>) : Graph2D;
+function secondaryGrid(grid : Secondary_Grid_Modifier) : Graph2D;
 function secondaryGrid(arg : void) : Axis_Property<Secondary_Grid>;
-function secondaryGrid(grid : RecursivePartial<Axis_Property<Secondary_Grid>>|void) : Graph2D|Axis_Property<Secondary_Grid>|undefined{
+function secondaryGrid(grid : Secondary_Grid_Modifier|void) : Graph2D|Axis_Property<Secondary_Grid>|undefined{
     if(typeof grid === "undefined")
         return state.grid.secondary;
 
     if(typeof grid === "object"){
-        if(grid.x == null && grid.y==null) return graphHandler;
-        if(grid.x?.color === state.grid.secondary.x.color && 
-           grid.x?.opacity === state.grid.secondary.x.opacity &&
-           grid.x?.enable === state.grid.secondary.x.enable &&
-           grid.x?.style === state.grid.secondary.x.style &&
-           grid.x?.width === state.grid.secondary.x.width &&
-           grid.x?.density === state.grid.secondary.x.density &&
-           grid.x?.minSpacing === state.grid.secondary.x.minSpacing &&
-           grid.x?.maxDensity === state.grid.secondary.x.maxDensity &&
-           grid.y?.color === state.grid.secondary.y.color && 
-           grid.y?.opacity === state.grid.secondary.y.opacity &&
-           grid.y?.enable === state.grid.secondary.y.enable &&
-           grid.y?.style === state.grid.secondary.y.style &&
-           grid.y?.width === state.grid.secondary.y.width &&
-           grid.y?.density === state.grid.secondary.y.density &&
-           grid.y?.minSpacing === state.grid.secondary.y.minSpacing &&
-           grid.y?.maxDensity === state.grid.secondary.y.maxDensity) return graphHandler;
+        if(grid.grid==null && grid.x == null && grid.y==null) return graphHandler;
+        
+
+        if(grid.grid?.color!=null){
+            state.grid.secondary.x.color = grid.grid.color;
+            state.grid.secondary.y.color = grid.grid.color;
+        }
+        if(grid.grid?.opacity!=null){
+            const newOpacity = grid.grid.opacity<0?0:(grid.grid.opacity>1?1:grid.grid.opacity);
+            state.grid.secondary.x.opacity = newOpacity;
+            state.grid.secondary.y.opacity = newOpacity;
+        }
+        if(grid.grid?.enable!=null){
+            state.grid.secondary.x.enable = grid.grid.enable;
+            state.grid.secondary.y.enable = grid.grid.enable;
+        }
+        if(grid.grid?.style!=null){
+            state.grid.secondary.x.style = grid.grid.style;
+            state.grid.secondary.y.style = grid.grid.style;
+        }
+        if(grid.grid?.width!=null){
+            state.grid.secondary.x.width = grid.grid.width;
+            state.grid.secondary.y.width = grid.grid.width;
+        }
+        if(grid.grid?.density!=null){
+            state.grid.secondary.x.density = grid.grid.density;
+            state.grid.secondary.y.density = grid.grid.density;
+        }
+        if(grid.grid?.minSpacing!=null){
+            state.grid.secondary.x.minSpacing = grid.grid.minSpacing;
+            state.grid.secondary.y.minSpacing = grid.grid.minSpacing;
+        }
+        if(grid.grid?.maxDensity!=null){
+            state.grid.secondary.x.maxDensity = grid.grid.maxDensity;
+            state.grid.secondary.y.maxDensity = grid.grid.maxDensity;
+        }
 
         if(grid.x?.enable !=null) state.grid.secondary.x.enable = grid.x.enable;
         if(grid.x?.color !=null) state.grid.secondary.x.color = grid.x.color;

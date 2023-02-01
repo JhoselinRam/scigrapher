@@ -3,7 +3,11 @@ import { Axis_Property, Graph2D, RecursivePartial, Secondary_Grid } from "../../
 export interface Secondary_Grid_Generator {
     draw : (xMin : number, xMax : number, yMin : number, yMax:number)=>void,
     secondaryGrid : {
-        (grid : RecursivePartial<Axis_Property<Secondary_Grid>>) : Graph2D,
+        (grid : Secondary_Grid_Modifier) : Graph2D,
         (arg : void) : Axis_Property<Secondary_Grid>
     }
+}
+
+export interface Secondary_Grid_Modifier extends RecursivePartial<Axis_Property<Secondary_Grid>> {
+    grid ?: Secondary_Grid
 }

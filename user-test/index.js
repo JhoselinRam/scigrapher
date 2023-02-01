@@ -427,7 +427,7 @@ function enableGrid(e){
 }
 
 function changeGridColor(e){
-    const target = document.querySelector("#gridColorTarget").value;
+    const target = document.querySelector("#gridTarget").value;
     const color = e.target.value;
 
     switch(target){
@@ -459,6 +459,183 @@ function changeGridColor(e){
             Graph.gridColor({y:{secondary:color}});
             break;
  
+    }
+}
+
+function changeGridOpacity(e){
+    const target = document.querySelector("#gridTarget").value;
+    const value = parseFloat(e.target.value);
+
+    switch(target){
+        case "all":
+            Graph.gridOpacity({grid:value});
+            break;
+            
+        case "primary":
+            Graph.gridOpacity({primary:value});
+            break;
+
+        case "secondary":
+            Graph.gridOpacity({secondary:value});
+            break;
+
+        case "xPrimary":
+            Graph.gridOpacity({x:{primary:value}});
+            break;
+
+        case "yPrimary":
+            Graph.gridOpacity({y:{primary:value}});
+            break;
+ 
+        case "xSecondary":
+            Graph.gridOpacity({x:{secondary:value}});
+            break;
+
+        case "ySecondary":
+            Graph.gridOpacity({y:{secondary:value}});
+            break;
+ 
+    }
+}
+
+function changeGridWidth(e){
+    const target = document.querySelector("#gridTarget").value;
+    const value = parseInt(e.target.value);
+
+    switch(target){
+        case "all":
+            Graph.gridWidth({grid:value});
+            break;
+            
+        case "primary":
+            Graph.gridWidth({primary:value});
+            break;
+
+        case "secondary":
+            Graph.gridWidth({secondary:value});
+            break;
+
+        case "xPrimary":
+            Graph.gridWidth({x:{primary:value}});
+            break;
+
+        case "yPrimary":
+            Graph.gridWidth({y:{primary:value}});
+            break;
+ 
+        case "xSecondary":
+            Graph.gridWidth({x:{secondary:value}});
+            break;
+
+        case "ySecondary":
+            Graph.gridWidth({y:{secondary:value}});
+            break;
+ 
+    }
+}
+
+function changeGridStyle(e){
+    const target = document.querySelector("#gridTarget").value;
+    const value = e.target.value;
+
+    switch(target){
+        case "all":
+            Graph.gridStyle({grid:value});
+            break;
+            
+        case "primary":
+            Graph.gridStyle({primary:value});
+            break;
+
+        case "secondary":
+            Graph.gridStyle({secondary:value});
+            break;
+
+        case "xPrimary":
+            Graph.gridStyle({x:{primary:value}});
+            break;
+
+        case "yPrimary":
+            Graph.gridStyle({y:{primary:value}});
+            break;
+ 
+        case "xSecondary":
+            Graph.gridStyle({x:{secondary:value}});
+            break;
+
+        case "ySecondary":
+            Graph.gridStyle({y:{secondary:value}});
+            break;
+    }
+}
+
+function changeGridDensity(e){
+    const target = document.querySelector("#gridTarget").value;
+    let value = parseInt(e.target.value);
+    value = value>-1?value:"auto";
+    
+    switch(target){
+        case "all":
+            Graph.secondaryGrid({grid:{density:value}});
+            break;
+
+        case "secondary":
+            Graph.secondaryGrid({grid:{density:value}});
+            break;
+ 
+        case "xSecondary":
+            Graph.secondaryGrid({x:{density:value}});
+            break;
+
+        case "ySecondary":
+            Graph.secondaryGrid({x:{density:value}});
+            break;
+    }
+}
+
+function changeGridSpacing(e){
+    const target = document.querySelector("#gridTarget").value;
+    let value = parseInt(e.target.value);
+    
+    switch(target){
+        case "all":
+            Graph.secondaryGrid({grid:{minSpacing:value}});
+            break;
+
+        case "secondary":
+            Graph.secondaryGrid({grid:{minSpacing:value}});
+            break;
+ 
+        case "xSecondary":
+            Graph.secondaryGrid({x:{minSpacing:value}});
+            break;
+
+        case "ySecondary":
+            Graph.secondaryGrid({x:{minSpacing:value}});
+            break;
+    }
+}
+
+function changeGridMaxDensity(e){
+    const target = document.querySelector("#gridTarget").value;
+    let value = parseInt(e.target.value);
+    
+    switch(target){
+        case "all":
+            Graph.secondaryGrid({grid:{maxDensity:value}});
+            break;
+
+        case "secondary":
+            Graph.secondaryGrid({grid:{maxDensity:value}});
+            break;
+ 
+        case "xSecondary":
+            Graph.secondaryGrid({x:{maxDensity:value}});
+            break;
+
+        case "ySecondary":
+            Graph.secondaryGrid({x:{maxDensity:value}});
+            break;
     }
 }
 
@@ -538,6 +715,13 @@ function main(){
     document.querySelector("#xSecondaryGrid").addEventListener("change", enableGrid);
     document.querySelector("#ySecondaryGrid").addEventListener("change", enableGrid);
     document.querySelector("#gridColor").addEventListener("input", changeGridColor);
+    document.querySelector("#gridOpacity").addEventListener("input", changeGridOpacity);
+    document.querySelector("#gridWidth").addEventListener("input", changeGridWidth);
+    document.querySelector("#gridStyle").addEventListener("change", changeGridStyle);
+    document.querySelector("#gridDensity").addEventListener("input", changeGridDensity);
+    document.querySelector("#gridSpacing").addEventListener("input", changeGridSpacing);
+    document.querySelector("#gridMaxDensity").addEventListener("input", changeGridMaxDensity);
+
 }
 
 main();

@@ -1,7 +1,7 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
 import { Axis_Property, Graph2D, Primary_Grid, RecursivePartial } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
-import { Primary_Grid_Generator } from "./Grid_Primary_Types";
+import { Primary_Grid_Generator, Primary_Grid_Modifier } from "./Grid_Primary_Types";
 
 function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator) : Primary_Grid_Generator {
 
@@ -61,24 +61,37 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
 //---------- Customization Methods ------------
 //-------------- Primary Grid -----------------
 
-    function primaryGrid(grid : RecursivePartial<Axis_Property<Primary_Grid>>) : Graph2D;
+    function primaryGrid(grid : Primary_Grid_Modifier) : Graph2D;
     function primaryGrid(arg : void) : Axis_Property<Primary_Grid>;
-    function primaryGrid(grid : RecursivePartial<Axis_Property<Primary_Grid>>|void) : Graph2D|Axis_Property<Primary_Grid>|undefined{
+    function primaryGrid(grid : Primary_Grid_Modifier|void) : Graph2D|Axis_Property<Primary_Grid>|undefined{
         if(typeof grid === "undefined")
             return state.grid.primary;
 
         if(typeof grid === "object"){
-            if(grid.x == null && grid.y==null) return graphHandler;
-            if(grid.x?.color === state.grid.primary.x.color && 
-               grid.x?.opacity === state.grid.primary.x.opacity &&
-               grid.x?.enable === state.grid.primary.x.enable &&
-               grid.x?.style === state.grid.primary.x.style &&
-               grid.x?.width === state.grid.primary.x.width &&
-               grid.y?.color === state.grid.primary.y.color && 
-               grid.y?.opacity === state.grid.primary.y.opacity &&
-               grid.y?.enable === state.grid.primary.y.enable &&
-               grid.y?.style === state.grid.primary.y.style &&
-               grid.y?.width === state.grid.primary.y.width ) return graphHandler;
+            if(grid.grid==null && grid.x == null && grid.y==null) return graphHandler;
+            
+            
+            if(grid.grid?.color!=null){
+                state.grid.primary.x.color = grid.grid.color;
+                state.grid.primary.y.color = grid.grid.color;
+            }
+            if(grid.grid?.opacity!=null){
+                const newOpacity = grid.grid.opacity<0?0:(grid.grid.opacity>1?1:grid.grid.opacity);
+                state.grid.primary.x.opacity = newOpacity;
+                state.grid.primary.y.opacity = newOpacity;
+            }
+            if(grid.grid?.enable!=null){
+                state.grid.primary.x.enable = grid.grid.enable;
+                state.grid.primary.y.enable = grid.grid.enable;
+            }
+            if(grid.grid?.style!=null){
+                state.grid.primary.x.style = grid.grid.style;
+                state.grid.primary.y.style = grid.grid.style;
+            }
+            if(grid.grid?.width!=null){
+                state.grid.primary.x.width = grid.grid.width;
+                state.grid.primary.y.width = grid.grid.width;
+            }
 
             if(grid.x?.enable !=null) state.grid.primary.x.enable = grid.x.enable;
             if(grid.x?.color !=null) state.grid.primary.x.color = grid.x.color;
