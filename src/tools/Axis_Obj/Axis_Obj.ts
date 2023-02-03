@@ -1,13 +1,16 @@
-import { Graph2D_State } from "../../Graph2D/Graph2D_Types.js";
+import { Axis_Property, Graph2D_State } from "../../Graph2D/Graph2D_Types.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } from "./Axis_Obj_Types";
 
-function CreateAxis({state, axis}:CreateAxis_Props) : Axis_Obj{
-    const positions = computePositions(state.scale.primary[axis], state.axis[axis].ticks, state.axis[axis].minSpacing);
+function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
+    const complementary = axis==="x"?"y":"x";
+    const scaleUsed = (state.scale[scale] as Axis_Property<Mapping>)[axis];
+    const compScale = (state.scale[scale] as Axis_Property<Mapping>)[complementary];
+    const positions = computePositions(scaleUsed, state.axis[axis].ticks, state.axis[axis].minSpacing);
     const {labels, maxHeight, maxWidth} = createLabels(positions, axis, state);
-    const {translation, axisStart, axisEnd} = computeSizes(state, axis, maxWidth, maxHeight);
-    const rects =  computeRects(positions, labels, axis, state, translation);
+    const {translation, axisStart, axisEnd} = computeSizes(state, axis, maxWidth, maxHeight, compScale, scale);
+    const rects =  computeRects(positions, labels, axis, state, translation, scaleUsed);
 
 //----------------- Draw ----------------------
     
@@ -39,7 +42,7 @@ function CreateAxis({state, axis}:CreateAxis_Props) : Axis_Obj{
         positions.forEach(item=>{
             if(item === 0 && state.axis.position === "center") return;
 
-            const coor = Math.round(state.scale.primary[axis].map(item)) + state.axis[axis].tickWidth%2 * 0.5;
+            const coor = Math.round(scaleUsed.map(item)) + state.axis[axis].tickWidth%2 * 0.5;
 
             switch(state.axis.position){
                 case "center":
@@ -265,11 +268,11 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
 //---------------------------------------------
 //--------------- Compute rects ---------------
 
-function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number) : Array<Label_Rect>{
+function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number, scale : Mapping) : Array<Label_Rect>{
     let rects : Array<Label_Rect> = [];
 
     positions.forEach((item, index)=>{
-        const coord1 = state.scale.primary[axis].map(item); //coordinate 1
+        const coord1 = scale.map(item); //coordinate 1
         const textSize = getTextSize(labels[index], axis, state);
         let coord2 = translation; //coordinate 2
 
@@ -325,7 +328,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 //---------------------------------------------
 //----------- Compute Translation -------------
 
-    function computeSizes(state:Graph2D_State, axis:"x"|"y", textWidth:number, textHeight:number) : Compute_Sizes{
+    function computeSizes(state:Graph2D_State, axis:"x"|"y", textWidth:number, textHeight:number, compScale:Mapping, scale:"primary"|"secondary") : Compute_Sizes{
         const complementary = axis==="x"? "y":"x";
         const clientSize = axis==="x"? state.context.clientRect.height : state.context.clientRect.width;
         const axisSize = axis==="x"? textHeight + state.labelOffset + state.axis[axis].tickSize : textWidth + state.labelOffset + state.axis[axis].tickSize;
@@ -338,7 +341,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 
         switch(state.axis.position){
             case "center":
-                translation = state.scale.primary[complementary].map(0);
+                translation = compScale.map(0);
 
                 if(state.axis[axis].contained){
                     if(translation < state.margin[complementary].start)

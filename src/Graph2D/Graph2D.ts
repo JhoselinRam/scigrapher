@@ -146,7 +146,7 @@ const defaultLabel : LabelProperties = {
 
 export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
     //Combines the options object with the default options
-    const state : RequiredExept<Graph2D_State, "compute" | "scale" | "secondary" | "labels" | "context" | "draw" | "axisObj"> = { 
+    const state : RequiredExept<Graph2D_State, "compute" | "scale"  | "labels" | "context" | "draw" | "axisObj"> = { 
         container,
         render,
         labelOffset : 4,
@@ -179,42 +179,42 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             x : {
                 ...defaultOptions.axis.x,
                 ...options.axis?.x,
-                ticks : options.axis?.x?.ticks!=undefined ? options.axis.x.ticks as "auto"|number|number[] : defaultOptions.axis.x.ticks
+                ticks : options.axis?.x?.ticks!=null ? options.axis.x.ticks as "auto"|number|number[] : defaultOptions.axis.x.ticks
             },
             y : {
                 ...defaultOptions.axis.y,
                 ...options.axis?.y,
-                ticks : options.axis?.y?.ticks!=undefined ? options.axis.y.ticks as "auto"|number|number[] : defaultOptions.axis.y.ticks
+                ticks : options.axis?.y?.ticks!=null ? options.axis.y.ticks as "auto"|number|number[] : defaultOptions.axis.y.ticks
             },
         },
         secondary : {
-            x : options.secondary?.x === null ? undefined : {
+            x : options.secondary?.x == null ? undefined : {
                 ...defaultSecondaryAxis, 
                 ...options.secondary?.x,
                 ticks : options.secondary?.x?.ticks!=undefined ? options.secondary.x.ticks as "auto"|number|number[] : defaultSecondaryAxis.ticks
             },
-            y : options.secondary?.y === null ? undefined : {
+            y : options.secondary?.y == null ? undefined : {
                 ...defaultSecondaryAxis, 
                 ...options.secondary?.y,
                 ticks : options.secondary?.y?.ticks!=undefined ? options.secondary.y.ticks as "auto"|number|number[] : defaultSecondaryAxis.ticks
             }
         },
         labels : {
-            title : options.labels?.title === null ? undefined : {
+            title : options.labels?.title == null ? undefined : {
                 ...defaultLabel, 
                 size:"25px",
                 position:"start", 
                 ...options.labels?.title
             },
-            subtitle : options.labels?.subtitle === null ? undefined : {
+            subtitle : options.labels?.subtitle == null ? undefined : {
                 ...defaultLabel, 
                 position:"start", 
                 ...options.labels?.subtitle
             },
-            xPrimary : options.labels?.xPrimary === null ? undefined : {...defaultLabel, ...options.labels?.xPrimary},
-            yPrimary : options.labels?.yPrimary === null ? undefined : {...defaultLabel, ...options.labels?.yPrimary},
-            xSecondary : options.labels?.xSecondary === null ? undefined : {...defaultLabel, ...options.labels?.xSecondary},
-            ySecondary : options.labels?.ySecondary === null ? undefined : {...defaultLabel, ...options.labels?.ySecondary},
+            xPrimary : options.labels?.xPrimary == null ? undefined : {...defaultLabel, ...options.labels?.xPrimary},
+            yPrimary : options.labels?.yPrimary == null ? undefined : {...defaultLabel, ...options.labels?.yPrimary},
+            xSecondary : options.labels?.xSecondary == null ? undefined : {...defaultLabel, ...options.labels?.xSecondary},
+            ySecondary : options.labels?.ySecondary == null ? undefined : {...defaultLabel, ...options.labels?.ySecondary},
         },
         grid : {
             primary : {

@@ -26,35 +26,38 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
                 size : state.labels.subtitle.size, 
                 font : state.labels.subtitle.font
             });
-        if(state.labels.xPrimary != null && state.labels.xPrimary.enable) 
-            xPrimaryHeight = getTextHeight({
-                text : state.labels.xPrimary.text,
-                size : state.labels.xPrimary.size,
-                font : state.labels.xPrimary.font
-            });
-        if(state.labels.yPrimary != null && state.labels.yPrimary.enable) 
-            yPrimaryHeight = getTextHeight({
-                text : state.labels.yPrimary.text,
-                size : state.labels.yPrimary.size,
-                font : state.labels.yPrimary.font
-            });
-        if(state.labels.xSecondary != null && state.labels.xSecondary.enable) 
-            xSecondaryHeight = getTextHeight({
-                text : state.labels.xSecondary.text,
-                size : state.labels.xSecondary.size,
-                font : state.labels.xSecondary.font
-            });
-        if(state.labels.ySecondary != null && state.labels.ySecondary.enable)
-            ySecondaryHeight = getTextHeight({
-                text : state.labels.ySecondary.text,
-                size : state.labels.ySecondary.size,
-                font : state.labels.ySecondary.font
-            });
+        if(state.axis.position !== "center"){
+            if(state.labels.xPrimary != null && state.labels.xPrimary.enable) 
+                xPrimaryHeight = getTextHeight({
+                    text : state.labels.xPrimary.text,
+                    size : state.labels.xPrimary.size,
+                    font : state.labels.xPrimary.font
+                });
+            if(state.labels.yPrimary != null && state.labels.yPrimary.enable) 
+                yPrimaryHeight = getTextHeight({
+                    text : state.labels.yPrimary.text,
+                    size : state.labels.yPrimary.size,
+                    font : state.labels.yPrimary.font
+                });
+            if(state.labels.xSecondary != null && state.labels.xSecondary.enable) 
+                xSecondaryHeight = getTextHeight({
+                    text : state.labels.xSecondary.text,
+                    size : state.labels.xSecondary.size,
+                    font : state.labels.xSecondary.font
+                });
+            if(state.labels.ySecondary != null && state.labels.ySecondary.enable)
+                ySecondaryHeight = getTextHeight({
+                    text : state.labels.ySecondary.text,
+                    size : state.labels.ySecondary.size,
+                    font : state.labels.ySecondary.font
+                });
+        }
         
         //Compute the graph area
         state.context.clientRect.width = state.container.clientWidth - yPrimaryHeight - ySecondaryHeight;
         state.context.clientRect.height = state.container.clientHeight - titleHeight - subtitleHeight - xPrimaryHeight - xSecondaryHeight;
         state.context.clientRect.y = titleHeight + subtitleHeight;
+        state.context.clientRect.x = 0;
         switch (state.axis.position) {
             case "bottom-left":
                 state.context.clientRect.x = yPrimaryHeight;

@@ -2,7 +2,8 @@ import { Graph2D_State } from "../../Graph2D/Graph2D_Types";
 
 export interface CreateAxis_Props {
     state : Graph2D_State,
-    axis : "x" | "y"
+    axis : "x" | "y",
+    scale : "primary" | "secondary"
 }
 
 export interface Axis_Obj {

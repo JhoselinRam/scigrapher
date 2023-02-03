@@ -112,7 +112,7 @@ export interface Graph2D_State extends Graph2D_Options {
     },
     scale : {
         primary : Axis_Property<Mapping>
-        secondary ?: Axis_Property<Mapping>
+        secondary : Partial<Axis_Property<Mapping>>
     }
     compute : {
         full : ()=>void,
@@ -136,10 +136,10 @@ export interface Graph2D_State extends Graph2D_Options {
             height : number,
             obj ?: Axis_Property<Axis_Obj>
         },
-        secondary ?: {
+        secondary : {
             width : number,
             height : number,
-            obj ?: Axis_Property<Axis_Obj>
+            obj ?: Partial<Axis_Property<Axis_Obj>>
         }
     }
 }
