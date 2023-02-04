@@ -8,9 +8,9 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
     const scaleUsed = (state.scale[scale] as Axis_Property<Mapping>)[axis];
     const compScale = (state.scale[scale] as Axis_Property<Mapping>)[complementary];
     const positions = computePositions(scaleUsed, state.axis[axis].ticks, state.axis[axis].minSpacing);
-    const {labels, maxHeight, maxWidth} = createLabels(positions, axis, state);
-    const {translation, axisStart, axisEnd} = computeSizes(state, axis, maxWidth, maxHeight, compScale, scale);
-    const rects =  computeRects(positions, labels, axis, state, translation, scaleUsed);
+    const {labels} = createLabels(positions, axis, state);
+    const {translation, axisStart, axisEnd} = computeSizes(state, axis, compScale, scale);
+    const rects =  computeRects(positions, labels, axis, state, translation, scaleUsed, scale);
 
 //----------------- Draw ----------------------
     
@@ -268,11 +268,11 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
 //---------------------------------------------
 //--------------- Compute rects ---------------
 
-function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number, scale : Mapping) : Array<Label_Rect>{
+function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number, scaleUsed : Mapping, scale:"primary"|"secondary") : Array<Label_Rect>{
     let rects : Array<Label_Rect> = [];
 
     positions.forEach((item, index)=>{
-        const coord1 = scale.map(item); //coordinate 1
+        const coord1 = scaleUsed.map(item); //coordinate 1
         const textSize = getTextSize(labels[index], axis, state);
         let coord2 = translation; //coordinate 2
 
@@ -306,15 +306,29 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
         let x = axis==="x" ? coord1 - textSize.width/2 : coord2 - state.axis[axis].tickSize - state.labelOffset - textSize.width;
         let y = axis==="x" ? coord2 + state.axis[axis].tickSize + state.labelOffset : coord1 - textSize.height/2;
 
-        if(state.axis.position === "bottom-right")
-            x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
-        
-        if(state.axis.position === "top-left")
-            y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+        if(scale === "primary"){
+            if(state.axis.position === "bottom-right")
+                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
+            
+            if(state.axis.position === "top-left")
+                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+    
+            if(state.axis.position === "top-right"){
+                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
+                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+            }
+        }
+        if(scale === "secondary"){
+            if(state.axis.position === "bottom-left"){
+                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
+                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+            }
 
-        if(state.axis.position === "top-right"){
-            x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
-            y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+            if(state.axis.position === "bottom-right")
+                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+
+            if(state.axis.position === "top-left")
+                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
         }
 
         rects.push({ x, y, width : textSize.width, height: textSize.height});
@@ -328,53 +342,139 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 //---------------------------------------------
 //----------- Compute Translation -------------
 
-    function computeSizes(state:Graph2D_State, axis:"x"|"y", textWidth:number, textHeight:number, compScale:Mapping, scale:"primary"|"secondary") : Compute_Sizes{
-        const complementary = axis==="x"? "y":"x";
-        const clientSize = axis==="x"? state.context.clientRect.height : state.context.clientRect.width;
-        const axisSize = axis==="x"? textHeight + state.labelOffset + state.axis[axis].tickSize : textWidth + state.labelOffset + state.axis[axis].tickSize;
-        const compAxisSize = axis==="x" ? state.axisObj.primary.width : state.axisObj.primary.height;
-
-        let translation : number = 0;
-        let axisStart : number = 0;
-        let axisEnd : number = axis==="x" ? state.context.clientRect.width : state.context.clientRect.height;
+    function computeSizes(state:Graph2D_State, axis:"x"|"y", compScale:Mapping, scale:"primary"|"secondary") : Compute_Sizes{
+        let translation = 0;
+        let axisStart = 0;
+        let axisEnd = 0;
 
 
         switch(state.axis.position){
             case "center":
                 translation = compScale.map(0);
+                let marginStart = 0;
+                let marginEnd = 0;
+                let clientSize = 0;
+
+                if(axis === "x"){
+                    marginStart = state.margin["y"].start;
+                    marginEnd = state.margin["y"].end;
+                    clientSize = state.context.clientRect.height;
+                    axisEnd = state.context.clientRect.width;
+                }
+                if(axis === "y"){
+                    marginStart = state.margin["x"].start;
+                    marginEnd = state.margin["x"].end;
+                    clientSize = state.context.clientRect.width;
+                    axisEnd = state.context.clientRect.height;
+                }
 
                 if(state.axis[axis].contained){
-                    if(translation < state.margin[complementary].start)
-                        translation = state.margin[complementary].start;
+                    if(translation < marginStart)
+                        translation = marginStart;
                     
-                    if(translation > clientSize - state.margin[complementary].end)
-                        translation = clientSize - state.margin[complementary].end;
+                    if(translation > clientSize - marginEnd)
+                        translation = clientSize - marginEnd;
                 }
                 break;
 
             case "bottom-left":
-                translation = axis==="x"? clientSize - state.margin[complementary].start - axisSize :  
-                                          state.margin[complementary].start + axisSize;
-                axisStart = axis==="x"? state.margin[axis].start + compAxisSize : axisStart;
-                axisEnd = axis==="x"? axisEnd : axisEnd - state.margin[axis].start - compAxisSize;
+                if(axis === "x"){
+                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
+                    if(scale === "secondary")
+                        translation = state.margin.y.end + state.axisObj.secondary.height;
+
+                    axisStart = state.margin.x.start + state.axisObj.primary.width;
+                    axisEnd = state.context.clientRect.width - secondaryEnabled*(state.margin.x.end + state.axisObj.secondary.width);
+                }
+                if(axis==="y"){
+                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.margin.x.start + state.axisObj.primary.width;
+                    if(scale === "secondary") 
+                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.secondary.width;
+
+                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.width);
+                    axisEnd = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
+                }
                 break;
 
             case "bottom-right":
-                translation = axis==="x"? clientSize - state.margin[complementary].start - axisSize : 
-                                          clientSize - state.margin[complementary].end - axisSize;
-                axisEnd = axis==="x"? axisEnd - state.margin[axis].end - compAxisSize : axisEnd - state.margin[axis].start - compAxisSize;
+                if(axis === "x"){
+                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
+                    if(scale === "secondary")
+                        translation = state.margin.y.end + state.axisObj.secondary.height;
+
+                    axisStart = secondaryEnabled*(state.margin.x.start + state.axisObj.secondary.width);
+                    axisEnd = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
+                }
+                if(axis==="y"){
+                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
+                    if(scale === "secondary") 
+                        translation = state.margin.x.start + state.axisObj.secondary.width;
+
+                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.width);
+                    axisEnd = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
+                }
                 break;
 
             case "top-left":
-                translation = axis==="x"? state.margin[complementary].end + axisSize : state.margin[complementary].start + axisSize;
-                axisStart = axis==="x"? state.margin[axis].start + compAxisSize : state.margin[axis].end + compAxisSize;
+                if(axis === "x"){
+                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.margin.y.end + state.axisObj.primary.height;
+                    if(scale === "secondary")
+                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.secondary.height;
+
+                    axisStart = state.margin.x.start + state.axisObj.primary.width;
+                    axisEnd = state.context.clientRect.width - secondaryEnabled*(state.margin.x.end + state.axisObj.secondary.width);
+                }
+                if(axis==="y"){
+                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.margin.x.start + state.axisObj.primary.width;
+                    if(scale === "secondary") 
+                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.secondary.width;
+
+                    axisStart = state.margin.y.end + state.axisObj.primary.width;
+                    axisEnd = state.context.clientRect.height - secondaryEnabled*(state.margin.y.start + state.axisObj.secondary.height);
+                }
                 break;
 
             case "top-right":
-                translation = axis==="x"? state.margin[complementary].end + axisSize :
-                                          clientSize - state.margin[complementary].end - axisSize;
-                axisStart = axis==="x"? axisStart : state.margin[axis].end + compAxisSize;
-                axisEnd = axis==="x"? axisEnd - state.margin[axis].end - compAxisSize : axisEnd;
+                if(axis === "x"){
+                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.margin.y.end + state.axisObj.primary.height;
+                    if(scale === "secondary")
+                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.secondary.height;
+
+                    axisStart = secondaryEnabled*(state.margin.x.start + state.axisObj.secondary.width);
+                    axisEnd = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
+                }
+                if(axis==="y"){
+                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
+                    
+                    if(scale === "primary")
+                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
+                    if(scale === "secondary") 
+                        translation = state.margin.x.start + state.axisObj.secondary.width;
+
+                    axisStart = state.margin.y.end + state.axisObj.primary.height;
+                    axisEnd = state.context.clientRect.height - secondaryEnabled*(state.margin.y.start + state.axisObj.secondary.height);
+                }
                 break;
         }
 
