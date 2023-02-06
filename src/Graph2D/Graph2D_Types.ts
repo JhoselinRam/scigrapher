@@ -5,12 +5,14 @@ import { Background } from "./resourses/Background/Background_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
 import { Margin } from "./resourses/Margin/Margin_Types";
+import { Secondary } from "./resourses/Secondary/Secondary_Types";
 
 export interface Graph2D extends 
     Omit<Background, "draw" | "drawClientRect">, 
     Omit<Axis,"compute" | "draw">, 
     Omit<Labels,"compute" | "draw">,
     Omit<Grid, "compute" | "draw">,
+    Omit<Secondary, "compute" | "draw">,
     Margin{}
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
@@ -119,7 +121,8 @@ export interface Graph2D_State extends Graph2D_Options {
         client : ()=>void,
         scale : ()=>void,
         axis : ()=>void,
-        labels : ()=>void
+        labels : ()=>void,
+        secondary : ()=>void
     },
     draw : {
         full : ()=>void,
@@ -128,7 +131,8 @@ export interface Graph2D_State extends Graph2D_Options {
         backgroundClientRect : ()=>void,
         labels : ()=>void
         axis : ()=>void,
-        grid : ()=>void
+        grid : ()=>void,
+        secondary : ()=>void
     },
     axisObj : {
         primary : {

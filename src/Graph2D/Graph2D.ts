@@ -5,6 +5,7 @@ import Grid from "./resourses/Grid/Grid.js";
 import Labels from "./resourses/Labels/Labels.js";
 import Margin from "./resourses/Margin/Margin.js";
 import Scale from "./resourses/Scale/Scale.js";
+import Secondary from "./resourses/Secondary/Secondary.js";
 
 const defaultOptions : Graph2D_Options = {
     background : {
@@ -238,15 +239,18 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const labels = Labels({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const margin = Margin({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const grid = Grid({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const secondary = Secondary({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
     state.compute.axis = axis.compute;
+    state.compute.secondary = secondary.compute;
     state.compute.labels = labels.compute;
     state.draw.background = background.draw;
     state.draw.backgroundClientRect = background.drawClientRect;
     state.draw.labels = labels.draw;
     state.draw.axis = axis.draw;
+    state.draw.secondary = secondary.draw;
     state.draw.grid = grid.draw;
 
 
@@ -276,6 +280,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.gridWidth = grid.gridWidth;
     graphHandler.primaryGrid = grid.primaryGrid;
     graphHandler.secondaryGrid = grid.secondaryGrid;
+    graphHandler.secondaryAxisEnable = secondary.secondaryAxisEnable;
+    graphHandler.secondaryAxisDomain = secondary.secondaryAxisDomain;
 
 
     //Setup configurations
@@ -301,6 +307,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
 
         fullState.compute.scale();
         fullState.compute.axis();   
+        fullState.compute.secondary();   
     }
 
     //Helper function, draws all elements.
@@ -319,6 +326,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         fullState.draw.backgroundClientRect();
         fullState.draw.grid();
         fullState.draw.axis();
+        fullState.draw.secondary();
     }
 
     //Helper function, set the container properties and adds the canvas element

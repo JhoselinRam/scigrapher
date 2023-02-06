@@ -1,5 +1,4 @@
 import CreateAxis from "../../../tools/Axis_Obj/Axis_Obj.js";
-import { Axis_Obj } from "../../../tools/Axis_Obj/Axis_Obj_Types.js";
 import { Axis_Position, Axis_Property, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
 import { Axis, Axis_Modifier, Axis_Modifier_Props, Axis_Overlap, Base_Props, Domain_Props, Dynamic_Props, Text_Props, Ticks_Props } from "./Axis_Types";
 
@@ -16,17 +15,6 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             y : primaryAxisY
         }
 
-        if(state.axis.position === "center") return;
-
-        const secondaryAxis : Partial<Axis_Property<Axis_Obj>> = {};
-        if(state.secondary.x != null && state.secondary.x.enable)
-            secondaryAxis.x = CreateAxis({state, axis:"x", scale:"secondary"});
-        if(state.secondary.y != null && state.secondary.y.enable)
-            secondaryAxis.y = CreateAxis({state, axis:"y", scale:"secondary"});
-
-        
-        state.axisObj.secondary.obj = secondaryAxis;
-
     }
 
 //---------------------------------------------
@@ -41,13 +29,6 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             state.axisObj.primary.obj?.x.draw();
             state.axisObj.primary.obj?.y.draw();
         }
-
-        if(state.axis.position === "center") return;
-        
-        if(state.secondary.x!=null && state.secondary.x.enable)
-            state.axisObj.secondary?.obj?.x?.draw();
-        if(state.secondary.y!=null && state.secondary.y.enable)
-            state.axisObj.secondary?.obj?.y?.draw();
     }
 
 //---------------------------------------------

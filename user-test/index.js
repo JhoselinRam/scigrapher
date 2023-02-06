@@ -1,43 +1,5 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph"),{
-    axis : {
-        position : "bottom-left",
-        x : {
-            unit : "s"
-        },
-        y : {
-            unit : "m/s"
-        }
-    },
-    labels :{
-        title : {
-            text : "Graph Title"
-        },
-        subtitle : {
-            text : "Graph Subtitle"
-        },
-        xPrimary : {
-            text : "Label X"
-        },
-        yPrimary : {
-            text : "Label Y"
-        }, 
-        xSecondary : {
-            text :"Secondary Axis X"
-        },
-        ySecondary : {
-            text : "Secondary Axis Y"
-        }
-    },
-    secondary : {
-        y : {
-            unit : "J"
-        },
-        x : {
-            unit : "s"
-        }
-    }
-});
+const Graph = Graph2D(document.querySelector(".graph"));
 
 function changeBackgroundColor(e){
     const color = e.target.value;
@@ -677,6 +639,49 @@ function changeGridMaxDensity(e){
     }
 }
 
+function enableSecondaryAxis(e){
+    const target = e.target.id;
+    const checked = e.target.checked;
+
+    if(target === "enableSecondaryX")
+        Graph.secondaryAxisEnable({x:checked});
+    if(target === "enableSecondaryY")
+        Graph.secondaryAxisEnable({y:checked});
+}
+
+const secondaryDomain = {
+    x : {
+        start : -5,
+        end : 5
+    },
+    y : {
+        start : -5,
+        end : 5
+    }
+}
+
+function changeSecondaryDomain(e){
+    const target = e.target.id;
+    const value = parseFloat(e.target.value);
+
+    switch(target){
+        case "secondaryXStart":
+            secondaryDomain.x.start = value;
+            break;
+        case "secondaryXEnd":
+            secondaryDomain.x.end = value;
+            break;
+        case "secondaryYStart":
+            secondaryDomain.y.start = value;
+            break;
+        case "secondaryYEnd":
+            secondaryDomain.y.end = value;
+            break;
+    }
+
+    Graph.secondaryAxisDomain(secondaryDomain);
+}
+
 
 
 
@@ -759,7 +764,12 @@ function main(){
     document.querySelector("#gridDensity").addEventListener("input", changeGridDensity);
     document.querySelector("#gridSpacing").addEventListener("input", changeGridSpacing);
     document.querySelector("#gridMaxDensity").addEventListener("input", changeGridMaxDensity);
-
+    document.querySelector("#enableSecondaryX").addEventListener("change", enableSecondaryAxis);
+    document.querySelector("#enableSecondaryY").addEventListener("change", enableSecondaryAxis);
+    document.querySelector("#secondaryXStart").addEventListener("input", changeSecondaryDomain);
+    document.querySelector("#secondaryXEnd").addEventListener("input", changeSecondaryDomain);
+    document.querySelector("#secondaryYStart").addEventListener("input", changeSecondaryDomain);
+    document.querySelector("#secondaryYEnd").addEventListener("input", changeSecondaryDomain);
 }
 
 main();
