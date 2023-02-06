@@ -1,5 +1,43 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph"));
+const Graph = Graph2D(document.querySelector(".graph"),{
+    axis : {
+        position : "bottom-left",
+        x : {
+            unit : "s"
+        },
+        y : {
+            unit : "m/s"
+        }
+    },
+    labels :{
+        title : {
+            text : "Graph Title"
+        },
+        subtitle : {
+            text : "Graph Subtitle"
+        },
+        xPrimary : {
+            text : "Label X"
+        },
+        yPrimary : {
+            text : "Label Y"
+        }, 
+        xSecondary : {
+            text :"Secondary Axis X"
+        },
+        ySecondary : {
+            text : "Secondary Axis Y"
+        }
+    },
+    secondary : {
+        y : {
+            unit : "J"
+        },
+        x : {
+            unit : "s"
+        }
+    }
+});
 
 function changeBackgroundColor(e){
     const color = e.target.value;

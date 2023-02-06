@@ -16,6 +16,8 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             y : primaryAxisY
         }
 
+        if(state.axis.position === "center") return;
+
         const secondaryAxis : Partial<Axis_Property<Axis_Obj>> = {};
         if(state.secondary.x != null && state.secondary.x.enable)
             secondaryAxis.x = CreateAxis({state, axis:"x", scale:"secondary"});
@@ -40,12 +42,12 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             state.axisObj.primary.obj?.y.draw();
         }
 
-        if(state.axis.position !== "center"){
-            if(state.secondary.x!=null && state.secondary.x.enable)
-                state.axisObj.secondary?.obj?.x?.draw();
-            if(state.secondary.y!=null && state.secondary.y.enable)
-                state.axisObj.secondary?.obj?.y?.draw();
-        }
+        if(state.axis.position === "center") return;
+        
+        if(state.secondary.x!=null && state.secondary.x.enable)
+            state.axisObj.secondary?.obj?.x?.draw();
+        if(state.secondary.y!=null && state.secondary.y.enable)
+            state.axisObj.secondary?.obj?.y?.draw();
     }
 
 //---------------------------------------------

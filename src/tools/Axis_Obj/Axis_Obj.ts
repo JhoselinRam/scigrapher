@@ -1,4 +1,4 @@
-import { Axis_Property, Graph2D_State } from "../../Graph2D/Graph2D_Types.js";
+import { Axis_Property, Graph2D_State, Secondary_Axis } from "../../Graph2D/Graph2D_Types.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } from "./Axis_Obj_Types";
@@ -8,7 +8,7 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
     const scaleUsed = (state.scale[scale] as Axis_Property<Mapping>)[axis];
     const compScale = (state.scale[scale] as Axis_Property<Mapping>)[complementary];
     const positions = computePositions(scaleUsed, state.axis[axis].ticks, state.axis[axis].minSpacing);
-    const {labels} = createLabels(positions, axis, state);
+    const {labels} = createLabels(positions, axis, state, scale);
     const {translation, axisStart, axisEnd} = computeSizes(state, axis, compScale, scale);
     const rects =  computeRects(positions, labels, axis, state, translation, scaleUsed, scale);
 
@@ -44,61 +44,49 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
 
             const coor = Math.round(scaleUsed.map(item)) + state.axis[axis].tickWidth%2 * 0.5;
 
-            switch(state.axis.position){
-                case "center":
-                    if(axis==="x"){
-                        state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
-                        state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
-                    }
-                    if(axis==="y"){
-                        state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
-                        state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
-                    }
-                    break;
+            if(state.axis.position === "center"){
+                if(axis==="x"){
+                    state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
+                    state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
+                }
+                if(axis==="y"){
+                    state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
+                    state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
+                }
+            }
+            else{
+                let direction : number
+                switch(state.axis.position){
+                    case "bottom-left":
+                        if(axis==="x")
+                            direction = scale==="primary"? 1 : -1;
+                        else
+                            direction = scale==="primary"? -1 : 1;
+                        break;
+                    
+                    case "bottom-right":
+                        direction = scale==="primary"? 1 : -1;
+                        break;
 
-                case "bottom-left":
-                    if(axis==="x"){
-                        state.context.canvas.moveTo(coor, translation);
-                        state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
-                    }
-                    if(axis==="y"){
-                        state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
-                        state.context.canvas.lineTo(translation, coor);
-                    }
-                    break;
-                
-                case "bottom-right":
-                    if(axis==="x"){
-                        state.context.canvas.moveTo(coor, translation);
-                        state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
-                    }
-                    if(axis==="y"){
-                        state.context.canvas.moveTo(translation, coor);
-                        state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
-                    }
-                    break;
+                    case "top-left":
+                        direction = scale==="primary"? -1 : 1;
+                        break;
 
-                case "top-left":
-                    if(axis==="x"){
-                        state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
-                        state.context.canvas.lineTo(coor, translation);
-                    }
-                    if(axis==="y"){
-                        state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
-                        state.context.canvas.lineTo(translation, coor);
-                    }
-                    break;
-
-                case "top-right":
-                    if(axis==="x"){
-                        state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
-                        state.context.canvas.lineTo(coor, translation);
-                    }
-                    if(axis==="y"){
-                        state.context.canvas.moveTo(translation, coor);
-                        state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
-                    }
-                    break;
+                    case "top-right":
+                        if(axis==="x")
+                            direction = scale==="primary"? -1 : 1;
+                        else
+                            direction = scale==="primary"? 1 : -1;
+                        break
+                }
+                if(axis==="x"){
+                    state.context.canvas.moveTo(coor, translation);
+                    state.context.canvas.lineTo(coor, translation + direction*state.axis[axis].tickSize);
+                }
+                if(axis==="y"){
+                    state.context.canvas.moveTo(translation + direction*state.axis[axis].tickSize, coor);
+                    state.context.canvas.lineTo(translation, coor);
+                }
             }
         });
         state.context.canvas.stroke();
@@ -215,7 +203,7 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
 //---------------------------------------------
 //------------- Create Labels -----------------
 
-export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2D_State) : Create_Labels{
+export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2D_State, scale:"primary" | "secondary") : Create_Labels{
     let maxWidth : number = 0;
     let maxHeight : number = 0;
 
@@ -244,7 +232,10 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
             }
         }
 
-        label = `${label}${state.axis[axis].unit}`;
+        if(scale === "primary")
+            label = `${label}${state.axis[axis].unit}`;
+        if(scale === "secondary" && state.secondary[axis] != null)
+            label = `${label}${(state.secondary[axis] as Secondary_Axis).unit}`;
         
         const width = state.context.canvas.measureText(label).width; 
         if(width > maxWidth)
@@ -340,7 +331,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 }
 
 //---------------------------------------------
-//----------- Compute Translation -------------
+//-------------- Compute Sizes ----------------
 
     function computeSizes(state:Graph2D_State, axis:"x"|"y", compScale:Mapping, scale:"primary"|"secondary") : Compute_Sizes{
         let translation = 0;
@@ -397,7 +388,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
                     if(scale === "secondary") 
                         translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.secondary.width;
 
-                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.width);
+                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.height);
                     axisEnd = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
                 }
                 break;
@@ -422,7 +413,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
                     if(scale === "secondary") 
                         translation = state.margin.x.start + state.axisObj.secondary.width;
 
-                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.width);
+                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.height);
                     axisEnd = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
                 }
                 break;
@@ -447,7 +438,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
                     if(scale === "secondary") 
                         translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.secondary.width;
 
-                    axisStart = state.margin.y.end + state.axisObj.primary.width;
+                    axisStart = state.margin.y.end + state.axisObj.primary.height;
                     axisEnd = state.context.clientRect.height - secondaryEnabled*(state.margin.y.start + state.axisObj.secondary.height);
                 }
                 break;

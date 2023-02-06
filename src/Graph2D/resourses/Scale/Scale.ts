@@ -37,6 +37,8 @@ function Scale({state}:Method_Generator) : Scale{
                 break;
         }
 
+        if(state.axis.position === "center") return;
+
         //Secondary scale
         const secondaryScale : Partial<Axis_Property<Mapping>> = {};
         if(state.secondary.x != null && state.secondary.x.enable){
@@ -90,7 +92,7 @@ function Scale({state}:Method_Generator) : Scale{
                 to:[state.margin.x.start, state.context.clientRect.width - state.margin.x.end]
             });
             const secondaryPositionsX = computePositions(secondaryScaleX, state.secondary.x.ticks, state.secondary.x.minSpacing);
-            const secondaryLabelsX = createLabels(secondaryPositionsX, "x", state);
+            const secondaryLabelsX = createLabels(secondaryPositionsX, "x", state, "secondary");
 
             secondaryAxisHeight = secondaryLabelsX.maxHeight + state.labelOffset + state.secondary.x.tickSize;
         }
@@ -101,7 +103,7 @@ function Scale({state}:Method_Generator) : Scale{
                 to:[state.context.clientRect.height - state.margin.y.start, state.margin.y.end]
             });
             const secondaryPositionsY = computePositions(secondaryScaleY, state.secondary.y.ticks, state.secondary.y.minSpacing);
-            const secondaryLabelsY = createLabels(secondaryPositionsY, "y", state);
+            const secondaryLabelsY = createLabels(secondaryPositionsY, "y", state, "secondary");
 
             secondaryAxisWidth = secondaryLabelsY.maxWidth + state.labelOffset + state.secondary.y.tickSize;
         }
@@ -109,9 +111,9 @@ function Scale({state}:Method_Generator) : Scale{
 
         //Compute axis size
         const auxPositionsX = computePositions(auxScaleX, state.axis.x.ticks, state.axis.x.minSpacing);
-        const labelsX = createLabels(auxPositionsX, "x", state);
+        const labelsX = createLabels(auxPositionsX, "x", state, "primary");
         const auxPositionsY = computePositions(auxScaleY, state.axis.y.ticks, state.axis.y.minSpacing);
-        const labelsY = createLabels(auxPositionsY, "y", state);
+        const labelsY = createLabels(auxPositionsY, "y", state, "primary");
 
         const axisHeight = labelsX.maxHeight + state.labelOffset + state.axis.x.tickSize;
         const axisWidth = labelsY.maxWidth + state.labelOffset + state.axis.y.tickSize;
@@ -150,7 +152,7 @@ function Scale({state}:Method_Generator) : Scale{
 
             case "top-left":
                 xMin = state.margin.x.start + axisWidth;
-                xMax= state.context.clientRect.width - state.margin.x.end + secondaryAxisWidth;
+                xMax= state.context.clientRect.width - state.margin.x.end - secondaryAxisWidth;
                 yMin = state.context.clientRect.height - state.margin.y.start - secondaryAxisHeight;
                 yMax = state.margin.y.end + axisHeight;
                 break;

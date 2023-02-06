@@ -59,26 +59,37 @@ function getMinMaxCoords() : [number, number, number, number]{
     let xEnd = props.state.context.clientRect.width;
     let yStart = 0;
     let yEnd = props.state.context.clientRect.height;
+    const secondaryXEnabled = props.state.axisObj.secondary.height>0? 1 : 0;
+    const secondaryYEnabled = props.state.axisObj.secondary.width>0? 1 : 0;
 
     switch(props.state.axis.position){
         case "bottom-left":
             xStart = props.state.margin.x.start + props.state.axisObj.primary.width;
+            xEnd = xEnd - secondaryYEnabled*(props.state.margin.x.end + props.state.axisObj.secondary.width);
+            yStart = secondaryXEnabled*(props.state.margin.y.end + props.state.axisObj.secondary.height);
             yEnd = yEnd - props.state.margin.y.start - props.state.axisObj.primary.height;
             break;
 
         case "bottom-right":
+            xStart = secondaryYEnabled*(props.state.margin.x.start + props.state.axisObj.secondary.width);
             xEnd = xEnd - props.state.margin.x.end - props.state.axisObj.primary.width;
+            yStart = secondaryXEnabled*(props.state.margin.y.end + props.state.axisObj.secondary.height);
             yEnd = yEnd - props.state.margin.y.start - props.state.axisObj.primary.height;
             break;
         
         case "top-left":
             xStart = props.state.margin.x.start + props.state.axisObj.primary.width;
+            xEnd = xEnd - secondaryYEnabled*(props.state.margin.x.end + props.state.axisObj.secondary.width);
             yStart = props.state.margin.y.end + props.state.axisObj.primary.height;
+            yEnd = yEnd - secondaryXEnabled*(props.state.margin.y.start + props.state.axisObj.secondary.height);
+
             break;
 
         case "top-right":
+            xStart = secondaryYEnabled*(props.state.margin.x.start + props.state.axisObj.secondary.width);
             xEnd = xEnd - props.state.margin.x.end - props.state.axisObj.primary.width;
             yStart = props.state.margin.y.end + props.state.axisObj.primary.height;
+            yEnd = yEnd - secondaryXEnabled*(props.state.margin.y.start + props.state.axisObj.secondary.height);
             break;
     }
 
