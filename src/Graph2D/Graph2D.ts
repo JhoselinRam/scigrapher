@@ -24,7 +24,7 @@ const defaultOptions : Graph2D_Options = {
     },
     axis : {
         position : "center",
-        type : "rectangular",
+        type : "polar",
         overlapPriority : "x",
         x : {
             start : -5,

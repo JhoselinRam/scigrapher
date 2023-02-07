@@ -8,16 +8,26 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 //----------------- Draw ----------------------
 
     function draw(xMin : number, xMax : number, yMin : number, yMax:number){
-        if(state.grid.secondary.x.enable)
-            drawByAxis("x", yMin, yMax, xMin, xMax);
-        if(state.grid.secondary.y.enable)
-            drawByAxis("y", xMin, xMax, yMin, yMax);
+        if(state.grid.secondary.x.enable){
+            if(state.axis.type === "rectangular")
+                drawRectangular("x", yMin, yMax, xMin, xMax);
+                
+            if(state.axis.type === "polar")
+                drawPolar("x", xMin, xMax, yMin, yMax);
+        }
+        if(state.grid.secondary.y.enable){
+            if(state.axis.type === "rectangular")
+                drawRectangular("y", xMin, xMax, yMin, yMax);
+                
+            if(state.axis.type === "polar")
+                drawPolar("y", xMin, xMax, yMin, yMax);
+        }
     }
 
 //---------------------------------------------
-//---------------------------------------------
+//------------- Draw Rectangular --------------
 
-    function drawByAxis(axis:"x"|"y", start:number, end:number, limitMin:number, limitMax:number){
+    function drawRectangular(axis:"x"|"y", start:number, end:number, limitMin:number, limitMax:number){
         const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions;
         const drawAt = positions.map(item=>state.scale.primary[axis].map(item));    //Maps to "linear space" so it works on log scales
         drawAt.push(drawAt[drawAt.length-1] + drawAt[1]-drawAt[0]); //Adds one more position at the end
@@ -56,7 +66,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
     }
 
 //---------------------------------------------
-//---------------------------------------------
+//-------------- Get Partition ----------------
 
     function getPartition(axis:"x"|"y", interval:number) : number{
         let spacing = 0;
@@ -70,6 +80,13 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
         }
 
         return spacing;
+    }
+
+//---------------------------------------------
+//--------------- Draw Polar ------------------
+
+    function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
+
     }
 
 //---------------------------------------------

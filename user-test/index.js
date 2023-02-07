@@ -818,6 +818,26 @@ function changeSecondaryAxisTextSize(e){
         Graph.secondaryAxisText({y:{size}});
 }
 
+function changeSecondaryTicks(e){
+    const target = e.target.id;
+    const value = parseInt(e.target.value);
+
+    if(target === "secondaryXTicks")
+        Graph.secondaryAxisTicks({x:{ticks:value===-1?"auto":value}});
+    if(target === "secondaryYTicks")
+        Graph.secondaryAxisTicks({y:{ticks:value===-1?"auto":value}});
+}
+
+function changeSecondarySpacing(e){
+    const target = e.target.id;
+    const value = parseInt(e.target.value);
+
+    if(target === "secondaryXSpacing")
+        Graph.secondaryAxisTicks({x:{minSpacing : value}});
+    if(target === "secondaryYSpacing")
+        Graph.secondaryAxisTicks({y:{minSpacing : value}});
+}
+
 
 
 
@@ -916,6 +936,10 @@ function main(){
     document.querySelector("#secondaryTickFont").addEventListener("change", changeSecondaryTickFont);
     document.querySelector("#secondaryXTextSize").addEventListener("input", changeSecondaryAxisTextSize);
     document.querySelector("#secondaryYTextSize").addEventListener("input", changeSecondaryAxisTextSize);
+    document.querySelector("#secondaryXTicks").addEventListener("input", changeSecondaryTicks);
+    document.querySelector("#secondaryYTicks").addEventListener("input", changeSecondaryTicks);
+    document.querySelector("#secondaryXSpacing").addEventListener("input", changeSecondarySpacing);
+    document.querySelector("#secondaryYSpacing").addEventListener("input", changeSecondarySpacing);
 }
 
 main();

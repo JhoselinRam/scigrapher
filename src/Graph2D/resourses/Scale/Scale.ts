@@ -12,19 +12,26 @@ function Scale({state}:Method_Generator) : Scale{
         const {xMin, xMax, yMin, yMax} = getMinMaxCoords();
 
         switch(state.axis.type){
-            case "rectangular":
-                //Primary scale
-                const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax]});
-                const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax]});
+            case "rectangular":{
+                    const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax]});
+                    const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax]});
 
-                state.scale.primary = {
-                    x : primaryScaleX,
-                    y : primaryScaleY
-                };  
-
+                    state.scale.primary = {
+                        x : primaryScaleX,
+                        y : primaryScaleY
+                    };  
+                }
                 break;
 
-            case "polar":
+            case "polar":{
+                    const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax]});
+                    const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax]});
+
+                    state.scale.primary = {
+                        x : primaryScaleX,
+                        y : primaryScaleY
+                    };  
+                }
                 break;
 
             case "x-log":

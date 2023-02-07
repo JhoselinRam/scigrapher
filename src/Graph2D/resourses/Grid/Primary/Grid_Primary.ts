@@ -8,16 +8,28 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
 //----------------- Draw ----------------------
 
     function draw(xMin : number, xMax : number, yMin : number, yMax:number){
-        if(state.grid.primary.x.enable)
-            drawByAxis("x", yMin, yMax, xMin, xMax);
-        if(state.grid.primary.y.enable)
-            drawByAxis("y", xMin, xMax, yMin, yMax);
+        if(state.grid.primary.x.enable){
+            if(state.axis.type === "rectangular")
+                drawRectangular("x", yMin, yMax, xMin, xMax);
+            
+            if(state.axis.type === "polar")
+                drawPolar("x");
+            
+        }
+        
+        if(state.grid.primary.y.enable){
+            if(state.axis.type === "rectangular")
+                drawRectangular("y", xMin, xMax, yMin, yMax);
+                
+            if(state.axis.type === "polar")
+                drawPolar("y");
+        }
     }
 
 //---------------------------------------------
-//-------------- Draw By Axis -----------------
+//------------- Draw Rectangular --------------
 
-    function drawByAxis(axis : "x" | "y", start:number, end:number, limitMin:number, limitMax:number){
+    function drawRectangular(axis : "x" | "y", start:number, end:number, limitMin:number, limitMax:number){
         const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions;
 
         state.context.canvas.save();
@@ -44,6 +56,13 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
         state.context.canvas.stroke();
 
         state.context.canvas.restore();
+    }
+
+//---------------------------------------------
+//--------------- Draw Polar ------------------
+
+    function drawPolar(axis : "x"|"y"){
+
     }
 
 //---------------------------------------------
