@@ -1,5 +1,5 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
-import { Axis_Property, Graph2D, Primary_Grid, RecursivePartial } from "../../../Graph2D_Types";
+import { Axis_Property, Graph2D, Primary_Grid } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
 import { Primary_Grid_Generator, Primary_Grid_Modifier } from "./Grid_Primary_Types";
 
@@ -13,7 +13,7 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
                 drawRectangular("x", yMin, yMax, xMin, xMax);
             
             if(state.axis.type === "polar")
-                drawPolar("x");
+                drawPolar("x", xMin, xMax, yMin, yMax);
             
         }
         
@@ -22,7 +22,7 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
                 drawRectangular("y", xMin, xMax, yMin, yMax);
                 
             if(state.axis.type === "polar")
-                drawPolar("y");
+                drawPolar("y", xMin, xMax, yMin, yMax);
         }
     }
 
@@ -61,8 +61,40 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
 //---------------------------------------------
 //--------------- Draw Polar ------------------
 
-    function drawPolar(axis : "x"|"y"){
+    function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
+        if(axis === "x"){
+            //Get and filter the grid positions
+            const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item));
+            const radii = positions.filter((item, index) => item!==0 && positions.indexOf(item)===index);
+            const xCenter = state.scale.primary.x.map(0);
+            const yCenter = state.scale.primary.y.map(0);
+            const thetha0 = 0;
+            const thetha1 = 2*Math.PI;
+            const yCompression = (yCenter - state.scale.primary.y.map(radii[0])) / (state.scale.primary.x.map(radii[0]) - xCenter);
 
+            state.context.canvas.save();
+            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.beginPath();
+            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.clip();
+            state.context.canvas.translate(xCenter, yCenter);
+            state.context.canvas.scale(1,yCompression);
+
+            state.context.canvas.strokeStyle = state.grid.primary.x.color;
+            state.context.canvas.globalAlpha = state.grid.primary.x.opacity;
+            state.context.canvas.lineWidth = state.grid.primary.x.width;
+            state.context.canvas.setLineDash(getLineDash(state.grid.primary.x.style));
+            radii.forEach(radius=>{
+                const radiusUsed = state.scale.primary.x.map(radius) - xCenter;
+                
+                state.context.canvas.beginPath();
+                state.context.canvas.arc(0, 0, radiusUsed, thetha0, thetha1);
+                state.context.canvas.stroke();
+            });            
+
+            state.context.canvas.restore();
+
+        }
     }
 
 //---------------------------------------------
