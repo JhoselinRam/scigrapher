@@ -682,6 +682,142 @@ function changeSecondaryDomain(e){
     Graph.secondaryAxisDomain(secondaryDomain);
 }
 
+function changeSecondaryAxisColor(e){
+    const target = document.querySelector("#colorToSecondary").value;
+    const color = e.target.value;
+    switch(target){
+        case "All":
+            Graph.secondaryAxisColor({axis:color});
+            break;
+        case "xAxis":
+            Graph.secondaryAxisColor({xAxis:color});
+            break;
+        case "yAxis":
+            Graph.secondaryAxisColor({yAxis:color});
+            break;
+        case "xBase":
+            Graph.secondaryAxisColor({base:{x:color}});
+            break;
+        case "yBase":
+            Graph.secondaryAxisColor({base:{y:color}});
+            break;
+        case "xTick":
+            Graph.secondaryAxisColor({tick:{x:color}});
+            break;
+        case "yTick":
+            Graph.secondaryAxisColor({tick:{y:color}});
+            break;
+        case "xText":
+            Graph.secondaryAxisColor({text:{x:color}});
+            break;
+        case "yText":
+            Graph.secondaryAxisColor({text:{y:color}});
+            break;
+    }
+}
+
+function changeSecondaryAxisOpacity(e){
+    const target = document.querySelector("#opacityToSecondary").value;
+    const opacity = e.target.value;
+    switch(target){
+        case "All":
+            Graph.secondaryAxisOpacity({axis:opacity});
+            break;
+        case "xAxis":
+            Graph.secondaryAxisOpacity({xAxis:opacity});
+            break;
+        case "yAxis":
+            Graph.secondaryAxisOpacity({yAxis:opacity});
+            break;
+        case "xBase":
+            Graph.secondaryAxisOpacity({base:{x:opacity}});
+            break;
+        case "yBase":
+            Graph.secondaryAxisOpacity({base:{y:opacity}});
+            break;
+        case "xTick":
+            Graph.secondaryAxisOpacity({tick:{x:opacity}});
+            break;
+        case "yTick":
+            Graph.secondaryAxisOpacity({tick:{y:opacity}});
+            break;
+        case "xText":
+            Graph.secondaryAxisOpacity({text:{x:opacity}});
+            break;
+        case "yText":
+            Graph.secondaryAxisOpacity({text:{y:opacity}});
+            break;
+    }
+}
+
+function changeSecondaryUnits(e){
+    const axis = e.target.id;
+    const unit = e.target.value;
+
+    switch(axis){
+        case "secondaryXUnits":
+            Graph.secondaryAxisUnits({x:unit});
+            break;
+        
+        case "secondaryYUnits":
+            Graph.secondaryAxisUnits({y:unit});
+            break;
+    }
+}
+
+function changeSecondaryAxisWidth(e){
+    const target = document.querySelector("#widthToSecondary").value;
+    const value = e.target.value;
+
+    switch(target){
+        case "xBase":
+            Graph.secondaryAxisBase({x:{width:value}});
+            break;
+
+        case "yBase":
+            Graph.secondaryAxisBase({y:{width:value}});
+            break;
+
+        case "xTicks":
+            Graph.secondaryAxisTicks({x:{width:value}});
+            break;
+
+        case "yTicks":
+            Graph.secondaryAxisTicks({y:{width:value}});
+            break;
+    }
+}
+
+function changeSecondaryTickSize(e){
+    const target = e.target.id;
+    const value = parseFloat(e.target.value);
+
+    if(target === "secondaryXTickSize")
+        Graph.secondaryAxisTicks({x:{size:value}});
+    if(target === "secondaryYTickSize")
+        Graph.secondaryAxisTicks({y:{size:value}});
+}
+
+function changeSecondaryTickFont(e){
+    const target = document.querySelector("#tickFontForSecondary").value;
+    const font = e.target.value;
+
+    if(target === "x")
+        Graph.secondaryAxisText({x:{font}});
+    if(target === "y")
+        Graph.secondaryAxisText({y:{font}});
+}
+
+function changeSecondaryAxisTextSize(e){
+    const size = `${e.target.value}px`;
+    const target = e.target.id;
+
+    if(target === "secondaryXTextSize")
+        Graph.secondaryAxisText({x:{size}});
+    if(target === "secondaryYTextSize")
+        Graph.secondaryAxisText({y:{size}});
+}
+
 
 
 
@@ -770,6 +906,16 @@ function main(){
     document.querySelector("#secondaryXEnd").addEventListener("input", changeSecondaryDomain);
     document.querySelector("#secondaryYStart").addEventListener("input", changeSecondaryDomain);
     document.querySelector("#secondaryYEnd").addEventListener("input", changeSecondaryDomain);
+    document.querySelector("#secondaryAxisColor").addEventListener("input", changeSecondaryAxisColor);
+    document.querySelector("#secondaryAxisOpacity").addEventListener("input", changeSecondaryAxisOpacity);
+    document.querySelector("#secondaryXUnits").addEventListener("input", changeSecondaryUnits);
+    document.querySelector("#secondaryYUnits").addEventListener("input", changeSecondaryUnits);
+    document.querySelector("#secondaryWidthInput").addEventListener("input", changeSecondaryAxisWidth);
+    document.querySelector("#secondaryXTickSize").addEventListener("input", changeSecondaryTickSize);
+    document.querySelector("#secondaryYTickSize").addEventListener("input", changeSecondaryTickSize);
+    document.querySelector("#secondaryTickFont").addEventListener("change", changeSecondaryTickFont);
+    document.querySelector("#secondaryXTextSize").addEventListener("input", changeSecondaryAxisTextSize);
+    document.querySelector("#secondaryYTextSize").addEventListener("input", changeSecondaryAxisTextSize);
 }
 
 main();

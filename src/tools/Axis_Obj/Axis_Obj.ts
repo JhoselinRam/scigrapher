@@ -5,9 +5,10 @@ import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } 
 
 function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
     const complementary = axis==="x"?"y":"x";
+    const axisUsed = scale==="primary"? state.axis[axis] : state.secondary[axis] as Secondary_Axis;
     const scaleUsed = (state.scale[scale] as Axis_Property<Mapping>)[axis];
     const compScale = (state.scale[scale] as Axis_Property<Mapping>)[complementary];
-    const positions = computePositions(scaleUsed, state.axis[axis].ticks, state.axis[axis].minSpacing);
+    const positions = computePositions(scaleUsed, axisUsed.ticks, axisUsed.minSpacing);
     const {labels} = createLabels(positions, axis, state, scale);
     const {translation, axisStart, axisEnd} = computeSizes(state, axis, compScale, scale);
     const rects =  computeRects(positions, labels, axis, state, translation, scaleUsed, scale);
@@ -16,42 +17,44 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
     
     function draw(){
         const margin = 2;
+        const translationUsed = Math.round(translation) + axisUsed.baseWidth%2 * 0.5;
+
         state.context.canvas.save();
         state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         //Base
-        state.context.canvas.strokeStyle = state.axis[axis].baseColor;
-        state.context.canvas.globalAlpha = state.axis[axis].baseOpacity;
-        state.context.canvas.lineWidth = state.axis[axis].baseWidth;
+        state.context.canvas.strokeStyle = axisUsed.baseColor;
+        state.context.canvas.globalAlpha = axisUsed.baseOpacity;
+        state.context.canvas.lineWidth = axisUsed.baseWidth;
         state.context.canvas.beginPath();
         if(axis === "x"){
-            state.context.canvas.moveTo(axisStart, translation);
-            state.context.canvas.lineTo(axisEnd, translation);
+            state.context.canvas.moveTo(axisStart, translationUsed);
+            state.context.canvas.lineTo(axisEnd, translationUsed);
         }
         if(axis === "y"){
-            state.context.canvas.moveTo(translation, axisStart);
-            state.context.canvas.lineTo(translation, axisEnd);
+            state.context.canvas.moveTo(translationUsed, axisStart);
+            state.context.canvas.lineTo(translationUsed, axisEnd);
         }
         state.context.canvas.stroke();
 
         //Ticks
-        state.context.canvas.strokeStyle = state.axis[axis].tickColor;
-        state.context.canvas.globalAlpha = state.axis[axis].tickOpacity;
-        state.context.canvas.lineWidth = state.axis[axis].tickWidth;
+        state.context.canvas.strokeStyle = axisUsed.tickColor;
+        state.context.canvas.globalAlpha = axisUsed.tickOpacity;
+        state.context.canvas.lineWidth = axisUsed.tickWidth;
         state.context.canvas.beginPath();
         positions.forEach(item=>{
             if(item === 0 && state.axis.position === "center") return;
 
-            const coor = Math.round(scaleUsed.map(item)) + state.axis[axis].tickWidth%2 * 0.5;
+            const coor = Math.round(scaleUsed.map(item)) + axisUsed.tickWidth%2 * 0.5;
 
             if(state.axis.position === "center"){
                 if(axis==="x"){
-                    state.context.canvas.moveTo(coor, translation - state.axis[axis].tickSize);
-                    state.context.canvas.lineTo(coor, translation + state.axis[axis].tickSize);
+                    state.context.canvas.moveTo(coor, translationUsed - axisUsed.tickSize);
+                    state.context.canvas.lineTo(coor, translationUsed + axisUsed.tickSize);
                 }
                 if(axis==="y"){
-                    state.context.canvas.moveTo(translation - state.axis[axis].tickSize, coor);
-                    state.context.canvas.lineTo(translation + state.axis[axis].tickSize, coor);
+                    state.context.canvas.moveTo(translationUsed - axisUsed.tickSize, coor);
+                    state.context.canvas.lineTo(translationUsed + axisUsed.tickSize, coor);
                 }
             }
             else{
@@ -80,12 +83,12 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
                         break
                 }
                 if(axis==="x"){
-                    state.context.canvas.moveTo(coor, translation);
-                    state.context.canvas.lineTo(coor, translation + direction*state.axis[axis].tickSize);
+                    state.context.canvas.moveTo(coor, translationUsed);
+                    state.context.canvas.lineTo(coor, translationUsed + direction*axisUsed.tickSize);
                 }
                 if(axis==="y"){
-                    state.context.canvas.moveTo(translation + direction*state.axis[axis].tickSize, coor);
-                    state.context.canvas.lineTo(translation, coor);
+                    state.context.canvas.moveTo(translationUsed + direction*axisUsed.tickSize, coor);
+                    state.context.canvas.lineTo(translationUsed, coor);
                 }
             }
         });
@@ -93,7 +96,7 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
 
         //Text
         state.context.canvas.textBaseline = "top";
-        state.context.canvas.font = `${state.axis[axis].textSize} ${state.axis[axis].textFont}`;
+        state.context.canvas.font = `${axisUsed.textSize} ${axisUsed.textFont}`;
         rects.forEach((item, index)=>{
             if(positions[index] === 0 && state.axis.position === "center") return;
 
@@ -107,8 +110,8 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
                 state.context.canvas.fillRect(item.x-(margin+1), item.y-(margin+1), item.width+2*(margin+1), item.height+2*(margin+1));
             }
 
-            state.context.canvas.fillStyle = state.axis[axis].textColor;
-            state.context.canvas.globalAlpha = state.axis[axis].textOpacity;
+            state.context.canvas.fillStyle = axisUsed.textColor;
+            state.context.canvas.globalAlpha = axisUsed.textOpacity;
             state.context.canvas.fillText(labels[index], item.x, item.y);
         });
 
@@ -207,8 +210,11 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
     let maxWidth : number = 0;
     let maxHeight : number = 0;
 
+    const textSizeUsed = scale==="primary"? state.axis[axis].textSize : (state.secondary[axis] as Secondary_Axis).textSize;
+    const textFontUsed = scale==="primary"? state.axis[axis].textFont : (state.secondary[axis] as Secondary_Axis).textFont;
+
     state.context.canvas.save();
-    state.context.canvas.font = `${state.axis[axis].textSize} ${state.axis[axis].textFont}`;
+    state.context.canvas.font = `${textSizeUsed} ${textFontUsed}`;
 
     const labels = positions.map(position=>{
         let label : string = "";
@@ -240,6 +246,7 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
         const width = state.context.canvas.measureText(label).width; 
         if(width > maxWidth)
             maxWidth = width;
+
             
         return label;
     });
@@ -264,7 +271,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 
     positions.forEach((item, index)=>{
         const coord1 = scaleUsed.map(item); //coordinate 1
-        const textSize = getTextSize(labels[index], axis, state);
+        const textSize = getTextSize(labels[index], axis, state, scale);
         let coord2 = translation; //coordinate 2
 
         if(state.axis[axis].dynamic && state.axis.position==="center"){
@@ -293,33 +300,33 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
             }
         }
 
-
-        let x = axis==="x" ? coord1 - textSize.width/2 : coord2 - state.axis[axis].tickSize - state.labelOffset - textSize.width;
-        let y = axis==="x" ? coord2 + state.axis[axis].tickSize + state.labelOffset : coord1 - textSize.height/2;
+        const axisUsed = scale==="primary"? state.axis[axis] : state.secondary[axis] as Secondary_Axis;
+        let x = axis==="x" ? coord1 - textSize.width/2 : coord2 - axisUsed.tickSize - state.labelOffset - textSize.width;
+        let y = axis==="x" ? coord2 + axisUsed.tickSize + state.labelOffset : coord1 - textSize.height/2;
 
         if(scale === "primary"){
             if(state.axis.position === "bottom-right")
-                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
+                x = axis==="x" ? x : coord2 + axisUsed.tickSize + state.labelOffset;
             
             if(state.axis.position === "top-left")
-                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+                y = axis==="x" ? coord2 - textSize.height - axisUsed.tickSize - state.labelOffset : y;
     
             if(state.axis.position === "top-right"){
-                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
-                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+                x = axis==="x" ? x : coord2 + axisUsed.tickSize + state.labelOffset;
+                y = axis==="x" ? coord2 - textSize.height - axisUsed.tickSize - state.labelOffset : y;
             }
         }
         if(scale === "secondary"){
             if(state.axis.position === "bottom-left"){
-                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
-                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+                x = axis==="x" ? x : coord2 + axisUsed.tickSize + state.labelOffset;
+                y = axis==="x" ? coord2 - textSize.height - axisUsed.tickSize - state.labelOffset : y;
             }
 
             if(state.axis.position === "bottom-right")
-                y = axis==="x" ? coord2 - textSize.height - state.axis[axis].tickSize - state.labelOffset : y;
+                y = axis==="x" ? coord2 - textSize.height - axisUsed.tickSize - state.labelOffset : y;
 
             if(state.axis.position === "top-left")
-                x = axis==="x" ? x : coord2 + state.axis[axis].tickSize + state.labelOffset;
+                x = axis==="x" ? x : coord2 + axisUsed.tickSize + state.labelOffset;
         }
 
         rects.push({ x, y, width : textSize.width, height: textSize.height});
@@ -469,7 +476,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
                 break;
         }
 
-        translation = Math.round(translation) + state.axis[axis].baseWidth%2 * 0.5;
+
         return {
             translation,
             axisStart,
@@ -481,9 +488,12 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 //---------------------------------------------
 //----------------- Text Size -----------------
 
-    function getTextSize(text:string, axis:"x"|"y", state:Graph2D_State) : {width:number, height:number}{
+    function getTextSize(text:string, axis:"x"|"y", state:Graph2D_State, scale:"primary"|"secondary") : {width:number, height:number}{
+        const textSizeUsed = scale==="primary"? state.axis[axis].textSize : (state.secondary[axis] as Secondary_Axis).textSize;
+        const textFontUsed = scale==="primary"? state.axis[axis].textFont : (state.secondary[axis] as Secondary_Axis).textFont;
+        
         state.context.canvas.save();
-        state.context.canvas.font = `${state.axis[axis].textSize} ${state.axis[axis].textFont}`;
+        state.context.canvas.font = `${textSizeUsed} ${textFontUsed}`;
         const metrics = state.context.canvas.measureText(text);
         state.context.canvas.restore();
 

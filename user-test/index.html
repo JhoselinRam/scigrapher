@@ -454,12 +454,118 @@
                         <input type="number" class="number-input" name="secondaryYEnd" id="secondaryYEnd" value="5" step="0.1">
                     </div>
                 </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="colorToSecondary">Color to:</label>
+                        <select name="colorToSecondary" id="colorToSecondary" value="All">
+                            <option value="All">All</option>
+                            <option value="xAxis">X Axis</option>
+                            <option value="yAxis">Y Axis</option>
+                            <option value="xBase">X Base</option>
+                            <option value="yBase">Y Base</option>
+                            <option value="xTick">X Tick</option>
+                            <option value="yTick">Y Tick</option>
+                            <option value="xText">X Text</option>
+                            <option value="yText">Y Text</option>
+                        </select>
+                    </div>
+                    <input type="color" id="secondaryAxisColor" value="#000000" class="color-input">
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="opacityToSecondary">Opacity to:</label>
+                        <select name="opacityToSecondary" id="opacityToSecondary" value="All">
+                            <option value="All">All</option>
+                            <option value="xAxis">X Axis</option>
+                            <option value="yAxis">Y Axis</option>
+                            <option value="xBase">X Base</option>
+                            <option value="yBase">Y Base</option>
+                            <option value="xTick">X Tick</option>
+                            <option value="yTick">Y Tick</option>
+                            <option value="xText">X Text</option>
+                            <option value="yText">Y Text</option>
+                        </select>
+                    </div>
+                    <input type="range" class="range-input" id="secondaryAxisOpacity" value="1" min="0" max="1" step="0.05">
+                </div>
+                <div  class="flex-control">
+                    <div>
+                        <label for="secondaryXUnits">X Units:</label>
+                        <input type="text" name="secondaryXUnits" id="secondaryXUnits" class="text-input">
+                    </div>
+                    <div>
+                        <label for="secondaryYUnits">Y Units:</label>
+                        <input type="text" name="secondaryYUnits" id="secondaryYUnits" class="text-input">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="widthToSecondary">Width to:</label>
+                        <select name="widthToSecondary" id="widthToSecondary" value="xBase">
+                            <option value="xBase">X Base</option>
+                            <option value="yBase">Y Base</option>
+                            <option value="xTicks">X Ticks</option>
+                            <option value="yTicks">Y Ticks</option>
+                        </select>
+                    </div>
+                    <input type="number" id="secondaryWidthInput" min="1" step="1" value="1" class="number-input">
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <div class="control-row">
+
+                <div class="flex-control">
+                    <div>
+                        <label for="secondaryXTickSize">X Tick Size</label>
+                        <input type="number" name="secondaryXTickSize" id="secondaryXTickSize" min="0" step="1" value="5" class="number-input">
+                    </div>
+                    <div>
+                        <label for="secondaryYTickSize">Y Tick Size</label>
+                        <input type="number" name="secondaryYTickSize" id="secondaryYTickSize" min="0" step="1" value="5" class="number-input">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="tickFontForSecondary">Font for:</label>
+                        <select name="tickFontForSecondary" id="tickFontForSecondary" value="x">
+                            <option value="x">X Text</option>
+                            <option value="y">Y Text</option>
+                        </select>
+                    </div>
+                    <select id="secondaryTickFont" value="Arial, Helvetica Neue, Helvetica, sans-serif">
+                        <option value="Arial, Helvetica Neue, Helvetica, sans-serif">Auto</option>
+                            <option value="Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif">Calibri</option>
+                            <option value="Century Gothic, CenturyGothic, AppleGothic, sans-serif">Century</option>
+                            <option value="Consolas, monaco, monospace">Consolas</option>
+                            <option value="Georgia, Times, Times New Roman, serif">Times Roman</option>
+                    </select>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="secondaryXTextSize">X Text Size</label>
+                        <input type="number" class="number-input" name="secondaryXTextSize" id="secondaryXTextSize" min="0" step="1" value="10">
+                    </div>
+                    <div>
+                        <label for="secondaryYTextSize">Y Text Size</label>
+                        <input type="number" class="number-input" name="secondaryYTextSize" id="secondaryYTextSize" min="0" step="1" value="10">
+                    </div>
+                </div>
+
 
 
             </div>
     
         </header>
         
+
+
+
         <div class="graph-backplate">
             <div class="graph"></div>
         </div>
