@@ -42,7 +42,10 @@ export interface Graph2D_Options{
         ySecondary ?: LabelProperties
     },
     grid : {
-        primary : Axis_Property<Primary_Grid>,
+        primary : {
+            x : Primary_Grid,
+            y : Primary_Grid & { polarGrid : number}
+        },
         secondary : Axis_Property<Secondary_Grid>
     }
 }

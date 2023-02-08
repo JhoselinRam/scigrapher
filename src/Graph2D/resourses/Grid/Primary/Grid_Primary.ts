@@ -85,15 +85,19 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
             state.context.canvas.lineWidth = state.grid.primary.x.width;
             state.context.canvas.setLineDash(getLineDash(state.grid.primary.x.style));
             radii.forEach(radius=>{
-                const radiusUsed = state.scale.primary.x.map(radius) - xCenter;
-                
+                let radiusUsed = state.scale.primary.x.map(radius) - xCenter;
+                radiusUsed = Math.abs(radiusUsed) + 0.5*state.grid.primary.x.width%2
+
                 state.context.canvas.beginPath();
                 state.context.canvas.arc(0, 0, radiusUsed, thetha0, thetha1);
                 state.context.canvas.stroke();
             });            
 
             state.context.canvas.restore();
+        }
 
+        if(axis === "y"){
+            const deltaAngle = Math.PI/state.grid.primary.y.polarGrid;
         }
     }
 
