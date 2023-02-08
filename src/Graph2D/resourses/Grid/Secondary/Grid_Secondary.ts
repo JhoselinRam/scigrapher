@@ -1,5 +1,5 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
-import { Axis_Property, Graph2D, RecursivePartial, Secondary_Grid } from "../../../Graph2D_Types";
+import { Axis_Property, Graph2D, Secondary_Grid } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
 import { Secondary_Grid_Generator, Secondary_Grid_Modifier } from "./Grid_Secondary_Types";
 
@@ -86,7 +86,49 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 //--------------- Draw Polar ------------------
 
     function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
+        const xCenter = state.scale.primary.x.map(0);
+        const yCenter = state.scale.primary.y.map(0);
 
+        if(axis==="x"){
+            const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item));
+            let radii = positions.filter((item, index) =>  positions.indexOf(item)===index).sort();
+            radii = radii.map(item => state.scale.primary.x.map(item));
+            radii.push(radii[radii.length-1] + radii[1] - radii[0]);
+
+            const partition = getPartition("x", radii[1]-radii[0]);
+            const spacing = (radii[1]-radii[0])/partition;
+            const thetha0 = 0;
+            const thetha1 = 2*Math.PI;
+            const yCompression = (yCenter - state.scale.primary.y.map(1)) / (state.scale.primary.x.map(1) - xCenter);
+        console.dir(radii);    
+            state.context.canvas.save();
+            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.beginPath();
+            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.clip();
+            state.context.canvas.translate(xCenter, yCenter);
+            state.context.canvas.scale(1,yCompression);
+
+            state.context.canvas.strokeStyle = state.grid.secondary.x.color;
+            state.context.canvas.globalAlpha = state.grid.secondary.x.opacity;
+            state.context.canvas.lineWidth = state.grid.secondary.x.width;
+            state.context.canvas.setLineDash(getLineDash(state.grid.secondary.x.style));
+            radii.forEach(item=>{
+                for(let i=1; i<partition; i++){
+                    const radiusUsed = Math.round(item-i*spacing - xCenter) + state.grid.secondary.x.width%2 * 0.5;
+
+                    if(radiusUsed > 0){
+                        state.context.canvas.beginPath();
+                        state.context.canvas.arc(0, 0, radiusUsed, thetha0, thetha1);
+                        state.context.canvas.stroke();
+                    }
+                }
+            });
+
+
+
+            state.context.canvas.restore();
+        }
     }
 
 //---------------------------------------------

@@ -72,13 +72,14 @@ const defaultOptions : Graph2D_Options = {
     secondary : {},
     labels : {},
     grid : {
+        polarGrid : 16,
         primary : {
             x : {
                 enable : true,
                 color : "#000000",
                 opacity : 0.2,
                 style : "solid",
-                width : 1
+                width : 1,
             },
             y : {
                 enable : true,
@@ -86,7 +87,6 @@ const defaultOptions : Graph2D_Options = {
                 opacity : 0.2,
                 style : "solid",
                 width : 1,
-                polarGrid : 16
             }
         }, 
         secondary : {
@@ -98,7 +98,7 @@ const defaultOptions : Graph2D_Options = {
                 width : 1,
                 density : "auto",
                 maxDensity : 5,
-                minSpacing : 20
+                minSpacing : 20,
             },
             y : {
                 enable : true,
@@ -108,7 +108,7 @@ const defaultOptions : Graph2D_Options = {
                 width : 1,
                 density : "auto",
                 maxDensity : 5,
-                minSpacing : 20
+                minSpacing : 20,
             }
         }
     }
@@ -219,6 +219,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             ySecondary : options.labels?.ySecondary == null ? undefined : {...defaultLabel, ...options.labels?.ySecondary},
         },
         grid : {
+            polarGrid : options.grid?.polarGrid != null ? options.grid?.polarGrid : defaultOptions.grid.polarGrid,
             primary : {
                 x : {...defaultOptions.grid.primary.x, ...options.grid?.primary?.x},
                 y : {...defaultOptions.grid.primary.y, ...options.grid?.primary?.y}
