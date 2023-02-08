@@ -86,7 +86,7 @@ const defaultOptions : Graph2D_Options = {
                 opacity : 0.2,
                 style : "solid",
                 width : 1,
-                polarGrid : 12
+                polarGrid : 16
             }
         }, 
         secondary : {

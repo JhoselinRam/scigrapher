@@ -62,12 +62,13 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
 //--------------- Draw Polar ------------------
 
     function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
+        const xCenter = state.scale.primary.x.map(0);
+        const yCenter = state.scale.primary.y.map(0);
+
         if(axis === "x"){
             //Get and filter the grid positions
             const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item));
             const radii = positions.filter((item, index) => item!==0 && positions.indexOf(item)===index);
-            const xCenter = state.scale.primary.x.map(0);
-            const yCenter = state.scale.primary.y.map(0);
             const thetha0 = 0;
             const thetha1 = 2*Math.PI;
             const yCompression = (yCenter - state.scale.primary.y.map(radii[0])) / (state.scale.primary.x.map(radii[0]) - xCenter);
@@ -97,7 +98,31 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
         }
 
         if(axis === "y"){
-            const deltaAngle = Math.PI/state.grid.primary.y.polarGrid;
+            const deltaAngle = 2*Math.PI/state.grid.primary.y.polarGrid;
+            const maxRadius = Math.max(Math.hypot(state.axis.x.start,state.axis.y.start), Math.hypot(state.axis.x.start,state.axis.y.end), Math.hypot(state.axis.x.end,state.axis.y.start), Math.hypot(state.axis.x.end,state.axis.y.end));
+
+            state.context.canvas.save();
+            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.beginPath();
+            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.clip();
+            //state.context.canvas.translate(xCenter, yCenter);
+
+            state.context.canvas.strokeStyle = state.grid.primary.y.color;
+            state.context.canvas.globalAlpha = state.grid.primary.y.opacity;
+            state.context.canvas.lineWidth = state.grid.primary.y.width;
+            state.context.canvas.setLineDash(getLineDash(state.grid.primary.y.style));
+            state.context.canvas.beginPath();
+            for(let i=0; i<state.grid.primary.y.polarGrid; i++){
+                const xCoor = state.scale.primary.x.map(maxRadius*Math.cos(i*deltaAngle));
+                const yCoor = state.scale.primary.y.map(maxRadius*Math.sin(i*deltaAngle));
+                
+                state.context.canvas.moveTo(xCenter, yCenter);
+                state.context.canvas.lineTo(xCoor, yCoor);
+            }
+            state.context.canvas.stroke();
+
+            state.context.canvas.restore();
         }
     }
 
