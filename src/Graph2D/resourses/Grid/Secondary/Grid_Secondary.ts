@@ -90,8 +90,18 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
         const yCenter = state.scale.primary.y.map(0);
 
         if(axis==="x"){
-            const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item));
-            let radii = positions.filter((item, index) =>  positions.indexOf(item)===index).sort();
+            const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item)).sort();
+            let radii = positions.filter((item, index)=>{
+                console.log(index === positions.length-1)
+                if(index === positions.length-1)
+                    return true;
+               
+                const tolerance = 0.00000001;
+                if(Math.abs(item - positions[index+1]) > tolerance)
+                    return true;
+                return false;
+            });
+               
             radii = radii.map(item => state.scale.primary.x.map(item));
             radii.push(radii[radii.length-1] + radii[1] - radii[0]);
 
@@ -100,7 +110,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
             const thetha0 = 0;
             const thetha1 = 2*Math.PI;
             const yCompression = (yCenter - state.scale.primary.y.map(1)) / (state.scale.primary.x.map(1) - xCenter);
-        console.dir(radii);    
+ 
             state.context.canvas.save();
             state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
             state.context.canvas.beginPath();
