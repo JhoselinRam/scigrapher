@@ -24,7 +24,7 @@ const defaultOptions : Graph2D_Options = {
     },
     axis : {
         position : "center",
-        type : "polar",
+        type : "rectangular",
         overlapPriority : "x",
         x : {
             start : -5,
@@ -266,6 +266,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.xLabelSecondary = labels.xLabelSecondary;
     graphHandler.yLabelSecondary = labels.yLabelSecondary;
     graphHandler.axisPosition = axis.axisPosition;
+    graphHandler.axisType = axis.axisType;
     graphHandler.axisDomain = axis.axisDomain;
     graphHandler.axisColor = axis.axisColor;
     graphHandler.axisOpacity = axis.axisOpacity;
@@ -282,6 +283,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.gridWidth = grid.gridWidth;
     graphHandler.primaryGrid = grid.primaryGrid;
     graphHandler.secondaryGrid = grid.secondaryGrid;
+    graphHandler.polarGrid = grid.polarGrid;
     graphHandler.secondaryAxisEnable = secondary.secondaryAxisEnable;
     graphHandler.secondaryAxisDomain = secondary.secondaryAxisDomain;
     graphHandler.secondaryAxisColor = secondary.secondaryAxisColor;

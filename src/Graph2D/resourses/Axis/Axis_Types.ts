@@ -1,4 +1,4 @@
-import { Axis_Position, Axis_Property, Graph2D, RecursivePartial } from "../../Graph2D_Types"
+import { Axis_Position, Axis_Property, Axis_Type, Graph2D, RecursivePartial } from "../../Graph2D_Types"
 
 export interface Axis{
     compute : ()=>void,
@@ -42,6 +42,10 @@ export interface Axis{
     axisOverlap : {
         (overlap : RecursivePartial<Axis_Overlap>):Graph2D,
         (arg:void):Axis_Overlap
+    },
+    axisType : {
+        (type : Axis_Type) : Graph2D,
+        (arg : void) : Axis_Type
     }
 }
 

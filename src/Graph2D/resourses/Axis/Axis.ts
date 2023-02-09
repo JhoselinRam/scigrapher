@@ -1,5 +1,5 @@
 import CreateAxis from "../../../tools/Axis_Obj/Axis_Obj.js";
-import { Axis_Position, Axis_Property, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Axis_Position, Axis_Property, Axis_Type, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
 import { Axis, Axis_Modifier, Axis_Modifier_Props, Axis_Overlap, Base_Props, Domain_Props, Dynamic_Props, Text_Props, Ticks_Props } from "./Axis_Types";
 
 function Axis({state, graphHandler}:Method_Generator) : Axis{
@@ -62,6 +62,26 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             state.axis.position = position;
 
             state.render();
+
+            return graphHandler;
+        }
+    }
+
+//---------------------------------------------
+//---------------- Axis Type ------------------
+
+    function axisType(type : Axis_Type) : Graph2D;
+    function axisType(arg : void) : Axis_Type;
+    function axisType(type : Axis_Type | void) : Graph2D | Axis_Type | undefined{
+        if(typeof type === "undefined")
+            return state.axis.type;
+
+        if(typeof type === "string"){
+            if(type === state.axis.type) return graphHandler;
+
+            state.axis.type = type;
+            state.compute.client();
+            state.draw.client();
 
             return graphHandler;
         }
@@ -490,7 +510,8 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void) : Graph2D | A
         axisTicks,
         axisText,
         axisDynamic,
-        axisOverlap
+        axisOverlap,
+        axisType
     }
 }
 

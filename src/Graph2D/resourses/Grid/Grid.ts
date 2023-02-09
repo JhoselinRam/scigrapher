@@ -303,6 +303,25 @@ function gridWidth(width : Grid_Modifier<number> | void) : Graph2D | Grid_Proper
 }
 
 //---------------------------------------------
+//---------------------------------------------
+
+    function polarGrid(density : number) : Graph2D;
+    function polarGrid(arg : void) : number;
+    function polarGrid(density : number | void) : Graph2D | number | undefined{
+        if(typeof density === "undefined")
+            return props.state.grid.polarGrid;
+
+        if(typeof density === "number"){
+            if(density === props.state.grid.polarGrid) return props.graphHandler;
+
+            props.state.grid.polarGrid = density;
+            props.state.draw.client();
+
+            return props.graphHandler;
+        }
+    }
+
+//---------------------------------------------
 
 
     return {
@@ -312,7 +331,8 @@ function gridWidth(width : Grid_Modifier<number> | void) : Graph2D | Grid_Proper
         gridStyle,
         gridWidth,
         primaryGrid : primaryGrid.primaryGrid,
-        secondaryGrid : secondaryGrid.secondaryGrid
+        secondaryGrid : secondaryGrid.secondaryGrid,
+        polarGrid
     }
 
 }

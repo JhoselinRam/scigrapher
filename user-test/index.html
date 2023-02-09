@@ -114,6 +114,16 @@
                     </select>
                 </div>
                 <div class="flex-control">
+                    <label for="axisType">Axis Type</label>
+                    <select name="axisType" id="axisType" value="rectangular">
+                        <option value="rectangular">Rectangular</option>
+                        <option value="polar">Polar</option>
+                        <option value="x-log">X-Log</option>
+                        <option value="y-log">Y-Log</option>
+                        <option value="log-log">Log-Log</option>
+                    </select>
+                </div>
+                <div class="flex-control">
                     <div>
                         <label for="selectLabel">Customize label:</label>
                         <select name="selectLabel" id="selectLabel" class="select-input" value="titleObj">
@@ -376,6 +386,8 @@
                     <div>
                         <label for="gridColor">Color: </label>
                         <input type="color" name="gridColor" id="gridColor" value="#000000" class="color-input">
+                        <label for="polarGrid">Polar:</label>
+                        <input type="number" name="polarGrid" id="polarGrid" class="number-input" min="0" step="1">
                     </div>
                 </div>
                 <div class="flex-control">

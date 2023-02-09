@@ -10,59 +10,54 @@ function Scale({state}:Method_Generator) : Scale{
 
     function compute(){
         const {xMin, xMax, yMin, yMax} = getMinMaxCoords();
+        let xType : "linear" | "log" = "linear";
+        let yType : "linear" | "log" = "linear";
 
         switch(state.axis.type){
-            case "rectangular":{
-                    const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax]});
-                    const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax]});
-
-                    state.scale.primary = {
-                        x : primaryScaleX,
-                        y : primaryScaleY
-                    };  
-                }
-                break;
-
-            case "polar":{
-                    const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax]});
-                    const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax]});
-
-                    state.scale.primary = {
-                        x : primaryScaleX,
-                        y : primaryScaleY
-                    };  
-                }
-                break;
-
             case "x-log":
+                xType = "log";
                 break;
 
             case "y-log":
+                yType = "log";
                 break;
 
             case "log-log":
+                xType = "log";
+                yType = "log";
                 break;
         }
+
+        const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax], type:xType});
+        const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax], type:yType});
+
+        state.scale.primary = {
+            x : primaryScaleX,
+            y : primaryScaleY
+        }; 
 
         if(state.axis.position === "center") return;
 
         //Secondary scale
         const secondaryScale : Partial<Axis_Property<Mapping>> = {};
+
         if(state.secondary.x != null && state.secondary.x.enable){
-            if(state.secondary.x.type === "rectangular"){
-                secondaryScale.x = mapping({
-                    from:[state.secondary.x.start, state.secondary.x.end], 
-                    to:[xMin, xMax]
-                });
-            }
+            const type = state.secondary.x.type === "rectangular" ? "linear" : "log";
+            
+            secondaryScale.x = mapping({
+                from:[state.secondary.x.start, state.secondary.x.end], 
+                to:[xMin, xMax],
+                type
+            });
         }
         if(state.secondary.y != null && state.secondary.y.enable){
-            if(state.secondary.y.type === "rectangular"){
-                secondaryScale.y = mapping({
-                    from:[state.secondary.y.start, state.secondary.y.end], 
-                    to:[yMin, yMax]
-                });
-            }
+            const type = state.secondary.y.type === "rectangular" ? "linear" : "log";
+            
+            secondaryScale.y = mapping({
+                from:[state.secondary.y.start, state.secondary.y.end], 
+                to:[yMin, yMax],
+                type
+            });
         }
         
         state.scale.secondary = secondaryScale;

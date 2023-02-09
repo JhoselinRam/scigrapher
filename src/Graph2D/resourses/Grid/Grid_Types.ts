@@ -21,6 +21,10 @@ Omit<Secondary_Grid_Generator, "draw">{
     gridWidth : {
         (width:Grid_Modifier<number>): Graph2D,
         (arg:void):Grid_Property<number>
+    },
+    polarGrid : {
+        (density:number) : Graph2D,
+        (arg:void) : number
     }
 }
 

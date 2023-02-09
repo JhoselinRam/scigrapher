@@ -135,6 +135,37 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
                 }
             });
 
+            state.context.canvas.restore();
+        }
+
+        if(axis==="y"){
+            const deltaPrimaryAngle = 2*Math.PI/state.grid.polarGrid;
+            const density = typeof state.grid.secondary.y.density === "string" ? 4 : state.grid.secondary.y.density;
+            const deltaAngle = deltaPrimaryAngle/density;
+            const maxRadius = Math.max(Math.hypot(state.axis.x.start,state.axis.y.start), Math.hypot(state.axis.x.start,state.axis.y.end), Math.hypot(state.axis.x.end,state.axis.y.start), Math.hypot(state.axis.x.end,state.axis.y.end));
+
+            state.context.canvas.save();
+            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.beginPath();
+            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.clip();
+
+            state.context.canvas.strokeStyle = state.grid.secondary.y.color;
+            state.context.canvas.globalAlpha = state.grid.secondary.y.opacity;
+            state.context.canvas.lineWidth = state.grid.secondary.y.width;
+            state.context.canvas.setLineDash(getLineDash(state.grid.secondary.y.style));
+            state.context.canvas.beginPath();
+            for(let i=0; i<state.grid.polarGrid; i++){
+                for(let j=1; j<density; j++){
+                    const angle = i*deltaPrimaryAngle + j*deltaAngle;
+                    const xCoor = state.scale.primary.x.map(maxRadius*Math.cos(angle));
+                    const yCoor = state.scale.primary.y.map(maxRadius*Math.sin(angle));
+
+                    state.context.canvas.moveTo(xCenter, yCenter);
+                    state.context.canvas.lineTo(xCoor, yCoor);
+                }
+            }
+            state.context.canvas.stroke();
 
 
             state.context.canvas.restore();
@@ -155,7 +186,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 
 
 //---------- Customization Methods ------------
-//-------------- Primary Grid -----------------
+//------------- Secondary Grid ----------------
 
 function secondaryGrid(grid : Secondary_Grid_Modifier) : Graph2D;
 function secondaryGrid(arg : void) : Axis_Property<Secondary_Grid>;

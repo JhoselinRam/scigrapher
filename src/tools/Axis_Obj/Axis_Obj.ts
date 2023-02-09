@@ -1,4 +1,5 @@
 import { Axis_Property, Graph2D_State, Secondary_Axis } from "../../Graph2D/Graph2D_Types.js";
+import Scale from "../../Graph2D/resourses/Scale/Scale.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } from "./Axis_Obj_Types";
@@ -138,7 +139,7 @@ export function computePositions(scale:Mapping, ticks: "auto" | number | Array<n
     const fullDomain = Math.abs(scale.domain[1] - scale.domain[0]);
     let positions : Array<number> = [];
 
-    switch(typeof(ticks)){
+    switch(typeof ticks){
         case "string":
             positions = autoCompute(scale, minSpacing);
             break;
@@ -165,16 +166,17 @@ export function computePositions(scale:Mapping, ticks: "auto" | number | Array<n
 //------------- Auto Compute ------------------
 
 function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
-    const fullRange = Math.abs(scale.range[1] - scale.range[0]);
     let positions : Array<number> = [];
+    const fullRange = Math.abs(scale.range[1] - scale.range[0]);
+    const minPartition = Math.floor(fullRange/minSpacing);
+    
+    if(minPartition<=1){
+        positions.push(scale.domain[0]);
+        positions.push(scale.domain[1]);
+        return positions;
+    }
 
     if(scale.type==="linear"){
-        const minPartition = Math.floor(fullRange/minSpacing);
-        if(minPartition<1){
-            positions.push(scale.domain[0]);
-            positions.push(scale.domain[1]);
-            return positions;
-        }
 
         const minDomainSpacing = Math.abs((scale.domain[1] - scale.domain[0])/minPartition);
         const tickMultiplier = [1,2,5,10]; //Order is important!!
@@ -195,8 +197,16 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
             positions.push(newPosition);
         }
     }
-    else{
+    
+    if(scale.type === "log"){
+        const domainStart = scale.domain[0] < scale.domain[1] ? scale.domain[0] : scale.domain[1];
+        const domainEnd = scale.domain[1] > scale.domain[0] ? scale.domain[1] : scale.domain[0];
+        const initialMagnitude = Math.floor(Math.log10(domainStart));
+        const finalMagnitude = Math.floor(Math.log10(domainEnd));
 
+        for(let i=initialMagnitude; i<=finalMagnitude; i++){
+            
+        }
     }
 
 

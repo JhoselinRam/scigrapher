@@ -1,5 +1,12 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph"));
+const Graph = Graph2D(document.querySelector(".graph"),{
+    axis:{
+        x :{
+            start : -12,
+            end : 12
+        }
+    }
+});
 
 function changeBackgroundColor(e){
     const color = e.target.value;
@@ -588,7 +595,7 @@ function changeGridDensity(e){
             break;
 
         case "ySecondary":
-            Graph.secondaryGrid({x:{density:value}});
+            Graph.secondaryGrid({y:{density:value}});
             break;
     }
 }
@@ -838,6 +845,16 @@ function changeSecondarySpacing(e){
         Graph.secondaryAxisTicks({y:{minSpacing : value}});
 }
 
+function changePolarGrid(e){
+    const value = parseInt(e.target.value);
+    Graph.polarGrid(value);
+}
+
+function changeAxisType(e){
+    const type = e.target.value;
+    Graph.axisType(type);
+}
+
 
 
 
@@ -940,6 +957,7 @@ function main(){
     document.querySelector("#secondaryYTicks").addEventListener("input", changeSecondaryTicks);
     document.querySelector("#secondaryXSpacing").addEventListener("input", changeSecondarySpacing);
     document.querySelector("#secondaryYSpacing").addEventListener("input", changeSecondarySpacing);
+    document.querySelector("#polarGrid").addEventListener("input", changePolarGrid);
+    document.querySelector("#axisType").addEventListener("input", changeAxisType);
 }
-
 main();

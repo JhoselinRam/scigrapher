@@ -106,7 +106,6 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
             state.context.canvas.beginPath();
             state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
             state.context.canvas.clip();
-            //state.context.canvas.translate(xCenter, yCenter);
 
             state.context.canvas.strokeStyle = state.grid.primary.y.color;
             state.context.canvas.globalAlpha = state.grid.primary.y.opacity;
