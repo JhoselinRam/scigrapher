@@ -169,6 +169,7 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
     let positions : Array<number> = [];
     const fullRange = Math.abs(scale.range[1] - scale.range[0]);
     const minPartition = Math.floor(fullRange/minSpacing);
+    const tickMultiplier = [1,2,5,10]; //Order is important!!
     
     if(minPartition<=1){
         positions.push(scale.domain[0]);
@@ -177,9 +178,7 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
     }
 
     if(scale.type==="linear"){
-
         const minDomainSpacing = Math.abs((scale.domain[1] - scale.domain[0])/minPartition);
-        const tickMultiplier = [1,2,5,10]; //Order is important!!
         let magnitudeOrder = Math.floor(Math.log10(minDomainSpacing));
         let multiplier : number = 1;
         for(let i=0; i<3; i++){
@@ -203,10 +202,28 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
         const domainEnd = scale.domain[1] > scale.domain[0] ? scale.domain[1] : scale.domain[0];
         const initialMagnitude = Math.floor(Math.log10(domainStart));
         const finalMagnitude = Math.floor(Math.log10(domainEnd));
-
-        for(let i=initialMagnitude; i<=finalMagnitude; i++){
-            
+        
+        let magnitudeLeap = 1;
+        const unitRange = scale.map(Math.pow(10,initialMagnitude + 1)) - scale.map(Math.pow(10,initialMagnitude));
+        
+        if(minSpacing > unitRange){
+            const minPartition = Math.ceil(minSpacing/unitRange);
+            const minPartitionOrder = Math.floor(Math.log10(minPartition));
+            for(let i=0; i<3; i++){
+                if(minPartition/Math.pow(10,minPartitionOrder) <= tickMultiplier[i])
+                    break;
+                magnitudeLeap = tickMultiplier[i+1];
+            }
+            magnitudeLeap *= Math.pow(10,minPartitionOrder);
         }
+
+        for(let i=initialMagnitude; i<=finalMagnitude; i+=magnitudeLeap){
+            const candidate = Math.pow(10,i);
+            
+            if(candidate>=domainStart && candidate<=domainEnd)
+                positions.push(candidate);
+        }
+
     }
 
 
