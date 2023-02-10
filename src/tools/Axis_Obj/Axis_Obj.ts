@@ -1,5 +1,4 @@
 import { Axis_Property, Graph2D_State, Secondary_Axis } from "../../Graph2D/Graph2D_Types.js";
-import Scale from "../../Graph2D/resourses/Scale/Scale.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } from "./Axis_Obj_Types";
@@ -113,7 +112,7 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
 
             state.context.canvas.fillStyle = axisUsed.textColor;
             state.context.canvas.globalAlpha = axisUsed.textOpacity;
-            state.context.canvas.fillText(labels[index], item.x, item.y);
+            drawLabel(state.context.canvas, labels[index], item.x, item.y);
         });
 
         state.context.canvas.restore();
@@ -263,7 +262,8 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
             label = label.replace("-", "– ");
             if(Math.abs(position)>999){
                 const caracteres = label.split("");
-                caracteres.splice(label.indexOf("– ")+2,0,",");
+                const commaIndex = label.includes("– ") ? 3 : 1; 
+                caracteres.splice(commaIndex,0,",");
                 label = caracteres.join("");
             }
         }
@@ -273,16 +273,16 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
         if(scale === "secondary" && state.secondary[axis] != null)
             label = `${label}${(state.secondary[axis] as Secondary_Axis).unit}`;
         
-        const width = state.context.canvas.measureText(label).width; 
-        if(width > maxWidth)
-            maxWidth = width;
+        const textSize = getTextSize(label, axis, state, scale);
+        if(textSize.width > maxWidth)
+            maxWidth = textSize.width;
+        if(textSize.height > maxHeight)
+            maxHeight = textSize.height;
 
             
         return label;
     });
     
-    const metrics = state.context.canvas.measureText(labels[0]);
-    maxHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
     state.context.canvas.restore();
     
     return {
@@ -521,16 +521,58 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
     function getTextSize(text:string, axis:"x"|"y", state:Graph2D_State, scale:"primary"|"secondary") : {width:number, height:number}{
         const textSizeUsed = scale==="primary"? state.axis[axis].textSize : (state.secondary[axis] as Secondary_Axis).textSize;
         const textFontUsed = scale==="primary"? state.axis[axis].textFont : (state.secondary[axis] as Secondary_Axis).textFont;
+        let width = 0;
+        let height = 0;
         
         state.context.canvas.save();
         state.context.canvas.font = `${textSizeUsed} ${textFontUsed}`;
-        const metrics = state.context.canvas.measureText(text);
+        
+        if(!text.includes("x10")){
+            const metrics = state.context.canvas.measureText(text);
+            width = metrics.width;
+            height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        }
+        else{
+            const scaleFactor = 0.85;
+            const parts = text.split("x10");
+            parts[0] = `${parts[0]}x10`
+            parts[1] = parts[1].replace("+", "");
+            const metrics0 = state.context.canvas.measureText(parts[0]);
+            const metrics1 = state.context.canvas.measureText(parts[1]);
+
+            width = metrics0.width  + metrics1.width*scaleFactor;
+            height = metrics0.actualBoundingBoxAscent + metrics0.actualBoundingBoxDescent + 3;
+        }
+        
         state.context.canvas.restore();
 
         return {
-            width : metrics.width,
-            height : metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent
+            width,
+            height
         }
+    }
+
+//---------------------------------------------
+//--------------- Draw Label ------------------
+
+    function drawLabel(context:CanvasRenderingContext2D, text:string, x:number, y:number){
+        if(!text.includes("x10")){
+            context.fillText(text, x, y);
+            return;
+        }
+
+        const scaleFactor = 0.85;
+        const parts = text.split("x10");
+        parts[0] = `${parts[0]}x10`
+        parts[1] = parts[1].replace("+", "");
+        const exponentStart = context.measureText(parts[0]).width;
+
+        context.fillText(parts[0], x, y);
+        context.save();
+        context.translate(x+exponentStart, y);
+        context.scale(scaleFactor, scaleFactor);
+        context.fillText(parts[1], 0, -3);
+        context.restore();
     }
 
 //---------------------------------------------

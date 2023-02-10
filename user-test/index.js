@@ -1,12 +1,16 @@
 import { Graph2D } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"),{
     axis:{
-        type : "x-log",
+        type : "log-log",
         position : "bottom-left",
         x :{
-            start : 1,
-            end : 1e50
-        }
+            start : 1e-5,
+            end : 1e5
+        },
+        y :{
+            start : 1e-5,
+            end : 1e5
+        },
     }
 });
 
