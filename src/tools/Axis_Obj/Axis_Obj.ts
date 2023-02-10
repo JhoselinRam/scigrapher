@@ -198,14 +198,14 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
     }
     
     if(scale.type === "log"){
-        const domainStart = scale.domain[0] < scale.domain[1] ? scale.domain[0] : scale.domain[1];
-        const domainEnd = scale.domain[1] > scale.domain[0] ? scale.domain[1] : scale.domain[0];
-        const initialMagnitude = Math.floor(Math.log10(domainStart));
-        const finalMagnitude = Math.floor(Math.log10(domainEnd));
+        const domainStart = Math.abs(scale.domain[0]) < Math.abs(scale.domain[1]) ? Math.abs(scale.domain[0]) : Math.abs(scale.domain[1]);
+        const domainEnd = Math.abs(scale.domain[1]) > Math.abs(scale.domain[0]) ? Math.abs(scale.domain[1]) : Math.abs(scale.domain[0]);
+        const initialMagnitude = Math.floor(Math.log10(Math.abs(domainStart)));
+        const finalMagnitude = Math.floor(Math.log10(Math.abs(domainEnd)));
         
         let magnitudeLeap = 1;
-        const unitRange = scale.map(Math.pow(10,initialMagnitude + 1)) - scale.map(Math.pow(10,initialMagnitude));
-        
+        const unitRange = Math.abs(scale.map(Math.pow(10,initialMagnitude + 1)) - scale.map(Math.pow(10,initialMagnitude)));
+    
         if(minSpacing > unitRange){
             const minPartition = Math.ceil(minSpacing/unitRange);
             const minPartitionOrder = Math.floor(Math.log10(minPartition));
@@ -218,14 +218,17 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
         }
 
         for(let i=initialMagnitude; i<=finalMagnitude; i+=magnitudeLeap){
-            const candidate = Math.pow(10,i);
+            const candidate = Math.pow(10,i);            
             
-            if(candidate>=domainStart && candidate<=domainEnd)
-                positions.push(candidate);
+            if(candidate>=domainStart && candidate<=domainEnd){
+                if(scale.domain[0]>0 && scale.domain[1]>0)
+                    positions.push(candidate);
+                if(scale.domain[0]<0 && scale.domain[1]<0)
+                    positions.push(-candidate);
+            }
         }
 
     }
-
 
     return positions;
 }

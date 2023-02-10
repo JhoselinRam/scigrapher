@@ -14,6 +14,9 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
                 
             if(state.axis.type === "polar")
                 drawPolar("x", xMin, xMax, yMin, yMax);
+
+            if(state.axis.type === "x-log" || state.axis.type === "log-log")
+                drawLog("x", yMin, yMax, xMin, xMax);
         }
         if(state.grid.secondary.y.enable){
             if(state.axis.type === "rectangular")
@@ -21,6 +24,9 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
                 
             if(state.axis.type === "polar")
                 drawPolar("y", xMin, xMax, yMin, yMax);
+
+            if(state.axis.type === "y-log" || state.axis.type === "log-log")
+                drawLog("x", xMin, xMax, yMin, yMax);
         }
     }
 
@@ -68,7 +74,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 //---------------------------------------------
 //-------------- Get Partition ----------------
 
-    function getPartition(axis:"x"|"y", interval:number) : number{
+    function getPartition(axis:"x"|"y", interval:number, start=0, end=0) : number{
         let spacing = 0;
 
         if(typeof state.grid.secondary[axis].density === "number")
@@ -80,7 +86,19 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
                 spacing = minPartition<state.grid.secondary[axis].maxDensity? minPartition : state.grid.secondary[axis].maxDensity;
             }
             if(state.scale.primary[axis].type === "log"){
+                const domainStart = start<end?start:end;
+                const domainEnd = end>start?end:start;
+                const tickMultiplier = [5,4, 3, 2, 1]; //Order is important!!
+                spacing = 10;
 
+                for(let i=0; i<=tickMultiplier.length; i++){
+                    const tickPosition = domainEnd - (domainEnd-domainStart)/spacing;
+                    const minTickSpacing = state.scale.primary[axis].map(domainEnd) - state.scale.primary[axis].map(tickPosition);
+                    
+                    if(minTickSpacing>=state.axis[axis].minSpacing)
+                        break;
+                    spacing = tickMultiplier[i];
+                }
             }
         }
 
@@ -185,7 +203,36 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
         const drawAt = positions.slice().sort();
         const magnitudeLeap = Math.abs(Math.floor(Math.log10(drawAt[1])) - Math.floor(Math.log10(drawAt[0])));
         drawAt.push(drawAt[drawAt.length-1] + Math.pow(10,magnitudeLeap));
-        const partition = getPartition(axis, Math.abs(state.scale.primary[axis].map(drawAt[1])-state.scale.primary[axis].map(drawAt[0])));
+        const partition = getPartition(axis, 0, Math.abs(drawAt[0]), Math.abs(drawAt[1]));
+
+        state.context.canvas.save();
+        state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+
+        state.context.canvas.strokeStyle = state.grid.secondary[axis].color;
+        state.context.canvas.globalAlpha = state.grid.secondary[axis].opacity;
+        state.context.canvas.lineWidth = state.grid.secondary[axis].width;
+        state.context.canvas.setLineDash(getLineDash(state.grid.secondary[axis].style));
+        state.context.canvas.beginPath();
+        drawAt.forEach(item=>{
+            const spacing = (item - (item/Math.pow(10,magnitudeLeap))) / partition;
+            for(let i=1; i<partition; i++){ 
+                const coord = Math.round(state.scale.primary[axis].map(item-i*spacing)) + state.grid.secondary[axis].width%2 * 0.5;
+                console.log(coord);
+                if(coord < limitMin || coord > limitMax) return;
+
+                if(axis === "x"){
+                    state.context.canvas.moveTo(coord, start);
+                    state.context.canvas.lineTo(coord, end);
+                }
+                if(axis === "y"){
+                    state.context.canvas.moveTo(start, coord);
+                    state.context.canvas.lineTo(end, coord);
+                }
+            }
+        });
+        state.context.canvas.stroke();
+
+        state.context.canvas.restore();
     }
 
 //---------------------------------------------

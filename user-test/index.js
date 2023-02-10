@@ -2,6 +2,7 @@ import { Graph2D } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"),{
     axis:{
         type : "x-log",
+        position : "bottom-left",
         x :{
             start : 1,
             end : 1e50
