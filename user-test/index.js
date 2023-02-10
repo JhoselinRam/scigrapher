@@ -3,7 +3,7 @@ const Graph = Graph2D(document.querySelector(".graph"),{
     axis:{
         type : "x-log",
         x :{
-            start : 1e-10,
+            start : 1,
             end : 1e50
         }
     }

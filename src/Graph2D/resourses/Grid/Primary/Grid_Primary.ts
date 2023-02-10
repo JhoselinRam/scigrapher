@@ -10,20 +10,18 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
 
     function draw(xMin : number, xMax : number, yMin : number, yMax:number){
         if(state.grid.primary.x.enable){
-            if(state.axis.type === "rectangular")
-                drawRectangular("x", yMin, yMax, xMin, xMax);
-            
             if(state.axis.type === "polar")
                 drawPolar("x", xMin, xMax, yMin, yMax);
+            else
+                drawRectangular("x", yMin, yMax, xMin, xMax);
             
         }
         
         if(state.grid.primary.y.enable){
-            if(state.axis.type === "rectangular")
-                drawRectangular("y", xMin, xMax, yMin, yMax);
-                
             if(state.axis.type === "polar")
-                drawPolar("y", xMin, xMax, yMin, yMax);
+            drawPolar("y", xMin, xMax, yMin, yMax);
+        else
+            drawRectangular("y", xMin, xMax, yMin, yMax);
         }
     }
 

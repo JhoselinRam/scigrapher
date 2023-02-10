@@ -75,8 +75,13 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
             spacing = state.grid.secondary[axis].density as number;
 
         if(state.grid.secondary[axis].density === "auto"){
-            const minPartition = Math.ceil(interval/state.grid.secondary[axis].minSpacing);
-            spacing = minPartition<state.grid.secondary[axis].maxDensity? minPartition : state.grid.secondary[axis].maxDensity;
+            if(state.scale.primary[axis].type === "linear"){
+                const minPartition = Math.ceil(interval/state.grid.secondary[axis].minSpacing);
+                spacing = minPartition<state.grid.secondary[axis].maxDensity? minPartition : state.grid.secondary[axis].maxDensity;
+            }
+            if(state.scale.primary[axis].type === "log"){
+
+            }
         }
 
         return spacing;
@@ -170,6 +175,17 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 
             state.context.canvas.restore();
         }
+    }
+
+//---------------------------------------------
+//-------------- Draw Log ---------------------
+
+    function drawLog(axis:"x"|"y", start:number, end:number, limitMin:number, limitMax:number){
+        const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions;
+        const drawAt = positions.slice().sort();
+        const magnitudeLeap = Math.abs(Math.floor(Math.log10(drawAt[1])) - Math.floor(Math.log10(drawAt[0])));
+        drawAt.push(drawAt[drawAt.length-1] + Math.pow(10,magnitudeLeap));
+        const partition = getPartition(axis, Math.abs(state.scale.primary[axis].map(drawAt[1])-state.scale.primary[axis].map(drawAt[0])));
     }
 
 //---------------------------------------------
