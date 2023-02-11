@@ -79,13 +79,23 @@ function Scale({state}:Method_Generator) : Scale{
         // Set auxiliar dummy scales
         const auxScaleX = mapping({
             from:[state.axis.x.start, state.axis.x.end], 
-            to:[state.margin.x.start, state.context.clientRect.width - state.margin.x.end]
+            to:[state.margin.x.start, state.context.clientRect.width - state.margin.x.end],
+            type : state.axis.type==="x-log"||state.axis.type==="log-log"?"log":"linear"
         });
+        const auxPositionsX = computePositions(auxScaleX, state.axis.x.ticks, state.axis.x.minSpacing);
+        const labelsX = createLabels(auxPositionsX, "x", state, "primary");
+        const axisHeight = labelsX.maxHeight + state.labelOffset + state.axis.x.tickSize;
+        
+        
         
         const auxScaleY = mapping({
             from:[state.axis.y.start, state.axis.y.end], 
-            to:[state.context.clientRect.height - state.margin.y.start, state.margin.y.end]
+            to:[state.context.clientRect.height - state.margin.y.start - axisHeight, state.margin.y.end],
+            type : state.axis.type==="y-log"||state.axis.type==="log-log"?"log":"linear"
         });
+        const auxPositionsY = computePositions(auxScaleY, state.axis.y.ticks, state.axis.y.minSpacing);
+        const labelsY = createLabels(auxPositionsY, "y", state, "primary");
+        const axisWidth = labelsY.maxWidth + state.labelOffset + state.axis.y.tickSize;
 
         
         if(state.secondary.x != null && state.secondary.x.enable){
@@ -112,13 +122,6 @@ function Scale({state}:Method_Generator) : Scale{
         
 
         //Compute axis size
-        const auxPositionsX = computePositions(auxScaleX, state.axis.x.ticks, state.axis.x.minSpacing);
-        const labelsX = createLabels(auxPositionsX, "x", state, "primary");
-        const auxPositionsY = computePositions(auxScaleY, state.axis.y.ticks, state.axis.y.minSpacing);
-        const labelsY = createLabels(auxPositionsY, "y", state, "primary");
-
-        const axisHeight = labelsX.maxHeight + state.labelOffset + state.axis.x.tickSize;
-        const axisWidth = labelsY.maxWidth + state.labelOffset + state.axis.y.tickSize;
 
         state.axisObj.primary = {
             width : axisWidth,

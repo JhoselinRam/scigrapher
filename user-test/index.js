@@ -5,11 +5,13 @@ const Graph = Graph2D(document.querySelector(".graph"),{
         position : "bottom-left",
         x :{
             start : 1e-5,
-            end : 1e5
+            end : 1e5,
+            unit : "m"
         },
         y :{
             start : 1e-5,
-            end : 1e5
+            end : 1e7,
+            unit : "m/s"
         },
     }
 });

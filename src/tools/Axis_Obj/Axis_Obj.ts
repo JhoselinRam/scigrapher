@@ -112,7 +112,7 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
 
             state.context.canvas.fillStyle = axisUsed.textColor;
             state.context.canvas.globalAlpha = axisUsed.textOpacity;
-            drawLabel(state.context.canvas, labels[index], item.x, item.y);
+            drawLabel(state.context.canvas, labels[index], item.x, item.y, axisUsed.unit);
         });
 
         state.context.canvas.restore();
@@ -534,14 +534,18 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
         }
         else{
             const scaleFactor = 0.85;
-            const parts = text.split("x10");
-            parts[0] = `${parts[0]}x10`
-            parts[1] = parts[1].replace("+", "");
-            const metrics0 = state.context.canvas.measureText(parts[0]);
-            const metrics1 = state.context.canvas.measureText(parts[1]);
+            const unit =  scale === "primary"? state.axis[axis].unit : (state.secondary[axis] as Secondary_Axis).unit;
 
-            width = metrics0.width  + metrics1.width*scaleFactor;
-            height = metrics0.actualBoundingBoxAscent + metrics0.actualBoundingBoxDescent + 3;
+            const parts = text.split("x10");
+            const number = `${parts[0]}x10`
+            const exponent = parts[1].replace("+", "").replace(unit, "");
+            
+            const metrics0 = state.context.canvas.measureText(number);
+            const metrics1 = state.context.canvas.measureText(exponent);
+            const metrics2 = state.context.canvas.measureText(unit);
+
+            width = metrics0.width  + metrics1.width*scaleFactor + metrics2.width;
+            height = metrics0.actualBoundingBoxAscent + metrics0.actualBoundingBoxDescent;
         }
         
         state.context.canvas.restore();
@@ -555,7 +559,7 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 //---------------------------------------------
 //--------------- Draw Label ------------------
 
-    function drawLabel(context:CanvasRenderingContext2D, text:string, x:number, y:number){
+    function drawLabel(context:CanvasRenderingContext2D, text:string, x:number, y:number, unit:string){
         if(!text.includes("x10")){
             context.fillText(text, x, y);
             return;
@@ -563,16 +567,18 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 
         const scaleFactor = 0.85;
         const parts = text.split("x10");
-        parts[0] = `${parts[0]}x10`
-        parts[1] = parts[1].replace("+", "");
-        const exponentStart = context.measureText(parts[0]).width;
+        const number = `${parts[0]}x10`
+        const exponent = parts[1].replace("+", "").replace(unit, "");
+        const exponentStart = context.measureText(number).width;
+        const unitStart = exponentStart + context.measureText(exponent).width*scaleFactor + 1;
 
-        context.fillText(parts[0], x, y);
+        context.fillText(number, x, y);
         context.save();
         context.translate(x+exponentStart, y);
         context.scale(scaleFactor, scaleFactor);
-        context.fillText(parts[1], 0, -3);
+        context.fillText(exponent, 0, -2);
         context.restore();
+        context.fillText(unit, x+unitStart, y);
     }
 
 //---------------------------------------------
