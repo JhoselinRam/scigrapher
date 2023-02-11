@@ -35,6 +35,10 @@ export interface Secondary{
     secondaryAxisText : {
         (base : RecursivePartial<Text_Props>) : Graph2D,
         (arg : void) : Partial<Text_Props>
+    },
+    secondaryAxisType : {
+        (types : Partial<Axis_Property<"rectangular"|"log">>) : Graph2D,
+        (arg : void) : Partial<Axis_Property<"rectangular"|"log">>
     }
 }
 

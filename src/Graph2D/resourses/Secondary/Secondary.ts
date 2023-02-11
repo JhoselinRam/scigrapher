@@ -42,6 +42,26 @@ function Secondary({state, graphHandler}:Method_Generator) : Secondary {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const defaultSecondaryAxis : Secondary_Axis = {
     enable : true,
     type : "rectangular",
@@ -195,6 +215,50 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void) : Gra
     }
     
 }
+
+//---------------------------------------------
+//---------------- Axis Type ------------------
+
+    function secondaryAxisType(types : Partial<Axis_Property<"rectangular"|"log">>) : Graph2D;
+    function secondaryAxisType(arg : void) : Partial<Axis_Property<"rectangular"|"log">>;
+    function secondaryAxisType(types : Partial<Axis_Property<"rectangular"|"log">> | void) : Graph2D | Partial<Axis_Property<"rectangular"|"log">> | undefined{
+        if(typeof types === "undefined"){
+            const axisTypes : Partial<Axis_Property<"rectangular"|"log">> = {};
+            if(state.secondary.x != null)
+                axisTypes.x = state.secondary.x.type;
+            if(state.secondary.y != null)
+                axisTypes.y = state.secondary.y.type;
+
+            return axisTypes;
+        }
+
+        if(typeof types === "object"){
+            if(types.x == null && types.y == null) return graphHandler;
+            if(state.secondary.x == null && state.secondary.y == null) return graphHandler;
+
+            let changeX = false;
+            let changeY = false;
+
+            if(state.secondary.x != null && types.x != null){
+                state.secondary.x.type = types.x;
+                changeX = true;
+            }
+            
+            if(state.secondary.y != null && types.y != null){
+                state.secondary.y.type = types.y;
+                changeY = true;
+            }
+
+            if(changeX || changeY){
+                state.compute.client();
+                state.draw.client();
+            }
+
+            return graphHandler;
+        
+        }
+    }
+
 
 //---------------------------------------------
 //-------------- Axis Color -------------------
@@ -662,7 +726,8 @@ function secondaryAxisText(text : RecursivePartial<Text_Props> | void) : Graph2D
         secondaryAxisUnits,
         secondaryAxisBase,
         secondaryAxisTicks,
-        secondaryAxisText
+        secondaryAxisText,
+        secondaryAxisType
     }
 
 }

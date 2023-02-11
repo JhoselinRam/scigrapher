@@ -256,7 +256,7 @@ function secondaryGrid(grid : Secondary_Grid_Modifier) : Graph2D;
 function secondaryGrid(arg : void) : Axis_Property<Secondary_Grid>;
 function secondaryGrid(grid : Secondary_Grid_Modifier|void) : Graph2D|Axis_Property<Secondary_Grid>|undefined{
     if(typeof grid === "undefined")
-        return state.grid.secondary;
+        return {...state.grid.secondary};
 
     if(typeof grid === "object"){
         if(grid.grid==null && grid.x == null && grid.y==null) return graphHandler;

@@ -292,6 +292,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.secondaryAxisBase = secondary.secondaryAxisBase;
     graphHandler.secondaryAxisTicks = secondary.secondaryAxisTicks;
     graphHandler.secondaryAxisText = secondary.secondaryAxisText;
+    graphHandler.secondaryAxisType = secondary.secondaryAxisType;
 
 
     //Setup configurations

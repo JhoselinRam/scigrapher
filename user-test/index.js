@@ -863,6 +863,15 @@ function changeAxisType(e){
     Graph.axisType(type);
 }
 
+function changeSecondaryAxisType(e){
+    const target = e.target.id;
+    const type = e.target.value;
+
+    if(target === "secondaryXAxisType")
+        Graph.secondaryAxisType({x:type});
+    if(target === "secondaryYAxisType")
+        Graph.secondaryAxisType({y:type});
+}
 
 
 
@@ -967,5 +976,7 @@ function main(){
     document.querySelector("#secondaryYSpacing").addEventListener("input", changeSecondarySpacing);
     document.querySelector("#polarGrid").addEventListener("input", changePolarGrid);
     document.querySelector("#axisType").addEventListener("input", changeAxisType);
+    document.querySelector("#secondaryXAxisType").addEventListener("change", changeSecondaryAxisType);
+    document.querySelector("#secondaryYAxisType").addEventListener("change", changeSecondaryAxisType);
 }
 main();

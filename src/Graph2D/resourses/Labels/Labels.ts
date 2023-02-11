@@ -321,7 +321,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function title(arg : void) : LabelProperties | undefined;
     function title(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
-            return state.labels.title;
+            return Object.assign({}, state.labels.title);
             
         if(typeof label === "object"){
             const labelArg : LabelProperties = {
@@ -346,7 +346,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function subtitle(arg : void) : LabelProperties | undefined;
     function subtitle(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
-            return state.labels.subtitle;
+            return Object.assign({}, state.labels.subtitle);
             
         if(typeof label === "object"){
             const labelArg : LabelProperties = {
@@ -370,7 +370,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function xLabel(arg : void) : LabelProperties | undefined;
     function xLabel(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
-            return state.labels.xPrimary;
+            return Object.assign({}, state.labels.xPrimary);
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
@@ -392,7 +392,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function yLabel(arg : void) : LabelProperties | undefined;
     function yLabel(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
-            return state.labels.yPrimary;
+            return Object.assign({}, state.labels.yPrimary);
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
@@ -414,7 +414,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function xLabelSecondary(arg : void) : LabelProperties | undefined;
     function xLabelSecondary(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
-            return state.labels.xSecondary;
+            return Object.assign({}, state.labels.xSecondary);
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels
@@ -437,7 +437,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function yLabelSecondary(arg : void) : LabelProperties | undefined;
     function yLabelSecondary(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
         if(typeof label === null)
-            return state.labels.ySecondary;
+            return Object.assign({}, state.labels.ySecondary);
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels

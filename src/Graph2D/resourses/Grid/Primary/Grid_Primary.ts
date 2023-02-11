@@ -142,7 +142,7 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
     function primaryGrid(arg : void) : Axis_Property<Primary_Grid>;
     function primaryGrid(grid : Primary_Grid_Modifier|void) : Graph2D|Axis_Property<Primary_Grid>|undefined{
         if(typeof grid === "undefined")
-            return state.grid.primary;
+            return {...state.grid.primary};
 
         if(typeof grid === "object"){
             if(grid.grid==null && grid.x == null && grid.y==null) return graphHandler;

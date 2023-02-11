@@ -2,6 +2,7 @@ import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
 import { Background } from "./resourses/Background/Background_Types";
+import { Events } from "./resourses/Events/Events_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
 import { Margin } from "./resourses/Margin/Margin_Types";
@@ -13,7 +14,8 @@ export interface Graph2D extends
     Omit<Labels,"compute" | "draw">,
     Omit<Grid, "compute" | "draw">,
     Omit<Secondary, "compute" | "draw">,
-    Margin{}
+    Margin,
+    Events{}
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
 export type Axis_Type = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
