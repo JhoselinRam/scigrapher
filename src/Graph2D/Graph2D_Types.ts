@@ -149,12 +149,41 @@ export interface Graph2D_State extends Graph2D_Options {
             height : number,
             obj ?: Partial<Axis_Property<Axis_Obj>>
         }
+    },
+    events : {
+        move : Pointer_Move,
+        zoom : Pointer_Zoom,
+        hoverCursor : string,
+        moveCursor : string,
+        defaultCursor : string,
+        pointerCapture : boolean,
     }
 }
 
 export interface Method_Generator{
     state : Graph2D_State,
     graphHandler : Graph2D
+}
+
+export interface Pointer_Move {
+    enable : boolean,
+    callback ?: (handler:Graph2D)=>void,
+    delay : number,
+    onMove : (position : Axis_Property<number>)=>void
+}
+
+export interface Pointer_Zoom extends Pointer_Move{
+    type : "area" | "drag",
+    axis : "x" | "y",
+    strength : number,
+    rect : {
+        background : string,
+        opacity : number,
+        borderColor : string,
+        borderWidth : number,
+        borderOpacity : number
+        borderStyle : string
+    }
 }
 
 export type RecursivePartial<T> = {

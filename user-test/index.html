@@ -589,15 +589,13 @@
                     </div>
                 </div>
                 <div class="flex-control">
-                    <label for="secondaryXAxisType">X Axis Type</label>
-                    <select name="secondaryXAxisType" id="secondaryXAxisType" value="rectangular">
-                        <option value="rectangular">Rectangular</option>
-                        <option value="log">Log</option>
-                    </select>
-                </div>
-                <div class="flex-control">
-                    <label for="secondaryYAxisType">Y Axis Type</label>
-                    <select name="secondaryYAxisType" id="secondaryYAxisType" value="rectangular">
+                    <div>
+                        <label for="secondaryXAxisType">X:</label>
+                        <input type="radio" name="secondaryAxisType" id="secondaryXAxisType" checked>
+                        <label for="secondaryYAxisType">Y:</label>
+                        <input type="radio" name="secondaryAxisType" id="secondaryYAxisType" >
+                    </div>
+                    <select id="secondaryType" value="rectangular">
                         <option value="rectangular">Rectangular</option>
                         <option value="log">Log</option>
                     </select>

@@ -849,12 +849,12 @@ function changeAxisType(e){
 }
 
 function changeSecondaryAxisType(e){
-    const target = e.target.id;
+    const target = document.querySelector("#secondaryXAxisType").checked?"x":"y";
     const type = e.target.value;
 
-    if(target === "secondaryXAxisType")
+    if(target === "x")
         Graph.secondaryAxisType({x:type});
-    if(target === "secondaryYAxisType")
+    if(target === "y")
         Graph.secondaryAxisType({y:type});
 }
 
@@ -981,8 +981,7 @@ function main(){
     document.querySelector("#secondaryYSpacing").addEventListener("input", changeSecondarySpacing);
     document.querySelector("#polarGrid").addEventListener("input", changePolarGrid);
     document.querySelector("#axisType").addEventListener("input", changeAxisType);
-    document.querySelector("#secondaryXAxisType").addEventListener("change", changeSecondaryAxisType);
-    document.querySelector("#secondaryYAxisType").addEventListener("change", changeSecondaryAxisType);
+    document.querySelector("#secondaryType").addEventListener("change", changeSecondaryAxisType);
     document.querySelector("#applyAspectRatio").addEventListener("click", changeAspectRatio);
     document.querySelector("#pointerMove").addEventListener("change", changePointerMove);
     document.querySelector("#pointerCapture").addEventListener("change", changePointerMove);

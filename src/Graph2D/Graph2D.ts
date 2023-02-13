@@ -172,6 +172,33 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             }
         },
         axisObj : {},
+        events : {
+            move : {
+                enable : false,
+                delay : 15,
+                onMove : (args)=>{}
+            },
+            zoom : {
+                enable : false,
+                delay : 15,
+                axis : "x",
+                strength : 1,
+                type : "area",
+                rect : {
+                    background : "#ffffff",
+                    opacity : 0,
+                    borderColor  : "#000000",
+                    borderOpacity : 0.8,
+                    borderWidth : 1,
+                    borderStyle : "solid"
+                },
+                onMove : (args)=>{}
+            },
+            hoverCursor : "",
+            moveCursor : "",
+            defaultCursor : "",
+            pointerCapture : true,
+        },
         background : {...defaultOptions.background, ...options.background},
         margin : {
             x : {...defaultOptions.margin.x, ...options.margin?.x},
