@@ -1,20 +1,5 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph"),{
-    axis:{
-        type : "log-log",
-        position : "bottom-left",
-        x :{
-            start : 1e-5,
-            end : 1e5,
-            unit : "m"
-        },
-        y :{
-            start : 1e-5,
-            end : 1e7,
-            unit : "m/s"
-        },
-    }
-});
+const Graph = Graph2D(document.querySelector(".graph")).pointerMove();
 
 function changeBackgroundColor(e){
     const color = e.target.value;
@@ -873,6 +858,26 @@ function changeSecondaryAxisType(e){
         Graph.secondaryAxisType({y:type});
 }
 
+function changeAspectRatio(){
+    const ratio = parseFloat(document.querySelector("#aspectRatio").value);
+    const anchor = parseFloat(document.querySelector("#anchor").value);
+    const axis = document.querySelector("#xAspectRatio").checked? "x" : "y";
+
+    Graph.aspectRatio({ratio, anchor, axis});
+}
+
+function changePointerMove(){
+    const enable = document.querySelector("#pointerMove").checked;
+    const pointerCapture = document.querySelector("#pointerCapture").checked;
+    const delay = parseInt(document.querySelector("#pointerDelay").value);
+    const defaultCursor = document.querySelector("#defaultCursor").value;
+    const hoverCursor = document.querySelector("#hoverCursor").value;
+    const moveCursor = document.querySelector("#moveCursor").value;
+
+    Graph.pointerMove({enable, delay, pointerCapture, defaultCursor, hoverCursor, moveCursor});
+}
+
+
 
 
 
@@ -978,5 +983,12 @@ function main(){
     document.querySelector("#axisType").addEventListener("input", changeAxisType);
     document.querySelector("#secondaryXAxisType").addEventListener("change", changeSecondaryAxisType);
     document.querySelector("#secondaryYAxisType").addEventListener("change", changeSecondaryAxisType);
+    document.querySelector("#applyAspectRatio").addEventListener("click", changeAspectRatio);
+    document.querySelector("#pointerMove").addEventListener("change", changePointerMove);
+    document.querySelector("#pointerCapture").addEventListener("change", changePointerMove);
+    document.querySelector("#pointerDelay").addEventListener("input", changePointerMove);
+    document.querySelector("#defaultCursor").addEventListener("input", changePointerMove);
+    document.querySelector("#hoverCursor").addEventListener("input", changePointerMove);
+    document.querySelector("#moveCursor").addEventListener("input", changePointerMove);
 }
 main();

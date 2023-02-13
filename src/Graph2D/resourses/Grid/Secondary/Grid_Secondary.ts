@@ -9,7 +9,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 
     function draw(xMin : number, xMax : number, yMin : number, yMax:number){
         if(state.grid.secondary.x.enable){
-            if(state.axis.type === "rectangular")
+            if(state.axis.type === "rectangular" || state.axis.type === "y-log")
                 drawRectangular("x", yMin, yMax, xMin, xMax);
                 
             if(state.axis.type === "polar")
@@ -19,7 +19,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
                 drawLog("x", yMin, yMax, xMin, xMax);
         }
         if(state.grid.secondary.y.enable){
-            if(state.axis.type === "rectangular")
+            if(state.axis.type === "rectangular" || state.axis.type === "x-log")
                 drawRectangular("y", xMin, xMax, yMin, yMax);
                 
             if(state.axis.type === "polar")
@@ -51,7 +51,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
         drawAt.forEach(item=>{
             for(let i=1; i<partition; i++){
                 const coord = Math.round(item-i*spacing) + state.grid.secondary[axis].width%2 * 0.5;
-                if(coord < limitMin || coord > limitMax) return;
+                if(coord < limitMin || coord > limitMax) continue;
 
                 if(axis === "x"){
                     state.context.canvas.moveTo(coord, start);
@@ -115,7 +115,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
         if(axis==="x"){
             const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item)).sort();
             let radii = positions.filter((item, index)=>{
-                console.log(index === positions.length-1)
+                
                 if(index === positions.length-1)
                     return true;
                
@@ -218,7 +218,7 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
             for(let i=1; i<partition; i++){ 
                 const coord = Math.round(state.scale.primary[axis].map(item-i*spacing)) + state.grid.secondary[axis].width%2 * 0.5;
 
-                if(coord < limitMin || coord > limitMax) return;
+                if(coord < limitMin || coord > limitMax) continue;
 
                 if(axis === "x"){
                     state.context.canvas.moveTo(coord, start);

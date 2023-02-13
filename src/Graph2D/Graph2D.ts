@@ -1,6 +1,7 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
+import Events from "./resourses/Events/Events.js";
 import Grid from "./resourses/Grid/Grid.js";
 import Labels from "./resourses/Labels/Labels.js";
 import Margin from "./resourses/Margin/Margin.js";
@@ -150,6 +151,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     //Combines the options object with the default options
     const state : RequiredExept<Graph2D_State, "compute" | "scale"  | "labels" | "context" | "draw" | "axisObj"> = { 
         container,
+        canvasElement : document.createElement("canvas"),
         render,
         labelOffset : 4,
         scale : {},
@@ -242,6 +244,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const margin = Margin({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const grid = Grid({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const secondary = Secondary({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const events  = Events({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -293,6 +296,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.secondaryAxisTicks = secondary.secondaryAxisTicks;
     graphHandler.secondaryAxisText = secondary.secondaryAxisText;
     graphHandler.secondaryAxisType = secondary.secondaryAxisType;
+    graphHandler.aspectRatio = events.aspectRatio;
+    graphHandler.pointerMove = events.pointerMove;
 
 
     //Setup configurations
@@ -344,18 +349,18 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     function setup(){
         const width = state.container.clientWidth;
         const height = state.container.clientHeight;
-        const newCanvas = document.createElement("canvas");
         const dpi = window.devicePixelRatio;
         
-        newCanvas.style.width = `${width}px`;
-        newCanvas.style.height = `${height}px`;
-        newCanvas.width = width*dpi;
-        newCanvas.height = height*dpi;
+        state.canvasElement.style.width = `${width}px`;
+        state.canvasElement.style.height = `${height}px`;
+        state.canvasElement.width = width*dpi;
+        state.canvasElement.height = height*dpi;
 
-        state.container.appendChild(newCanvas);
-        state.context.canvas = newCanvas.getContext("2d") as CanvasRenderingContext2D;
+        state.container.appendChild(state.canvasElement);
+        state.context.canvas = state.canvasElement.getContext("2d") as CanvasRenderingContext2D;
         state.context.canvas.scale(dpi, dpi);
         state.context.canvas.imageSmoothingEnabled = false;
+        
     }
 
 

@@ -104,6 +104,7 @@ export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"
 
 export interface Graph2D_State extends Graph2D_Options {
     container : HTMLDivElement,
+    canvasElement : HTMLCanvasElement,
     render : ()=>void,
     labelOffset : number,
     context : {
