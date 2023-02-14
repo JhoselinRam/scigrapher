@@ -190,9 +190,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                     borderColor  : "#0057bd",
                     borderOpacity : 0.5,
                     borderWidth : 1,
-                    borderStyle : "solid",
-                    xLast : 0,
-                    yLast :0
+                    borderStyle : "solid"
                 },
                 onZoom : (args)=>{}
             },
@@ -203,6 +201,20 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             lastPosition : {
                 x : 0,
                 y : 0
+            },
+            secondaryLastPosition : {
+                x : 0,
+                y : 0
+            },
+            lastAxisDomain : {
+                x : {
+                    start : 0,
+                    end : 0
+                },
+                y : {
+                    start : 0,
+                    end : 0
+                }
             }
         },
         background : {...defaultOptions.background, ...options.background},

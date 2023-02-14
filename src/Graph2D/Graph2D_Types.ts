@@ -157,7 +157,12 @@ export interface Graph2D_State extends Graph2D_Options {
         moveCursor : string,
         defaultCursor : string,
         pointerCapture : boolean,
-        lastPosition : Axis_Property<number>
+        lastPosition : Axis_Property<number>,
+        secondaryLastPosition : Axis_Property<number>,
+        lastAxisDomain : Axis_Property<{
+            start : number,
+            end : number
+        }>
     }
 }
 
@@ -184,9 +189,7 @@ export interface Pointer_Zoom extends Omit<Pointer_Move, "onMove">{
         borderColor : string,
         borderWidth : number,
         borderOpacity : number
-        borderStyle : string,
-        xLast : number,
-        yLast:number
+        borderStyle : string
     },
 
 }
