@@ -1,48 +1,122 @@
 import { Axis_Obj } from "../../../tools/Axis_Obj/Axis_Obj_Types";
-import { Axis_Property, Graph2D, Method_Generator } from "../../Graph2D_Types";
-import { Aspect_Ratio, Events, Pointer_Move, Pointer_Zoom } from "./Events_Types";
+import { Axis_Property, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Aspect_Ratio, Events, Move_Event, Pointer_Move_Props, Pointer_Zoom_Props, Zoom_Event } from "./Events_Types";
 
 function Events({state, graphHandler} : Method_Generator) : Events {
 
-//----------- Pointer Move Down ---------------
+//-------------- Apply Events -----------------
 
-    function pointerDown(e : PointerEvent){     
+    function applyEvents(){
+        //Reset all events in the element
+        state.canvasElement.removeEventListener("pointerdown", onDown);
+        state.canvasElement.removeEventListener("pointermove", onStyle);
+        state.canvasElement.removeEventListener("pointerup", onUp);
+        state.canvasElement.style.cursor = "default";
+        state.canvasElement.style.touchAction = "auto";
+        
+        if(state.events.move.enable || state.events.zoom.enable){
+            state.canvasElement.addEventListener("pointerdown", onDown);
+            state.canvasElement.addEventListener("pointermove", onStyle);
+            state.canvasElement.addEventListener("pointerup", onUp);
+            state.canvasElement.style.touchAction = "none";
+
+            if(state.events.move.enable)
+                state.events.move.onMove = throttle<Move_Event>(moveOnPointer, state.events.move.delay);
+            if(state.events.zoom.enable)
+                state.events.zoom.onZoom = throttle<Zoom_Event>(zoomOnPointer, state.events.zoom.delay);
+            
+        }
+    }
+
+//--------------------------------------------
+//----------------- On Down ------------------
+
+    function onDown(e : PointerEvent){     
         if(inClientRect(e.clientX, e.clientY)){
-            if(pointerMoveOptions.pointerCapture)
+            if(state.events.pointerCapture)
                 state.canvasElement.setPointerCapture(e.pointerId);
-            lastCoordinates.x = e.clientX;
-            lastCoordinates.y = e.clientY;
-            state.canvasElement.removeEventListener("pointermove", pointerMoveOnStyle);
-            state.canvasElement.addEventListener("pointermove", pointerMoveOnMove);
-            state.canvasElement.style.cursor = pointerMoveOptions.moveCursor;
+            
+            state.events.lastPosition = {
+                x : e.clientX, 
+                y : e.clientY
+            };
+
+            state.canvasElement.style.cursor = state.events.moveCursor;
+            state.canvasElement.removeEventListener("pointermove", onStyle);
+            state.canvasElement.addEventListener("pointermove", onMove);
         }
     }
 
 //---------------------------------------------
-//------------ Pointer Move Move --------------
+//----------------- On Move -------------------
     
-function pointerMoveOnMove(e:PointerEvent){
-    moveOnPointer({x:e.clientX, y:e.clientY});
+function onMove(e:PointerEvent){
+    switch(e.pointerType){
+        case "mouse":
+            if(state.events.move.enable){
+                state.events.move.onMove({x:e.clientX, y:e.clientY});
+                break
+            }
+            if(state.events.zoom.enable){
+                state.events.zoom.onZoom({x:e.clientX, y:e.clientY, type:state.events.zoom.type});
+            }
+            break;
+
+        case "touch":
+
+            break;
+
+        default:
+            console.error("Pointer type no recognised");
+            break;
+    }
+    
 }
 
 //---------------------------------------------
-//------------- Pointer Move Up ---------------
+//------------------ On Up --------------------
 
-function pointerMoveOnUp(){
-    state.canvasElement.style.cursor = pointerMoveOptions.hoverCursor;
-    state.canvasElement.removeEventListener("pointermove", pointerMoveOnMove);
-    state.canvasElement.addEventListener("pointermove", pointerMoveOnStyle);
+function onUp(){
+    state.canvasElement.style.cursor = state.events.hoverCursor;
+    state.canvasElement.removeEventListener("pointermove", onMove);
+    state.canvasElement.addEventListener("pointermove", onStyle);
+
+    if(state.events.zoom.enable && state.events.zoom.type==="area"){
+        let [initialX, initialY] = clientCoords(state.events.lastPosition.x, state.events.lastPosition.y);
+        let finalX = state.events.zoom.rect.xLast;
+        let finalY = state.events.zoom.rect.yLast;
+        
+        if(initialX > finalX){
+            const aux = initialX;
+            initialX = finalX;
+            finalX = aux;
+        }
+        if(initialY > finalY){
+            const aux = initialY;
+            initialY = finalY;
+            finalY = aux;
+        }
+        if(initialX>0 && initialY>0){
+            state.axis.x.start = state.scale.primary.x.invert(initialX);
+            state.axis.x.end = state.scale.primary.x.invert(finalX);
+            state.axis.y.start = state.scale.primary.y.invert(finalY);
+            state.axis.y.end = state.scale.primary.y.invert(initialY);
+        }
+        
+        state.compute.client();
+        state.draw.client();
+    }
 }
 
 //---------------------------------------------
-//------------- Pointer Move Style ------------
+//----------------- On Style ------------------
 
-function pointerMoveOnStyle(e : PointerEvent){
+function onStyle(e : PointerEvent){
     if(inClientRect(e.clientX, e.clientY)){
-        state.canvasElement.style.cursor = pointerMoveOptions.hoverCursor;
+        state.canvasElement.style.cursor = state.events.hoverCursor;
         return;
     }
-    state.canvasElement.style.cursor = pointerMoveOptions.defaultCursor;
+    state.canvasElement.style.cursor = state.events.defaultCursor;
 }
 
 //---------------------------------------------
@@ -61,32 +135,99 @@ function inClientRect(x:number, y:number) : boolean{
 }
 
 //---------------------------------------------
+//-------------- Client Coords ----------------
+
+    function clientCoords(x:number, y:number) : [number, number] {
+        const canvasRect = state.canvasElement.getBoundingClientRect();
+        return [Math.round(x - canvasRect.x), Math.round(y - canvasRect.y)];
+    }
+
+//---------------------------------------------
 //--------------- Throttle --------------------
 
 function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
     let shouldWait = false;
-    let lastArgs : T | null;
     const timeoutFunction = ()=>{
-        if(lastArgs == null)
             shouldWait = false;
-        else{
-            func(lastArgs);
-            lastArgs = null;
-            setTimeout(timeoutFunction, delay);
-        }
     }
 
     return (args:T)=>{
-        if(shouldWait){
-            lastArgs = args;
+        if(shouldWait)
             return;
-        }
 
         func(args);
         shouldWait = true;
         setTimeout(timeoutFunction, delay);
     }
 }
+
+//---------------------------------------------
+//------------ Move On Pointer ----------------
+
+    function moveOnPointer({x,y}:Move_Event){
+        if(state.scale.primary.x.type === "linear"){
+            const xDisplacement = state.scale.primary.x.invert(state.events.lastPosition.x) - state.scale.primary.x.invert(x);
+            state.axis.x.start += xDisplacement;
+            state.axis.x.end += xDisplacement;
+        }
+        if(state.scale.primary.x.type === "log"){
+            const xDisplacement = Math.log10(Math.abs(state.scale.primary.x.invert(state.events.lastPosition.x))) - Math.log10(Math.abs(state.scale.primary.x.invert(x)));
+            state.axis.x.start *= Math.pow(10 , xDisplacement);
+            state.axis.x.end *= Math.pow(10 , xDisplacement);
+        }
+        
+        if(state.scale.primary.y.type === "linear"){
+            const yDisplacement = state.scale.primary.y.invert(state.events.lastPosition.y) - state.scale.primary.y.invert(y);
+            state.axis.y.start += yDisplacement;
+            state.axis.y.end += yDisplacement;
+        }
+        if(state.scale.primary.y.type === "log"){
+            const yDisplacement = Math.log10(Math.abs(state.scale.primary.y.invert(state.events.lastPosition.y))) - Math.log10(Math.abs(state.scale.primary.y.invert(y)));
+            state.axis.y.start *= Math.pow(10 , yDisplacement);
+            state.axis.y.end *= Math.pow(10 , yDisplacement);
+        }
+
+        //update the las position computed
+        state.events.lastPosition = {x, y};
+
+        state.compute.client();
+        if(state.events.move.callback != null) state.events.move.callback(graphHandler);
+        state.draw.client();
+    }
+
+//---------------------------------------------
+//------------ Zoom On Pointer ----------------
+
+    function zoomOnPointer({x, y, type} : Zoom_Event){
+        if(type === "area"){
+            state.draw.client()
+
+            let [pointerX, pointerY] = clientCoords(x, y);
+            const [initialX, initialY] = clientCoords(state.events.lastPosition.x, state.events.lastPosition.y);
+            const minX = state.context.clientRect.x+2;
+            const maxX = minX + state.context.clientRect.width-2;
+            const minY = state.context.clientRect.y+2;
+            const maxY = minY + state.context.clientRect.height-2;
+
+            pointerX = pointerX<minX? minX : (pointerX>maxX? maxX : pointerX);
+            pointerY = pointerY<minY? minY : (pointerY>maxY? maxY : pointerY);
+
+            state.context.canvas.save();
+
+            state.context.canvas.fillStyle = state.events.zoom.rect.background;
+            state.context.canvas.globalAlpha = state.events.zoom.rect.opacity;
+            state.context.canvas.fillRect(initialX, initialY, pointerX-initialX, pointerY-initialY);
+            state.context.canvas.strokeStyle = state.events.zoom.rect.borderColor;
+            state.context.canvas.globalAlpha = state.events.zoom.rect.borderOpacity;
+            state.context.canvas.lineWidth = state.events.zoom.rect.borderWidth;
+            state.context.canvas.strokeRect(initialX, initialY, pointerX-initialX, pointerY-initialY);
+
+            state.context.canvas.restore();
+
+            state.events.zoom.rect.xLast = pointerX;
+            state.events.zoom.rect.yLast = pointerY;
+        }
+    }
 
 //---------------------------------------------
 
@@ -112,7 +253,7 @@ function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
 
 
 
-
+//---------- Customization Methods ------------
 //-------------- Aspect Ratio -----------------
 
     function aspectRatio({ratio, axis="y", anchor="start"} : Aspect_Ratio) : Graph2D{
@@ -179,64 +320,50 @@ function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
 //---------------------------------------------
 //------------- Pointer Move ------------------
 
-    function pointerMove(props : Partial<Pointer_Move_Props>) : Graph2D{
-        pointerMoveOptions = {...defaultPointerMove, ...props};
+    function pointerMove( options ?: Partial<Pointer_Move_Props>) : Graph2D{
 
-        state.canvasElement.removeEventListener("pointerdown", pointerMoveOnDown);
-        state.canvasElement.removeEventListener("pointerup", pointerMoveOnUp);
-        state.canvasElement.removeEventListener("pointermove", pointerMoveOnStyle);
-        state.canvasElement.style.cursor = pointerMoveOptions.defaultCursor;
-
-        if(pointerMoveOptions.enable){
-            state.canvasElement.style.touchAction = "none"
-            state.canvasElement.addEventListener("pointerdown", pointerMoveOnDown);
-            state.canvasElement.addEventListener("pointerup", pointerMoveOnUp);
-            state.canvasElement.addEventListener("pointermove", pointerMoveOnStyle);
-            
-            moveOnPointer = throttle<Move_Graph>(({x,y})=>{
-
-                if(state.scale.primary.x.type === "linear"){
-                    const xDisplacement = state.scale.primary.x.invert(lastCoordinates.x) - state.scale.primary.x.invert(x);
-                    state.axis.x.start += xDisplacement;
-                    state.axis.x.end += xDisplacement;
-                }
-                if(state.scale.primary.x.type === "log"){
-                    const xDisplacement = Math.log10(Math.abs(state.scale.primary.x.invert(lastCoordinates.x))) - Math.log10(Math.abs(state.scale.primary.x.invert(x)));
-                    state.axis.x.start *= Math.pow(10 , xDisplacement);
-                    state.axis.x.end *= Math.pow(10 , xDisplacement);
-                }
-                
-                if(state.scale.primary.y.type === "linear"){
-                    const yDisplacement = state.scale.primary.y.invert(lastCoordinates.y) - state.scale.primary.y.invert(y);
-                    state.axis.y.start += yDisplacement;
-                    state.axis.y.end += yDisplacement;
-                }
-                if(state.scale.primary.y.type === "log"){
-                    const yDisplacement = Math.log10(Math.abs(state.scale.primary.y.invert(lastCoordinates.y))) - Math.log10(Math.abs(state.scale.primary.y.invert(y)));
-                    state.axis.y.start *= Math.pow(10 , yDisplacement);
-                    state.axis.y.end *= Math.pow(10 , yDisplacement);
-                }
-        
-                lastCoordinates.x = x;
-                lastCoordinates.y = y;
-        
-        
-                state.compute.client();
-                if(pointerMoveOptions.callback != null) pointerMoveOptions.callback(graphHandler);
-                state.draw.client();
-        
-            }, pointerMoveOptions.delay);
+        state.events.move.enable = options != null && options.enable != null ? options.enable : true;
+        state.events.moveCursor = "grabbing";
+        state.events.hoverCursor = "grab";
+        state.events.defaultCursor = "default";
+        if(options != null){
+            if(options.delay != null) state.events.move.delay = options.delay;
+            if(options.pointerCapture != null) state.events.pointerCapture = options.pointerCapture;
+            if(options.hoverCursor != null) state.events.hoverCursor = options.hoverCursor;
+            if(options.moveCursor != null) state.events.moveCursor = options.moveCursor;
+            if(options.defaultCursor != null) state.events.defaultCursor = options.defaultCursor;
+            state.events.move.callback = options.callback;
         }
         
-
+        applyEvents();
         return graphHandler;
+        
     }
 
 //--------------------------------------------
 //--------------- Pointer Zoom ----------------
 
-    function pointerZoom({} : Pointer_Move_Props){
-
+    function pointerZoom(options ?: RecursivePartial<Pointer_Zoom_Props>) : Graph2D{
+        
+        state.events.zoom.enable = options != null && options.enable != null ? options.enable : true;
+        state.events.defaultCursor = "default";
+        state.events.hoverCursor = "zoom-in";
+        state.events.moveCursor = "zoom-in";
+        if(options != null){
+            if(options.delay != null) state.events.zoom.delay = options.delay;
+            if(options.pointerCapture != null) state.events.pointerCapture = options.pointerCapture;
+            if(options.hoverCursor != null) state.events.hoverCursor = options.hoverCursor;
+            if(options.moveCursor != null) state.events.moveCursor = options.moveCursor;
+            if(options.defaultCursor != null) state.events.defaultCursor = options.defaultCursor;
+            if(options.axis != null) state.events.zoom.axis = options.axis;
+            if(options.strength != null) state.events.zoom.strength = options.strength;
+            if(options.type != null) state.events.zoom.type = options.type;
+            state.events.zoom.callback = options.callback as (handler:Graph2D)=>void | undefined;
+            if(options.rect != null) state.events.zoom.rect = {...state.events.zoom.rect, ...options.rect};
+        }
+        
+        applyEvents();
+        return graphHandler;
     }
 
 //---------------------------------------------
@@ -244,7 +371,8 @@ function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
 
     return {
         aspectRatio,
-        pointerMove
+        pointerMove,
+        pointerZoom
     };
 }
 

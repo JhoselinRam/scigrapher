@@ -1,5 +1,5 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph")).pointerMove();
+const Graph = Graph2D(document.querySelector(".graph")).pointerZoom();
 
 function changeBackgroundColor(e){
     const color = e.target.value;

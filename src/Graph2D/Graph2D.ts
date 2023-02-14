@@ -185,19 +185,25 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 strength : 1,
                 type : "area",
                 rect : {
-                    background : "#ffffff",
-                    opacity : 0,
-                    borderColor  : "#000000",
-                    borderOpacity : 0.8,
+                    background : "#0075FF",
+                    opacity : 0.05,
+                    borderColor  : "#0057bd",
+                    borderOpacity : 0.5,
                     borderWidth : 1,
-                    borderStyle : "solid"
+                    borderStyle : "solid",
+                    xLast : 0,
+                    yLast :0
                 },
-                onMove : (args)=>{}
+                onZoom : (args)=>{}
             },
             hoverCursor : "",
             moveCursor : "",
             defaultCursor : "",
             pointerCapture : true,
+            lastPosition : {
+                x : 0,
+                y : 0
+            }
         },
         background : {...defaultOptions.background, ...options.background},
         margin : {
@@ -325,6 +331,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.secondaryAxisType = secondary.secondaryAxisType;
     graphHandler.aspectRatio = events.aspectRatio;
     graphHandler.pointerMove = events.pointerMove;
+    graphHandler.pointerZoom = events.pointerZoom;
 
 
     //Setup configurations
