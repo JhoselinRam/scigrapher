@@ -162,7 +162,8 @@ export interface Graph2D_State extends Graph2D_Options {
         lastAxisDomain : Axis_Property<{
             start : number,
             end : number
-        }>
+        }>,
+        lastScale : Axis_Property<Mapping>
     }
 }
 

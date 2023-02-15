@@ -50,6 +50,10 @@ function Events({state, graphHandler} : Method_Generator) : Events {
                     end : state.axis.y.end
                 }
             };
+            state.events.lastScale = {
+                x : state.scale.primary.x,
+                y : state.scale.primary.y,
+            }
 
             state.canvasElement.style.cursor = state.events.moveCursor;
             state.canvasElement.removeEventListener("pointermove", onStyle);
@@ -126,7 +130,7 @@ function inClientRect(x:number, y:number) : boolean{
 
     function clientCoords(x:number, y:number) : [number, number] {
         const canvasRect = state.canvasElement.getBoundingClientRect();
-        return [Math.round(x - canvasRect.x), Math.round(y - canvasRect.y)];
+        return [x - canvasRect.x, y - canvasRect.y];
     }
 
 //---------------------------------------------
@@ -198,6 +202,9 @@ function zoomOnPointer({x, y, type} : Zoom_Event){
 
             pointerX = pointerX<minX? minX : (pointerX>maxX? maxX : pointerX);
             pointerY = pointerY<minY? minY : (pointerY>maxY? maxY : pointerY);
+            
+            pointerX += pointerX === initialX? 3 : 0;
+            pointerY += pointerY === initialY? 3 : 0;
 
             state.context.canvas.save();
 
@@ -221,19 +228,23 @@ function zoomOnPointer({x, y, type} : Zoom_Event){
             const domainWidth = state.events.lastAxisDomain.x.end-state.events.lastAxisDomain.x.start;
             const domainHeight = state.events.lastAxisDomain.y.end-state.events.lastAxisDomain.y.start;
             const aspectRatio = domainWidth / domainHeight;
+            const domainPointerX = state.events.lastScale.x.invert(pointerX);
+            const domainInitialX = state.events.lastScale.x.invert(initialX);
+            const domainInitialY = state.events.lastScale.y.invert(initialY);
             
             if(state.axis.type === "rectangular" || state.axis.type === "polar"){
-                const displacement = state.events.zoom.strength*(state.scale.primary.x.invert(pointerX) - state.scale.primary.x.invert(initialX));
-                const newDomainWidth = domainWidth - displacement;
+                const displacement = state.events.zoom.strength*(domainPointerX - domainInitialX);
+                const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
                 const newDomainHeight = newDomainWidth / aspectRatio;
-                
-                state.axis.x.start = newDomainWidth/domainWidth*(state.axis.x.start - initialX) + initialX;
-                state.axis.x.end = newDomainWidth/domainWidth*(state.axis.x.end - initialX) + initialX;
-                state.axis.y.start = newDomainHeight/domainHeight*(state.axis.y.start - initialY) + initialY;
-                state.axis.y.end = newDomainHeight/domainHeight*(state.axis.y.end - initialY) + initialY;
+
+                state.axis.x.start = newDomainWidth/domainWidth*(state.events.lastAxisDomain.x.start - domainInitialX) + domainInitialX;
+                state.axis.x.end = newDomainWidth/domainWidth*(state.events.lastAxisDomain.x.end - domainInitialX) + domainInitialX;
+                state.axis.y.start = newDomainHeight/domainHeight*(state.events.lastAxisDomain.y.start - domainInitialY) + domainInitialY;
+                state.axis.y.end = newDomainHeight/domainHeight*(state.events.lastAxisDomain.y.end - domainInitialY) + domainInitialY;
             }
 
             state.compute.client();
+            if(state.events.zoom.callback != null) state.events.zoom.callback(graphHandler);
             state.draw.client();
         }
     }
@@ -257,13 +268,19 @@ function zoomOnPointer({x, y, type} : Zoom_Event){
             finalY = aux;
         }
         if(initialX>0 && initialY>0){
-            state.axis.x.start = state.scale.primary.x.invert(initialX);
-            state.axis.x.end = state.scale.primary.x.invert(finalX);
-            state.axis.y.start = state.scale.primary.y.invert(finalY);
-            state.axis.y.end = state.scale.primary.y.invert(initialY);
+            const xStart = state.scale.primary.x.invert(initialX);
+            const xEnd = state.scale.primary.x.invert(finalX);
+            const yStart = state.scale.primary.y.invert(initialY);
+            const yEnd = state.scale.primary.y.invert(finalY);       
+
+            state.axis.x.start = xStart;
+            state.axis.x.end = xEnd;
+            state.axis.y.start = yStart;
+            state.axis.y.end = yEnd;
         }
         
         state.compute.client();
+        if(state.events.zoom.callback != null) state.events.zoom.callback(graphHandler);
         state.draw.client();
     }
 

@@ -1,3 +1,4 @@
+import mapping from "../tools/Mapping/Mapping.js";
 import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
@@ -182,7 +183,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 enable : false,
                 delay : 15,
                 axis : "x",
-                strength : 1,
+                strength : 10,
                 type : "area",
                 rect : {
                     background : "#0075FF",
@@ -215,6 +216,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                     start : 0,
                     end : 0
                 }
+            },
+            lastScale : {
+                x : mapping({from:[0,1], to:[0,1]}),
+                y : mapping({from:[0,1], to:[0,1]})
             }
         },
         background : {...defaultOptions.background, ...options.background},
