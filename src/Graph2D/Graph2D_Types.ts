@@ -15,10 +15,20 @@ export interface Graph2D extends
     Omit<Grid, "compute" | "draw">,
     Omit<Secondary, "compute" | "draw">,
     Margin,
-    Events{}
+    Events{
+        canvasElements : ()=>Array<HTMLCanvasElement>,
+        clientRect : ()=> Readonly<Rect>,
+        graphRect : ()=>Readonly<Rect>
+    }
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
 export type Axis_Type = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
+export interface Rect {
+    x : number,
+    y : number,
+    width : number,
+    height : number
+}
 
 export interface Graph2D_Options{
     background : {

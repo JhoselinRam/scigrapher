@@ -236,6 +236,7 @@ function autoCompute(scale:Mapping, minSpacing:number):Array<number>{
 //------------- Create Labels -----------------
 
 export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2D_State, scale:"primary" | "secondary") : Create_Labels{
+    const maxDecimals = 5;
     let maxWidth : number = 0;
     let maxHeight : number = 0;
 
@@ -250,16 +251,29 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
         const magnitudeOrder = position===0? 0 : Math.floor(Math.log10(Math.abs(position)));
      
         if(magnitudeOrder<-2 || magnitudeOrder>3){
-            const fixed = Number.isInteger(position/Math.pow(10,magnitudeOrder)) ? 0 : 2;
-            const temp = position.toExponential(fixed).split("e");
-            label = (fixed===2 && temp[0].endsWith("0")) ? [temp[0].slice(0,-1),temp[1]].join("e") : temp.join("e");
+            const fixed = Number.isInteger(position/Math.pow(10,magnitudeOrder)) ? 0 : maxDecimals;
+            let temp = position.toExponential(fixed).split("e");
+            for(let i=0; i<maxDecimals; i++){
+                if(!temp[0].endsWith("0"))
+                    break;
+                temp[0] = temp[0].slice(0,-1);
+            }
+            label = temp.join("e");
             label = label.replace("e","x10").replace("-", "– ");
+
         }
         else{
-            const fixed = Number.isInteger(position) ? 0 : 2;
-            const temp = position.toFixed(fixed);
-            label = (fixed===2 && temp.endsWith("0")) ? temp.slice(0,-1) : temp;
+            const fixed = Number.isInteger(position) ? 0 : maxDecimals;
+            let temp = position.toFixed(fixed);
+            //Remove tailing ceros.
+            for(let i=0; i<maxDecimals; i++){
+                if(!temp.endsWith("0"))
+                    break;     
+                temp = temp.slice(0, -1);
+                }
+            label = temp
             label = label.replace("-", "– ");
+            
             if(Math.abs(position)>999){
                 const caracteres = label.split("");
                 const commaIndex = label.includes("– ") ? 3 : 1; 

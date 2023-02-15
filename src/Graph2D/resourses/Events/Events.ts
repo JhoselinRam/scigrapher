@@ -69,15 +69,20 @@ function onMove(e:PointerEvent){
         case "mouse":
             if(state.events.move.enable){
                 state.events.move.onMove({x:e.clientX, y:e.clientY});
-                break
+                break;
             }
             if(state.events.zoom.enable){
-                state.events.zoom.onZoom({x:e.clientX, y:e.clientY, type:state.events.zoom.type});
+                state.events.zoom.onZoom({
+                    x:e.clientX, 
+                    y:e.clientY, 
+                    type:state.events.zoom.type,
+                    shiftKey : e.shiftKey
+                });
             }
             break;
 
         case "touch":
-
+            
             break;
 
         default:
@@ -189,22 +194,32 @@ function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
 //---------------------------------------------
 //------------ Zoom On Pointer ----------------
 
-function zoomOnPointer({x, y, type} : Zoom_Event){
+function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
         if(type === "area"){
             state.draw.client()
-
+            
+            let [initialX, initialY] = [0,0];
             let [pointerX, pointerY] = clientCoords(x, y);
-            const [initialX, initialY] = clientCoords(state.events.lastPosition.x, state.events.lastPosition.y);
             const minX = state.context.clientRect.x+2;
             const maxX = minX + state.context.clientRect.width-2;
             const minY = state.context.clientRect.y+2;
             const maxY = minY + state.context.clientRect.height-2;
-
+            
             pointerX = pointerX<minX? minX : (pointerX>maxX? maxX : pointerX);
             pointerY = pointerY<minY? minY : (pointerY>maxY? maxY : pointerY);
             
-            pointerX += pointerX === initialX? 3 : 0;
-            pointerY += pointerY === initialY? 3 : 0;
+            //Shifts the selection if the shift key is pressed
+            if(shiftKey){
+                state.events.lastPosition.x += x - state.events.secondaryLastPosition.x;
+                state.events.lastPosition.y += y - state.events.secondaryLastPosition.y;
+            }
+
+            [initialX, initialY] = clientCoords(state.events.lastPosition.x, state.events.lastPosition.y);
+            initialX = initialX<minX? minX : (initialX>maxX? maxX : initialX);
+            initialY = initialY<minY? minY : (initialY>maxY? maxY : initialY);
+            
+            pointerX += pointerX === initialX? 2 : 0;
+            pointerY += pointerY === initialY? 2 : 0;
 
             state.context.canvas.save();
 
@@ -218,8 +233,8 @@ function zoomOnPointer({x, y, type} : Zoom_Event){
 
             state.context.canvas.restore();
 
-            state.events.secondaryLastPosition.x = pointerX;
-            state.events.secondaryLastPosition.y = pointerY;
+            state.events.secondaryLastPosition.x = x;
+            state.events.secondaryLastPosition.y = y;
         }
 
         if(type === "drag"){
@@ -231,7 +246,7 @@ function zoomOnPointer({x, y, type} : Zoom_Event){
             const domainPointerX = state.events.lastScale.x.invert(pointerX);
             const domainInitialX = state.events.lastScale.x.invert(initialX);
             const domainInitialY = state.events.lastScale.y.invert(initialY);
-            
+    
             if(state.axis.type === "rectangular" || state.axis.type === "polar"){
                 const displacement = state.events.zoom.strength*(domainPointerX - domainInitialX);
                 const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
@@ -254,8 +269,7 @@ function zoomOnPointer({x, y, type} : Zoom_Event){
 
     function zoomRectOnUp(){
         let [initialX, initialY] = clientCoords(state.events.lastPosition.x, state.events.lastPosition.y);
-        let finalX = state.events.secondaryLastPosition.x;
-        let finalY = state.events.secondaryLastPosition.y;
+        let[finalX, finalY] = clientCoords(state.events.secondaryLastPosition.x, state.events.secondaryLastPosition.y);
         
         if(initialX > finalX){
             const aux = initialX;
@@ -267,11 +281,13 @@ function zoomOnPointer({x, y, type} : Zoom_Event){
             initialY = finalY;
             finalY = aux;
         }
+
+
         if(initialX>0 && initialY>0){
             const xStart = state.scale.primary.x.invert(initialX);
             const xEnd = state.scale.primary.x.invert(finalX);
-            const yStart = state.scale.primary.y.invert(initialY);
-            const yEnd = state.scale.primary.y.invert(finalY);       
+            const yStart = state.scale.primary.y.invert(finalY);
+            const yEnd = state.scale.primary.y.invert(initialY);       
 
             state.axis.x.start = xStart;
             state.axis.x.end = xEnd;

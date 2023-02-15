@@ -38,5 +38,6 @@ export interface Pointer_Zoom_Props extends Pointer_Move_Props{
 
 export type Move_Event = Axis_Property<number>
 export type Zoom_Event = Axis_Property<number> & {
-    type : "area" | "drag"
+    type : "area" | "drag",
+    shiftKey : boolean
 }
