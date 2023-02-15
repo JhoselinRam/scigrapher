@@ -350,6 +350,70 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.pointerMove = events.pointerMove;
     graphHandler.pointerZoom = events.pointerZoom;
 
+    //Generates graph handler methods
+    graphHandler.canvasElements = ()=>{
+        return [state.canvasElement];
+    }
+    graphHandler.clientRect = ()=>{
+        return {...state.context.clientRect};
+    }
+    graphHandler.graphRect = ()=>{
+        const fullState = state as Graph2D_State;
+        const primaryWidth = fullState.axisObj.primary.width;
+        const primaryHeight = fullState.axisObj.primary.height;
+        const secondaryWidth = fullState.axisObj.secondary.width;
+        const secondaryHeight = fullState.axisObj.secondary.height;
+
+        switch(fullState.axis.position){
+            case "center":
+                return {...fullState.context.clientRect};
+            
+            case "bottom-left":
+                return {
+                    x : fullState.context.clientRect.x + primaryWidth,
+                    y : fullState.context.clientRect.y + secondaryHeight,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
+                };
+            
+            case "bottom-right": 
+                return {
+                    x : fullState.context.clientRect.x + secondaryWidth,
+                    y : fullState.context.clientRect.y + secondaryHeight,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
+                };
+
+            case "top-left": 
+                return {
+                    x : fullState.context.clientRect.x + primaryWidth,
+                    y : fullState.context.clientRect.y + primaryHeight,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
+                };
+
+            case "top-right": 
+                return {
+                    x : fullState.context.clientRect.x + secondaryWidth,
+                    y : fullState.context.clientRect.y + primaryHeight,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
+                };
+        }
+    };
+    graphHandler.compute = ()=>{
+        fullCompute();
+        return graphHandler;
+    };
+    graphHandler.draw = ()=>{
+        fullDraw();
+        return graphHandler;
+    };
+    graphHandler.render = ()=>{
+        render();
+        return graphHandler;
+    } 
+
 
     //Setup configurations
     setup();
@@ -411,7 +475,6 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         state.context.canvas = state.canvasElement.getContext("2d") as CanvasRenderingContext2D;
         state.context.canvas.scale(dpi, dpi);
         state.context.canvas.imageSmoothingEnabled = false;
-        
     }
 
 

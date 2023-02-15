@@ -18,7 +18,10 @@ export interface Graph2D extends
     Events{
         canvasElements : ()=>Array<HTMLCanvasElement>,
         clientRect : ()=> Readonly<Rect>,
-        graphRect : ()=>Readonly<Rect>
+        graphRect : ()=>Readonly<Rect>,
+        compute : ()=>Graph2D,
+        draw : ()=>Graph2D,
+        render : ()=>Graph2D
     }
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
