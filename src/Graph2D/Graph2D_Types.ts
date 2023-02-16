@@ -19,9 +19,7 @@ export interface Graph2D extends
         canvasElements : ()=>Array<HTMLCanvasElement>,
         clientRect : ()=> Readonly<Rect>,
         graphRect : ()=>Readonly<Rect>,
-        compute : ()=>Graph2D,
         draw : ()=>Graph2D,
-        render : ()=>Graph2D
     }
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
@@ -163,50 +161,12 @@ export interface Graph2D_State extends Graph2D_Options {
             height : number,
             obj ?: Partial<Axis_Property<Axis_Obj>>
         }
-    },
-    events : {
-        move : Pointer_Move,
-        zoom : Pointer_Zoom,
-        hoverCursor : string,
-        moveCursor : string,
-        defaultCursor : string,
-        pointerCapture : boolean,
-        lastPosition : Axis_Property<number>,
-        secondaryLastPosition : Axis_Property<number>,
-        lastAxisDomain : Axis_Property<{
-            start : number,
-            end : number
-        }>,
-        lastScale : Axis_Property<Mapping>
     }
 }
 
 export interface Method_Generator{
     state : Graph2D_State,
     graphHandler : Graph2D
-}
-
-export interface Pointer_Move {
-    enable : boolean,
-    callback ?: (handler:Graph2D)=>void,
-    delay : number,
-    onMove : (position : Move_Event)=>void,
-}
-
-export interface Pointer_Zoom extends Omit<Pointer_Move, "onMove">{
-    type : "area" | "drag",
-    axis : "x" | "y",
-    strength : number,
-    onZoom : ( arg : Zoom_Event)=>void,
-    rect : {
-        background : string,
-        opacity : number,
-        borderColor : string,
-        borderWidth : number,
-        borderOpacity : number
-        borderStyle : string
-    },
-
 }
 
 export type RecursivePartial<T> = {

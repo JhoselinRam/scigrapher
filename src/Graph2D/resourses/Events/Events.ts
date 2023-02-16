@@ -1,9 +1,64 @@
-import { Axis_Obj } from "../../../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
 import { Axis_Property, Graph2D, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
-import { Aspect_Ratio, Events, Move_Event, Pointer_Move_Props, Pointer_Zoom_Props, Zoom_Event } from "./Events_Types";
+import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Pointer_Move_Props, Pointer_Zoom_Props, Zoom_Event } from "./Events_Types";
+
+// events : {
+//     move : Pointer_Move,
+//     zoom : Pointer_Zoom,
+//     hoverCursor : string,
+//     moveCursor : string,
+//     defaultCursor : string,
+//     pointerCapture : boolean,
+//     lastPosition : Axis_Property<number>,
+//     secondaryLastPosition : Axis_Property<number>,
+//     lastAxisDomain : Axis_Property<{
+//         start : number,
+//         end : number
+//     }>,
+//     lastScale : Axis_Property<Mapping>
+// }
+
+// rect : {
+//     background : "#0075FF",
+//     opacity : 0.05,
+//     borderColor  : "#0057bd",
+//     borderOpacity : 0.5,
+//     borderWidth : 1,
+//     borderStyle : "solid"
+// }
+
+// export interface Pointer_Move {
+//     enable : boolean,
+//     callback ?: (handler:Graph2D)=>void,
+//     delay : number,
+//     onMove : (position : Move_Event)=>void,
+// }
+
+// export interface Pointer_Zoom extends Omit<Pointer_Move, "onMove">{
+//     type : "area" | "drag",
+//     axis : "x" | "y",
+//     strength : number,
+//     onZoom : ( arg : Zoom_Event)=>void,
+//     rect : {
+//         background : string,
+//         opacity : number,
+//         borderColor : string,
+//         borderWidth : number,
+//         borderOpacity : number
+//         borderStyle : string
+//     },
+
+// }
+
+
 
 function Events({state, graphHandler} : Method_Generator) : Events {
+    const cursor : Event_Cursor = {
+        default : "",
+        hover : "",
+        move : ""
+    };
+    
 
 //-------------- Apply Events -----------------
 

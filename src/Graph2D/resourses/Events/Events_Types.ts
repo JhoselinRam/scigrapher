@@ -1,3 +1,4 @@
+import { Mapping } from "../../../tools/Mapping/Mapping_Types";
 import { Axis_Property, Graph2D, RecursivePartial } from "../../Graph2D_Types"
 
 export type Aspect_Ratio_Axis = "x" | "y" | "xSecondary" | "ySecondary"
@@ -43,4 +44,40 @@ export type Move_Event = Axis_Property<number>
 export type Zoom_Event = Axis_Property<number> & {
     type : "area" | "drag",
     shiftKey : boolean
+}
+
+export interface Event_Cursor {
+    hover : string,
+    move : string,
+    default : string
+}
+
+export interface Move_State {
+    enable : boolean,
+    callback : (handler : Graph2D)=>void,
+    delay : number,
+    onEvent : (position : Move_Event)=>void, 
+}
+
+export interface Zoom_State extends Move_State{
+    type : "area" | "drag" | "click",
+    strengh : number,
+    anchor : "center" | "pointer" | [number, number],
+    rect : {
+        background : string,
+        opacity : number,
+        borderColor : string,
+        borderWidth : number,
+        borderOpacity : number
+        borderStyle : string
+    }
+}
+
+export interface Pointer_State {
+    activePointers : Array<PointerEvent>,
+    lastDomain : Axis_Property<{
+        start : number,
+        end : number
+    }>,
+    lastScale : Axis_Property<Mapping>
 }

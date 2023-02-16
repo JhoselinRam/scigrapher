@@ -174,55 +174,6 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             graphRect
         },
         axisObj : {},
-        events : {
-            move : {
-                enable : false,
-                delay : 15,
-                onMove : (args)=>{}
-            },
-            zoom : {
-                enable : false,
-                delay : 15,
-                axis : "x",
-                strength : 10,
-                type : "area",
-                rect : {
-                    background : "#0075FF",
-                    opacity : 0.05,
-                    borderColor  : "#0057bd",
-                    borderOpacity : 0.5,
-                    borderWidth : 1,
-                    borderStyle : "solid"
-                },
-                onZoom : (args)=>{}
-            },
-            hoverCursor : "",
-            moveCursor : "",
-            defaultCursor : "",
-            pointerCapture : true,
-            lastPosition : {
-                x : 0,
-                y : 0
-            },
-            secondaryLastPosition : {
-                x : 0,
-                y : 0
-            },
-            lastAxisDomain : {
-                x : {
-                    start : 0,
-                    end : 0
-                },
-                y : {
-                    start : 0,
-                    end : 0
-                }
-            },
-            lastScale : {
-                x : mapping({from:[0,1], to:[0,1]}),
-                y : mapping({from:[0,1], to:[0,1]})
-            }
-        },
         background : {...defaultOptions.background, ...options.background},
         margin : {
             x : {...defaultOptions.margin.x, ...options.margin?.x},
@@ -359,18 +310,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.clientRect = ()=>{
         return {...state.context.clientRect};
     }
-    graphHandler.compute = ()=>{
-        fullCompute();
-        return graphHandler;
-    };
     graphHandler.draw = ()=>{
         fullDraw();
         return graphHandler;
-    };
-    graphHandler.render = ()=>{
-        render();
-        return graphHandler;
-    } 
+    }
 
 
     //Setup configurations

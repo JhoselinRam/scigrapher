@@ -612,13 +612,24 @@
                 </div>
                 <div class="flex-control">
                     <div>
-                        <span>Apply on:</span>
-                        <label for="xAspectRatio">X</label>
-                        <input type="radio" name="axisAspectRatio" id="xAspectRatio">
-                        <label for="yAspectRatio">Y</label>
-                        <input type="radio" name="axisAspectRatio" id="yAspectRatio" checked>
+                        <label for="sourse">Sourse: </label>
+                        <select name="sourse" id="sourse" value="x">
+                            <option value="x">X</option>
+                            <option value="y">Y</option>
+                            <option value="xSecondary">X Secondary</option>
+                            <option value="ySecondary">Y Secondary</option>
+                        </select>
                     </div>
-                    <button type="button" id="applyAspectRatio">Apply Aspect Ratio</button>
+                    <div>
+                        <label for="target">Target: </label>
+                        <select name="target" id="target" value="y">
+                            <option value="y">Y</option>
+                            <option value="x">X</option>
+                            <option value="xSecondary">X Secondary</option>
+                            <option value="ySecondary">Y Secondary</option>
+                        </select>
+                    </div>
+                    
                 </div>
 
 

@@ -861,12 +861,10 @@ function changeSecondaryAxisType(e){
 function changeAspectRatio(){
     const ratio = parseFloat(document.querySelector("#aspectRatio").value);
     const anchor = parseFloat(document.querySelector("#anchor").value);
-    const axis = document.querySelector("#xAspectRatio").checked? "x" : "y";
+    const target = document.querySelector("#target").value;
+    const sourse = document.querySelector("#sourse").value;
 
-    Graph.aspectRatio({
-        anchor : 0,
-        target : "ySecondary"
-    });
+    Graph.aspectRatio({ratio, anchor, target, sourse});
 }
 
 function changePointerMove(){
@@ -985,7 +983,10 @@ function main(){
     document.querySelector("#polarGrid").addEventListener("input", changePolarGrid);
     document.querySelector("#axisType").addEventListener("input", changeAxisType);
     document.querySelector("#secondaryType").addEventListener("change", changeSecondaryAxisType);
-    document.querySelector("#applyAspectRatio").addEventListener("click", changeAspectRatio);
+    document.querySelector("#aspectRatio").addEventListener("input", changeAspectRatio);
+    document.querySelector("#anchor").addEventListener("input", changeAspectRatio);
+    document.querySelector("#sourse").addEventListener("change", changeAspectRatio);
+    document.querySelector("#target").addEventListener("change", changeAspectRatio);
     document.querySelector("#pointerMove").addEventListener("change", changePointerMove);
     document.querySelector("#pointerCapture").addEventListener("change", changePointerMove);
     document.querySelector("#pointerDelay").addEventListener("input", changePointerMove);
