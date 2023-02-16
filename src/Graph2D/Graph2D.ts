@@ -1,5 +1,5 @@
 import mapping from "../tools/Mapping/Mapping.js";
-import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
+import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, Rect, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
 import Events from "./resourses/Events/Events.js";
@@ -170,7 +170,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 y : 0,
                 width  : container.clientWidth,
                 height : container.clientHeight
-            }
+            },
+            graphRect
         },
         axisObj : {},
         events : {
@@ -351,56 +352,13 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.pointerZoom = events.pointerZoom;
 
     //Generates graph handler methods
+    graphHandler.graphRect = graphRect;
     graphHandler.canvasElements = ()=>{
         return [state.canvasElement];
     }
     graphHandler.clientRect = ()=>{
         return {...state.context.clientRect};
     }
-    graphHandler.graphRect = ()=>{
-        const fullState = state as Graph2D_State;
-        const primaryWidth = fullState.axisObj.primary.width;
-        const primaryHeight = fullState.axisObj.primary.height;
-        const secondaryWidth = fullState.axisObj.secondary.width;
-        const secondaryHeight = fullState.axisObj.secondary.height;
-
-        switch(fullState.axis.position){
-            case "center":
-                return {...fullState.context.clientRect};
-            
-            case "bottom-left":
-                return {
-                    x : fullState.context.clientRect.x + primaryWidth,
-                    y : fullState.context.clientRect.y + secondaryHeight,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
-                };
-            
-            case "bottom-right": 
-                return {
-                    x : fullState.context.clientRect.x + secondaryWidth,
-                    y : fullState.context.clientRect.y + secondaryHeight,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
-                };
-
-            case "top-left": 
-                return {
-                    x : fullState.context.clientRect.x + primaryWidth,
-                    y : fullState.context.clientRect.y + primaryHeight,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
-                };
-
-            case "top-right": 
-                return {
-                    x : fullState.context.clientRect.x + secondaryWidth,
-                    y : fullState.context.clientRect.y + primaryHeight,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight,
-                };
-        }
-    };
     graphHandler.compute = ()=>{
         fullCompute();
         return graphHandler;
@@ -477,6 +435,56 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         state.context.canvas.imageSmoothingEnabled = false;
     }
 
+    //Helper function that computes the graph rect, this includes the axis width and height and the margins
+    function graphRect() : Readonly<Rect>{
+        const fullState = state as Graph2D_State;
+        const primaryWidth = fullState.axisObj.primary.width;
+        const primaryHeight = fullState.axisObj.primary.height;
+        const secondaryWidth = fullState.axisObj.secondary.width;
+        const secondaryHeight = fullState.axisObj.secondary.height;
+
+        switch(fullState.axis.position){
+            case "center":
+                return {
+                    x : state.margin.x.start,
+                    y : fullState.context.clientRect.y + state.margin.y.end,
+                    width : fullState.context.clientRect.width - state.margin.x.start - state.margin.x.end,
+                    height : fullState.context.clientRect.height - state.margin.y.start - state.margin.y.end
+                };
+            
+            case "bottom-left":
+                return {
+                    x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
+                    y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+                };
+            
+            case "bottom-right": 
+                return {
+                    x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
+                    y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+                };
+
+            case "top-left": 
+                return {
+                    x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
+                    y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+                };
+
+            case "top-right": 
+                return {
+                    x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
+                    y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
+                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+                };
+        }
+    }
 
     //---------------------------------------------
 

@@ -127,7 +127,8 @@ export interface Graph2D_State extends Graph2D_Options {
             width : number,
             height : number
         },
-        canvas : CanvasRenderingContext2D
+        canvas : CanvasRenderingContext2D,
+        graphRect : ()=>Readonly<Rect>
     },
     scale : {
         primary : Axis_Property<Mapping>

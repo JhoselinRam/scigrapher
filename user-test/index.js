@@ -863,7 +863,10 @@ function changeAspectRatio(){
     const anchor = parseFloat(document.querySelector("#anchor").value);
     const axis = document.querySelector("#xAspectRatio").checked? "x" : "y";
 
-    Graph.aspectRatio({ratio, anchor, axis});
+    Graph.aspectRatio({
+        anchor : 0,
+        target : "ySecondary"
+    });
 }
 
 function changePointerMove(){

@@ -1,14 +1,17 @@
 import { Axis_Property, Graph2D, RecursivePartial } from "../../Graph2D_Types"
 
+export type Aspect_Ratio_Axis = "x" | "y" | "xSecondary" | "ySecondary"
+
 export interface Events {
-    aspectRatio : (options : Aspect_Ratio)=>Graph2D,
+    aspectRatio : (options : Partial<Aspect_Ratio>)=>Graph2D,
     pointerMove : (options : Partial<Pointer_Move_Props>)=>Graph2D,
     pointerZoom : (options : RecursivePartial<Pointer_Zoom_Props>)=>Graph2D
 }
 
 export interface Aspect_Ratio {
     ratio : number,
-    axis : "x"|"y",
+    sourse : Aspect_Ratio_Axis,
+    target : Aspect_Ratio_Axis,
     anchor : "start" | "end" | number
 }
 

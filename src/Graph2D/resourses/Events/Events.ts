@@ -1,5 +1,6 @@
 import { Axis_Obj } from "../../../tools/Axis_Obj/Axis_Obj_Types";
-import { Axis_Property, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Mapping } from "../../../tools/Mapping/Mapping_Types";
+import { Axis_Property, Graph2D, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
 import { Aspect_Ratio, Events, Move_Event, Pointer_Move_Props, Pointer_Zoom_Props, Zoom_Event } from "./Events_Types";
 
 function Events({state, graphHandler} : Method_Generator) : Events {
@@ -327,61 +328,112 @@ function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
 //---------- Customization Methods ------------
 //-------------- Aspect Ratio -----------------
 
-    function aspectRatio({ratio, axis="y", anchor="start"} : Aspect_Ratio) : Graph2D{
-        const fixpoint = typeof anchor === "number"? anchor : state.axis[axis][anchor];
-        
-        if(state.axis.type === "log-log"){
-            const xPositions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions;
-            const xMagnitudeLeap = Math.abs(Math.floor(Math.log10(Math.abs(xPositions[1]))) - Math.floor(Math.log10(Math.abs(xPositions[0]))));
-            const rangeWidth = Math.abs(state.scale.primary.x.map(xPositions[1]) - state.scale.primary.x.map(xPositions[0]));
-            const yPositions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).y.positions;
-            const yMagnitudeLeap = Math.abs(Math.floor(Math.log10(Math.abs(yPositions[1]))) - Math.floor(Math.log10(Math.abs(yPositions[0]))));
-            const rangeHeight = Math.abs(state.scale.primary.y.map(yPositions[1]) - state.scale.primary.y.map(yPositions[0]));
-            
-            if(axis==="x"){
-                const newMagnitedeLeap = rangeWidth/rangeHeight * yMagnitudeLeap*ratio;
-                const m = newMagnitedeLeap/xMagnitudeLeap;
-                if(state.axis.x.start > 0 && state.axis.x.start > 0){
-                    state.axis.x.start = Math.pow(10, m*(Math.log10(Math.abs(state.axis.x.start)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
-                    state.axis.x.end = Math.pow(10, m*(Math.log10(Math.abs(state.axis.x.end)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
-                }
-                if(state.axis.x.start < 0 && state.axis.x.start < 0){
-                    state.axis.x.start = -Math.pow(10, m*(Math.log10(Math.abs(state.axis.x.start)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
-                    state.axis.x.end = -Math.pow(10, m*(Math.log10(Math.abs(state.axis.x.end)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
-                }
-            }
-            if(axis==="y"){
-                const newMagnitedeLeap = rangeHeight/rangeWidth * xMagnitudeLeap/ratio;
-                const m = newMagnitedeLeap/yMagnitudeLeap;
-                if(state.axis.y.start>0 && state.axis.y.end >0){
-                    state.axis.y.start = Math.pow(10, m*(Math.log10(Math.abs(state.axis.y.start)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
-                    state.axis.y.end = Math.pow(10, m*(Math.log10(Math.abs(state.axis.y.end)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
-                }
-                if(state.axis.y.start<0 && state.axis.y.end <0){
-                    state.axis.y.start = -Math.pow(10, m*(Math.log10(Math.abs(state.axis.y.start)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
-                    state.axis.y.end = -Math.pow(10, m*(Math.log10(Math.abs(state.axis.y.end)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));    
-                }
-            }
+    function aspectRatio(args ?: Partial<Aspect_Ratio>) : Graph2D{
+        //Combines the default values and the arguments pased
+        const options : Aspect_Ratio = {
+            ratio : 1,
+            sourse : "x",
+            target : "y",
+            anchor : "start",
+            ...args
         }
-        else{
-            const domainWidth = Math.abs(state.axis.x.end - state.axis.x.start);
-            const domainHeight = Math.abs(state.axis.y.end - state.axis.y.start);
-            
-            if(axis === "x"){
-                const newWidth = state.context.clientRect.width/state.context.clientRect.height * domainHeight*ratio;  
-                const m = newWidth/domainWidth;
-                state.axis.x.start = m*(state.axis.x.start - fixpoint) + fixpoint;
-                state.axis.x.end = m*(state.axis.x.end - fixpoint) + fixpoint;      
-            }
-    
-            if(axis === "y"){
-                const newHeight = state.context.clientRect.height/state.context.clientRect.width * domainWidth/ratio;
-                const m = newHeight/domainHeight;
-                state.axis.y.start = m*(state.axis.y.start - fixpoint) + fixpoint;
-                state.axis.y.end = m*(state.axis.y.end - fixpoint) + fixpoint;
-            }
+        //Calculation whith this condition lead to no change at all
+        if(options.sourse === options.target){
+            console.warn("Sourse and Target are equal, this lead to no change being made")
+            return graphHandler;
+        } 
+
+        if(state.secondary.x == null && (options.sourse==="xSecondary" || options.target==="xSecondary")){
+            console.error("Secondary X axis not defined yet");
+            return graphHandler;
         }
         
+        if(state.secondary.y == null && (options.sourse==="ySecondary" || options.target==="ySecondary")){
+            console.error("Secondary Y axis not defined yet");
+            return graphHandler;
+        }
+
+
+        //Set the sourse and target properties
+        const graphRect = state.context.graphRect();
+        let sourseAxis : Primary_Axis | Secondary_Axis = state.axis.x;
+        let targetAxis : Primary_Axis | Secondary_Axis = state.axis.y;
+        let sourseType : "log" | "linear" = "linear";
+        let targetType : "log" | "linear" = "linear";
+        let sourseSize = graphRect.width;
+        let targetSize = graphRect.height;
+        
+        switch(options.sourse){
+            case "x":
+                sourseType = state.scale.primary.x.type;
+                break;
+            case "y":
+                sourseAxis = state.axis.y;
+                sourseType = state.scale.primary.y.type;
+                sourseSize = graphRect.height;
+                break;
+            case "xSecondary":
+                sourseAxis = state.secondary.x as Secondary_Axis;
+                sourseType = (state.scale.secondary as Axis_Property<Mapping>).x.type;
+                break;
+            case "ySecondary":
+                sourseAxis = state.secondary.y as Secondary_Axis;
+                sourseType = (state.scale.secondary as Axis_Property<Mapping>).y.type;
+                sourseSize = graphRect.height;
+                break;
+        }
+        
+        switch(options.target){
+            case "x":
+                targetAxis = state.axis.x;
+                targetType = state.scale.primary.x.type;
+                targetSize = graphRect.width;
+                break;
+            case "y":
+                targetType = state.scale.primary.y.type;
+                break;
+            case "xSecondary":
+                targetAxis = state.secondary.x as Secondary_Axis;
+                targetType = (state.scale.secondary as Axis_Property<Mapping>).x.type;
+                targetSize = graphRect.width;
+                break;
+            case "ySecondary":
+                targetAxis = state.secondary.y as Secondary_Axis;
+                targetType = (state.scale.secondary as Axis_Property<Mapping>).y.type;
+                break;
+        }
+
+        //Start the calculations
+        const fixpoint = typeof options.anchor === "number"? options.anchor : targetAxis[options.anchor];
+        let sourseDomain = Math.abs(sourseAxis.start - sourseAxis.end);
+        let targetDomain = Math.abs(targetAxis.start - targetAxis.end);
+
+        if(sourseType === "log")
+            sourseDomain = Math.abs(Math.log10(Math.abs(sourseAxis.start)) - Math.log10(Math.abs(sourseAxis.end)));
+
+        if(targetType === "linear"){
+            const newTargetDomain = targetSize/sourseSize * sourseDomain/options.ratio;
+            const m = newTargetDomain/targetDomain;
+            targetAxis.start = m*(targetAxis.start - fixpoint) + fixpoint;
+            targetAxis.end = m*(targetAxis.end - fixpoint) + fixpoint;
+        }
+        
+        if(targetType === "log"){
+            targetDomain = Math.abs(Math.log10(Math.abs(targetAxis.start)) - Math.log10(Math.abs(targetAxis.end)));
+            const newTargetDomain = targetSize/sourseSize * sourseDomain/options.ratio;
+            const m = newTargetDomain/targetDomain;
+
+            if(targetAxis.start>0 && targetAxis.end>0){
+                targetAxis.start = Math.pow(10, m*(Math.log10(targetAxis.start) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
+                targetAxis.end = Math.pow(10, m*(Math.log10(targetAxis.end) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
+            }
+            
+            if(targetAxis.start<0 && targetAxis.end<0){
+                targetAxis.start = -Math.pow(10, m*(Math.log10(Math.abs(targetAxis.start)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
+                targetAxis.end = -Math.pow(10, m*(Math.log10(Math.abs(targetAxis.end)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
+            }
+        }
+   
         state.compute.client();
         state.draw.client();
 
