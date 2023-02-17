@@ -19,13 +19,16 @@ function Events({state, graphHandler} : Method_Generator) : Events {
             x : mapping({from:[0,1], to:[0,1]}),
             y : mapping({from:[0,1], to:[0,1]})
         },
-        pointerPosition1 : { x:0, y:0},
-        pointerPosition2 : { x:0, y:0},
+        pointers : [],
         pointerCapture : true
     };
     const moveState : Move_State = {
         enable : false,
         delay : 12,
+        positionA : {
+            x:0,
+            y:0
+        },
         onMove : (args)=>{}
     };
     const zoomState : Zoom_State = {
@@ -33,7 +36,7 @@ function Events({state, graphHandler} : Method_Generator) : Events {
         delay : 12,
         onZoom : (args)=>{},
         anchor : "pointer",
-        strenght : 15,
+        strength : 5,
         type : "area",
         rect : {
             background : "#0075FF",
@@ -41,6 +44,14 @@ function Events({state, graphHandler} : Method_Generator) : Events {
             borderColor  : "#0057bd",
             borderOpacity : 0.5,
             borderWidth : 1
+        },
+        positionA : {
+            x : 0,
+            y : 0,
+        },
+        positionB : {
+            x : 0,
+            y : 0,
         }
     };
     
@@ -77,23 +88,37 @@ function Events({state, graphHandler} : Method_Generator) : Events {
             if(pointerState.pointerCapture)
                 state.canvasElement.setPointerCapture(e.pointerId);
             
-            pointerState.pointerPosition1 = {
-                x : e.clientX, 
-                y : e.clientY
-            };
-            pointerState.lastDomain = {
-                x : {
-                    start : state.axis.x.start,
-                    end : state.axis.x.end
-                },
-                y : {
-                    start : state.axis.y.start,
-                    end : state.axis.y.end
+            //Stores the domain and scale only on a new gesture
+            if(pointerState.pointers.length === 0){
+                pointerState.lastDomain = {
+                    x : {
+                        start : state.axis.x.start,
+                        end : state.axis.x.end
+                    },
+                    y : {
+                        start : state.axis.y.start,
+                        end : state.axis.y.end
+                    }
+                };
+                pointerState.lastScale = {
+                    x : state.scale.primary.x,
+                    y : state.scale.primary.y,
+                };
+                moveState.positionA = {
+                    x : e.clientX,
+                    y : e.clientY
+                };
+                zoomState.positionA = {
+                    x : e.clientX,
+                    y : e.clientY
                 }
-            };
-            pointerState.lastScale = {
-                x : state.scale.primary.x,
-                y : state.scale.primary.y,
+            }
+            
+            if(pointerState.pointers.length < 2){
+                pointerState.pointers.push({
+                    id : e.pointerId,
+                    position : { x : e.clientX, y : e.clientY}
+                });
             }
 
             state.canvasElement.style.cursor = cursor.move;
@@ -117,13 +142,34 @@ function onMove(e:PointerEvent){
                     x:e.clientX, 
                     y:e.clientY, 
                     type:zoomState.type,
-                    shiftKey : e.shiftKey
+                    shiftKey : e.shiftKey,
+                    anchor : zoomState.anchor
                 });
             }
             break;
 
         case "touch":
-            
+            pointerState.pointers.forEach(pointer=>{
+                if(pointer.id === e.pointerId)
+                    pointer.position = {x:e.clientX, y:e.clientY}
+            });
+
+            if(moveState.enable){
+                if(pointerState.pointers.length === 1)
+                    moveState.onMove({x:pointerState.pointers[0].position.x, y:pointerState.pointers[0].position.y});
+            }
+            if(zoomState.enable){
+                if(pointerState.pointers.length === 2){
+                    zoomState.positionA = {x:pointerState.pointers[0].position.x, y:pointerState.pointers[0].position.y}
+                    zoomState.onZoom({
+                        x:pointerState.pointers[1].position.x, 
+                        y:pointerState.pointers[1].position.y, 
+                        type:"drag",
+                        shiftKey : false,
+                        anchor : "touch"
+                    });
+                }
+            }
             break;
 
         default:
@@ -140,6 +186,12 @@ function onUp(e : PointerEvent){
     state.canvasElement.style.cursor = cursor.hover;
     state.canvasElement.removeEventListener("pointermove", onMove);
     state.canvasElement.addEventListener("pointermove", onStyle);
+
+    //remove the pointer
+    for(let i=0; i<pointerState.pointers.length; i++){
+        if(pointerState.pointers[i].id === e.pointerId)
+            pointerState.pointers.splice(i,1);
+    }
 
     if(zoomState.enable && zoomState.type==="area" && e.pointerType === "mouse")
         zoomRectOnUp();
@@ -203,29 +255,29 @@ function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
 
     function moveOnPointer({x,y}:Move_Event){
         if(state.scale.primary.x.type === "linear"){
-            const xDisplacement = state.scale.primary.x.invert(pointerState.pointerPosition1.x) - state.scale.primary.x.invert(x);
+            const xDisplacement = state.scale.primary.x.invert(moveState.positionA.x) - state.scale.primary.x.invert(x);
             state.axis.x.start += xDisplacement;
             state.axis.x.end += xDisplacement;
         }
         if(state.scale.primary.x.type === "log"){
-            const xDisplacement = Math.log10(Math.abs(state.scale.primary.x.invert(pointerState.pointerPosition1.x))) - Math.log10(Math.abs(state.scale.primary.x.invert(x)));
+            const xDisplacement = Math.log10(Math.abs(state.scale.primary.x.invert(moveState.positionA.x))) - Math.log10(Math.abs(state.scale.primary.x.invert(x)));
             state.axis.x.start *= Math.pow(10 , xDisplacement);
             state.axis.x.end *= Math.pow(10 , xDisplacement);
         }
         
         if(state.scale.primary.y.type === "linear"){
-            const yDisplacement = state.scale.primary.y.invert(pointerState.pointerPosition1.y) - state.scale.primary.y.invert(y);
+            const yDisplacement = state.scale.primary.y.invert(moveState.positionA.y) - state.scale.primary.y.invert(y);
             state.axis.y.start += yDisplacement;
             state.axis.y.end += yDisplacement;
         }
         if(state.scale.primary.y.type === "log"){
-            const yDisplacement = Math.log10(Math.abs(state.scale.primary.y.invert(pointerState.pointerPosition1.y))) - Math.log10(Math.abs(state.scale.primary.y.invert(y)));
+            const yDisplacement = Math.log10(Math.abs(state.scale.primary.y.invert(moveState.positionA.y))) - Math.log10(Math.abs(state.scale.primary.y.invert(y)));
             state.axis.y.start *= Math.pow(10 , yDisplacement);
             state.axis.y.end *= Math.pow(10 , yDisplacement);
         }
 
         //update the las position computed
-        pointerState.pointerPosition1 = {x, y};
+        moveState.positionA = {x, y};
 
         state.compute.client();
         if(moveState.callback != null) moveState.callback(graphHandler);
@@ -235,7 +287,7 @@ function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
 //---------------------------------------------
 //------------ Zoom On Pointer ----------------
 
-function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
+function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         if(type === "area"){
             state.draw.client()
             
@@ -251,11 +303,11 @@ function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
             
             //Shifts the selection if the shift key is pressed
             if(shiftKey){
-                pointerState.pointerPosition1.x += x - pointerState.pointerPosition2.x;
-                pointerState.pointerPosition1.y += y - pointerState.pointerPosition2.y;
+                zoomState.positionA.x += x - zoomState.positionB.x;
+                zoomState.positionA.y += y - zoomState.positionB.y;
             }
 
-            [initialX, initialY] = clientCoords(pointerState.pointerPosition1.x, pointerState.pointerPosition1.y);
+            [initialX, initialY] = clientCoords(zoomState.positionA.x, zoomState.positionA.y);
             initialX = initialX<minX? minX : (initialX>maxX? maxX : initialX);
             initialY = initialY<minY? minY : (initialY>maxY? maxY : initialY);
             
@@ -274,29 +326,109 @@ function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
 
             state.context.canvas.restore();
 
-            pointerState.pointerPosition2.x = x;
-            pointerState.pointerPosition2.y = y;
+            zoomState.positionB.x = x;
+            zoomState.positionB.y = y;
         }
 
         if(type === "drag"){
             const [pointerX, pointerY] = clientCoords(x, y);
-            const [initialX, initialY] = clientCoords(pointerState.pointerPosition1.x, pointerState.pointerPosition1.y);
-            const domainWidth = pointerState.lastDomain.x.end-pointerState.lastDomain.x.start;
-            const domainHeight = pointerState.lastDomain.y.end-pointerState.lastDomain.y.start;
-            const aspectRatio = domainWidth / domainHeight;
-            const domainPointerX = pointerState.lastScale.x.invert(pointerX);
-            const domainInitialX = pointerState.lastScale.x.invert(initialX);
-            const domainInitialY = pointerState.lastScale.y.invert(initialY);
-    
-            if(state.axis.type === "rectangular" || state.axis.type === "polar"){
-                const displacement = zoomState.strenght*(domainPointerX - domainInitialX);
-                const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
-                const newDomainHeight = newDomainWidth / aspectRatio;
+            const [initialX, initialY] = clientCoords(zoomState.positionA.x, zoomState.positionA.y);
 
-                state.axis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - domainInitialX) + domainInitialX;
-                state.axis.x.end = newDomainWidth/domainWidth*(pointerState.lastDomain.x.end - domainInitialX) + domainInitialX;
-                state.axis.y.start = newDomainHeight/domainHeight*(pointerState.lastDomain.y.start - domainInitialY) + domainInitialY;
-                state.axis.y.end = newDomainHeight/domainHeight*(pointerState.lastDomain.y.end - domainInitialY) + domainInitialY;
+            let xDomainStart = pointerState.lastDomain.x.start;
+            let xDomainEnd = pointerState.lastDomain.x.end;
+            let yDomainStart = pointerState.lastDomain.y.start;
+            let yDomainEnd = pointerState.lastDomain.y.end;
+            let domainPointerX = pointerState.lastScale.x.invert(pointerX);
+            let domainInitialX = pointerState.lastScale.x.invert(initialX);
+            let domainInitialY = pointerState.lastScale.y.invert(initialY);
+
+            if(state.scale.primary.x.type === "log"){
+                xDomainStart = Math.log10(Math.abs(xDomainStart));
+                xDomainEnd = Math.log10(Math.abs(xDomainEnd));
+                domainPointerX = Math.log10(Math.abs(domainPointerX));
+                domainInitialX = Math.log10(Math.abs(domainInitialX));
+            }
+            if(state.scale.primary.y.type === "log"){
+                domainInitialY = Math.log10(Math.abs(domainInitialY));
+            }
+
+            const domainWidth = xDomainEnd - xDomainStart;
+            const domainHeight = yDomainEnd - yDomainStart;
+            const aspectRatio = domainWidth / domainHeight;
+           
+            const fixpoint = {x : domainInitialX, y : domainInitialY } //if zoomState.anchor === "pointer"
+            if(typeof anchor === "object"){
+                fixpoint.x = anchor[0];
+                fixpoint.y = anchor[1];
+            }
+            if(anchor === "center"){
+                fixpoint.x = xDomainStart + domainWidth/2;
+                fixpoint.y = yDomainStart + domainHeight/2;
+            }
+            if(anchor === "touch"){
+                let minX = 0;
+                let maxX = 0;
+                let minY = 0;
+                let maxY = 0;
+
+                if(zoomState.positionA.x < x){
+                    minX = zoomState.positionA.x;
+                    maxX = x;
+                } else{
+                    minX = x;
+                    maxX = zoomState.positionA.x;
+                }
+                
+                if(zoomState.positionA.y < y){
+                    minY = zoomState.positionA.y;
+                    maxY = y;
+                } else{
+                    minY = y;
+                    maxY = zoomState.positionA.y;
+                }
+
+                let fixpointX = pointerState.lastScale.x.invert(minX - (maxX-minX)/2);
+                let fixpointY = pointerState.lastScale.y.invert(minY - (maxY-minY)/2);
+
+                if(state.scale.primary.x.type === "log"){
+                    const sign = (pointerState.lastDomain.x.start>0 && pointerState.lastDomain.x.end>0) ? 1 : -1;
+                    fixpointX = sign*Math.log10(Math.abs(fixpointX));
+                }
+                if(state.scale.primary.y.type === "log"){
+                    const sign = (pointerState.lastDomain.y.start>0 && pointerState.lastDomain.y.end>0) ? 1 : -1;
+                    fixpointY = sign*Math.log10(Math.abs(fixpointY));
+                }
+                
+                fixpoint.x = 0;
+                fixpoint.y =0;
+            }
+
+            const displacement = zoomState.strength*(domainPointerX - domainInitialX);
+            const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
+            const newDomainHeight = newDomainWidth / aspectRatio;
+
+
+
+            if(state.scale.primary.x.type === "linear"){
+                state.axis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - fixpoint.x) + fixpoint.x;
+                state.axis.x.end = newDomainWidth/domainWidth*(pointerState.lastDomain.x.end - fixpoint.x) + fixpoint.x;
+            }
+            if(state.scale.primary.y.type === "linear"){
+                state.axis.y.start = newDomainHeight/domainHeight*(pointerState.lastDomain.y.start - fixpoint.y) + fixpoint.y;
+                state.axis.y.end = newDomainHeight/domainHeight*(pointerState.lastDomain.y.end - fixpoint.y) + fixpoint.y;
+            }
+            
+            if(state.scale.primary.x.type === "log"){
+                const sign = (state.axis.x.start >0 && state.axis.x.end >0)? 1: -1;
+                state.axis.x.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.start)) - Math.log10(Math.abs(fixpoint.x))) + Math.log10(Math.abs(fixpoint.x)));
+                
+                state.axis.x.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.end)) - Math.log10(Math.abs(fixpoint.x))) + Math.log10(Math.abs(fixpoint.x)));        
+            }
+            if(state.scale.primary.y.type === "log"){
+                const sign = (state.axis.y.start >0 && state.axis.y.end >0)? 1: -1;
+                state.axis.y.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.start)) - Math.log10(Math.abs(fixpoint.y))) + Math.log10(Math.abs(fixpoint.y)));
+                
+                state.axis.y.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.end)) - Math.log10(Math.abs(fixpoint.y))) + Math.log10(Math.abs(fixpoint.y)));        
             }
 
             state.compute.client();
@@ -309,8 +441,17 @@ function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
 //---------------------------------------------
 
     function zoomRectOnUp(){
-        let [initialX, initialY] = clientCoords(pointerState.pointerPosition1.x, pointerState.pointerPosition1.y);
-        let[finalX, finalY] = clientCoords(pointerState.pointerPosition2.x, pointerState.pointerPosition2.y);
+        let [initialX, initialY] = clientCoords(zoomState.positionA.x, zoomState.positionA.y);
+        let[finalX, finalY] = clientCoords(zoomState.positionB.x, zoomState.positionB.y);
+        const minX = state.context.clientRect.x+2;
+        const maxX = minX + state.context.clientRect.width-2;
+        const minY = state.context.clientRect.y+2;
+        const maxY = minY + state.context.clientRect.height-2;
+
+        initialX = initialX<minX? minX : (initialX>maxX? maxX : initialX);
+        initialY = initialY<minY? minY : (initialY>maxY? maxY : initialY);
+        finalX = finalX<minX? minX : (finalX>maxX? maxX : finalX);
+        finalY = finalY<minY? minY : (finalY>maxY? maxY : finalY);
         
         if(initialX > finalX){
             const aux = initialX;
@@ -335,6 +476,8 @@ function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
             state.axis.y.start = yStart;
             state.axis.y.end = yEnd;
         }
+
+
         
         state.compute.client();
         if(zoomState.callback != null) zoomState.callback(graphHandler);
@@ -517,7 +660,8 @@ function zoomOnPointer({x, y, type, shiftKey} : Zoom_Event){
             if(options.hoverCursor != null) cursor.hover = options.hoverCursor;
             if(options.moveCursor != null) cursor.move = options.moveCursor;
             if(options.defaultCursor != null) cursor.default = options.defaultCursor;
-            if(options.strength != null) zoomState.strenght = options.strength;
+            if(options.strength != null) zoomState.strength = options.strength;
+            if(options.anchor != null) zoomState.anchor = options.anchor as "center" | "pointer" | [number, number];
             if(options.type != null) zoomState.type = options.type;
             zoomState.callback = options.callback as (handler:Graph2D)=>void | undefined;
             if(options.rect != null) zoomState.rect = {...zoomState.rect, ...options.rect};

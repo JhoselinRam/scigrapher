@@ -30,20 +30,21 @@ export interface Pointer_Zoom_Props extends Pointer_Move_Props{
     type : "area" | "drag",
     axis : "x" | "y",
     strength : number,
+    anchor : "pointer" | "center" | [number,number]
     rect : {
         background : string,
         opacity : number,
         borderColor : string,
         borderWidth : number,
         borderOpacity : number
-        borderStyle : string
     }
 }
 
 export type Move_Event = Axis_Property<number>
 export type Zoom_Event = Axis_Property<number> & {
-    type : "area" | "drag" | "click",
-    shiftKey : boolean
+    type : "area" | "drag",
+    shiftKey : boolean,
+    anchor : "center" | "pointer" | [number, number] | "touch"
 }
 
 export interface Event_Cursor {
@@ -57,13 +58,15 @@ export interface Move_State {
     callback ?: (handler : Graph2D)=>void,
     delay : number,
     onMove : (position : Move_Event)=>void, 
+    positionA : Axis_Property<number>
 }
 
 export interface Zoom_State extends Omit<Move_State, "onMove">{
-    type : "area" | "drag" | "click",
-    strenght : number,
+    type : "area" | "drag",
+    strength : number,
     anchor : "center" | "pointer" | [number, number],
     onZoom : (zoom : Zoom_Event)=>void,
+    positionB : Axis_Property<number>,
     rect : {
         background : string,
         opacity : number,
@@ -74,12 +77,16 @@ export interface Zoom_State extends Omit<Move_State, "onMove">{
 }
 
 export interface Pointer_State {
-    pointerPosition1 : Axis_Property<number>,
-    pointerPosition2 : Axis_Property<number>,
+    pointers : Array<Pointer_Info>   
     lastDomain : Axis_Property<{
         start : number,
         end : number
     }>,
     lastScale : Axis_Property<Mapping>,
     pointerCapture : boolean
+}
+
+export interface Pointer_Info {
+    id : number,
+    position : Axis_Property<number>
 }
