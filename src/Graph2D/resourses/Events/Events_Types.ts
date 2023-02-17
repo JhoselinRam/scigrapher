@@ -42,7 +42,7 @@ export interface Pointer_Zoom_Props extends Pointer_Move_Props{
 
 export type Move_Event = Axis_Property<number>
 export type Zoom_Event = Axis_Property<number> & {
-    type : "area" | "drag",
+    type : "area" | "drag" | "click",
     shiftKey : boolean
 }
 
@@ -54,30 +54,32 @@ export interface Event_Cursor {
 
 export interface Move_State {
     enable : boolean,
-    callback : (handler : Graph2D)=>void,
+    callback ?: (handler : Graph2D)=>void,
     delay : number,
-    onEvent : (position : Move_Event)=>void, 
+    onMove : (position : Move_Event)=>void, 
 }
 
-export interface Zoom_State extends Move_State{
+export interface Zoom_State extends Omit<Move_State, "onMove">{
     type : "area" | "drag" | "click",
-    strengh : number,
+    strenght : number,
     anchor : "center" | "pointer" | [number, number],
+    onZoom : (zoom : Zoom_Event)=>void,
     rect : {
         background : string,
         opacity : number,
         borderColor : string,
         borderWidth : number,
         borderOpacity : number
-        borderStyle : string
     }
 }
 
 export interface Pointer_State {
-    activePointers : Array<PointerEvent>,
+    pointerPosition1 : Axis_Property<number>,
+    pointerPosition2 : Axis_Property<number>,
     lastDomain : Axis_Property<{
         start : number,
         end : number
     }>,
-    lastScale : Axis_Property<Mapping>
+    lastScale : Axis_Property<Mapping>,
+    pointerCapture : boolean
 }

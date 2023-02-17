@@ -253,10 +253,12 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
         if(magnitudeOrder<-2 || magnitudeOrder>3){
             const fixed = Number.isInteger(position/Math.pow(10,magnitudeOrder)) ? 0 : maxDecimals;
             let temp = position.toExponential(fixed).split("e");
-            for(let i=0; i<maxDecimals; i++){
-                if(!temp[0].endsWith("0"))
-                    break;
-                temp[0] = temp[0].slice(0,-1);
+            if(fixed === maxDecimals){
+                for(let i=0; i<maxDecimals; i++){
+                    if(!temp[0].endsWith("0"))
+                        break;
+                    temp[0] = temp[0].slice(0,-1);
+                }
             }
             label = temp.join("e");
             label = label.replace("e","x10").replace("-", "– ");
@@ -266,11 +268,13 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
             const fixed = Number.isInteger(position) ? 0 : maxDecimals;
             let temp = position.toFixed(fixed);
             //Remove tailing ceros.
-            for(let i=0; i<maxDecimals; i++){
-                if(!temp.endsWith("0"))
-                    break;     
-                temp = temp.slice(0, -1);
-                }
+            if(fixed === maxDecimals){
+                for(let i=0; i<maxDecimals; i++){
+                    if(!temp.endsWith("0"))
+                        break;     
+                    temp = temp.slice(0, -1);
+                    }
+            }
             label = temp
             label = label.replace("-", "– ");
             
