@@ -360,8 +360,6 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
                 fixpoint.x = Math.log10(Math.abs(fixpoint.x));
             }
             if(state.scale.primary.y.type === "log"){
-                yDomainStart = Math.log10(Math.abs(yDomainStart));
-                yDomainEnd = Math.log10(Math.abs(yDomainEnd));
                 domainInitialY = Math.log10(Math.abs(domainInitialY));
                 fixpoint.y = Math.log10(Math.abs(fixpoint.y));
             }
@@ -373,8 +371,6 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             const displacement = zoomState.strength*(domainPointerX - domainInitialX);
             const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
             const newDomainHeight = newDomainWidth / aspectRatio;
-
-
 
             if(state.scale.primary.x.type === "linear"){
                 state.axis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - fixpoint.x) + fixpoint.x;
@@ -401,8 +397,8 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             state.compute.client();
             if(zoomState.callback != null) zoomState.callback(graphHandler);
             state.draw.client();
-        }
     }
+}
 
 //---------------------------------------------
 //---------------------------------------------
@@ -497,10 +493,10 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
         const newDomainHeight = newDomainWidth / aspectRatio;
         
-        const fixpoint = {
+        const fixpoint = {  // <- if zoomState.anchor === "pointer"
             x : (xDomainAnchor - newDomainWidth/domainWidth*zoomState.touch.anchor.x) / (newDomainWidth/domainWidth - 1),
             y : (yDomainAnchor - newDomainHeight/domainHeight*zoomState.touch.anchor.y) / (newDomainHeight/domainHeight - 1),
-        } //if zoomState.anchor === "pointer"
+        }
         if(typeof zoomState.anchor === "object"){
             fixpoint.x = zoomState.anchor[0];
             fixpoint.y = zoomState.anchor[1];
