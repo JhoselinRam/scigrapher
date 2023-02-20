@@ -1,5 +1,5 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph")).pointerZoom({type:"area"});
+const Graph = Graph2D(document.querySelector(".graph")).pointerZoom().pointerMove().containerResize();
 
 function changeBackgroundColor(e){
     const color = e.target.value;
@@ -868,14 +868,36 @@ function changeAspectRatio(){
 }
 
 function changePointerMove(){
-    const enable = document.querySelector("#pointerMove").checked;
+    const target = document.querySelector("#pointerMove").checked ? "move" : "zoom"
+    const enable = document.querySelector("#pointerEnable").checked;
     const pointerCapture = document.querySelector("#pointerCapture").checked;
     const delay = parseInt(document.querySelector("#pointerDelay").value);
     const defaultCursor = document.querySelector("#defaultCursor").value;
     const hoverCursor = document.querySelector("#hoverCursor").value;
     const moveCursor = document.querySelector("#moveCursor").value;
+    const strength = parseFloat(document.querySelector("#pointerStrength").value);
+    const anchor = document.querySelector("#pointerAnchor").value;
+    const background = document.querySelector("#pointerBackgroundColor").value;
+    const borderColor = document.querySelector("#pointerBorderColor").value;
+    const opacity = document.querySelector("#pointerBackgroundOpacity").value;
+    const borderOpacity = document.querySelector("#pointerBorderOpacity").value;
+    const borderWidth = document.querySelector("#pointerWidth").value;
+    const type = document.querySelector("#pointerZoomType").value;
 
-    Graph.pointerMove({enable, delay, pointerCapture, defaultCursor, hoverCursor, moveCursor});
+    if(target === "move")
+        Graph.pointerMove({enable, delay, pointerCapture, defaultCursor, hoverCursor, moveCursor});
+    if(target === "zoom")
+        Graph.pointerZoom({enable, pointerCapture, delay, defaultCursor, hoverCursor, moveCursor, type, anchor, strength, rect:{background, borderColor, borderOpacity, borderWidth, opacity}});
+}
+
+function changeResizeEvent(){
+    const enable = document.querySelector("#resizeEnable").checked;
+    const preserveAspectRatio = document.querySelector("#resizePreserve").checked;
+    const delay = parseFloat(document.querySelector("#resizeDelay").value);
+    const anchorX = parseFloat(document.querySelector("#resizeAnchorX").value);
+    const anchorY = parseFloat(document.querySelector("#resizeAnchorY").value);
+
+    Graph.containerResize({enable, preserveAspectRatio, delay, anchor:[anchorX,anchorY]});
 }
 
 
@@ -987,11 +1009,24 @@ function main(){
     document.querySelector("#anchor").addEventListener("input", changeAspectRatio);
     document.querySelector("#sourse").addEventListener("change", changeAspectRatio);
     document.querySelector("#target").addEventListener("change", changeAspectRatio);
-    document.querySelector("#pointerMove").addEventListener("change", changePointerMove);
+    document.querySelector("#pointerEnable").addEventListener("change", changePointerMove);
     document.querySelector("#pointerCapture").addEventListener("change", changePointerMove);
     document.querySelector("#pointerDelay").addEventListener("input", changePointerMove);
     document.querySelector("#defaultCursor").addEventListener("input", changePointerMove);
     document.querySelector("#hoverCursor").addEventListener("input", changePointerMove);
     document.querySelector("#moveCursor").addEventListener("input", changePointerMove);
+    document.querySelector("#pointerStrength").addEventListener("input", changePointerMove);
+    document.querySelector("#pointerAnchor").addEventListener("change", changePointerMove);
+    document.querySelector("#pointerBackgroundColor").addEventListener("input", changePointerMove);
+    document.querySelector("#pointerBackgroundOpacity").addEventListener("input", changePointerMove);
+    document.querySelector("#pointerBorderColor").addEventListener("input", changePointerMove);
+    document.querySelector("#pointerBorderOpacity").addEventListener("input", changePointerMove);
+    document.querySelector("#pointerZoomType").addEventListener("change", changePointerMove);
+    document.querySelector("#pointerWidth").addEventListener("input", changePointerMove);
+    document.querySelector("#resizeEnable").addEventListener("change", changeResizeEvent);
+    document.querySelector("#resizePreserve").addEventListener("change", changeResizeEvent);
+    document.querySelector("#resizeDelay").addEventListener("input", changeResizeEvent);
+    document.querySelector("#resizeAnchorX").addEventListener("input", changeResizeEvent);
+    document.querySelector("#resizeAnchorY").addEventListener("input", changeResizeEvent);
 }
 main();

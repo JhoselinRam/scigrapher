@@ -1,7 +1,7 @@
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
 import { Axis_Property, Graph2D, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
-import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Zoom_Event, Zoom_State } from "./Events_Types";
+import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Resize_Event_Props, Resize_State, Zoom_Event, Zoom_State } from "./Events_Types";
 
 function Events({state, graphHandler} : Method_Generator) : Events {
     //Default Options
@@ -52,7 +52,22 @@ function Events({state, graphHandler} : Method_Generator) : Events {
         positionB : {
             x : 0,
             y : 0,
+        },
+        touch : {
+            onZoomTouch : ()=>{},
+            distance : 0,
+            anchor : {x:0, y:0}
         }
+    };
+
+    const resizeState : Resize_State =  {
+        anchor : "center",
+        enable : false,
+        preserveAspectRatio : true,
+        onResize : ()=>{},
+        delay : 12,
+        observer : new ResizeObserver(element => resizeState.onResize(element[0])),
+        reset : true
     };
     
 
@@ -74,8 +89,10 @@ function Events({state, graphHandler} : Method_Generator) : Events {
 
             if(moveState.enable)
                 moveState.onMove = throttle<Move_Event>(moveOnPointer, moveState.delay);
-            if(zoomState.enable)
+            if(zoomState.enable){
                 zoomState.onZoom = throttle<Zoom_Event>(zoomOnPointer, zoomState.delay);
+                zoomState.touch.onZoomTouch = throttle<void>(zoomOnTouch, zoomState.delay);
+            }
             
         }
     }
@@ -91,35 +108,41 @@ function Events({state, graphHandler} : Method_Generator) : Events {
             //Stores the domain and scale only on a new gesture
             if(pointerState.pointers.length === 0){
                 pointerState.lastDomain = {
-                    x : {
-                        start : state.axis.x.start,
-                        end : state.axis.x.end
-                    },
-                    y : {
-                        start : state.axis.y.start,
-                        end : state.axis.y.end
-                    }
+                    x : { start : state.axis.x.start, end : state.axis.x.end },
+                    y : { start : state.axis.y.start, end : state.axis.y.end }
                 };
-                pointerState.lastScale = {
-                    x : state.scale.primary.x,
-                    y : state.scale.primary.y,
-                };
-                moveState.positionA = {
-                    x : e.clientX,
-                    y : e.clientY
-                };
-                zoomState.positionA = {
-                    x : e.clientX,
-                    y : e.clientY
-                }
+                pointerState.lastScale = { x : state.scale.primary.x, y : state.scale.primary.y };
+                moveState.positionA = { x : e.clientX, y : e.clientY };
+                zoomState.positionA = { x : e.clientX, y : e.clientY }
             }
             
+            //Save the pointer info
             if(pointerState.pointers.length < 2){
                 pointerState.pointers.push({
                     id : e.pointerId,
                     position : { x : e.clientX, y : e.clientY}
                 });
             }
+
+            //Necessary for zoom on mobile devices
+            if(pointerState.pointers.length === 2 && zoomState.enable){
+                zoomState.touch.distance = distance(pointerState.pointers[0].position, pointerState.pointers[1].position, pointerState.lastScale);
+                if(zoomState.anchor === "pointer"){
+                    const clientPositionA = clientCoords(pointerState.pointers[0].position.x, pointerState.pointers[0].position.y);
+                    const clientPositionB = clientCoords(pointerState.pointers[1].position.x, pointerState.pointers[1].position.y);
+                    let [centerX, centerY] = middlePoint(clientPositionA[0], clientPositionA[1], clientPositionB[0], clientPositionB[1]);
+                    centerX = pointerState.lastScale.x.invert(centerX);
+                    centerY = pointerState.lastScale.y.invert(centerY);
+
+                    if(pointerState.lastScale.x.type === "log")
+                        centerX = Math.log10(Math.abs(centerX));
+                    if(pointerState.lastScale.y.type === "log")
+                        centerY = Math.log10(Math.abs(centerY));
+
+                    zoomState.touch.anchor = {x:centerX, y:centerY}
+                }
+            }
+
 
             state.canvasElement.style.cursor = cursor.move;
             state.canvasElement.removeEventListener("pointermove", onStyle);
@@ -143,7 +166,8 @@ function onMove(e:PointerEvent){
                     y:e.clientY, 
                     type:zoomState.type,
                     shiftKey : e.shiftKey,
-                    anchor : zoomState.anchor
+                    anchor : zoomState.anchor,
+                    touch : false
                 });
             }
             break;
@@ -161,13 +185,9 @@ function onMove(e:PointerEvent){
             if(zoomState.enable){
                 if(pointerState.pointers.length === 2){
                     zoomState.positionA = {x:pointerState.pointers[0].position.x, y:pointerState.pointers[0].position.y}
-                    zoomState.onZoom({
-                        x:pointerState.pointers[1].position.x, 
-                        y:pointerState.pointers[1].position.y, 
-                        type:"drag",
-                        shiftKey : false,
-                        anchor : "touch"
-                    });
+                    zoomState.positionB = {x:pointerState.pointers[1].position.x, y:pointerState.pointers[1].position.y}
+                    
+                    zoomState.touch.onZoomTouch();
                 }
             }
             break;
@@ -193,7 +213,7 @@ function onUp(e : PointerEvent){
             pointerState.pointers.splice(i,1);
     }
 
-    if(zoomState.enable && zoomState.type==="area" && e.pointerType === "mouse")
+    if(zoomState.enable && !moveState.enable && zoomState.type==="area" && e.pointerType === "mouse")
         zoomRectOnUp();
 }
 
@@ -228,29 +248,10 @@ function inClientRect(x:number, y:number) : boolean{
 
     function clientCoords(x:number, y:number) : [number, number] {
         const canvasRect = state.canvasElement.getBoundingClientRect();
-        return [x - canvasRect.x, y - canvasRect.y];
+
+        return [x - canvasRect.x - state.context.clientRect.x, y - canvasRect.y - state.context.clientRect.y];
     }
 
-//---------------------------------------------
-//--------------- Throttle --------------------
-
-function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
-    let shouldWait = false;
-    const timeoutFunction = ()=>{
-            shouldWait = false;
-    }
-
-    return (args:T)=>{
-        if(shouldWait)
-            return;
-
-        func(args);
-        shouldWait = true;
-        setTimeout(timeoutFunction, delay);
-    }
-}
-
-//---------------------------------------------
 //------------ Move On Pointer ----------------
 
     function moveOnPointer({x,y}:Move_Event){
@@ -341,67 +342,33 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             let domainPointerX = pointerState.lastScale.x.invert(pointerX);
             let domainInitialX = pointerState.lastScale.x.invert(initialX);
             let domainInitialY = pointerState.lastScale.y.invert(initialY);
-
-            if(state.scale.primary.x.type === "log"){
-                xDomainStart = Math.log10(Math.abs(xDomainStart));
-                xDomainEnd = Math.log10(Math.abs(xDomainEnd));
-                domainPointerX = Math.log10(Math.abs(domainPointerX));
-                domainInitialX = Math.log10(Math.abs(domainInitialX));
-            }
-            if(state.scale.primary.y.type === "log"){
-                domainInitialY = Math.log10(Math.abs(domainInitialY));
-            }
-
-            const domainWidth = xDomainEnd - xDomainStart;
-            const domainHeight = yDomainEnd - yDomainStart;
-            const aspectRatio = domainWidth / domainHeight;
-           
             const fixpoint = {x : domainInitialX, y : domainInitialY } //if zoomState.anchor === "pointer"
             if(typeof anchor === "object"){
                 fixpoint.x = anchor[0];
                 fixpoint.y = anchor[1];
             }
             if(anchor === "center"){
-                fixpoint.x = xDomainStart + domainWidth/2;
-                fixpoint.y = yDomainStart + domainHeight/2;
+                fixpoint.x = xDomainStart + (xDomainEnd - xDomainStart)/2;
+                fixpoint.y = yDomainStart + (yDomainEnd - yDomainStart)/2;
             }
-            if(anchor === "touch"){
-                let minX = 0;
-                let maxX = 0;
-                let minY = 0;
-                let maxY = 0;
 
-                if(zoomState.positionA.x < x){
-                    minX = zoomState.positionA.x;
-                    maxX = x;
-                } else{
-                    minX = x;
-                    maxX = zoomState.positionA.x;
-                }
-                
-                if(zoomState.positionA.y < y){
-                    minY = zoomState.positionA.y;
-                    maxY = y;
-                } else{
-                    minY = y;
-                    maxY = zoomState.positionA.y;
-                }
-
-                let fixpointX = pointerState.lastScale.x.invert(minX - (maxX-minX)/2);
-                let fixpointY = pointerState.lastScale.y.invert(minY - (maxY-minY)/2);
-
-                if(state.scale.primary.x.type === "log"){
-                    const sign = (pointerState.lastDomain.x.start>0 && pointerState.lastDomain.x.end>0) ? 1 : -1;
-                    fixpointX = sign*Math.log10(Math.abs(fixpointX));
-                }
-                if(state.scale.primary.y.type === "log"){
-                    const sign = (pointerState.lastDomain.y.start>0 && pointerState.lastDomain.y.end>0) ? 1 : -1;
-                    fixpointY = sign*Math.log10(Math.abs(fixpointY));
-                }
-                
-                fixpoint.x = 0;
-                fixpoint.y =0;
+            if(state.scale.primary.x.type === "log"){
+                xDomainStart = Math.log10(Math.abs(xDomainStart));
+                xDomainEnd = Math.log10(Math.abs(xDomainEnd));
+                domainPointerX = Math.log10(Math.abs(domainPointerX));
+                domainInitialX = Math.log10(Math.abs(domainInitialX));
+                fixpoint.x = Math.log10(Math.abs(fixpoint.x));
             }
+            if(state.scale.primary.y.type === "log"){
+                yDomainStart = Math.log10(Math.abs(yDomainStart));
+                yDomainEnd = Math.log10(Math.abs(yDomainEnd));
+                domainInitialY = Math.log10(Math.abs(domainInitialY));
+                fixpoint.y = Math.log10(Math.abs(fixpoint.y));
+            }
+
+            const domainWidth = xDomainEnd - xDomainStart;
+            const domainHeight = yDomainEnd - yDomainStart;
+            const aspectRatio = domainWidth / domainHeight;
 
             const displacement = zoomState.strength*(domainPointerX - domainInitialX);
             const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
@@ -420,15 +387,15 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             
             if(state.scale.primary.x.type === "log"){
                 const sign = (state.axis.x.start >0 && state.axis.x.end >0)? 1: -1;
-                state.axis.x.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.start)) - Math.log10(Math.abs(fixpoint.x))) + Math.log10(Math.abs(fixpoint.x)));
+                state.axis.x.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.start)) - fixpoint.x) + fixpoint.x);
                 
-                state.axis.x.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.end)) - Math.log10(Math.abs(fixpoint.x))) + Math.log10(Math.abs(fixpoint.x)));        
+                state.axis.x.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.end)) - fixpoint.x) + fixpoint.x);        
             }
             if(state.scale.primary.y.type === "log"){
                 const sign = (state.axis.y.start >0 && state.axis.y.end >0)? 1: -1;
-                state.axis.y.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.start)) - Math.log10(Math.abs(fixpoint.y))) + Math.log10(Math.abs(fixpoint.y)));
+                state.axis.y.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.start)) - fixpoint.y) + fixpoint.y);
                 
-                state.axis.y.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.end)) - Math.log10(Math.abs(fixpoint.y))) + Math.log10(Math.abs(fixpoint.y)));        
+                state.axis.y.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.end)) - fixpoint.y) + fixpoint.y);        
             }
 
             state.compute.client();
@@ -482,6 +449,159 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         state.compute.client();
         if(zoomState.callback != null) zoomState.callback(graphHandler);
         state.draw.client();
+    }
+
+//---------------------------------------------
+//------------ Zoom On Touch ------------------
+
+    function zoomOnTouch(){
+        const [xPointerA, yPointerA] = clientCoords(zoomState.positionA.x, zoomState.positionA.y);
+        const [xPointerB, yPointerB] = clientCoords(zoomState.positionB.x, zoomState.positionB.y);
+        const [xMiddle, yMiddle] = middlePoint(xPointerA, yPointerA, xPointerB, yPointerB);
+        const newDistance = distance(zoomState.positionA, zoomState.positionB, pointerState.lastScale);
+        
+        let xDomainPointerA = pointerState.lastScale.x.invert(xPointerA);
+        let yDomainPointerA = pointerState.lastScale.y.invert(yPointerA);
+        let xDomainPointerB = pointerState.lastScale.x.invert(xPointerB);
+        let yDomainPointerB = pointerState.lastScale.y.invert(yPointerB);
+        let xDomainAnchor = pointerState.lastScale.x.invert(xMiddle);
+        let yDomainAnchor = pointerState.lastScale.y.invert(yMiddle);
+        let xDomainStart = pointerState.lastDomain.x.start;
+        let xDomainEnd = pointerState.lastDomain.x.end;
+        let yDomainStart = pointerState.lastDomain.y.start;
+        let yDomainEnd = pointerState.lastDomain.y.end;
+        
+        if(pointerState.lastScale.x.type === "log"){
+            xDomainPointerA = Math.log10(Math.abs(xDomainPointerA));
+            xDomainPointerB = Math.log10(Math.abs(xDomainPointerB));
+            xDomainAnchor = Math.log10(Math.abs(xDomainAnchor));
+            xDomainStart = Math.log10(Math.abs(xDomainStart));
+            xDomainEnd = Math.log10(Math.abs(xDomainEnd));
+        }
+        
+        if(pointerState.lastScale.y.type === "log"){
+            yDomainPointerA = Math.log10(Math.abs(yDomainPointerA));
+            yDomainPointerB = Math.log10(Math.abs(yDomainPointerB));
+            yDomainAnchor = Math.log10(Math.abs(yDomainAnchor));
+            yDomainStart = Math.log10(Math.abs(yDomainStart));
+            yDomainEnd = Math.log10(Math.abs(yDomainEnd));
+        }
+
+        
+        const domainWidth = xDomainEnd - xDomainStart;
+        const domainHeight = yDomainEnd - yDomainStart;
+        const aspectRatio = domainWidth / domainHeight;
+        
+        
+        const displacement = zoomState.strength*(newDistance - zoomState.touch.distance);
+        const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
+        const newDomainHeight = newDomainWidth / aspectRatio;
+        
+        const fixpoint = {
+            x : (xDomainAnchor - newDomainWidth/domainWidth*zoomState.touch.anchor.x) / (newDomainWidth/domainWidth - 1),
+            y : (yDomainAnchor - newDomainHeight/domainHeight*zoomState.touch.anchor.y) / (newDomainHeight/domainHeight - 1),
+        } //if zoomState.anchor === "pointer"
+        if(typeof zoomState.anchor === "object"){
+            fixpoint.x = zoomState.anchor[0];
+            fixpoint.y = zoomState.anchor[1];
+        }
+        if(zoomState.anchor === "center"){
+            fixpoint.x = xDomainStart + domainWidth/2;
+            fixpoint.y = yDomainStart + domainHeight/2;
+        }
+        
+        if(state.scale.primary.x.type === "linear"){
+                state.axis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - fixpoint.x) + fixpoint.x;
+                state.axis.x.end = newDomainWidth/domainWidth*(pointerState.lastDomain.x.end - fixpoint.x) + fixpoint.x;
+            }
+        if(state.scale.primary.y.type === "linear"){
+            state.axis.y.start = newDomainHeight/domainHeight*(pointerState.lastDomain.y.start - fixpoint.y) + fixpoint.y;
+            state.axis.y.end = newDomainHeight/domainHeight*(pointerState.lastDomain.y.end - fixpoint.y) + fixpoint.y;
+        }
+        
+        
+        state.compute.client();
+        if(zoomState.callback != null) zoomState.callback(graphHandler);
+        state.draw.client();
+    }
+
+//---------------------------------------------
+//--------------- On Resize -------------------
+
+    function onResize(container : ResizeObserverEntry){
+        if(resizeState.reset){
+            resizeState.reset = false;
+            return;
+        }
+        const width = container.borderBoxSize[0].inlineSize;
+        const height = container.borderBoxSize[0].blockSize;
+        const dpi = window.devicePixelRatio;
+
+        //Set the new canvas size
+        state.canvasElement.style.width = `${width}px`;
+        state.canvasElement.style.height = `${height}px`;
+        state.canvasElement.width = Math.round(width*dpi);
+        state.canvasElement.height = height*dpi;
+
+        if(resizeState.preserveAspectRatio){
+            let xStart = state.axis.x.start;
+            let xEnd = state.axis.x.end;
+            let yStart = state.axis.y.start;
+            let yEnd = state.axis.y.end;
+            const fixpoint = typeof resizeState.anchor==="object"? {x:resizeState.anchor[0], y:resizeState.anchor[1]} : {x:xStart+(xEnd-xStart)/2, y:yStart+(yEnd-yStart)/2};
+
+            if(state.scale.primary.x.type === "log"){
+                xStart = Math.log10(Math.abs(xStart));
+                xEnd = Math.log10(Math.abs(xEnd));
+                fixpoint.x = Math.log10(Math.abs(fixpoint.x));
+            }
+            
+            if(state.scale.primary.y.type === "log"){
+                yStart = Math.log10(Math.abs(yStart));
+                yEnd = Math.log10(Math.abs(yEnd));
+                fixpoint.y = Math.log10(Math.abs(fixpoint.y));
+            }
+
+
+            const lastGraphRect = state.context.graphRect();
+            const domainWidth = xEnd - xStart;
+            const domainHeight = yEnd - yStart;
+            const xDensity = domainWidth/lastGraphRect.width;
+            const yDensity = domainHeight/lastGraphRect.height;
+    
+            //Partially computes the new state
+            state.compute.labels();
+            const newGraphRect = state.context.graphRect();
+            const newDomainWidth = xDensity * newGraphRect.width;
+            const newDomainHeight = yDensity * newGraphRect.height;
+
+            if(state.scale.primary.x.type === "linear"){
+                state.axis.x.start = newDomainWidth/domainWidth*(xStart - fixpoint.x) + fixpoint.x;
+                state.axis.x.end = newDomainWidth/domainWidth*(xEnd - fixpoint.x) + fixpoint.x;
+            }
+            if(state.scale.primary.y.type === "linear"){
+                state.axis.y.start = newDomainHeight/domainHeight*(yStart - fixpoint.y) + fixpoint.y;
+                state.axis.y.end = newDomainHeight/domainHeight*(yEnd - fixpoint.y) + fixpoint.y;
+            }
+
+            if(state.scale.primary.x.type === "log"){
+                const sign = (state.axis.x.start >0 && state.axis.x.end >0)? 1: -1;
+                state.axis.x.start = sign * Math.pow(10, newDomainWidth/domainWidth*(xStart - fixpoint.x) + fixpoint.x);
+                state.axis.x.end = sign * Math.pow(10, newDomainWidth/domainWidth*(xEnd - fixpoint.x) + fixpoint.x);
+            }
+            if(state.scale.primary.y.type === "log"){
+                const sign = (state.axis.y.start >0 && state.axis.y.end >0)? 1: -1;
+                state.axis.y.start = sign * Math.pow(10, newDomainHeight/domainHeight*(yStart - fixpoint.y) + fixpoint.y);
+                state.axis.y.end = sign * Math.pow(10, newDomainHeight/domainHeight*(yEnd - fixpoint.y) + fixpoint.y);
+            }
+        }
+
+
+        state.compute.full();
+        if(resizeState.callback != null) resizeState.callback(graphHandler);
+        state.draw.full();
+
+
     }
 
 //---------------------------------------------
@@ -672,13 +792,101 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
     }
 
 //---------------------------------------------
+//---------------------------------------------
+
+    function containerResize(options : RecursivePartial<Resize_Event_Props>) : Graph2D{
+        resizeState.enable = options != null && options.enable != null ? options.enable : true;
+        resizeState.reset = true;
+        if(options != null){
+            if(options.preserveAspectRatio != null) resizeState.preserveAspectRatio = options.preserveAspectRatio;
+            if(options.delay != null) resizeState.delay = options.delay;
+            if(options.anchor != null) resizeState.anchor = options.anchor as "center" | [number, number];
+            resizeState.callback = options.callback as (handler:Graph2D)=>void;
+        }
+        
+        //Remove old listener
+        resizeState.observer.unobserve(state.container);
+
+        if(resizeState.enable){
+            resizeState.onResize = throttle<ResizeObserverEntry>(onResize, resizeState.delay);
+            resizeState.observer.observe(state.container);
+        }
+
+
+        return graphHandler;
+    }
+
+//---------------------------------------------
 
 
     return {
         aspectRatio,
         pointerMove,
-        pointerZoom
+        pointerZoom,
+        containerResize
     };
 }
-
 export default Events;
+
+
+
+
+
+
+
+
+
+
+//--------------- Throttle --------------------
+
+function throttle<T>(func : (args:T)=>void, delay:number) : (args:T)=>void{
+    let shouldWait = false;
+    const timeoutFunction = ()=>{
+            shouldWait = false;
+    }
+
+    return (args:T)=>{
+        if(shouldWait)
+            return;
+
+        func(args);
+        shouldWait = true;
+        setTimeout(timeoutFunction, delay);
+    }
+}
+
+//---------------------------------------------
+//-------------- Middle Point -----------------
+
+function middlePoint(x1:number, y1:number, x2:number, y2:number) : [number, number]{
+    const minX = Math.min(x1, x2);
+    const minY = Math.min(y1, y2);
+    const deltaX = Math.abs(x1 - x2);
+    const deltaY = Math.abs(y1 - y2);
+
+    return [minX+deltaX/2, minY+deltaY/2];
+}
+
+//---------------------------------------------
+//--------------- Distance --------------------
+
+function distance(pointA:Axis_Property<number>, pointB:Axis_Property<number>, scale:Axis_Property<Mapping>) : number{
+    let x1 = scale.x.invert(pointA.x);
+    let x2 = scale.x.invert(pointB.x);
+    let y1 = scale.y.invert(pointA.y);
+    let y2 = scale.y.invert(pointB.y);
+
+    if(scale.x.type === "log"){
+        x1 = Math.log10(Math.abs(x1));
+        x2 = Math.log10(Math.abs(x2));
+    }
+
+    if(scale.y.type === "log"){
+        y1 = Math.log10(Math.abs(y1));
+        y2 = Math.log10(Math.abs(y2));
+    }
+
+    return Math.hypot(x1-x2, y1-y2);
+}
+
+//---------------------------------------------

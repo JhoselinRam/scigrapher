@@ -6,7 +6,8 @@ export type Aspect_Ratio_Axis = "x" | "y" | "xSecondary" | "ySecondary"
 export interface Events {
     aspectRatio : (options : Partial<Aspect_Ratio>)=>Graph2D,
     pointerMove : (options : Partial<Pointer_Move_Props>)=>Graph2D,
-    pointerZoom : (options : RecursivePartial<Pointer_Zoom_Props>)=>Graph2D
+    pointerZoom : (options : RecursivePartial<Pointer_Zoom_Props>)=>Graph2D,
+    containerResize : (options : RecursivePartial<Resize_Event_Props>)=>Graph2D
 }
 
 export interface Aspect_Ratio {
@@ -28,7 +29,6 @@ export interface Pointer_Move_Props {
 
 export interface Pointer_Zoom_Props extends Pointer_Move_Props{
     type : "area" | "drag",
-    axis : "x" | "y",
     strength : number,
     anchor : "pointer" | "center" | [number,number]
     rect : {
@@ -44,7 +44,8 @@ export type Move_Event = Axis_Property<number>
 export type Zoom_Event = Axis_Property<number> & {
     type : "area" | "drag",
     shiftKey : boolean,
-    anchor : "center" | "pointer" | [number, number] | "touch"
+    anchor : "center" | "pointer" | [number, number],
+    touch : boolean
 }
 
 export interface Event_Cursor {
@@ -73,6 +74,11 @@ export interface Zoom_State extends Omit<Move_State, "onMove">{
         borderColor : string,
         borderWidth : number,
         borderOpacity : number
+    },
+    touch : {
+        onZoomTouch : ()=>void,
+        distance : number,
+        anchor : Axis_Property<number>
     }
 }
 
@@ -89,4 +95,18 @@ export interface Pointer_State {
 export interface Pointer_Info {
     id : number,
     position : Axis_Property<number>
+}
+
+export interface Resize_Event_Props {
+    enable : boolean,
+    preserveAspectRatio : boolean,
+    anchor : "center" | [number, number]
+    callback ?: (handler:Graph2D)=>void,
+    delay : number
+}
+
+export interface Resize_State extends Resize_Event_Props {
+    onResize : (container : ResizeObserverEntry)=>void,
+    observer : ResizeObserver,
+    reset : boolean
 }

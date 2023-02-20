@@ -301,6 +301,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.aspectRatio = events.aspectRatio;
     graphHandler.pointerMove = events.pointerMove;
     graphHandler.pointerZoom = events.pointerZoom;
+    graphHandler.containerResize = events.containerResize;
 
     //Generates graph handler methods
     graphHandler.graphRect = graphRect;

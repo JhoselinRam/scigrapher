@@ -639,10 +639,15 @@
 
                 <div class="flex-control">
                     <div>
-                        <label for="pointerMove">Pointer Move:</label>
-                        <input type="checkbox" name="pointerMove" id="pointerMove" checked>
+                        <span>Pointer:</span>
+                        <label for="pointerMove">Move</label>
+                        <input type="radio" name="pointerEvent" id="pointerMove" checked>
+                        <label for="pointerZoom">Zoom</label>
+                        <input type="radio" name="pointerEvent" id="pointerZoom">
                     </div>
                     <div>
+                        <label for="pointerEnable">Enable:</label>
+                        <input type="checkbox" name="pointerEnable" id="pointerEnable" checked>
                         <label for="pointerCapture">Capture:</label>
                         <input type="checkbox" name="pointerCapture" id="pointerCapture" checked>
                     </div>
@@ -658,6 +663,7 @@
                             <option value="move">Move</option>
                             <option value="grab">Grab</option>
                             <option value="grabbing">Grabbing</option>
+                            <option value="zoom-in">Zoom-in</option>
                         </select>
                     </div>
                     <div>
@@ -676,6 +682,7 @@
                             <option value="crosshair">Crosshair</option>
                             <option value="move">Move</option>
                             <option value="grabbing">Grabbing</option>
+                            <option value="zoom-in">Zoom-in</option>
                         </select>
                     </div>
                     <div>
@@ -688,9 +695,92 @@
                             <option value="crosshair">Crosshair</option>
                             <option value="move">Move</option>
                             <option value="grab">Grab</option>
+                            <option value="zoom-in">Zoom-in</option>
                         </select>
                     </div>
                 </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="pointerStrength">Strength: </label>
+                        <input type="number" name="pointerStrength" id="pointerStrength" value="5" class="number-input">
+                    </div>
+                    <div>
+                        <label for="pointerAnchor">Anchor: </label>
+                        <select name="pointerAnchor" id="pointerAnchor" value="pointer">
+                            <option value="pointer">Pointer</option>
+                            <option value="center">Center</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="pointerBackgroundColor">Rect color</label>
+                        <input type="color" name="pointerBackgroundColor" id="pointerBackgroundColor" value="#0075FF">
+                    </div>
+                    <div>
+                        <label for="pointerBorderColor">Border color</label>
+                        <input type="color" name="pointerBorderColor" id="pointerBorderColor" value="#0057bd">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="pointerBackgroundOpacity">Rect opacity</label>
+                        <input type="range" class="range-input" name="pointerBackgroundOpacity" id="pointerBackgroundOpacity" value="0.05" min="0" max="1" step="0.05">
+                    </div>
+                    <div>
+                        <label for="pointerBorderOpacity">Border opacity</label>
+                        <input type="range" class="range-input" name="pointerBorderOpacity" id="pointerBorderOpacity" value="0.5" min="0" max="1" step="0.05">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="pointerZoomType">Zoom type</label>
+                        <select name="pointerZoomType" id="pointerZoomType" value="drag">
+                            <option value="drag">Drag</option>
+                            <option value="area">Area</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="pointerWidth">Border width</label>
+                        <input type="number" name="pointerWidth" id="pointerWidth" min="0" step="0.1" value="1" class="number-input">
+                    </div>
+                </div>
+                
+                
+            </div>
+            
+            <div class="control-row">
+                <div class="flex-control">
+                    <div>
+                        <label for="resizeEnable">Resize</label>
+                        <input type="checkbox" name="resizeEnable" id="resizeEnable" checked>
+                    </div>
+                    <div>
+                        <label for="resizePreserve">Aspect ratio</label>
+                        <input type="checkbox" name="resizePreserve" id="resizePreserve" checked>
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="resizeAnchorX">Anchor x</label>
+                        <input type="number" name="resizeAnchorX" id="resizeAnchorX" class="number-input" step="0.1" value="0">
+                    </div>
+                    <div>
+                        <label for="resizeAnchorY">Anchor y</label>
+                        <input type="number" name="resizeAnchorY" id="resizeAnchorY" class="number-input" step="0.1" value="0">
+                    </div>
+                </div>
+                <div class="flex-control">
+                        <div>
+                            <label for="resizeDelay">Delay</label>
+                            <input type="number" name="resizeDelay" id="resizeDelay" class="number-input" min="0" step="1" value="12">
+                        </div>
+                </div>
+
+
+
+
+
 
 
             </div>
