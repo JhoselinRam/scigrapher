@@ -32,7 +32,7 @@ export interface Pointer_Move_Props {
 export interface Pointer_Zoom_Props extends Pointer_Move_Props{
     type : "area" | "drag",
     strength : number,
-    anchor : "pointer" | "center" | [number,number]
+    anchor : "pointer" | "center" | [number,number],
     rect : {
         background : string,
         opacity : number,
@@ -125,4 +125,25 @@ export interface Resize_Axis {
     scale : Mapping,
     lastSize : number,
     newSize : number
+}
+
+export interface Scale_Reference {
+    reference : {
+        scale : Mapping,
+        lastDomain : {
+            start : number,
+            end : number
+        },
+        newDomain : {
+            start : number,
+            end : number
+        }
+    },
+    target : {
+        scale : Mapping,
+        domain : {
+            start : number,
+            end : number
+        }
+    }
 }

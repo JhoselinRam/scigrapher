@@ -1,7 +1,7 @@
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
 import { Axis_Property, Graph2D, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
-import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Resize_Axis, Resize_Event_Props, Resize_State, Zoom_Event, Zoom_State } from "./Events_Types";
+import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Resize_Axis, Resize_Event_Props, Resize_State, Scale_Reference, Zoom_Event, Zoom_State } from "./Events_Types";
 
 function Events({state, graphHandler} : Method_Generator) : Events {
     //Default Options
@@ -120,7 +120,7 @@ function Events({state, graphHandler} : Method_Generator) : Events {
                 };
                 pointerState.lastScale = { x : state.scale.primary.x, y : state.scale.primary.y };
                 moveState.positionA = { x : e.clientX, y : e.clientY };
-                zoomState.positionA = { x : e.clientX, y : e.clientY }
+                zoomState.positionA = { x : e.clientX, y : e.clientY };
             }
             
             //Save the pointer info
@@ -377,7 +377,8 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         if(type === "drag"){
             const [pointerX, pointerY] = clientCoords(x, y);
             const [initialX, initialY] = clientCoords(zoomState.positionA.x, zoomState.positionA.y);
-
+            const newAxis : Axis_Property<{start:number, end:number}> = {x:{start:0, end:0}, y:{start:0, end:0}};
+            
             let xDomainStart = pointerState.lastDomain.x.start;
             let xDomainEnd = pointerState.lastDomain.x.end;
             let yDomainStart = pointerState.lastDomain.y.start;
@@ -415,26 +416,70 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             const newDomainWidth = displacement>0? domainWidth/(1+displacement/domainWidth) : domainWidth*(1+Math.abs(displacement)/domainWidth);
             const newDomainHeight = newDomainWidth / aspectRatio;
 
+            //Computes the new axis positions
             if(state.scale.primary.x.type === "linear"){
-                state.axis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - fixpoint.x) + fixpoint.x;
-                state.axis.x.end = newDomainWidth/domainWidth*(pointerState.lastDomain.x.end - fixpoint.x) + fixpoint.x;
+                newAxis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - fixpoint.x) + fixpoint.x;
+                newAxis.x.end = newDomainWidth/domainWidth*(pointerState.lastDomain.x.end - fixpoint.x) + fixpoint.x;
             }
             if(state.scale.primary.y.type === "linear"){
-                state.axis.y.start = newDomainHeight/domainHeight*(pointerState.lastDomain.y.start - fixpoint.y) + fixpoint.y;
-                state.axis.y.end = newDomainHeight/domainHeight*(pointerState.lastDomain.y.end - fixpoint.y) + fixpoint.y;
+                newAxis.y.start = newDomainHeight/domainHeight*(pointerState.lastDomain.y.start - fixpoint.y) + fixpoint.y;
+                newAxis.y.end = newDomainHeight/domainHeight*(pointerState.lastDomain.y.end - fixpoint.y) + fixpoint.y;
             }
             
             if(state.scale.primary.x.type === "log"){
                 const sign = (state.axis.x.start >0 && state.axis.x.end >0)? 1: -1;
-                state.axis.x.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.start)) - fixpoint.x) + fixpoint.x);
-                
-                state.axis.x.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.end)) - fixpoint.x) + fixpoint.x);        
+                newAxis.x.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.start)) - fixpoint.x) + fixpoint.x);
+                newAxis.x.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.end)) - fixpoint.x) + fixpoint.x);        
             }
             if(state.scale.primary.y.type === "log"){
                 const sign = (state.axis.y.start >0 && state.axis.y.end >0)? 1: -1;
-                state.axis.y.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.start)) - fixpoint.y) + fixpoint.y);
-                
-                state.axis.y.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.end)) - fixpoint.y) + fixpoint.y);        
+                newAxis.y.start = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.start)) - fixpoint.y) + fixpoint.y);
+                newAxis.y.end = sign*Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.end)) - fixpoint.y) + fixpoint.y);        
+            }
+
+            //Apply effects on secondary axis
+            if(zoomState.secondaryAxis){
+                if(state.secondary.x != null && state.secondary.x.enable){
+                    const xScale = state.scale.secondary.x as Mapping;
+                    const [newStart, newEnd] = scaleByReference({
+                        reference : {
+                            scale : state.scale.primary.x,
+                            lastDomain : {start:state.axis.x.start, end:state.axis.x.end},
+                            newDomain : {start:newAxis.x.start, end:newAxis.x.end}
+                        },
+                        target : {
+                            scale : xScale,
+                            domain : {start:state.secondary.x.start, end:state.secondary.x.end}
+                        }
+                    });
+
+                    state.secondary.x.start = newStart;
+                    state.secondary.x.end = newEnd;
+                }
+                if(state.secondary.y != null && state.secondary.y.enable){
+                    const yScale = state.scale.secondary.y as Mapping;
+                    const [newStart, newEnd] = scaleByReference({
+                        reference : {
+                            scale : state.scale.primary.y,
+                            lastDomain : {start:state.axis.y.start, end:state.axis.y.end},
+                            newDomain : {start:newAxis.y.start, end:newAxis.y.end}
+                        },
+                        target : {
+                            scale : yScale,
+                            domain : {start:state.secondary.y.start, end:state.secondary.y.end}
+                        }
+                    });
+
+                    state.secondary.y.start = newStart;
+                    state.secondary.y.end = newEnd;
+                }
+            }
+
+            if(zoomState.primaryAxis){
+                state.axis.x.start = newAxis.x.start;
+                state.axis.x.end = newAxis.x.end;
+                state.axis.y.start = newAxis.y.start;
+                state.axis.y.end = newAxis.y.end;
             }
 
             state.compute.client();
@@ -520,6 +565,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         const [xPointerB, yPointerB] = clientCoords(zoomState.positionB.x, zoomState.positionB.y);
         const [xMiddle, yMiddle] = middlePoint(xPointerA, yPointerA, xPointerB, yPointerB);
         const newDistance = distance(zoomState.positionA, zoomState.positionB, pointerState.lastScale);
+        const newAxis : Axis_Property<{start:number, end:number}> = {x:{start:0, end:0}, y:{start:0, end:0}};
         
         let xDomainPointerA = pointerState.lastScale.x.invert(xPointerA);
         let yDomainPointerA = pointerState.lastScale.y.invert(yPointerA);
@@ -572,13 +618,70 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         }
         
         if(state.scale.primary.x.type === "linear"){
-                state.axis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - fixpoint.x) + fixpoint.x;
-                state.axis.x.end = newDomainWidth/domainWidth*(pointerState.lastDomain.x.end - fixpoint.x) + fixpoint.x;
-            }
-        if(state.scale.primary.y.type === "linear"){
-            state.axis.y.start = newDomainHeight/domainHeight*(pointerState.lastDomain.y.start - fixpoint.y) + fixpoint.y;
-            state.axis.y.end = newDomainHeight/domainHeight*(pointerState.lastDomain.y.end - fixpoint.y) + fixpoint.y;
+            newAxis.x.start = newDomainWidth/domainWidth*(pointerState.lastDomain.x.start - fixpoint.x) + fixpoint.x;
+            newAxis.x.end = newDomainWidth/domainWidth*(pointerState.lastDomain.x.end - fixpoint.x) + fixpoint.x;
         }
+        if(state.scale.primary.y.type === "linear"){
+            newAxis.y.start = newDomainHeight/domainHeight*(pointerState.lastDomain.y.start - fixpoint.y) + fixpoint.y;
+            newAxis.y.end = newDomainHeight/domainHeight*(pointerState.lastDomain.y.end - fixpoint.y) + fixpoint.y;
+        }
+        
+        if(state.scale.primary.x.type === "log"){
+            const sign = (state.axis.x.start>0 && state.axis.x.end>0)? 1 : -1;
+            newAxis.x.start = sign * Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.start)) - fixpoint.x) + fixpoint.x);
+            newAxis.x.end = sign * Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.x.end)) - fixpoint.x) + fixpoint.x);
+        }
+        if(state.scale.primary.y.type === "log"){
+            const sign = (state.axis.y.start>0 && state.axis.y.end>0)? 1 : -1;
+            newAxis.y.start = sign * Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.start)) - fixpoint.y) + fixpoint.y);
+            newAxis.y.end = sign * Math.pow(10, newDomainWidth/domainWidth*(Math.log10(Math.abs(pointerState.lastDomain.y.end)) - fixpoint.y) + fixpoint.y);
+        }
+
+        if(zoomState.secondaryAxis){
+            if(state.secondary.x != null && state.secondary.x.enable){
+                const xScale = state.scale.secondary.x as Mapping;
+                const [newStart, newEnd] = scaleByReference({
+                    reference : {
+                        scale : state.scale.primary.x,
+                        lastDomain : {start:state.axis.x.start, end:state.axis.x.end},
+                        newDomain : {start:newAxis.x.start, end:newAxis.x.end}
+                    },
+                    target : {
+                        scale : xScale,
+                        domain : {start:state.secondary.x.start, end:state.secondary.x.end}
+                    }
+                });
+
+                state.secondary.x.start = newStart;
+                state.secondary.x.end = newEnd;
+            }
+            if(state.secondary.y != null && state.secondary.y.enable){
+                const yScale = state.scale.secondary.y as Mapping;
+                const [newStart, newEnd] = scaleByReference({
+                    reference : {
+                        scale : state.scale.primary.y,
+                        lastDomain : {start:state.axis.y.start, end:state.axis.y.end},
+                        newDomain : {start:newAxis.y.start, end:newAxis.y.end}
+                    },
+                    target : {
+                        scale : yScale,
+                        domain : {start:state.secondary.y.start, end:state.secondary.y.end}
+                    }
+                });
+
+                state.secondary.y.start = newStart;
+                state.secondary.y.end = newEnd;
+            }
+        }
+
+        if(zoomState.primaryAxis){
+            state.axis.x.start = newAxis.x.start;
+            state.axis.x.end = newAxis.x.end;
+            state.axis.y.start = newAxis.y.start;
+            state.axis.y.end = newAxis.y.end;
+        }
+
+
         
         
         state.compute.client();
@@ -997,3 +1100,64 @@ function distance(pointA:Axis_Property<number>, pointB:Axis_Property<number>, sc
     }
 
 //---------------------------------------------
+//---------------------------------------------
+
+    function scaleByReference({target, reference} : Scale_Reference) : [number,number]{
+        let lastStart = reference.lastDomain.start;
+        let lastEnd = reference.lastDomain.end;
+        let newStart = reference.newDomain.start;
+        let newEnd = reference.newDomain.end;
+        let axisStart = target.domain.start;
+        let axisEnd = target.domain.end;
+
+        if(reference.scale.type === "log"){
+            if(reference.lastDomain.start>0 && reference.lastDomain.end>0){
+                lastStart = Math.log10(Math.abs(lastStart));
+                lastEnd = Math.log10(Math.abs(lastEnd));
+                newStart = Math.log10(Math.abs(newStart));
+                newEnd = Math.log10(Math.abs(newEnd));
+            }else{
+                const auxLastStart = lastStart;
+                const auxNewStart = newStart;
+                lastStart = Math.log10(Math.abs(lastEnd));
+                lastEnd = Math.log10(Math.abs(auxLastStart));
+                newStart = Math.log10(Math.abs(newEnd));
+                newEnd = Math.log10(Math.abs(auxNewStart));
+            }
+        }
+
+        if(reference.scale.type === "log"){
+            if(target.domain.start>0 && target.domain.end>0){
+                axisStart = Math.log10(Math.abs(axisStart));
+                axisEnd = Math.log10(Math.abs(axisEnd));
+            } else{
+                const auxStart = axisStart;
+                axisStart = Math.log10(Math.abs(axisEnd));
+                axisEnd = Math.log10(Math.abs(auxStart));
+            }
+        }
+
+        const domain = lastEnd - lastStart;
+        const deltaStart = (newStart - lastStart) / domain;
+        const deltaEnd = (newEnd - lastEnd) / domain;
+
+        let secondaryStart = axisStart + deltaStart*(axisEnd - axisStart);
+        let secondaryEnd = axisEnd + deltaEnd*(axisEnd - axisStart);
+
+        if(reference.scale.type === "log"){
+            if(target.domain.start>0 && target.domain.end>0){
+                secondaryStart = Math.pow(10, secondaryStart);
+                secondaryEnd = Math.pow(10, secondaryEnd);
+            } else {
+                const auxStart = secondaryStart
+                secondaryStart = -Math.pow(10, secondaryEnd);
+                secondaryEnd = -Math.pow(10, auxStart);
+            }
+        }
+
+        return [secondaryStart, secondaryEnd];
+    }
+
+//---------------------------------------------
+
+
