@@ -4,11 +4,11 @@ export interface Background{
     draw : ()=>void,
     drawClientRect : ()=>void,
     backgroundColor : {
-        (color:string):Graph2D,
+        (color:string, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):string
     },
     backgroundOpacity : {
-        (opacity:number):Graph2D,
+        (opacity:number, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):number
     }
 }

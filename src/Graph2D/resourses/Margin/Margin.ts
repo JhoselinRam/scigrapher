@@ -5,10 +5,10 @@ function Margin({state, graphHandler}:Method_Generator) : Margin {
  
 //----------------- Margin --------------------
 
-    function margin(margins:RecursivePartial<Margin_Props>):Graph2D;
+    function margin(margins:RecursivePartial<Margin_Props>, callback?:(handler:Graph2D)=>void):Graph2D;
     function margin(arg:void):Margin_Props;
-    function margin(margins:RecursivePartial<Margin_Props> | void) : Graph2D | Margin_Props | undefined{
-        if(typeof margins === "undefined")
+    function margin(margins:RecursivePartial<Margin_Props> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Margin_Props | undefined{
+        if(typeof margins === "undefined" && callback == null)
             return {...state.margin};
 
         if(typeof margins === "object"){
@@ -23,7 +23,7 @@ function Margin({state, graphHandler}:Method_Generator) : Margin {
             if(margins.y?.end != null) state.margin.y.end = margins.y.end; 
             
             state.compute.client();
-            state.draw.client();
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;
         }

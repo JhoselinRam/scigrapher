@@ -138,10 +138,10 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
 //---------- Customization Methods ------------
 //-------------- Primary Grid -----------------
 
-    function primaryGrid(grid : Primary_Grid_Modifier) : Graph2D;
+    function primaryGrid(grid : Primary_Grid_Modifier, callback?:(handler?:Graph2D)=>void) : Graph2D;
     function primaryGrid(arg : void) : Axis_Property<Primary_Grid>;
-    function primaryGrid(grid : Primary_Grid_Modifier|void) : Graph2D|Axis_Property<Primary_Grid>|undefined{
-        if(typeof grid === "undefined")
+    function primaryGrid(grid : Primary_Grid_Modifier|void, callback?:(handler?:Graph2D)=>void) : Graph2D|Axis_Property<Primary_Grid>|undefined{
+        if(typeof grid === "undefined" && callback == null)
             return {...state.grid.primary};
 
         if(typeof grid === "object"){
@@ -180,8 +180,9 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
             if(grid.y?.opacity !=null) state.grid.primary.y.opacity = grid.y.opacity<0?0:(grid.y.opacity>1?1:grid.y.opacity);
             if(grid.y?.style !=null) state.grid.primary.y.style = grid.y.style;
             if(grid.y?.width !=null) state.grid.primary.y.width = grid.y.width;
-        
-            state.draw.client();
+
+            
+            if(callback != null) callback(graphHandler);
             return graphHandler;
         }
     }

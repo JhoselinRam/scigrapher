@@ -34,20 +34,26 @@ function Background({state, graphHandler} : Method_Generator) : Background{
         state.context.canvas.restore();
     }
     
+
+
+
+
     //------------------- Color -------------------
     //---------------------------------------------
     
-    function backgroundColor(color:string):Graph2D;
+    function backgroundColor(color:string, callback?:(handler?:Graph2D)=>void):Graph2D;
     function backgroundColor(arg:void):string;
-    function backgroundColor(color : string | void): Graph2D | string | undefined{
-        if(typeof color === "undefined")
+    function backgroundColor(color : string | void, callback?:(handler?:Graph2D)=>void): Graph2D | string | undefined{
+        if(typeof color === "undefined" && callback == null)
             return state.background.color;
         
         if(typeof color === "string"){
             if(color === state.background.color) return graphHandler;
 
             state.background.color = color;
-            state.draw.full();
+            
+            
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;    
         }
@@ -55,17 +61,20 @@ function Background({state, graphHandler} : Method_Generator) : Background{
     //---------------------------------------------
     //------------------ Opacity ------------------
 
-    function backgroundOpacity(opacity:number):Graph2D;
+    function backgroundOpacity(opacity:number, callback?:(handler?:Graph2D)=>void):Graph2D;
     function backgroundOpacity(arg:void):number;
-    function backgroundOpacity(opacity : number | void): Graph2D | number | undefined{
-        if(typeof opacity === "undefined")
+    function backgroundOpacity(opacity : number | void, callback?:(handler?:Graph2D)=>void): Graph2D | number | undefined{
+        if(typeof opacity === "undefined" && callback == null)
             return state.background.opacity;
         
         if(typeof opacity === "number"){
             if(opacity === state.background.opacity) return graphHandler;
 
             state.background.opacity = opacity<0?0:(opacity>1?1:opacity);   //Opacity must be a number between 0 and 1
-            state.draw.full();
+            
+
+            
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;    
         }

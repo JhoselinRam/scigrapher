@@ -4,27 +4,27 @@ export interface Labels {
     compute : ()=>void,
     draw : ()=>void,
     title : {
-        (label:Partial<LabelProperties>):Graph2D,
+        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     subtitle : {
-        (label:Partial<LabelProperties>):Graph2D,
+        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     xLabel : {
-        (label:Partial<LabelProperties>):Graph2D,
+        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     yLabel : {
-        (label:Partial<LabelProperties>):Graph2D,
+        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     xLabelSecondary : {
-        (label:Partial<LabelProperties>):Graph2D,
+        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     yLabelSecondary : {
-        (label:Partial<LabelProperties>):Graph2D,
+        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
         (arg:void):LabelProperties | undefined
     },
 }

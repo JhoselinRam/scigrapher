@@ -2,7 +2,7 @@ import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
 import { Background } from "./resourses/Background/Background_Types";
-import { Events, Move_Event, Zoom_Event } from "./resourses/Events/Events_Types";
+import { Events } from "./resourses/Events/Events_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
 import { Margin } from "./resourses/Margin/Margin_Types";
@@ -162,6 +162,10 @@ export interface Graph2D_State extends Graph2D_Options {
             obj ?: Partial<Axis_Property<Axis_Obj>>
         }
     }
+}
+
+export interface User_Callback {
+    callback ?: (handler:Graph2D) => void
 }
 
 export interface Method_Generator{

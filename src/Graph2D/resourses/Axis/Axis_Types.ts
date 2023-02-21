@@ -4,47 +4,47 @@ export interface Axis{
     compute : ()=>void,
     draw : ()=>void,
     axisPosition : {
-        (position:Axis_Position):Graph2D,
+        (position:Axis_Position, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Axis_Position
     },
     axisDomain : {
-        (domain:RecursivePartial<Domain_Props>):Graph2D,
+        (domain:RecursivePartial<Domain_Props>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Domain_Props
     },
     axisColor : {
-        (colors:Axis_Modifier_Props<string>):Graph2D,
+        (colors:Axis_Modifier_Props<string>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Axis_Modifier<string>
     },
     axisOpacity : {
-        (opacity:Axis_Modifier_Props<number>):Graph2D,
+        (opacity:Axis_Modifier_Props<number>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Axis_Modifier<number>
     },
     axisUnits : {
-        (units:RecursivePartial<Axis_Property<string>>):Graph2D,
+        (units:RecursivePartial<Axis_Property<string>>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Axis_Property<string>
     },
     axisBase : {
-        (base:RecursivePartial<Base_Props>):Graph2D,
+        (base:RecursivePartial<Base_Props>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Base_Props
     },
     axisTicks : {
-        (base:RecursivePartial<Ticks_Props>):Graph2D,
+        (base:RecursivePartial<Ticks_Props>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Ticks_Props
     },
     axisText : {
-        (base:RecursivePartial<Text_Props>):Graph2D,
+        (base:RecursivePartial<Text_Props>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Text_Props
     },
     axisDynamic : {
-        (options:RecursivePartial<Dynamic_Props>):Graph2D,
+        (options:RecursivePartial<Dynamic_Props>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Dynamic_Props
     },
     axisOverlap : {
-        (overlap : RecursivePartial<Axis_Overlap>):Graph2D,
+        (overlap : RecursivePartial<Axis_Overlap>, callback?:(handler?:Graph2D)=>void):Graph2D,
         (arg:void):Axis_Overlap
     },
     axisType : {
-        (type : Axis_Type) : Graph2D,
+        (type : Axis_Type, callback?:(handler?:Graph2D)=>void) : Graph2D,
         (arg : void) : Axis_Type
     }
 }

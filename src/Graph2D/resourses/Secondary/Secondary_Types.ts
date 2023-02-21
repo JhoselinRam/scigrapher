@@ -5,39 +5,39 @@ export interface Secondary{
     compute : ()=>void,
     draw : ()=>void,
     secondaryAxisEnable : {
-        (enable : Partial<Axis_Property<boolean>>) : Graph2D,
+        (enable : Partial<Axis_Property<boolean>>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Partial<Axis_Property<boolean>>
     },
     secondaryAxisDomain : {
-        (domain:RecursivePartial<Domain_Props>) : Graph2D,
+        (domain:RecursivePartial<Domain_Props>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg:void) : RecursivePartial<Domain_Props>
     },
     secondaryAxisColor : {
-        (colors : Secondary_Axis_Modifier_Props<string>) : Graph2D,
+        (colors : Secondary_Axis_Modifier_Props<string>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Secondary_Axis_Modifier<string>
     },
     secondaryAxisOpacity : {
-        (opacity : Secondary_Axis_Modifier_Props<number>) : Graph2D,
+        (opacity : Secondary_Axis_Modifier_Props<number>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Secondary_Axis_Modifier<number>
     },
     secondaryAxisUnits : {
-        (units : RecursivePartial<Axis_Property<string>>) : Graph2D,
+        (units : RecursivePartial<Axis_Property<string>>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Partial<Axis_Property<string>>
     },
     secondaryAxisBase : {
-        (base : RecursivePartial<Base_Props>) : Graph2D,
+        (base : RecursivePartial<Base_Props>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Partial<Base_Props>
     },
     secondaryAxisTicks : {
-        (base : RecursivePartial<Ticks_Props>) : Graph2D,
+        (base : RecursivePartial<Ticks_Props>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Partial<Ticks_Props>
     },
     secondaryAxisText : {
-        (base : RecursivePartial<Text_Props>) : Graph2D,
+        (base : RecursivePartial<Text_Props>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Partial<Text_Props>
     },
     secondaryAxisType : {
-        (types : Partial<Axis_Property<"rectangular"|"log">>) : Graph2D,
+        (types : Partial<Axis_Property<"rectangular"|"log">>, callback?:(hrandler:Graph2D)=>void) : Graph2D,
         (arg : void) : Partial<Axis_Property<"rectangular"|"log">>
     }
 }

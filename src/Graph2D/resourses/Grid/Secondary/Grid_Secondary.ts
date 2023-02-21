@@ -252,10 +252,10 @@ function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator)
 //---------- Customization Methods ------------
 //------------- Secondary Grid ----------------
 
-function secondaryGrid(grid : Secondary_Grid_Modifier) : Graph2D;
+function secondaryGrid(grid : Secondary_Grid_Modifier, callback?:(handler?:Graph2D)=>void) : Graph2D;
 function secondaryGrid(arg : void) : Axis_Property<Secondary_Grid>;
-function secondaryGrid(grid : Secondary_Grid_Modifier|void) : Graph2D|Axis_Property<Secondary_Grid>|undefined{
-    if(typeof grid === "undefined")
+function secondaryGrid(grid : Secondary_Grid_Modifier|void, callback?:(handler?:Graph2D)=>void) : Graph2D|Axis_Property<Secondary_Grid>|undefined{
+    if(typeof grid === "undefined" && callback == null)
         return {...state.grid.secondary};
 
     if(typeof grid === "object"){
@@ -314,7 +314,7 @@ function secondaryGrid(grid : Secondary_Grid_Modifier|void) : Graph2D|Axis_Prope
         if(grid.y?.maxDensity !=null) state.grid.secondary.y.maxDensity = grid.y.maxDensity;
 
     
-        state.draw.client();
+        if(callback != null) callback(graphHandler);
         return graphHandler;
     }
 }

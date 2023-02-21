@@ -4,7 +4,7 @@ import { Axis_Property, Graph2D, RecursivePartial } from "../../Graph2D_Types"
 export type Aspect_Ratio_Axis = "x" | "y" | "xSecondary" | "ySecondary"
 
 export interface Events {
-    aspectRatio : (options : Partial<Aspect_Ratio>)=>Graph2D,
+    aspectRatio : (options : Partial<Aspect_Ratio>, callback?:(handler?:Graph2D)=>void)=>Graph2D,
     pointerMove : (options : Partial<Pointer_Move_Props>)=>Graph2D,
     pointerZoom : (options : RecursivePartial<Pointer_Zoom_Props>)=>Graph2D,
     containerResize : (options : RecursivePartial<Resize_Event_Props>)=>Graph2D
@@ -19,7 +19,7 @@ export interface Aspect_Ratio {
 
 export interface Pointer_Move_Props {
     enable : boolean,
-    callback ?: (handler:Graph2D)=>void;
+    callback ?: (handler?:Graph2D)=>void;
     delay : number,
     pointerCapture : boolean,
     hoverCursor : string,
@@ -58,7 +58,7 @@ export interface Event_Cursor {
 
 export interface Move_State {
     enable : boolean,
-    callback ?: (handler : Graph2D)=>void,
+    callback ?: (handler?:Graph2D)=>void,
     delay : number,
     onMove : (position : Move_Event)=>void, 
     positionA : Axis_Property<number>,
@@ -106,7 +106,7 @@ export interface Resize_Event_Props {
     preserveAspectRatio : boolean,
     anchor : "center" | [number, number],
     secondaryAnchor : "center" | [number, number],
-    callback ?: (handler:Graph2D)=>void,
+    callback ?: (handler?:Graph2D)=>void,
     delay : number,
     primaryAxis : boolean,
     secondaryAxis : boolean

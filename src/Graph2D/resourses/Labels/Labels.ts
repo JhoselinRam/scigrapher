@@ -317,10 +317,10 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
 //----------------- Title ---------------------
 
-    function title(label : Partial<LabelProperties>) : Graph2D;
+    function title(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
     function title(arg : void) : LabelProperties | undefined;
-    function title(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null)
+    function title(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.title);
             
         if(typeof label === "object"){
@@ -332,7 +332,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             };
 
             state.labels.title = labelArg;
-            state.render();
+            state.compute.full();
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;
 
@@ -342,10 +343,10 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Subtitle --------------------
 
-    function subtitle(label : Partial<LabelProperties>) : Graph2D;
+    function subtitle(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
     function subtitle(arg : void) : LabelProperties | undefined;
-    function subtitle(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null)
+    function subtitle(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.subtitle);
             
         if(typeof label === "object"){
@@ -356,7 +357,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             };
             
             state.labels.subtitle = labelArg;
-            state.render();
+            state.compute.full();
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;
 
@@ -366,10 +368,10 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label x --------------------
 
-    function xLabel(label : Partial<LabelProperties>) : Graph2D;
+    function xLabel(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
     function xLabel(arg : void) : LabelProperties | undefined;
-    function xLabel(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null)
+    function xLabel(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.xPrimary);
             
         if(typeof label === "object"){
@@ -378,7 +380,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             const labelArg : LabelProperties = {...defaultLabel, ...label};
         
             state.labels.xPrimary = labelArg;
-            state.render();
+            state.compute.full();
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;
 
@@ -388,10 +391,10 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label y --------------------
 
-    function yLabel(label : Partial<LabelProperties>) : Graph2D;
+    function yLabel(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
     function yLabel(arg : void) : LabelProperties | undefined;
-    function yLabel(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null)
+    function yLabel(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.yPrimary);
             
         if(typeof label === "object"){
@@ -400,7 +403,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             const labelArg : LabelProperties = {...defaultLabel, ...label};
 
             state.labels.yPrimary = labelArg;
-            state.render();
+            state.compute.full();
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;
 
@@ -410,10 +414,10 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label x secondary --------------------
 
-    function xLabelSecondary(label : Partial<LabelProperties>) : Graph2D;
+    function xLabelSecondary(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
     function xLabelSecondary(arg : void) : LabelProperties | undefined;
-    function xLabelSecondary(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null)
+    function xLabelSecondary(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.xSecondary);
             
         if(typeof label === "object"){
@@ -423,7 +427,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             const labelArg : LabelProperties = {...defaultLabel, ...label};
 
             state.labels.xSecondary = labelArg;
-            state.render();
+            state.compute.full();
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;
 
@@ -433,10 +438,10 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label y secondary --------------------
 
-    function yLabelSecondary(label : Partial<LabelProperties>) : Graph2D;
+    function yLabelSecondary(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
     function yLabelSecondary(arg : void) : LabelProperties | undefined;
-    function yLabelSecondary(label : Partial<LabelProperties> | void) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null)
+    function yLabelSecondary(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+        if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.ySecondary);
             
         if(typeof label === "object"){
@@ -446,7 +451,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             const labelArg : LabelProperties = {...defaultLabel, ...label};
 
             state.labels.ySecondary = labelArg;
-            state.render();
+            state.compute.full();
+            if(callback != null) callback(graphHandler);
 
             return graphHandler;
 

@@ -3,7 +3,7 @@ import { Axis_Property, Graph2D, Primary_Grid, RecursivePartial } from "../../..
 export interface Primary_Grid_Generator {
     draw : (xMin : number, xMax : number, yMin : number, yMax:number)=>void,
     primaryGrid : {
-        (grid : Primary_Grid_Modifier) : Graph2D,
+        (grid : Primary_Grid_Modifier, callback?:(handler?:Graph2D)=>void) : Graph2D,
         (arg : void) : Axis_Property<Primary_Grid>
     }
 }

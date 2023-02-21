@@ -17,12 +17,12 @@ const Graph = Graph2D(document.querySelector(".graph"),{
 
 function changeBackgroundColor(e){
     const color = e.target.value;
-    Graph.backgroundColor(color);
+    Graph.backgroundColor(color).draw();
 }
 
 function changeOpacity(e){
     const opacity = parseFloat(e.target.value);
-    Graph.backgroundOpacity(opacity);
+    Graph.backgroundOpacity(opacity).draw();
 }
 
 const labels = {
@@ -118,22 +118,22 @@ function updateLabel(){
     const arg = labels[labelSelected];
     switch(labelSelected){
         case "titleObj":
-            Graph.title(arg);
+            Graph.title(arg).draw();
             break;
         case "subtitleObj":
-            Graph.subtitle(arg);
+            Graph.subtitle(arg).draw();
             break;
         case "xPrimaryObj":
-            Graph.xLabel(arg);
+            Graph.xLabel(arg).draw();
             break;
         case "yPrimaryObj":
-            Graph.yLabel(arg);
+            Graph.yLabel(arg).draw();
             break;
         case "xSecondaryObj":
-            Graph.xLabelSecondary(arg);
+            Graph.xLabelSecondary(arg).draw();
             break;
         case "ySecondaryObj":
-            Graph.yLabelSecondary(arg);
+            Graph.yLabelSecondary(arg).draw();
             break;
     }
 }
@@ -185,7 +185,7 @@ function changeDomain(e){
 
     domain[axis][prop] = parseFloat(e.target.value);
 
-    Graph.axisDomain(domain);
+    Graph.axisDomain(domain).draw();
 }
 
 function changeAxisColor(e){
@@ -193,31 +193,31 @@ function changeAxisColor(e){
     const color = e.target.value;
     switch(target){
         case "All":
-            Graph.axisColor({axis:color});
+            Graph.axisColor({axis:color}).draw();
             break;
         case "xAxis":
-            Graph.axisColor({xAxis:color});
+            Graph.axisColor({xAxis:color}).draw();
             break;
         case "yAxis":
-            Graph.axisColor({yAxis:color});
+            Graph.axisColor({yAxis:color}).draw();
             break;
         case "xBase":
-            Graph.axisColor({base:{x:color}});
+            Graph.axisColor({base:{x:color}}).draw();
             break;
         case "yBase":
-            Graph.axisColor({base:{y:color}});
+            Graph.axisColor({base:{y:color}}).draw();
             break;
         case "xTick":
-            Graph.axisColor({tick:{x:color}});
+            Graph.axisColor({tick:{x:color}}).draw();
             break;
         case "yTick":
-            Graph.axisColor({tick:{y:color}});
+            Graph.axisColor({tick:{y:color}}).draw();
             break;
         case "xText":
-            Graph.axisColor({text:{x:color}});
+            Graph.axisColor({text:{x:color}}).draw();
             break;
         case "yText":
-            Graph.axisColor({text:{y:color}});
+            Graph.axisColor({text:{y:color}}).draw();
             break;
     }
 }
@@ -227,31 +227,31 @@ function changeAxisOpacity(e){
     const opacity = e.target.value;
     switch(target){
         case "All":
-            Graph.axisOpacity({axis:opacity});
+            Graph.axisOpacity({axis:opacity}).draw();
             break;
         case "xAxis":
-            Graph.axisOpacity({xAxis:opacity});
+            Graph.axisOpacity({xAxis:opacity}).draw();
             break;
         case "yAxis":
-            Graph.axisOpacity({yAxis:opacity});
+            Graph.axisOpacity({yAxis:opacity}).draw();
             break;
         case "xBase":
-            Graph.axisOpacity({base:{x:opacity}});
+            Graph.axisOpacity({base:{x:opacity}}).draw();
             break;
         case "yBase":
-            Graph.axisOpacity({base:{y:opacity}});
+            Graph.axisOpacity({base:{y:opacity}}).draw();
             break;
         case "xTick":
-            Graph.axisOpacity({tick:{x:opacity}});
+            Graph.axisOpacity({tick:{x:opacity}}).draw();
             break;
         case "yTick":
-            Graph.axisOpacity({tick:{y:opacity}});
+            Graph.axisOpacity({tick:{y:opacity}}).draw();
             break;
         case "xText":
-            Graph.axisOpacity({text:{x:opacity}});
+            Graph.axisOpacity({text:{x:opacity}}).draw();
             break;
         case "yText":
-            Graph.axisOpacity({text:{y:opacity}});
+            Graph.axisOpacity({text:{y:opacity}}).draw();
             break;
     }
 }
@@ -262,11 +262,11 @@ function changeUnits(e){
 
     switch(axis){
         case "xUnits":
-            Graph.axisUnits({x:unit});
+            Graph.axisUnits({x:unit}).draw();
             break;
         
         case "yUnits":
-            Graph.axisUnits({y:unit});
+            Graph.axisUnits({y:unit}).draw();
             break;
     }
 }
@@ -277,19 +277,19 @@ function changeAxisWidth(e){
 
     switch(target){
         case "xBase":
-            Graph.axisBase({x:{width:value}});
+            Graph.axisBase({x:{width:value}}).draw();
             break;
 
         case "yBase":
-            Graph.axisBase({y:{width:value}});
+            Graph.axisBase({y:{width:value}}).draw();
             break;
 
         case "xTicks":
-            Graph.axisTicks({x:{width:value}});
+            Graph.axisTicks({x:{width:value}}).draw();
             break;
 
         case "yTicks":
-            Graph.axisTicks({y:{width:value}});
+            Graph.axisTicks({y:{width:value}}).draw();
             break;
     }
 }
@@ -299,9 +299,9 @@ function changeTickSize(e){
     const value = parseFloat(e.target.value);
 
     if(target === "xTickSize")
-        Graph.axisTicks({x:{size:value}});
+        Graph.axisTicks({x:{size:value}}).draw();
     if(target === "yTickSize")
-        Graph.axisTicks({y:{size:value}});
+        Graph.axisTicks({y:{size:value}}).draw();
 }
 
 function changeTickFont(e){
@@ -309,9 +309,9 @@ function changeTickFont(e){
     const font = e.target.value;
 
     if(target === "x")
-        Graph.axisText({x:{font}});
+        Graph.axisText({x:{font}}).draw();
     if(target === "y")
-        Graph.axisText({y:{font}});
+        Graph.axisText({y:{font}}).draw();
 }
 
 function changeAxisTextSize(e){
@@ -319,9 +319,9 @@ function changeAxisTextSize(e){
     const target = e.target.id;
 
     if(target === "xTextSize")
-        Graph.axisText({x:{size}});
+        Graph.axisText({x:{size}}).draw();
     if(target === "yTextSize")
-        Graph.axisText({y:{size}});
+        Graph.axisText({y:{size}}).draw();
 }
 
 function changeAxisDynamic(e){
@@ -330,19 +330,19 @@ function changeAxisDynamic(e){
 
     switch(target){
         case "xDynamic":
-            Graph.axisDynamic({x:{dynamic:checked}});
+            Graph.axisDynamic({x:{dynamic:checked}}).draw();
             break;
             
         case "yDynamic":
-            Graph.axisDynamic({y:{dynamic:checked}});
+            Graph.axisDynamic({y:{dynamic:checked}}).draw();
             break;
             
         case "xContained":
-            Graph.axisDynamic({x:{contained:checked}});
+            Graph.axisDynamic({x:{contained:checked}}).draw();
             break;
             
         case "yContained":
-            Graph.axisDynamic({y:{contained:checked}});
+            Graph.axisDynamic({y:{contained:checked}}).draw();
             break;
     }
 }
@@ -353,19 +353,19 @@ function changeMargin(e){
 
     switch(target){
         case "marginStart":
-            Graph.margin({x:{start:value}});
+            Graph.margin({x:{start:value}}).draw();
             break;
             
         case "marginEnd":
-            Graph.margin({x:{end:value}});
+            Graph.margin({x:{end:value}}).draw();
             break;
                 
         case "marginTop":
-            Graph.margin({y:{end:value}});
+            Graph.margin({y:{end:value}}).draw();
             break;
         
         case "marginBottom":
-            Graph.margin({y:{start:value}});
+            Graph.margin({y:{start:value}}).draw();
             break;
 
     }
@@ -376,9 +376,9 @@ function changeTicks(e){
     const value = parseInt(e.target.value);
 
     if(target === "xTicks")
-        Graph.axisTicks({x:{ticks:value===-1?"auto":value}});
+        Graph.axisTicks({x:{ticks:value===-1?"auto":value}}).draw();
     if(target === "yTicks")
-        Graph.axisTicks({y:{ticks:value===-1?"auto":value}});
+        Graph.axisTicks({y:{ticks:value===-1?"auto":value}}).draw();
 }
 
 function changeSpacing(e){
@@ -386,14 +386,14 @@ function changeSpacing(e){
     const value = parseInt(e.target.value);
 
     if(target === "xSpacing")
-        Graph.axisTicks({x:{minSpacing : value}});
+        Graph.axisTicks({x:{minSpacing : value}}).draw();
     if(target === "ySpacing")
-        Graph.axisTicks({y:{minSpacing : value}});
+        Graph.axisTicks({y:{minSpacing : value}}).draw();
 }
 
 function changeAxisPosition(e){
     const position = e.target.value;
-    Graph.axisPosition(position);
+    Graph.axisPosition(position).draw();
 }
 
 function changePriority(e){
@@ -401,9 +401,9 @@ function changePriority(e){
     const value = e.target.checked;
 console.log(target, value);
     if(target === "xPriority" && value)
-        Graph.axisOverlap({priority:"x"});
+        Graph.axisOverlap({priority:"x"}).draw();
     if(target === "yPriority" && value)
-        Graph.axisOverlap({priority:"y"});
+        Graph.axisOverlap({priority:"y"}).draw();
 }
 
 function changeOverlap(e){
@@ -411,9 +411,9 @@ function changeOverlap(e){
     const value = e.target.checked;
 
     if(target === "xOverlap")
-        Graph.axisOverlap({x:value});
+        Graph.axisOverlap({x:value}).draw();
     if(target === "yOverlap")
-        Graph.axisOverlap({y:value});
+        Graph.axisOverlap({y:value}).draw();
 }
 
 function enableGrid(e){
@@ -422,19 +422,19 @@ function enableGrid(e){
 
     switch(target){
         case "xPrimaryGrid":
-            Graph.primaryGrid({x:{enable:value}});
+            Graph.primaryGrid({x:{enable:value}}).draw();
             break;
         
         case "yPrimaryGrid":
-            Graph.primaryGrid({y:{enable:value}});
+            Graph.primaryGrid({y:{enable:value}}).draw();
             break;
         
         case "xSecondaryGrid":
-            Graph.secondaryGrid({x:{enable:value}});
+            Graph.secondaryGrid({x:{enable:value}}).draw();
             break;
         
         case "ySecondaryGrid":
-            Graph.secondaryGrid({y:{enable:value}});
+            Graph.secondaryGrid({y:{enable:value}}).draw();
             break;
         
     }
@@ -446,31 +446,31 @@ function changeGridColor(e){
 
     switch(target){
         case "all":
-            Graph.gridColor({grid:color});
+            Graph.gridColor({grid:color}).draw();
             break;
             
         case "primary":
-            Graph.gridColor({primary:color});
+            Graph.gridColor({primary:color}).draw();
             break;
 
         case "secondary":
-            Graph.gridColor({secondary:color});
+            Graph.gridColor({secondary:color}).draw();
             break;
 
         case "xPrimary":
-            Graph.gridColor({x:{primary:color}});
+            Graph.gridColor({x:{primary:color}}).draw();
             break;
 
         case "yPrimary":
-            Graph.gridColor({y:{primary:color}});
+            Graph.gridColor({y:{primary:color}}).draw();
             break;
  
         case "xSecondary":
-            Graph.gridColor({x:{secondary:color}});
+            Graph.gridColor({x:{secondary:color}}).draw();
             break;
 
         case "ySecondary":
-            Graph.gridColor({y:{secondary:color}});
+            Graph.gridColor({y:{secondary:color}}).draw();
             break;
  
     }
@@ -482,31 +482,31 @@ function changeGridOpacity(e){
 
     switch(target){
         case "all":
-            Graph.gridOpacity({grid:value});
+            Graph.gridOpacity({grid:value}).draw();
             break;
             
         case "primary":
-            Graph.gridOpacity({primary:value});
+            Graph.gridOpacity({primary:value}).draw();
             break;
 
         case "secondary":
-            Graph.gridOpacity({secondary:value});
+            Graph.gridOpacity({secondary:value}).draw();
             break;
 
         case "xPrimary":
-            Graph.gridOpacity({x:{primary:value}});
+            Graph.gridOpacity({x:{primary:value}}).draw();
             break;
 
         case "yPrimary":
-            Graph.gridOpacity({y:{primary:value}});
+            Graph.gridOpacity({y:{primary:value}}).draw();
             break;
  
         case "xSecondary":
-            Graph.gridOpacity({x:{secondary:value}});
+            Graph.gridOpacity({x:{secondary:value}}).draw();
             break;
 
         case "ySecondary":
-            Graph.gridOpacity({y:{secondary:value}});
+            Graph.gridOpacity({y:{secondary:value}}).draw();
             break;
  
     }
@@ -518,31 +518,31 @@ function changeGridWidth(e){
 
     switch(target){
         case "all":
-            Graph.gridWidth({grid:value});
+            Graph.gridWidth({grid:value}).draw();
             break;
             
         case "primary":
-            Graph.gridWidth({primary:value});
+            Graph.gridWidth({primary:value}).draw();
             break;
 
         case "secondary":
-            Graph.gridWidth({secondary:value});
+            Graph.gridWidth({secondary:value}).draw();
             break;
 
         case "xPrimary":
-            Graph.gridWidth({x:{primary:value}});
+            Graph.gridWidth({x:{primary:value}}).draw();
             break;
 
         case "yPrimary":
-            Graph.gridWidth({y:{primary:value}});
+            Graph.gridWidth({y:{primary:value}}).draw();
             break;
  
         case "xSecondary":
-            Graph.gridWidth({x:{secondary:value}});
+            Graph.gridWidth({x:{secondary:value}}).draw();
             break;
 
         case "ySecondary":
-            Graph.gridWidth({y:{secondary:value}});
+            Graph.gridWidth({y:{secondary:value}}).draw();
             break;
  
     }
@@ -554,31 +554,31 @@ function changeGridStyle(e){
 
     switch(target){
         case "all":
-            Graph.gridStyle({grid:value});
+            Graph.gridStyle({grid:value}).draw();
             break;
             
         case "primary":
-            Graph.gridStyle({primary:value});
+            Graph.gridStyle({primary:value}).draw();
             break;
 
         case "secondary":
-            Graph.gridStyle({secondary:value});
+            Graph.gridStyle({secondary:value}).draw();
             break;
 
         case "xPrimary":
-            Graph.gridStyle({x:{primary:value}});
+            Graph.gridStyle({x:{primary:value}}).draw();
             break;
 
         case "yPrimary":
-            Graph.gridStyle({y:{primary:value}});
+            Graph.gridStyle({y:{primary:value}}).draw();
             break;
  
         case "xSecondary":
-            Graph.gridStyle({x:{secondary:value}});
+            Graph.gridStyle({x:{secondary:value}}).draw();
             break;
 
         case "ySecondary":
-            Graph.gridStyle({y:{secondary:value}});
+            Graph.gridStyle({y:{secondary:value}}).draw();
             break;
     }
 }
@@ -590,19 +590,19 @@ function changeGridDensity(e){
     
     switch(target){
         case "all":
-            Graph.secondaryGrid({grid:{density:value}});
+            Graph.secondaryGrid({grid:{density:value}}).draw();
             break;
 
         case "secondary":
-            Graph.secondaryGrid({grid:{density:value}});
+            Graph.secondaryGrid({grid:{density:value}}).draw();
             break;
  
         case "xSecondary":
-            Graph.secondaryGrid({x:{density:value}});
+            Graph.secondaryGrid({x:{density:value}}).draw();
             break;
 
         case "ySecondary":
-            Graph.secondaryGrid({y:{density:value}});
+            Graph.secondaryGrid({y:{density:value}}).draw();
             break;
     }
 }
@@ -613,19 +613,19 @@ function changeGridSpacing(e){
     
     switch(target){
         case "all":
-            Graph.secondaryGrid({grid:{minSpacing:value}});
+            Graph.secondaryGrid({grid:{minSpacing:value}}).draw();
             break;
 
         case "secondary":
-            Graph.secondaryGrid({grid:{minSpacing:value}});
+            Graph.secondaryGrid({grid:{minSpacing:value}}).draw();
             break;
  
         case "xSecondary":
-            Graph.secondaryGrid({x:{minSpacing:value}});
+            Graph.secondaryGrid({x:{minSpacing:value}}).draw();
             break;
 
         case "ySecondary":
-            Graph.secondaryGrid({x:{minSpacing:value}});
+            Graph.secondaryGrid({x:{minSpacing:value}}).draw();
             break;
     }
 }
@@ -636,19 +636,19 @@ function changeGridMaxDensity(e){
     
     switch(target){
         case "all":
-            Graph.secondaryGrid({grid:{maxDensity:value}});
+            Graph.secondaryGrid({grid:{maxDensity:value}}).draw();
             break;
 
         case "secondary":
-            Graph.secondaryGrid({grid:{maxDensity:value}});
+            Graph.secondaryGrid({grid:{maxDensity:value}}).draw();
             break;
  
         case "xSecondary":
-            Graph.secondaryGrid({x:{maxDensity:value}});
+            Graph.secondaryGrid({x:{maxDensity:value}}).draw();
             break;
 
         case "ySecondary":
-            Graph.secondaryGrid({x:{maxDensity:value}});
+            Graph.secondaryGrid({x:{maxDensity:value}}).draw();
             break;
     }
 }
@@ -658,9 +658,9 @@ function enableSecondaryAxis(e){
     const checked = e.target.checked;
 
     if(target === "enableSecondaryX")
-        Graph.secondaryAxisEnable({x:checked});
+        Graph.secondaryAxisEnable({x:checked}).draw();
     if(target === "enableSecondaryY")
-        Graph.secondaryAxisEnable({y:checked});
+        Graph.secondaryAxisEnable({y:checked}).draw();
 }
 
 const secondaryDomain = {
@@ -693,7 +693,7 @@ function changeSecondaryDomain(e){
             break;
     }
 
-    Graph.secondaryAxisDomain(secondaryDomain);
+    Graph.secondaryAxisDomain(secondaryDomain).draw();
 }
 
 function changeSecondaryAxisColor(e){
@@ -701,31 +701,31 @@ function changeSecondaryAxisColor(e){
     const color = e.target.value;
     switch(target){
         case "All":
-            Graph.secondaryAxisColor({axis:color});
+            Graph.secondaryAxisColor({axis:color}).draw();
             break;
         case "xAxis":
-            Graph.secondaryAxisColor({xAxis:color});
+            Graph.secondaryAxisColor({xAxis:color}).draw();
             break;
         case "yAxis":
-            Graph.secondaryAxisColor({yAxis:color});
+            Graph.secondaryAxisColor({yAxis:color}).draw();
             break;
         case "xBase":
-            Graph.secondaryAxisColor({base:{x:color}});
+            Graph.secondaryAxisColor({base:{x:color}}).draw();
             break;
         case "yBase":
-            Graph.secondaryAxisColor({base:{y:color}});
+            Graph.secondaryAxisColor({base:{y:color}}).draw();
             break;
         case "xTick":
-            Graph.secondaryAxisColor({tick:{x:color}});
+            Graph.secondaryAxisColor({tick:{x:color}}).draw();
             break;
         case "yTick":
-            Graph.secondaryAxisColor({tick:{y:color}});
+            Graph.secondaryAxisColor({tick:{y:color}}).draw();
             break;
         case "xText":
-            Graph.secondaryAxisColor({text:{x:color}});
+            Graph.secondaryAxisColor({text:{x:color}}).draw();
             break;
         case "yText":
-            Graph.secondaryAxisColor({text:{y:color}});
+            Graph.secondaryAxisColor({text:{y:color}}).draw();
             break;
     }
 }
@@ -735,31 +735,31 @@ function changeSecondaryAxisOpacity(e){
     const opacity = e.target.value;
     switch(target){
         case "All":
-            Graph.secondaryAxisOpacity({axis:opacity});
+            Graph.secondaryAxisOpacity({axis:opacity}).draw();
             break;
         case "xAxis":
-            Graph.secondaryAxisOpacity({xAxis:opacity});
+            Graph.secondaryAxisOpacity({xAxis:opacity}).draw();
             break;
         case "yAxis":
-            Graph.secondaryAxisOpacity({yAxis:opacity});
+            Graph.secondaryAxisOpacity({yAxis:opacity}).draw();
             break;
         case "xBase":
-            Graph.secondaryAxisOpacity({base:{x:opacity}});
+            Graph.secondaryAxisOpacity({base:{x:opacity}}).draw();
             break;
         case "yBase":
-            Graph.secondaryAxisOpacity({base:{y:opacity}});
+            Graph.secondaryAxisOpacity({base:{y:opacity}}).draw();
             break;
         case "xTick":
-            Graph.secondaryAxisOpacity({tick:{x:opacity}});
+            Graph.secondaryAxisOpacity({tick:{x:opacity}}).draw();
             break;
         case "yTick":
-            Graph.secondaryAxisOpacity({tick:{y:opacity}});
+            Graph.secondaryAxisOpacity({tick:{y:opacity}}).draw();
             break;
         case "xText":
-            Graph.secondaryAxisOpacity({text:{x:opacity}});
+            Graph.secondaryAxisOpacity({text:{x:opacity}}).draw();
             break;
         case "yText":
-            Graph.secondaryAxisOpacity({text:{y:opacity}});
+            Graph.secondaryAxisOpacity({text:{y:opacity}}).draw();
             break;
     }
 }
@@ -770,11 +770,11 @@ function changeSecondaryUnits(e){
 
     switch(axis){
         case "secondaryXUnits":
-            Graph.secondaryAxisUnits({x:unit});
+            Graph.secondaryAxisUnits({x:unit}).draw();
             break;
         
         case "secondaryYUnits":
-            Graph.secondaryAxisUnits({y:unit});
+            Graph.secondaryAxisUnits({y:unit}).draw();
             break;
     }
 }
@@ -785,19 +785,19 @@ function changeSecondaryAxisWidth(e){
 
     switch(target){
         case "xBase":
-            Graph.secondaryAxisBase({x:{width:value}});
+            Graph.secondaryAxisBase({x:{width:value}}).draw();
             break;
 
         case "yBase":
-            Graph.secondaryAxisBase({y:{width:value}});
+            Graph.secondaryAxisBase({y:{width:value}}).draw();
             break;
 
         case "xTicks":
-            Graph.secondaryAxisTicks({x:{width:value}});
+            Graph.secondaryAxisTicks({x:{width:value}}).draw();
             break;
 
         case "yTicks":
-            Graph.secondaryAxisTicks({y:{width:value}});
+            Graph.secondaryAxisTicks({y:{width:value}}).draw();
             break;
     }
 }
@@ -807,9 +807,9 @@ function changeSecondaryTickSize(e){
     const value = parseFloat(e.target.value);
 
     if(target === "secondaryXTickSize")
-        Graph.secondaryAxisTicks({x:{size:value}});
+        Graph.secondaryAxisTicks({x:{size:value}}).draw();
     if(target === "secondaryYTickSize")
-        Graph.secondaryAxisTicks({y:{size:value}});
+        Graph.secondaryAxisTicks({y:{size:value}}).draw();
 }
 
 function changeSecondaryTickFont(e){
@@ -817,9 +817,9 @@ function changeSecondaryTickFont(e){
     const font = e.target.value;
 
     if(target === "x")
-        Graph.secondaryAxisText({x:{font}});
+        Graph.secondaryAxisText({x:{font}}).draw();
     if(target === "y")
-        Graph.secondaryAxisText({y:{font}});
+        Graph.secondaryAxisText({y:{font}}).draw();
 }
 
 function changeSecondaryAxisTextSize(e){
@@ -827,9 +827,9 @@ function changeSecondaryAxisTextSize(e){
     const target = e.target.id;
 
     if(target === "secondaryXTextSize")
-        Graph.secondaryAxisText({x:{size}});
+        Graph.secondaryAxisText({x:{size}}).draw();
     if(target === "secondaryYTextSize")
-        Graph.secondaryAxisText({y:{size}});
+        Graph.secondaryAxisText({y:{size}}).draw();
 }
 
 function changeSecondaryTicks(e){
@@ -837,9 +837,9 @@ function changeSecondaryTicks(e){
     const value = parseInt(e.target.value);
 
     if(target === "secondaryXTicks")
-        Graph.secondaryAxisTicks({x:{ticks:value===-1?"auto":value}});
+        Graph.secondaryAxisTicks({x:{ticks:value===-1?"auto":value}}).draw();
     if(target === "secondaryYTicks")
-        Graph.secondaryAxisTicks({y:{ticks:value===-1?"auto":value}});
+        Graph.secondaryAxisTicks({y:{ticks:value===-1?"auto":value}}).draw();
 }
 
 function changeSecondarySpacing(e){
@@ -847,19 +847,19 @@ function changeSecondarySpacing(e){
     const value = parseInt(e.target.value);
 
     if(target === "secondaryXSpacing")
-        Graph.secondaryAxisTicks({x:{minSpacing : value}});
+        Graph.secondaryAxisTicks({x:{minSpacing : value}}).draw();
     if(target === "secondaryYSpacing")
-        Graph.secondaryAxisTicks({y:{minSpacing : value}});
+        Graph.secondaryAxisTicks({y:{minSpacing : value}}).draw();
 }
 
 function changePolarGrid(e){
     const value = parseInt(e.target.value);
-    Graph.polarGrid(value);
+    Graph.polarGrid(value).draw();
 }
 
 function changeAxisType(e){
     const type = e.target.value;
-    Graph.axisType(type);
+    Graph.axisType(type).draw();
 }
 
 function changeSecondaryAxisType(e){
@@ -867,9 +867,9 @@ function changeSecondaryAxisType(e){
     const type = e.target.value;
 
     if(target === "x")
-        Graph.secondaryAxisType({x:type});
+        Graph.secondaryAxisType({x:type}).draw();
     if(target === "y")
-        Graph.secondaryAxisType({y:type});
+        Graph.secondaryAxisType({y:type}).draw();
 }
 
 function changeAspectRatio(){
@@ -878,7 +878,7 @@ function changeAspectRatio(){
     const target = document.querySelector("#target").value;
     const sourse = document.querySelector("#sourse").value;
 
-    Graph.aspectRatio({ratio, anchor, target, sourse});
+    Graph.aspectRatio({ratio, anchor, target, sourse}).draw();
 }
 
 function changePointerMove(){

@@ -800,7 +800,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 //---------- Customization Methods ------------
 //-------------- Aspect Ratio -----------------
 
-    function aspectRatio(args ?: Partial<Aspect_Ratio>) : Graph2D{
+    function aspectRatio(args ?: Partial<Aspect_Ratio>, callback?:(handler?:Graph2D)=>void) : Graph2D{
         //Combines the default values and the arguments pased
         const options : Aspect_Ratio = {
             ratio : 1,
@@ -905,9 +905,11 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
                 targetAxis.end = -Math.pow(10, m*(Math.log10(Math.abs(targetAxis.end)) - Math.log10(Math.abs(fixpoint))) + Math.log10(Math.abs(fixpoint)));
             }
         }
-   
+
+        
         state.compute.client();
-        state.draw.client();
+        if(callback != null) callback(graphHandler);
+
 
         return graphHandler;
     }
@@ -956,7 +958,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             if(options.strength != null) zoomState.strength = options.strength;
             if(options.anchor != null) zoomState.anchor = options.anchor as "center" | "pointer" | [number, number];
             if(options.type != null) zoomState.type = options.type;
-            zoomState.callback = options.callback as (handler:Graph2D)=>void | undefined;
+            zoomState.callback = options.callback as (handler?:Graph2D)=>void | undefined;
             if(options.rect != null) zoomState.rect = {...zoomState.rect, ...options.rect};
         }
         
@@ -977,7 +979,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             if(options.secondaryAxis != null) resizeState.secondaryAxis = options.secondaryAxis;
             if(options.anchor != null) resizeState.anchor = options.anchor as "center" | [number, number];
             if(options.secondaryAnchor != null) resizeState.secondaryAnchor = options.secondaryAnchor as "center" | [number, number];
-            resizeState.callback = options.callback as (handler:Graph2D)=>void;
+            resizeState.callback = options.callback as (handler?:Graph2D)=>void;
         }
         
         //Remove old listener

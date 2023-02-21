@@ -7,23 +7,23 @@ Omit<Primary_Grid_Generator, "draw">,
 Omit<Secondary_Grid_Generator, "draw">{
     draw : ()=>void,
     gridColor : {
-        (color:Grid_Modifier<string>): Graph2D,
+        (color:Grid_Modifier<string>, callback?:(handler?:Graph2D)=>void): Graph2D,
         (arg:void):Grid_Property<string>
     },
     gridOpacity : {
-        (opacity:Grid_Modifier<number>): Graph2D,
+        (opacity:Grid_Modifier<number>, callback?:(handler?:Graph2D)=>void): Graph2D,
         (arg:void):Grid_Property<number>
     },
     gridStyle : {
-        (style:Grid_Modifier<string>): Graph2D,
+        (style:Grid_Modifier<string>, callback?:(handler?:Graph2D)=>void): Graph2D,
         (arg:void):Grid_Property<string>
     },
     gridWidth : {
-        (width:Grid_Modifier<number>): Graph2D,
+        (width:Grid_Modifier<number>, callback?:(handler?:Graph2D)=>void): Graph2D,
         (arg:void):Grid_Property<number>
     },
     polarGrid : {
-        (density:number) : Graph2D,
+        (density:number, callback?:(handler?:Graph2D)=>void) : Graph2D,
         (arg:void) : number
     }
 }

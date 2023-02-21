@@ -117,10 +117,10 @@ function getMinMaxCoords() : [number, number, number, number]{
 //---------- Customization Methods ------------
 //----------------- Color ---------------------
 
-    function gridColor(color : Grid_Modifier<string>) : Graph2D;
+    function gridColor(color : Grid_Modifier<string>, callback?:(handler?:Graph2D)=>void) : Graph2D;
     function gridColor(arg : void) : Grid_Property<string>;
-    function gridColor(color : Grid_Modifier<string> | void) : Graph2D | Grid_Property<string> | undefined{
-        if(typeof color === "undefined")
+    function gridColor(color : Grid_Modifier<string> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<string> | undefined{
+        if(typeof color === "undefined" && callback == null)
             return {
                 x : {
                     primary : props.state.grid.primary.x.color,
@@ -154,8 +154,9 @@ function getMinMaxCoords() : [number, number, number, number]{
             if(color.x?.secondary != null) props.state.grid.secondary.x.color = color.x.secondary;
             if(color.y?.secondary != null) props.state.grid.secondary.y.color = color.y.secondary;
 
-            props.state.draw.client();
 
+
+            if(callback != null) callback(props.graphHandler);
             return props.graphHandler;
         }
     }
@@ -163,10 +164,10 @@ function getMinMaxCoords() : [number, number, number, number]{
 //---------------------------------------------
 //---------------- Opacity --------------------
 
-    function gridOpacity(opacity : Grid_Modifier<number>) : Graph2D;
+    function gridOpacity(opacity : Grid_Modifier<number>, callback?:(handler?:Graph2D)=>void) : Graph2D;
     function gridOpacity(arg : void) : Grid_Property<number>;
-    function gridOpacity(opacity : Grid_Modifier<number> | void) : Graph2D | Grid_Property<number> | undefined{
-        if(typeof opacity === "undefined")
+    function gridOpacity(opacity : Grid_Modifier<number> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<number> | undefined{
+        if(typeof opacity === "undefined" && callback == null)
             return {
                 x : {
                     primary : props.state.grid.primary.x.opacity,
@@ -204,8 +205,8 @@ function getMinMaxCoords() : [number, number, number, number]{
             if(opacity.y?.secondary != null) props.state.grid.secondary.y.opacity = opacity.y.secondary<0?0:(opacity.y.secondary>1?1:opacity.y.secondary);
             
 
-            props.state.draw.client();
 
+            if(callback != null) callback(props.graphHandler);
             return props.graphHandler;
         }
     }
@@ -213,10 +214,10 @@ function getMinMaxCoords() : [number, number, number, number]{
 //---------------------------------------------
 //----------------- Style ---------------------
 
-function gridStyle(style : Grid_Modifier<string>) : Graph2D;
+function gridStyle(style : Grid_Modifier<string>, callback?:(handler?:Graph2D)=>void) : Graph2D;
 function gridStyle(arg : void) : Grid_Property<string>;
-function gridStyle(style : Grid_Modifier<string> | void) : Graph2D | Grid_Property<string> | undefined{
-    if(typeof style === "undefined")
+function gridStyle(style : Grid_Modifier<string> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<string> | undefined{
+    if(typeof style === "undefined" && callback == null)
         return {
             x : {
                 primary : props.state.grid.primary.x.style,
@@ -250,8 +251,9 @@ function gridStyle(style : Grid_Modifier<string> | void) : Graph2D | Grid_Proper
         if(style.x?.secondary != null) props.state.grid.secondary.x.style = style.x.secondary;
         if(style.y?.secondary != null) props.state.grid.secondary.y.style = style.y.secondary;
 
-        props.state.draw.client();
 
+
+        if(callback != null) callback(props.graphHandler);
         return props.graphHandler;
     }
 }
@@ -259,10 +261,10 @@ function gridStyle(style : Grid_Modifier<string> | void) : Graph2D | Grid_Proper
 //---------------------------------------------
 //----------------- Width ---------------------
 
-function gridWidth(width : Grid_Modifier<number>) : Graph2D;
+function gridWidth(width : Grid_Modifier<number>, callback?:(handler?:Graph2D)=>void) : Graph2D;
 function gridWidth(arg : void) : Grid_Property<number>;
-function gridWidth(width : Grid_Modifier<number> | void) : Graph2D | Grid_Property<number> | undefined{
-    if(typeof width === "undefined")
+function gridWidth(width : Grid_Modifier<number> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<number> | undefined{
+    if(typeof width === "undefined" && callback == null)
         return {
             x : {
                 primary : props.state.grid.primary.x.width,
@@ -296,8 +298,8 @@ function gridWidth(width : Grid_Modifier<number> | void) : Graph2D | Grid_Proper
         if(width.x?.secondary != null) props.state.grid.secondary.x.width = width.x.secondary;
         if(width.y?.secondary != null) props.state.grid.secondary.y.width = width.y.secondary;
 
-        props.state.draw.client();
 
+        if(callback != null) callback(props.graphHandler);
         return props.graphHandler;
     }
 }
@@ -305,18 +307,19 @@ function gridWidth(width : Grid_Modifier<number> | void) : Graph2D | Grid_Proper
 //---------------------------------------------
 //---------------------------------------------
 
-    function polarGrid(density : number) : Graph2D;
+    function polarGrid(density : number, callback?:(handler?:Graph2D)=>void) : Graph2D;
     function polarGrid(arg : void) : number;
-    function polarGrid(density : number | void) : Graph2D | number | undefined{
-        if(typeof density === "undefined")
+    function polarGrid(density : number | void, callback?:(handler?:Graph2D)=>void) : Graph2D | number | undefined{
+        if(typeof density === "undefined" && callback == null)
             return props.state.grid.polarGrid;
 
         if(typeof density === "number"){
             if(density === props.state.grid.polarGrid) return props.graphHandler;
 
             props.state.grid.polarGrid = density;
-            props.state.draw.client();
 
+
+            if(callback != null) callback(props.graphHandler);
             return props.graphHandler;
         }
     }
