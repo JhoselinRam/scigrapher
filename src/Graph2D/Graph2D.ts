@@ -1,4 +1,3 @@
-import mapping from "../tools/Mapping/Mapping.js";
 import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, Rect, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
@@ -153,6 +152,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const state : RequiredExept<Graph2D_State, "compute" | "scale"  | "labels" | "context" | "draw" | "axisObj"> = { 
         container,
         canvasElement : document.createElement("canvas"),
+        canvasDataElement : document.createElement("canvas"),
         render,
         labelOffset : 4,
         scale : {},
@@ -174,6 +174,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             graphRect
         },
         axisObj : {},
+        data : [],
         background : {...defaultOptions.background, ...options.background},
         margin : {
             x : {...defaultOptions.margin.x, ...options.margin?.x},
@@ -306,7 +307,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     //Generates graph handler methods
     graphHandler.graphRect = graphRect;
     graphHandler.canvasElements = ()=>{
-        return [state.canvasElement];
+        return [state.canvasElement, state.canvasDataElement];
     }
     graphHandler.clientRect = ()=>{
         return {...state.context.clientRect};
@@ -360,6 +361,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         fullState.draw.grid();
         fullState.draw.axis();
         fullState.draw.secondary();
+        fullState.data.forEach(dataset => dataset._drawObject(fullState));
     }
 
     //Helper function, set the container properties and adds the canvas element
@@ -367,16 +369,31 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         const width = state.container.clientWidth;
         const height = state.container.clientHeight;
         const dpi = window.devicePixelRatio;
+
+        state.container.style.position = "relative";
         
         state.canvasElement.style.width = `${width}px`;
         state.canvasElement.style.height = `${height}px`;
         state.canvasElement.width = width*dpi;
         state.canvasElement.height = height*dpi;
+        state.canvasElement.style.position = "absolute";
+        
+        state.canvasDataElement.style.width = `${width}px`;
+        state.canvasDataElement.style.height = `${height}px`;
+        state.canvasDataElement.width = width*dpi;
+        state.canvasDataElement.height = height*dpi;
+        state.canvasDataElement.style.position = "absolute";
 
         state.container.appendChild(state.canvasElement);
+        state.container.appendChild(state.canvasDataElement);
+
         state.context.canvas = state.canvasElement.getContext("2d") as CanvasRenderingContext2D;
         state.context.canvas.scale(dpi, dpi);
         state.context.canvas.imageSmoothingEnabled = false;
+        
+        state.context.data = state.canvasDataElement.getContext("2d") as CanvasRenderingContext2D;
+        state.context.data.scale(dpi, dpi);
+        state.context.data.imageSmoothingEnabled = false;
     }
 
     //Helper function that computes the graph rect, this includes the axis width and height and the margins

@@ -82,17 +82,17 @@ function Events({state, graphHandler} : Method_Generator) : Events {
 
     function applyEvents(){
         //Reset all events in the element
-        state.canvasElement.removeEventListener("pointerdown", onDown);
-        state.canvasElement.removeEventListener("pointermove", onStyle);
-        state.canvasElement.removeEventListener("pointerup", onUp);
-        state.canvasElement.style.cursor = "default";
-        state.canvasElement.style.touchAction = "auto";
+        state.canvasDataElement.removeEventListener("pointerdown", onDown);
+        state.canvasDataElement.removeEventListener("pointermove", onStyle);
+        state.canvasDataElement.removeEventListener("pointerup", onUp);
+        state.canvasDataElement.style.cursor = "default";
+        state.canvasDataElement.style.touchAction = "auto";
         
         if(moveState.enable || zoomState.enable){
-            state.canvasElement.addEventListener("pointerdown", onDown);
-            state.canvasElement.addEventListener("pointermove", onStyle);
-            state.canvasElement.addEventListener("pointerup", onUp);
-            state.canvasElement.style.touchAction = "none";
+            state.canvasDataElement.addEventListener("pointerdown", onDown);
+            state.canvasDataElement.addEventListener("pointermove", onStyle);
+            state.canvasDataElement.addEventListener("pointerup", onUp);
+            state.canvasDataElement.style.touchAction = "none";
 
             if(moveState.enable)
                 moveState.onMove = throttle<Move_Event>(moveOnPointer, moveState.delay);
@@ -110,7 +110,7 @@ function Events({state, graphHandler} : Method_Generator) : Events {
     function onDown(e : PointerEvent){     
         if(inClientRect(e.clientX, e.clientY)){
             if(pointerState.pointerCapture)
-                state.canvasElement.setPointerCapture(e.pointerId);
+                state.canvasDataElement.setPointerCapture(e.pointerId);
             
             //Stores the domain and scale only on a new gesture
             if(pointerState.pointers.length === 0){
@@ -151,9 +151,9 @@ function Events({state, graphHandler} : Method_Generator) : Events {
             }
 
 
-            state.canvasElement.style.cursor = cursor.move;
-            state.canvasElement.removeEventListener("pointermove", onStyle);
-            state.canvasElement.addEventListener("pointermove", onMove);
+            state.canvasDataElement.style.cursor = cursor.move;
+            state.canvasDataElement.removeEventListener("pointermove", onStyle);
+            state.canvasDataElement.addEventListener("pointermove", onMove);
         }
     }
 
@@ -210,9 +210,9 @@ function onMove(e:PointerEvent){
 //------------------ On Up --------------------
 
 function onUp(e : PointerEvent){
-    state.canvasElement.style.cursor = cursor.hover;
-    state.canvasElement.removeEventListener("pointermove", onMove);
-    state.canvasElement.addEventListener("pointermove", onStyle);
+    state.canvasDataElement.style.cursor = cursor.hover;
+    state.canvasDataElement.removeEventListener("pointermove", onMove);
+    state.canvasDataElement.addEventListener("pointermove", onStyle);
 
     //remove the pointer
     for(let i=0; i<pointerState.pointers.length; i++){
@@ -229,17 +229,17 @@ function onUp(e : PointerEvent){
 
 function onStyle(e : PointerEvent){
     if(inClientRect(e.clientX, e.clientY)){
-        state.canvasElement.style.cursor = cursor.hover;
+        state.canvasDataElement.style.cursor = cursor.hover;
         return;
     }
-    state.canvasElement.style.cursor = cursor.default;
+    state.canvasDataElement.style.cursor = cursor.default;
 }
 
 //---------------------------------------------
 //------------- In Client Rect ----------------
 
 function inClientRect(x:number, y:number) : boolean{
-    const canvasRect = state.canvasElement.getBoundingClientRect();
+    const canvasRect = state.canvasDataElement.getBoundingClientRect();
     const pointerX = Math.round(x - canvasRect.x);
     const pointerY = Math.round(y - canvasRect.y);
     const minX = state.context.clientRect.x;
@@ -254,7 +254,7 @@ function inClientRect(x:number, y:number) : boolean{
 //-------------- Client Coords ----------------
 
     function clientCoords(x:number, y:number) : [number, number] {
-        const canvasRect = state.canvasElement.getBoundingClientRect();
+        const canvasRect = state.canvasDataElement.getBoundingClientRect();
 
         return [x - canvasRect.x - state.context.clientRect.x, y - canvasRect.y - state.context.clientRect.y];
     }
@@ -704,8 +704,14 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         //Set the new canvas size
         state.canvasElement.style.width = `${width}px`;
         state.canvasElement.style.height = `${height}px`;
-        state.canvasElement.width = Math.round(width*dpi);
+        state.canvasElement.width = width*dpi;
         state.canvasElement.height = height*dpi;
+        
+        state.canvasDataElement.style.width = `${width}px`;
+        state.canvasDataElement.style.height = `${height}px`;
+        state.canvasDataElement.width = width*dpi;
+        state.canvasDataElement.height = height*dpi;
+
 
         if(resizeState.preserveAspectRatio){
             const lastRect = state.context.graphRect();

@@ -24,6 +24,7 @@ export interface Graph2D extends
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
 export type Axis_Type = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
+
 export interface Rect {
     x : number,
     y : number,
@@ -116,6 +117,7 @@ export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"
 export interface Graph2D_State extends Graph2D_Options {
     container : HTMLDivElement,
     canvasElement : HTMLCanvasElement,
+    canvasDataElement : HTMLCanvasElement,
     render : ()=>void,
     labelOffset : number,
     context : {
@@ -126,6 +128,7 @@ export interface Graph2D_State extends Graph2D_Options {
             height : number
         },
         canvas : CanvasRenderingContext2D,
+        data : CanvasRenderingContext2D,
         graphRect : ()=>Readonly<Rect>
     },
     scale : {
@@ -161,16 +164,18 @@ export interface Graph2D_State extends Graph2D_Options {
             height : number,
             obj ?: Partial<Axis_Property<Axis_Obj>>
         }
-    }
-}
-
-export interface User_Callback {
-    callback ?: (handler:Graph2D) => void
+    },
+    data : Array<Data_Object>
 }
 
 export interface Method_Generator{
     state : Graph2D_State,
     graphHandler : Graph2D
+}
+
+export interface Data_Object {
+    _drawObject : (state : Graph2D_State)=>void,
+    useAxis : Axis_Property<"primary" | "secondary">
 }
 
 export type RecursivePartial<T> = {
