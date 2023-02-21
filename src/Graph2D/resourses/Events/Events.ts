@@ -1,7 +1,7 @@
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
 import { Axis_Property, Graph2D, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
-import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Resize_Event_Props, Resize_State, Zoom_Event, Zoom_State } from "./Events_Types";
+import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Resize_Axis, Resize_Event_Props, Resize_State, Zoom_Event, Zoom_State } from "./Events_Types";
 
 function Events({state, graphHandler} : Method_Generator) : Events {
     //Default Options
@@ -29,7 +29,9 @@ function Events({state, graphHandler} : Method_Generator) : Events {
             x:0,
             y:0
         },
-        onMove : (args)=>{}
+        onMove : (args)=>{},
+        primaryAxis : true,
+        secondaryAxis : true
     };
     const zoomState : Zoom_State = {
         enable : false,
@@ -37,6 +39,8 @@ function Events({state, graphHandler} : Method_Generator) : Events {
         onZoom : (args)=>{},
         anchor : "pointer",
         strength : 5,
+        primaryAxis : true,
+        secondaryAxis : true,
         type : "area",
         rect : {
             background : "#0075FF",
@@ -62,12 +66,15 @@ function Events({state, graphHandler} : Method_Generator) : Events {
 
     const resizeState : Resize_State =  {
         anchor : "center",
+        secondaryAnchor : "center",
         enable : false,
         preserveAspectRatio : true,
         onResize : ()=>{},
         delay : 12,
         observer : new ResizeObserver(element => resizeState.onResize(element[0])),
-        reset : true
+        reset : true,
+        primaryAxis : true,
+        secondaryAxis : true
     };
     
 
@@ -255,27 +262,63 @@ function inClientRect(x:number, y:number) : boolean{
 //------------ Move On Pointer ----------------
 
     function moveOnPointer({x,y}:Move_Event){
-        if(state.scale.primary.x.type === "linear"){
-            const xDisplacement = state.scale.primary.x.invert(moveState.positionA.x) - state.scale.primary.x.invert(x);
-            state.axis.x.start += xDisplacement;
-            state.axis.x.end += xDisplacement;
+        //Apply the effect on the primary axis
+        if(moveState.primaryAxis){
+            if(state.scale.primary.x.type === "linear"){
+                const xDisplacement = state.scale.primary.x.invert(moveState.positionA.x) - state.scale.primary.x.invert(x);
+                state.axis.x.start += xDisplacement;
+                state.axis.x.end += xDisplacement;
+            }
+            if(state.scale.primary.x.type === "log"){
+                const xDisplacement = Math.log10(Math.abs(state.scale.primary.x.invert(moveState.positionA.x))) - Math.log10(Math.abs(state.scale.primary.x.invert(x)));
+                state.axis.x.start *= Math.pow(10 , xDisplacement);
+                state.axis.x.end *= Math.pow(10 , xDisplacement);
+            }
+            
+            if(state.scale.primary.y.type === "linear"){
+                const yDisplacement = state.scale.primary.y.invert(moveState.positionA.y) - state.scale.primary.y.invert(y);
+                state.axis.y.start += yDisplacement;
+                state.axis.y.end += yDisplacement;
+            }
+            if(state.scale.primary.y.type === "log"){
+                const yDisplacement = Math.log10(Math.abs(state.scale.primary.y.invert(moveState.positionA.y))) - Math.log10(Math.abs(state.scale.primary.y.invert(y)));
+                state.axis.y.start *= Math.pow(10 , yDisplacement);
+                state.axis.y.end *= Math.pow(10 , yDisplacement);
+            }
         }
-        if(state.scale.primary.x.type === "log"){
-            const xDisplacement = Math.log10(Math.abs(state.scale.primary.x.invert(moveState.positionA.x))) - Math.log10(Math.abs(state.scale.primary.x.invert(x)));
-            state.axis.x.start *= Math.pow(10 , xDisplacement);
-            state.axis.x.end *= Math.pow(10 , xDisplacement);
+
+        //Apply the effect on the secondary axis if necessary
+        if(moveState.secondaryAxis){
+            if(state.secondary.x != null && state.secondary.x.enable){
+                const xScale = state.scale.secondary.x as Mapping;
+                if(xScale.type === "linear"){
+                    const xDisplacement = xScale.invert(moveState.positionA.x) - xScale.invert(x);
+                    state.secondary.x.start += xDisplacement;
+                    state.secondary.x.end += xDisplacement;
+                }
+                
+                if(xScale.type === "log"){
+                    const xDisplacement = Math.log10(Math.abs(xScale.invert(moveState.positionA.x))) - Math.log10(Math.abs(xScale.invert(x)));
+                    state.secondary.x.start *= Math.pow(10 , xDisplacement);
+                    state.secondary.x.end *= Math.pow(10 , xDisplacement);
+                }
+            }
+            if(state.secondary.y != null && state.secondary.y.enable){
+                const yScale = state.scale.secondary.y as Mapping;
+                if(yScale.type === "linear"){
+                    const yDisplacement = yScale.invert(moveState.positionA.y) - yScale.invert(y);
+                    state.secondary.y.start += yDisplacement;
+                    state.secondary.y.end += yDisplacement;
+                }
+                
+                if(yScale.type === "log"){
+                    const yDisplacement = Math.log10(Math.abs(yScale.invert(moveState.positionA.y))) - Math.log10(Math.abs(yScale.invert(y)));
+                    state.secondary.y.start *= Math.pow(10 , yDisplacement);
+                    state.secondary.y.end *= Math.pow(10 , yDisplacement);
+                }
+            }
         }
         
-        if(state.scale.primary.y.type === "linear"){
-            const yDisplacement = state.scale.primary.y.invert(moveState.positionA.y) - state.scale.primary.y.invert(y);
-            state.axis.y.start += yDisplacement;
-            state.axis.y.end += yDisplacement;
-        }
-        if(state.scale.primary.y.type === "log"){
-            const yDisplacement = Math.log10(Math.abs(state.scale.primary.y.invert(moveState.positionA.y))) - Math.log10(Math.abs(state.scale.primary.y.invert(y)));
-            state.axis.y.start *= Math.pow(10 , yDisplacement);
-            state.axis.y.end *= Math.pow(10 , yDisplacement);
-        }
 
         //update the las position computed
         moveState.positionA = {x, y};
@@ -429,15 +472,37 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
 
         if(initialX>0 && initialY>0){
-            const xStart = state.scale.primary.x.invert(initialX);
-            const xEnd = state.scale.primary.x.invert(finalX);
-            const yStart = state.scale.primary.y.invert(finalY);
-            const yEnd = state.scale.primary.y.invert(initialY);       
+            //Apply the effect on the primary axis
+            if(zoomState.primaryAxis){
+                const xStart = state.scale.primary.x.invert(initialX);
+                const xEnd = state.scale.primary.x.invert(finalX);
+                const yStart = state.scale.primary.y.invert(finalY);
+                const yEnd = state.scale.primary.y.invert(initialY);       
+    
+                state.axis.x.start = xStart;
+                state.axis.x.end = xEnd;
+                state.axis.y.start = yStart;
+                state.axis.y.end = yEnd;
+            }
 
-            state.axis.x.start = xStart;
-            state.axis.x.end = xEnd;
-            state.axis.y.start = yStart;
-            state.axis.y.end = yEnd;
+            //Apply on the secondary axis
+            if(zoomState.secondaryAxis){
+                if(state.secondary.x != null && state.secondary.x.enable){
+                    const xScale = state.scale.secondary.x as Mapping;
+                    const xStart = xScale.invert(initialX);
+                    const xEnd = xScale.invert(finalX);
+                    state.secondary.x.start = xStart;
+                    state.secondary.x.end = xEnd;
+                }
+                
+                if(state.secondary.y != null && state.secondary.y.enable){
+                    const yScale = state.scale.secondary.y as Mapping;
+                    const yStart = yScale.invert(initialX);
+                    const yEnd = yScale.invert(finalX);
+                    state.secondary.y.start = yStart;
+                    state.secondary.y.end = yEnd;
+                }
+            }
         }
 
 
@@ -540,55 +605,60 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         state.canvasElement.height = height*dpi;
 
         if(resizeState.preserveAspectRatio){
-            let xStart = state.axis.x.start;
-            let xEnd = state.axis.x.end;
-            let yStart = state.axis.y.start;
-            let yEnd = state.axis.y.end;
-            const fixpoint = typeof resizeState.anchor==="object"? {x:resizeState.anchor[0], y:resizeState.anchor[1]} : {x:xStart+(xEnd-xStart)/2, y:yStart+(yEnd-yStart)/2};
-
-            if(state.scale.primary.x.type === "log"){
-                xStart = Math.log10(Math.abs(xStart));
-                xEnd = Math.log10(Math.abs(xEnd));
-                fixpoint.x = Math.log10(Math.abs(fixpoint.x));
-            }
-            
-            if(state.scale.primary.y.type === "log"){
-                yStart = Math.log10(Math.abs(yStart));
-                yEnd = Math.log10(Math.abs(yEnd));
-                fixpoint.y = Math.log10(Math.abs(fixpoint.y));
-            }
-
-
-            const lastGraphRect = state.context.graphRect();
-            const domainWidth = xEnd - xStart;
-            const domainHeight = yEnd - yStart;
-            const xDensity = domainWidth/lastGraphRect.width;
-            const yDensity = domainHeight/lastGraphRect.height;
-    
-            //Partially computes the new state
+            const lastRect = state.context.graphRect();
             state.compute.labels();
-            const newGraphRect = state.context.graphRect();
-            const newDomainWidth = xDensity * newGraphRect.width;
-            const newDomainHeight = yDensity * newGraphRect.height;
+            const newRect = state.context.graphRect();
+            
+            if(moveState.primaryAxis){
+                const [xStart, xEnd] = resizeAxis({
+                    start : state.axis.x.start,
+                    end : state.axis.x.end, 
+                    anchor : typeof resizeState.anchor === "object"? resizeState.anchor[0] : state.axis.x.start + (state.axis.x.end-state.axis.x.start)/2,
+                    scale :  state.scale.primary.x,
+                    lastSize : lastRect.width,
+                    newSize : newRect.width
+                });
+                const [yStart, yEnd] = resizeAxis({
+                    start : state.axis.y.start,
+                    end : state.axis.y.end, 
+                    anchor : typeof resizeState.anchor === "object"? resizeState.anchor[1] : state.axis.y.start + (state.axis.y.end-state.axis.y.start)/2,
+                    scale :  state.scale.primary.y,
+                    lastSize : lastRect.height,
+                    newSize : newRect.height
+                });
 
-            if(state.scale.primary.x.type === "linear"){
-                state.axis.x.start = newDomainWidth/domainWidth*(xStart - fixpoint.x) + fixpoint.x;
-                state.axis.x.end = newDomainWidth/domainWidth*(xEnd - fixpoint.x) + fixpoint.x;
-            }
-            if(state.scale.primary.y.type === "linear"){
-                state.axis.y.start = newDomainHeight/domainHeight*(yStart - fixpoint.y) + fixpoint.y;
-                state.axis.y.end = newDomainHeight/domainHeight*(yEnd - fixpoint.y) + fixpoint.y;
+                state.axis.x.start = xStart;
+                state.axis.x.end = xEnd;
+                state.axis.y.start = yStart;
+                state.axis.y.end = yEnd;
             }
 
-            if(state.scale.primary.x.type === "log"){
-                const sign = (state.axis.x.start >0 && state.axis.x.end >0)? 1: -1;
-                state.axis.x.start = sign * Math.pow(10, newDomainWidth/domainWidth*(xStart - fixpoint.x) + fixpoint.x);
-                state.axis.x.end = sign * Math.pow(10, newDomainWidth/domainWidth*(xEnd - fixpoint.x) + fixpoint.x);
-            }
-            if(state.scale.primary.y.type === "log"){
-                const sign = (state.axis.y.start >0 && state.axis.y.end >0)? 1: -1;
-                state.axis.y.start = sign * Math.pow(10, newDomainHeight/domainHeight*(yStart - fixpoint.y) + fixpoint.y);
-                state.axis.y.end = sign * Math.pow(10, newDomainHeight/domainHeight*(yEnd - fixpoint.y) + fixpoint.y);
+            if(moveState.secondaryAxis){
+                if(state.secondary.x != null && state.secondary.x.enable){
+                    const [xStart, xEnd] = resizeAxis({
+                        start : state.secondary.x.start,
+                        end : state.secondary.x.end, 
+                        anchor : typeof resizeState.secondaryAnchor === "object"? resizeState.secondaryAnchor[0] : state.secondary.x.start + (state.secondary.x.end-state.secondary.x.start)/2,
+                        scale :  state.scale.secondary.x as Mapping,
+                        lastSize : lastRect.width,
+                        newSize : newRect.width
+                    });
+                    state.secondary.x.start = xStart;
+                    state.secondary.x.end = xEnd;
+                }
+
+                if(state.secondary.y != null && state.secondary.y.enable){
+                    const [yStart, yEnd] = resizeAxis({
+                        start : state.secondary.y.start,
+                        end : state.secondary.y.end, 
+                        anchor : typeof resizeState.secondaryAnchor === "object"? resizeState.secondaryAnchor[0] : state.secondary.y.start + (state.secondary.y.end-state.secondary.y.start)/2,
+                        scale :  state.scale.secondary.y as Mapping,
+                        lastSize : lastRect.height,
+                        newSize : newRect.height
+                    });
+                    state.secondary.y.start = yStart;
+                    state.secondary.y.end = yEnd;
+                }
             }
         }
 
@@ -750,6 +820,8 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         cursor.default = "default";
         if(options != null){
             if(options.delay != null) moveState.delay = options.delay;
+            if(options.primaryAxis != null) moveState.primaryAxis = options.primaryAxis;
+            if(options.secondaryAxis != null) moveState.secondaryAxis = options.secondaryAxis;
             if(options.pointerCapture != null) pointerState.pointerCapture = options.pointerCapture;
             if(options.hoverCursor != null) cursor.hover = options.hoverCursor;
             if(options.moveCursor != null) cursor.move = options.moveCursor;
@@ -772,6 +844,8 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         cursor.move = "zoom-in";
         if(options != null){
             if(options.delay != null) zoomState.delay = options.delay;
+            if(options.primaryAxis != null) zoomState.primaryAxis = options.primaryAxis;
+            if(options.secondaryAxis != null) zoomState.secondaryAxis = options.secondaryAxis;
             if(options.pointerCapture != null) pointerState.pointerCapture = options.pointerCapture;
             if(options.hoverCursor != null) cursor.hover = options.hoverCursor;
             if(options.moveCursor != null) cursor.move = options.moveCursor;
@@ -796,7 +870,10 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         if(options != null){
             if(options.preserveAspectRatio != null) resizeState.preserveAspectRatio = options.preserveAspectRatio;
             if(options.delay != null) resizeState.delay = options.delay;
+            if(options.primaryAxis != null) resizeState.primaryAxis = options.primaryAxis;
+            if(options.secondaryAxis != null) resizeState.secondaryAxis = options.secondaryAxis;
             if(options.anchor != null) resizeState.anchor = options.anchor as "center" | [number, number];
+            if(options.secondaryAnchor != null) resizeState.secondaryAnchor = options.secondaryAnchor as "center" | [number, number];
             resizeState.callback = options.callback as (handler:Graph2D)=>void;
         }
         
@@ -884,5 +961,37 @@ function distance(pointA:Axis_Property<number>, pointB:Axis_Property<number>, sc
 
     return Math.hypot(x1-x2, y1-y2);
 }
+
+//---------------------------------------------
+//-------------- Resize Axis ------------------
+
+    function resizeAxis({start, end, anchor, scale, lastSize, newSize} : Resize_Axis) : [number, number]{
+        let axisStart = start;
+        let axisEnd = end;
+        let fixpoint = anchor;
+        const newAxis : [number, number] = [0,0];
+
+        if(scale.type === "log"){
+            axisStart = Math.log10(Math.abs(axisStart));
+            axisEnd = Math.log10(Math.abs(axisEnd));
+            fixpoint = Math.log10(Math.abs(fixpoint));
+        }
+
+        const domainSize = axisEnd - axisStart;
+        const density = domainSize / lastSize;
+        const newDomainSize = density * newSize;
+
+        newAxis[0] = newDomainSize/domainSize * (axisStart - fixpoint) + fixpoint;
+        newAxis[1] = newDomainSize/domainSize * (axisEnd - fixpoint) + fixpoint;
+
+        if(scale.type === "log"){
+            const sign = (axisStart>0 && axisEnd>0)? 1 : -1;
+            console.log(sign)
+            newAxis[0] = sign * Math.pow(10, newAxis[0]);
+            newAxis[1] = sign * Math.pow(10, newAxis[1]);
+        }
+
+        return newAxis;
+    }
 
 //---------------------------------------------

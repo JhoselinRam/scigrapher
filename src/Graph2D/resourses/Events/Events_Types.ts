@@ -25,6 +25,8 @@ export interface Pointer_Move_Props {
     hoverCursor : string,
     moveCursor : string,
     defaultCursor : string,
+    primaryAxis : boolean,
+    secondaryAxis : boolean
 }
 
 export interface Pointer_Zoom_Props extends Pointer_Move_Props{
@@ -59,7 +61,9 @@ export interface Move_State {
     callback ?: (handler : Graph2D)=>void,
     delay : number,
     onMove : (position : Move_Event)=>void, 
-    positionA : Axis_Property<number>
+    positionA : Axis_Property<number>,
+    primaryAxis : boolean,
+    secondaryAxis : boolean
 }
 
 export interface Zoom_State extends Omit<Move_State, "onMove">{
@@ -100,13 +104,25 @@ export interface Pointer_Info {
 export interface Resize_Event_Props {
     enable : boolean,
     preserveAspectRatio : boolean,
-    anchor : "center" | [number, number]
+    anchor : "center" | [number, number],
+    secondaryAnchor : "center" | [number, number],
     callback ?: (handler:Graph2D)=>void,
-    delay : number
+    delay : number,
+    primaryAxis : boolean,
+    secondaryAxis : boolean
 }
 
 export interface Resize_State extends Resize_Event_Props {
     onResize : (container : ResizeObserverEntry)=>void,
     observer : ResizeObserver,
     reset : boolean
+}
+
+export interface Resize_Axis {
+    start : number,
+    end : number,
+    anchor : number,
+    scale : Mapping,
+    lastSize : number,
+    newSize : number
 }
