@@ -609,11 +609,11 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             state.compute.labels();
             const newRect = state.context.graphRect();
             
-            if(moveState.primaryAxis){
+            if(resizeState.primaryAxis){
                 const [xStart, xEnd] = resizeAxis({
                     start : state.axis.x.start,
                     end : state.axis.x.end, 
-                    anchor : typeof resizeState.anchor === "object"? resizeState.anchor[0] : state.axis.x.start + (state.axis.x.end-state.axis.x.start)/2,
+                    anchor : typeof resizeState.anchor === "object"? resizeState.anchor[0] : resizeState.anchor,
                     scale :  state.scale.primary.x,
                     lastSize : lastRect.width,
                     newSize : newRect.width
@@ -621,7 +621,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
                 const [yStart, yEnd] = resizeAxis({
                     start : state.axis.y.start,
                     end : state.axis.y.end, 
-                    anchor : typeof resizeState.anchor === "object"? resizeState.anchor[1] : state.axis.y.start + (state.axis.y.end-state.axis.y.start)/2,
+                    anchor : typeof resizeState.anchor === "object"? resizeState.anchor[1] : resizeState.anchor,
                     scale :  state.scale.primary.y,
                     lastSize : lastRect.height,
                     newSize : newRect.height
@@ -633,12 +633,12 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
                 state.axis.y.end = yEnd;
             }
 
-            if(moveState.secondaryAxis){
+            if(resizeState.secondaryAxis){
                 if(state.secondary.x != null && state.secondary.x.enable){
                     const [xStart, xEnd] = resizeAxis({
                         start : state.secondary.x.start,
                         end : state.secondary.x.end, 
-                        anchor : typeof resizeState.secondaryAnchor === "object"? resizeState.secondaryAnchor[0] : state.secondary.x.start + (state.secondary.x.end-state.secondary.x.start)/2,
+                        anchor : typeof resizeState.secondaryAnchor === "object"? resizeState.secondaryAnchor[0] : resizeState.secondaryAnchor,
                         scale :  state.scale.secondary.x as Mapping,
                         lastSize : lastRect.width,
                         newSize : newRect.width
@@ -651,7 +651,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
                     const [yStart, yEnd] = resizeAxis({
                         start : state.secondary.y.start,
                         end : state.secondary.y.end, 
-                        anchor : typeof resizeState.secondaryAnchor === "object"? resizeState.secondaryAnchor[0] : state.secondary.y.start + (state.secondary.y.end-state.secondary.y.start)/2,
+                        anchor : typeof resizeState.secondaryAnchor === "object"? resizeState.secondaryAnchor[1] : resizeState.secondaryAnchor,
                         scale :  state.scale.secondary.y as Mapping,
                         lastSize : lastRect.height,
                         newSize : newRect.height
@@ -968,25 +968,27 @@ function distance(pointA:Axis_Property<number>, pointB:Axis_Property<number>, sc
     function resizeAxis({start, end, anchor, scale, lastSize, newSize} : Resize_Axis) : [number, number]{
         let axisStart = start;
         let axisEnd = end;
-        let fixpoint = anchor;
         const newAxis : [number, number] = [0,0];
+        
+        let fixpoint = typeof anchor === "number"? anchor : axisStart+(axisEnd - axisStart)/2;
+
 
         if(scale.type === "log"){
             axisStart = Math.log10(Math.abs(axisStart));
             axisEnd = Math.log10(Math.abs(axisEnd));
-            fixpoint = Math.log10(Math.abs(fixpoint));
+            fixpoint = typeof anchor === "number"? Math.log10(Math.abs(fixpoint)) : axisStart+(axisEnd - axisStart)/2;
         }
 
         const domainSize = axisEnd - axisStart;
         const density = domainSize / lastSize;
         const newDomainSize = density * newSize;
 
+        
         newAxis[0] = newDomainSize/domainSize * (axisStart - fixpoint) + fixpoint;
         newAxis[1] = newDomainSize/domainSize * (axisEnd - fixpoint) + fixpoint;
-
+        
         if(scale.type === "log"){
-            const sign = (axisStart>0 && axisEnd>0)? 1 : -1;
-            console.log(sign)
+            const sign = (start>0 && end>0)? 1 : -1;
             newAxis[0] = sign * Math.pow(10, newAxis[0]);
             newAxis[1] = sign * Math.pow(10, newAxis[1]);
         }

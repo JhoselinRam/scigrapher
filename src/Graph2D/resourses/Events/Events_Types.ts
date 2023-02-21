@@ -121,7 +121,7 @@ export interface Resize_State extends Resize_Event_Props {
 export interface Resize_Axis {
     start : number,
     end : number,
-    anchor : number,
+    anchor : number | "center",
     scale : Mapping,
     lastSize : number,
     newSize : number

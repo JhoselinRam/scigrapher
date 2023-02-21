@@ -1,5 +1,30 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph")).pointerZoom().pointerMove().containerResize();
+const Graph = Graph2D(document.querySelector(".graph"),{
+    axis : {
+        position : "bottom-left",
+        type : "log-log",
+        x : {
+            start : 1,
+            end : 1e5
+        },
+        y : {
+            start : 1,
+            end : 1e5
+        }
+    },
+    secondary : {
+        x : {
+            start : 1,
+            end : 1e5,
+            type : "log"
+        },
+        y : {
+            start : 1,
+            end : 1e5,
+            type : "log"
+        }
+    }
+}).pointerZoom().pointerMove().containerResize();
 
 function changeBackgroundColor(e){
     const color = e.target.value;
