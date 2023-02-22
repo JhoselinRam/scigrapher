@@ -21,7 +21,7 @@ export interface Graph2D extends
     Data{
         canvasElements : ()=>Array<HTMLCanvasElement>,
         clientRect : ()=> Readonly<Rect>,
-        graphRect : ()=>Readonly<Rect>,
+        axisRect : ()=>Readonly<Rect>,
         draw : ()=>Graph2D,
     }
 
@@ -134,7 +134,7 @@ export interface Graph2D_State extends Graph2D_Options {
         },
         canvas : CanvasRenderingContext2D,
         data : CanvasRenderingContext2D,
-        graphRect : ()=>Readonly<Rect>
+        axisRect : ()=>Readonly<Rect>
     },
     scale : {
         primary : Axis_Property<Mapping>

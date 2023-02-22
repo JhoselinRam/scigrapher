@@ -5,12 +5,12 @@ import { Line_Chart, Line_Chart_Options, Line_Chart_State } from "./LineChart_Ty
 const defaultOptions : Line_Chart_Options = {
     useAxis : {x:"primary", y:"primary"},
     marker : {
-        enable : false,
+        enable : true,
         color : "#0043e0",
         opacity : 1,
-        filled : true,
-        size : 5,
-        type : "dot"
+        filled : false,
+        size : 3,
+        type : "star"
     },
     line : {
         enable : true,

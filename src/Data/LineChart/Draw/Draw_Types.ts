@@ -1,4 +1,4 @@
-import { Graph2D_State } from "../../../Graph2D/Graph2D_Types";
+import { Graph2D_State, Rect } from "../../../Graph2D/Graph2D_Types";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_State } from "../LineChart_Types";
 

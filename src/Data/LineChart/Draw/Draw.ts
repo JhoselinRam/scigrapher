@@ -1,7 +1,7 @@
-import { Graph2D_State, Rect } from "../../../Graph2D/Graph2D_Types";
-import { getLineDash } from "../../../tools/Helplers/Helplers.js";
+import { Graph2D_State } from "../../../Graph2D/Graph2D_Types";
+import { getLineDash, getGraphRect } from "../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
-import { Line_Chart_Method_Generator } from "../LineChart_Types";
+import { Line_Chart_Method_Generator, Line_Chart_State } from "../LineChart_Types";
 import { Draw, Draw_Helper_Props, Interpret_Coords_Props } from "./Draw_Types";
 
 function Draw({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw{
@@ -22,11 +22,21 @@ function Draw({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw{
         const xScale = dataState.useAxis.x === "primary"? state.scale.primary.x : state.scale.secondary.x as Mapping;
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
         const [xPositions, yPositions] = interpretCoordinates({xScale, yScale, dataState});
+        const clipRect = getGraphRect(state); 
+
+        //Common canvas configurations
+        state.context.data.save();
+        state.context.data.beginPath();
+        state.context.data.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
+        state.context.data.clip();
+        state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         if(dataState.line.enable)
             drawLines({state, dataState, xPositions, yPositions});
         if(dataState.marker.enable)
             drawMarkers({state, dataState, xPositions, yPositions});
+
+        state.context.data.restore();
 
     }
 
@@ -46,15 +56,7 @@ export default Draw;
 
 //--------------- Draw Lines ------------------
 
-function drawLines({xPositions, yPositions, state, dataState} : Draw_Helper_Props){
-    const clipRect = getClipRect(state);
-    
-    state.context.data.save();
-    state.context.data.beginPath();
-    state.context.data.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
-    state.context.data.clip();
-    state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
-
+function drawLines({xPositions, yPositions, state, dataState} : Draw_Helper_Props){    
     state.context.data.strokeStyle = dataState.line.color;
     state.context.data.globalAlpha = dataState.line.opacity;
     state.context.data.lineWidth = dataState.line.width;
@@ -67,18 +69,25 @@ function drawLines({xPositions, yPositions, state, dataState} : Draw_Helper_Prop
         state.context.data.lineTo(x ,y);
     });
     state.context.data.stroke();
-    
-    
-
-
-    state.context.data.restore();
 }
 
 //---------------------------------------------
 //------------- Draw Markers ------------------
 
 function drawMarkers({xPositions, yPositions, state, dataState} : Draw_Helper_Props){
+    const marker = createMarker(dataState);
+    state.context.data.strokeStyle = dataState.marker.color;
+    state.context.data.fillStyle = dataState.marker.color;
+    state.context.data.globalAlpha = dataState.marker.opacity;
+    xPositions.forEach((x,i)=>{
+        const y = yPositions[i];
+        state.context.data.save();
 
+        state.context.data.translate(x,y);
+        dataState.marker.filled? state.context.data.fill(marker) : state.context.data.stroke(marker);
+        
+        state.context.data.restore();
+    })
 }
 
 //---------------------------------------------
@@ -116,48 +125,92 @@ function isCallable(candidate : unknown) :  candidate is Function{
 }
 
 //---------------------------------------------
-//------------- Get Clip Rect------------------
+//------------- Create Marker ------------------
 
-function getClipRect(state : Graph2D_State):Rect{
-    const initialRect = {...state.context.graphRect()};
-    const xSecondaryActive = state.secondary.x != null && state.secondary.x.enable ? 0 : 1;
-    const ySecondaryActive = state.secondary.y != null && state.secondary.y.enable ? 0 : 1;
+function createMarker(dataState : Line_Chart_State) : Path2D {
+    const baseSize = 150;
+    const path = new Path2D();
 
-    switch(state.axis.position){
-        case "center":
-            initialRect.x = 0;
-            initialRect.y -= state.margin.y.end;
-            initialRect.width += state.margin.x.start + state.margin.x.end;
-            initialRect.height += state.margin.y.start + state.margin.y.end;
-            break;
+
+    switch(dataState.marker.type){
+        case "circle":
+            path.ellipse(0, 0, baseSize/2, baseSize/2, 0, 0, 2*Math.PI)
+        break;
+
+        case "square":
+            path.moveTo(-baseSize/2, baseSize/2);
+            path.lineTo(baseSize/2, baseSize/2);
+            path.lineTo(baseSize/2, -baseSize/2);
+            path.lineTo(-baseSize/2, -baseSize/2);
+            path.closePath();
+        break;
             
-        case "bottom-left":
-            initialRect.y -= xSecondaryActive * state.margin.y.end;
-            initialRect.width += ySecondaryActive * state.margin.x.end;
-            initialRect.height += xSecondaryActive * state.margin.y.end;
-            break;
+        case "h-rect":
+            path.moveTo(-baseSize/2, baseSize/4);
+            path.lineTo(baseSize/2, baseSize/4);
+            path.lineTo(baseSize/2, -baseSize/4);
+            path.lineTo(-baseSize/2, -baseSize/4);
+            path.closePath();
+        break;
+            
+        case "v-rect":
+            path.moveTo(-baseSize/4, baseSize/2);
+            path.lineTo(baseSize/4, baseSize/2);
+            path.lineTo(baseSize/4, -baseSize/2);
+            path.lineTo(-baseSize/4, -baseSize/2);
+            path.closePath();
+        break;
 
-        case "bottom-right":
-            initialRect.x -= ySecondaryActive * state.margin.x.start;
-            initialRect.y -= xSecondaryActive * state.margin.y.end;
-            initialRect.width += ySecondaryActive * state.margin.x.start;
-            initialRect.height += xSecondaryActive * state.margin.y.end;
-            break;
-        
-        case "top-left":
-            initialRect.width += ySecondaryActive * state.margin.x.end;
-            initialRect.height += xSecondaryActive * state.margin.y.start;
-            break;
+        case "triangle":
+            path.moveTo(0, -baseSize/2);
+            path.lineTo(baseSize/2*Math.cos(7/6*Math.PI), -baseSize/2*Math.sin(7/6*Math.PI));
+            path.lineTo(baseSize/2*Math.cos(11/6*Math.PI), -baseSize/2*Math.sin(11/6*Math.PI));
+            path.closePath();
+        break;
+            
+        case "inv-triangle":
+            path.moveTo(0, baseSize/2);
+            path.lineTo(baseSize/2*Math.cos(7/6*Math.PI), baseSize/2*Math.sin(7/6*Math.PI));
+            path.lineTo(baseSize/2*Math.cos(11/6*Math.PI), baseSize/2*Math.sin(11/6*Math.PI));
+            path.closePath();
+        break;
 
-        case "top-right":
-            initialRect.x -= ySecondaryActive * state.margin.x.start;
-            initialRect.width += ySecondaryActive * state.margin.x.start;
-            initialRect.height += xSecondaryActive * state.margin.y.start;
-            break;
-        
+        case "cross":
+            path.moveTo(-baseSize/6, -baseSize/2);
+            path.lineTo(baseSize/6, -baseSize/2);
+            path.lineTo(baseSize/6, -baseSize/6);
+            path.lineTo(baseSize/2, -baseSize/6);
+            path.lineTo(baseSize/2, baseSize/6);
+            path.lineTo(baseSize/6, baseSize/6);
+            path.lineTo(baseSize/6, baseSize/2);
+            path.lineTo(-baseSize/6, baseSize/2);
+            path.lineTo(-baseSize/6, baseSize/6);
+            path.lineTo(-baseSize/2, baseSize/6);
+            path.lineTo(-baseSize/2, -baseSize/6);
+            path.lineTo(-baseSize/6, -baseSize/6);
+            path.closePath();
+        break;
+
+        case "star":{
+            const angle = Math.PI/2;
+            const angle0 = angle + 2*Math.PI/10;
+            const r = baseSize/2;
+            const r0 = Math.hypot(r*0.049214217557598486, r*0.309016994374948); //Some algebra
+            path.moveTo(0, -r);
+            for(let i=1; i<=5; i++){
+                //path.lineTo(r0*Math.cos(angle0+i*2*Math.PI/5), -r0*Math.sin(angle0+i*2*Math.PI/5));
+                path.lineTo(r*Math.cos(angle+i*2*Math.PI/5), -r*Math.sin(angle+i*2*Math.PI/5));
+            }
+            path.moveTo(r0*Math.cos(angle0), -r0*Math.sin(angle0));
+            for(let i=1; i<=5; i++){
+                path.lineTo(r0*Math.cos(angle0+i*2*Math.PI/5), -r0*Math.sin(angle0+i*2*Math.PI/5));
+                //path.lineTo(r*Math.cos(angle+i*2*Math.PI/5), -r*Math.sin(angle+i*2*Math.PI/5));
+            }
+        }
+        break;
     }
 
-    return initialRect;
+    return path;
 }
 
 //---------------------------------------------

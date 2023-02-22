@@ -172,7 +172,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 width  : container.clientWidth,
                 height : container.clientHeight
             },
-            graphRect
+            axisRect
         },
         axisObj : {},
         data : [],
@@ -309,7 +309,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.getDatasets = data.getDatasets;
 
     //Generates graph handler methods
-    graphHandler.graphRect = graphRect;
+    graphHandler.axisRect = axisRect;
     graphHandler.canvasElements = ()=>{
         return [state.canvasElement, state.canvasDataElement];
     }
@@ -404,7 +404,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     }
 
     //Helper function that computes the graph rect, this includes the axis width and height and the margins
-    function graphRect() : Readonly<Rect>{
+    function axisRect() : Readonly<Rect>{
         const fullState = state as Graph2D_State;
         const primaryWidth = fullState.axisObj.primary.width;
         const primaryHeight = fullState.axisObj.primary.height;

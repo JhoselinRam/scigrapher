@@ -714,9 +714,9 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
 
         if(resizeState.preserveAspectRatio){
-            const lastRect = state.context.graphRect();
+            const lastRect = state.context.axisRect();
             state.compute.labels();
-            const newRect = state.context.graphRect();
+            const newRect = state.context.axisRect();
             
             if(resizeState.primaryAxis){
                 const [xStart, xEnd] = resizeAxis({
@@ -833,13 +833,13 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
 
         //Set the sourse and target properties
-        const graphRect = state.context.graphRect();
+        const axisRect = state.context.axisRect();
         let sourseAxis : Primary_Axis | Secondary_Axis = state.axis.x;
         let targetAxis : Primary_Axis | Secondary_Axis = state.axis.y;
         let sourseType : "log" | "linear" = "linear";
         let targetType : "log" | "linear" = "linear";
-        let sourseSize = graphRect.width;
-        let targetSize = graphRect.height;
+        let sourseSize = axisRect.width;
+        let targetSize = axisRect.height;
         
         switch(options.sourse){
             case "x":
@@ -848,7 +848,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             case "y":
                 sourseAxis = state.axis.y;
                 sourseType = state.scale.primary.y.type;
-                sourseSize = graphRect.height;
+                sourseSize = axisRect.height;
                 break;
             case "xSecondary":
                 sourseAxis = state.secondary.x as Secondary_Axis;
@@ -857,7 +857,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             case "ySecondary":
                 sourseAxis = state.secondary.y as Secondary_Axis;
                 sourseType = (state.scale.secondary as Axis_Property<Mapping>).y.type;
-                sourseSize = graphRect.height;
+                sourseSize = axisRect.height;
                 break;
         }
         
@@ -865,7 +865,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             case "x":
                 targetAxis = state.axis.x;
                 targetType = state.scale.primary.x.type;
-                targetSize = graphRect.width;
+                targetSize = axisRect.width;
                 break;
             case "y":
                 targetType = state.scale.primary.y.type;
@@ -873,7 +873,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             case "xSecondary":
                 targetAxis = state.secondary.x as Secondary_Axis;
                 targetType = (state.scale.secondary as Axis_Property<Mapping>).x.type;
-                targetSize = graphRect.width;
+                targetSize = axisRect.width;
                 break;
             case "ySecondary":
                 targetAxis = state.secondary.y as Secondary_Axis;

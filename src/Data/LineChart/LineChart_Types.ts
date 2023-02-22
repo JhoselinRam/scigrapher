@@ -1,7 +1,7 @@
 import { Axis_Property, Line_Style } from "../../Graph2D/Graph2D_Types";
 import { Data_Object } from "../Data_Types";
 
-export type Marker_Type = "dot" | "square" | "v-rect" | "h-rect" | "cros" | "star" | "triangle" | "inv-triange"
+export type Marker_Type = "circle" | "square" | "v-rect" | "h-rect" | "cross" | "star" | "triangle" | "inv-triangle"
 
 export interface Line_Chart extends Data_Object {}
 
