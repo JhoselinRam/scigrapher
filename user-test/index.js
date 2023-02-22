@@ -1,6 +1,34 @@
 import { Graph2D, LineChart } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph")).pointerZoom().pointerMove().containerResize();
-const lineChart = LineChart({x:[0,1,2,3,4,5], y:[0,1,2,3,4,5]});
+
+function xGenerator(){
+    const domain = Graph.axisDomain().x;
+    const n = 50;
+    const delta = (domain.end - domain.start)/(n-1);
+    const positions = [];
+    
+    for(let i=0; i<n; i++){
+        positions.push(domain.start + i*delta);
+    }
+
+    return positions;
+}
+function yGenerator(){
+    const domain = Graph.axisDomain().x;
+    const n = 50;
+    const delta = (domain.end - domain.start)/(n-1);
+    const positions = [];
+    
+    for(let i=0; i<n; i++){
+        positions.push(Math.cos(domain.start + i*delta));
+    }
+
+    return positions;
+}
+
+
+
+const lineChart = LineChart({x:xGenerator, y:yGenerator});
 
 Graph.addDataset(lineChart).draw();
 

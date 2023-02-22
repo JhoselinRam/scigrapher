@@ -12,6 +12,13 @@ function Data({state, graphHandler}:Method_Generator) : Data{
     }
 
 //---------------------------------------------
+//---------------------------------------------
+
+    function removeDataset(id:string){
+        
+    }
+
+//---------------------------------------------
 //-------------- Get Datasets -----------------
 
     function getDatasets() : Array<Dataset_Types>{

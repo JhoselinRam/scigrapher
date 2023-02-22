@@ -128,83 +128,92 @@ function isCallable(candidate : unknown) :  candidate is Function{
 //------------- Create Marker ------------------
 
 function createMarker(dataState : Line_Chart_State) : Path2D {
-    const baseSize = 150;
     const path = new Path2D();
-
-
+    
+    
     switch(dataState.marker.type){
-        case "circle":
-            path.ellipse(0, 0, baseSize/2, baseSize/2, 0, 0, 2*Math.PI)
+        case "circle":{
+            const size = 8;
+            path.ellipse(0, 0, size/2, size/2, 0, 0, 2*Math.PI)
+        }
         break;
 
-        case "square":
-            path.moveTo(-baseSize/2, baseSize/2);
-            path.lineTo(baseSize/2, baseSize/2);
-            path.lineTo(baseSize/2, -baseSize/2);
-            path.lineTo(-baseSize/2, -baseSize/2);
+        case "square":{
+            const size = 8;
+            path.moveTo(-size/2, size/2);
+            path.lineTo(size/2, size/2);
+            path.lineTo(size/2, -size/2);
+            path.lineTo(-size/2, -size/2);
             path.closePath();
+        }
         break;
             
-        case "h-rect":
-            path.moveTo(-baseSize/2, baseSize/4);
-            path.lineTo(baseSize/2, baseSize/4);
-            path.lineTo(baseSize/2, -baseSize/4);
-            path.lineTo(-baseSize/2, -baseSize/4);
+        case "h-rect":{
+            const size = 11;
+            path.moveTo(-size/2, size/4);
+            path.lineTo(size/2, size/4);
+            path.lineTo(size/2, -size/4);
+            path.lineTo(-size/2, -size/4);
             path.closePath();
+        }
         break;
             
-        case "v-rect":
-            path.moveTo(-baseSize/4, baseSize/2);
-            path.lineTo(baseSize/4, baseSize/2);
-            path.lineTo(baseSize/4, -baseSize/2);
-            path.lineTo(-baseSize/4, -baseSize/2);
+        case "v-rect":{
+            const size = 11;
+            path.moveTo(-size/4, size/2);
+            path.lineTo(size/4, size/2);
+            path.lineTo(size/4, -size/2);
+            path.lineTo(-size/4, -size/2);
             path.closePath();
+        }
         break;
 
-        case "triangle":
-            path.moveTo(0, -baseSize/2);
-            path.lineTo(baseSize/2*Math.cos(7/6*Math.PI), -baseSize/2*Math.sin(7/6*Math.PI));
-            path.lineTo(baseSize/2*Math.cos(11/6*Math.PI), -baseSize/2*Math.sin(11/6*Math.PI));
+        case "triangle":{
+            const size = 11;
+            path.moveTo(0, -size/2);
+            path.lineTo(size/2*Math.cos(7/6*Math.PI), -size/2*Math.sin(7/6*Math.PI));
+            path.lineTo(size/2*Math.cos(11/6*Math.PI), -size/2*Math.sin(11/6*Math.PI));
             path.closePath();
+        }
         break;
             
-        case "inv-triangle":
-            path.moveTo(0, baseSize/2);
-            path.lineTo(baseSize/2*Math.cos(7/6*Math.PI), baseSize/2*Math.sin(7/6*Math.PI));
-            path.lineTo(baseSize/2*Math.cos(11/6*Math.PI), baseSize/2*Math.sin(11/6*Math.PI));
+        case "inv-triangle":{
+            const size = 11;
+            path.moveTo(0, size/2);
+            path.lineTo(size/2*Math.cos(7/6*Math.PI), size/2*Math.sin(7/6*Math.PI));
+            path.lineTo(size/2*Math.cos(11/6*Math.PI), size/2*Math.sin(11/6*Math.PI));
             path.closePath();
+        }
         break;
 
-        case "cross":
-            path.moveTo(-baseSize/6, -baseSize/2);
-            path.lineTo(baseSize/6, -baseSize/2);
-            path.lineTo(baseSize/6, -baseSize/6);
-            path.lineTo(baseSize/2, -baseSize/6);
-            path.lineTo(baseSize/2, baseSize/6);
-            path.lineTo(baseSize/6, baseSize/6);
-            path.lineTo(baseSize/6, baseSize/2);
-            path.lineTo(-baseSize/6, baseSize/2);
-            path.lineTo(-baseSize/6, baseSize/6);
-            path.lineTo(-baseSize/2, baseSize/6);
-            path.lineTo(-baseSize/2, -baseSize/6);
-            path.lineTo(-baseSize/6, -baseSize/6);
+        case "cross":{
+            const size = 10;
+            path.moveTo(-size/6, -size/2);
+            path.lineTo(size/6, -size/2);
+            path.lineTo(size/6, -size/6);
+            path.lineTo(size/2, -size/6);
+            path.lineTo(size/2, size/6);
+            path.lineTo(size/6, size/6);
+            path.lineTo(size/6, size/2);
+            path.lineTo(-size/6, size/2);
+            path.lineTo(-size/6, size/6);
+            path.lineTo(-size/2, size/6);
+            path.lineTo(-size/2, -size/6);
+            path.lineTo(-size/6, -size/6);
             path.closePath();
+        }
         break;
 
         case "star":{
+            const size = 14;
             const angle = Math.PI/2;
             const angle0 = angle + 2*Math.PI/10;
-            const r = baseSize/2;
-            const r0 = Math.hypot(r*0.049214217557598486, r*0.309016994374948); //Some algebra
+            const r = size/2;
+            const r0 = Math.hypot(r*0.22451398828979263, r*0.3090169943749474); //Some algebra
             path.moveTo(0, -r);
             for(let i=1; i<=5; i++){
-                //path.lineTo(r0*Math.cos(angle0+i*2*Math.PI/5), -r0*Math.sin(angle0+i*2*Math.PI/5));
+                path.lineTo(r0*Math.cos(angle0+(i-1)*2*Math.PI/5), -r0*Math.sin(angle0+(i-1)*2*Math.PI/5));
                 path.lineTo(r*Math.cos(angle+i*2*Math.PI/5), -r*Math.sin(angle+i*2*Math.PI/5));
-            }
-            path.moveTo(r0*Math.cos(angle0), -r0*Math.sin(angle0));
-            for(let i=1; i<=5; i++){
-                path.lineTo(r0*Math.cos(angle0+i*2*Math.PI/5), -r0*Math.sin(angle0+i*2*Math.PI/5));
-                //path.lineTo(r*Math.cos(angle+i*2*Math.PI/5), -r*Math.sin(angle+i*2*Math.PI/5));
             }
         }
         break;

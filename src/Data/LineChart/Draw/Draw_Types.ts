@@ -17,5 +17,4 @@ export interface Interpret_Coords_Props {
     xScale : Mapping,
     yScale : Mapping,
     dataState : Line_Chart_State
-
 }

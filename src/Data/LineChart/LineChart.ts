@@ -10,10 +10,10 @@ const defaultOptions : Line_Chart_Options = {
         opacity : 1,
         filled : false,
         size : 3,
-        type : "star"
+        type : "circle"
     },
     line : {
-        enable : true,
+        enable : false,
         color : "#0043e0",
         opacity : 1,
         style : "solid",
