@@ -1,6 +1,7 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, Rect, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
+import Data from "./resourses/Data/Data.js";
 import Events from "./resourses/Events/Events.js";
 import Grid from "./resourses/Grid/Grid.js";
 import Labels from "./resourses/Labels/Labels.js";
@@ -248,6 +249,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const grid = Grid({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const secondary = Secondary({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const events  = Events({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const data = Data({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -303,6 +305,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.pointerMove = events.pointerMove;
     graphHandler.pointerZoom = events.pointerZoom;
     graphHandler.containerResize = events.containerResize;
+    graphHandler.addDataset = data.addDataset;
+    graphHandler.getDatasets = data.getDatasets;
 
     //Generates graph handler methods
     graphHandler.graphRect = graphRect;

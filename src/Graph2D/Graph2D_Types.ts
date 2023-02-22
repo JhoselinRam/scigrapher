@@ -1,7 +1,9 @@
+import { Dataset_Types, Data_Object } from "../Data/Data_Types";
 import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
 import { Background } from "./resourses/Background/Background_Types";
+import { Data } from "./resourses/Data/Data_Types";
 import { Events } from "./resourses/Events/Events_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
@@ -15,7 +17,8 @@ export interface Graph2D extends
     Omit<Grid, "compute" | "draw">,
     Omit<Secondary, "compute" | "draw">,
     Margin,
-    Events{
+    Events,
+    Data{
         canvasElements : ()=>Array<HTMLCanvasElement>,
         clientRect : ()=> Readonly<Rect>,
         graphRect : ()=>Readonly<Rect>,
@@ -165,17 +168,12 @@ export interface Graph2D_State extends Graph2D_Options {
             obj ?: Partial<Axis_Property<Axis_Obj>>
         }
     },
-    data : Array<Data_Object>
+    data : Array<Dataset_Types>
 }
 
 export interface Method_Generator{
     state : Graph2D_State,
     graphHandler : Graph2D
-}
-
-export interface Data_Object {
-    _drawObject : (state : Graph2D_State)=>void,
-    useAxis : Axis_Property<"primary" | "secondary">
 }
 
 export type RecursivePartial<T> = {
