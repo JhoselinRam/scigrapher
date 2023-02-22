@@ -1,4 +1,4 @@
-import { Dataset_Types, Data_Object } from "../Data/Data_Types";
+import { Dataset_Types } from "../Data/Data_Types";
 import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
@@ -70,8 +70,10 @@ export interface Primary_Grid {
     color : string,
     opacity : number,
     width : number,
-    style : string
+    style : Line_Style | string
 }
+
+export type Line_Style = "solid" | "dot" | "dash" | "long-dash" | "dash-dot" | "dash-2dot";
 
 export interface Secondary_Grid extends Primary_Grid {
     minSpacing : number,

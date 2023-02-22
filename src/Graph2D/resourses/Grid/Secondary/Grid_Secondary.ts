@@ -1,9 +1,10 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
+import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
 import { Axis_Property, Graph2D, Secondary_Grid } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
 import { Secondary_Grid_Generator, Secondary_Grid_Modifier } from "./Grid_Secondary_Types";
 
-function SecondaryGrid({state, graphHandler, getLineDash}:Grid_Method_Generator) : Secondary_Grid_Generator {
+function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_Grid_Generator {
 
 //----------------- Draw ----------------------
 

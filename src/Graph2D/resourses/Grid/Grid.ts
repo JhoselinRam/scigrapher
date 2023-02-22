@@ -4,8 +4,8 @@ import PrimaryGrid from "./Primary/Grid_Primary.js";
 import SecondaryGrid from "./Secondary/Grid_Secondary.js";
 
 function Grid(props : Method_Generator) : Grid {
-    const primaryGrid = PrimaryGrid({...props, getLineDash, getMinMaxCoords});
-    const secondaryGrid = SecondaryGrid({...props, getLineDash, getMinMaxCoords});
+    const primaryGrid = PrimaryGrid({...props, getMinMaxCoords});
+    const secondaryGrid = SecondaryGrid({...props, getMinMaxCoords});
 
 //----------------- Draw ----------------------
 
@@ -14,41 +14,6 @@ function Grid(props : Method_Generator) : Grid {
         primaryGrid.draw(xMin, xMax, yMin, yMax);
         secondaryGrid.draw(xMin, xMax, yMin, yMax);
         
-    }
-
-//---------------------------------------------
-//------------- Get Line Dash -----------------
-
-    function getLineDash(style : string) : Array<number> {
-        let lineDash : Array<number> = [];
-
-        switch(style){
-            case "dot":
-                lineDash = [2, 3];
-                break;
-            
-            case "dash":
-                lineDash = [5, 3];
-                break;
-            
-            case "long-dash":
-                lineDash = [8, 3];
-                break;
-
-            case "dash-dot":
-                lineDash = [5, 3, 2, 3];
-                break;
-
-            case "dash-2dot":
-                lineDash = [6, 3, 2, 3, 2, 3];
-                break;
-            
-            default:
-                lineDash = style.split(" ").map(item=>parseInt(item));
-                break;
-        }
-
-        return lineDash;
     }
 
 //---------------------------------------------

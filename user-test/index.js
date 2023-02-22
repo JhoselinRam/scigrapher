@@ -1,19 +1,8 @@
-import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph"),{
-    axis : {
-        position : "bottom-left",
-    },
-    secondary : {
-        x:{
-            start : -5,
-            end : 5,
-        },
-        y:{
-            start : 5,
-            end : -5,
-        }
-    }
-}).pointerZoom().pointerMove().containerResize();
+import { Graph2D, LineChart } from "../dist/lib/index.js";
+const Graph = Graph2D(document.querySelector(".graph")).pointerZoom().pointerMove().containerResize();
+const lineChart = LineChart({x:[0,1,2,3,4,5], y:[0,1,2,3,4,5]});
+
+Graph.addDataset(lineChart).draw();
 
 function changeBackgroundColor(e){
     const color = e.target.value;

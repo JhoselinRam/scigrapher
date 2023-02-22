@@ -365,7 +365,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         fullState.draw.grid();
         fullState.draw.axis();
         fullState.draw.secondary();
-        fullState.data.forEach(dataset => dataset._drawObject(fullState));
+
+        //Clear the data canvas
+        fullState.context.data.clearRect(0,0,fullState.context.data.canvas.width, fullState.context.data.canvas.height);
+        fullState.data.forEach(dataset => dataset._drawData(fullState));
     }
 
     //Helper function, set the container properties and adds the canvas element

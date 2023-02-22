@@ -1,10 +1,10 @@
-import { computePositions } from "../../../../tools/Axis_Obj/Axis_Obj";
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
+import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
 import { Axis_Property, Graph2D, Primary_Grid } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
 import { Primary_Grid_Generator, Primary_Grid_Modifier } from "./Grid_Primary_Types";
 
-function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator) : Primary_Grid_Generator {
+function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Grid_Generator {
 
 //----------------- Draw ----------------------
 
@@ -69,26 +69,23 @@ function PrimaryGrid({state, graphHandler, getLineDash} : Grid_Method_Generator)
             const radii = positions.filter((item, index) => item!==0 && positions.indexOf(item)===index);
             const thetha0 = 0;
             const thetha1 = 2*Math.PI;
-            const yCompression = (yCenter - state.scale.primary.y.map(radii[0])) / (state.scale.primary.x.map(radii[0]) - xCenter);
 
             state.context.canvas.save();
             state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
             state.context.canvas.beginPath();
             state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
             state.context.canvas.clip();
-            state.context.canvas.translate(xCenter, yCenter);
-            state.context.canvas.scale(1,yCompression);
 
             state.context.canvas.strokeStyle = state.grid.primary.x.color;
             state.context.canvas.globalAlpha = state.grid.primary.x.opacity;
             state.context.canvas.lineWidth = state.grid.primary.x.width;
             state.context.canvas.setLineDash(getLineDash(state.grid.primary.x.style));
             radii.forEach(radius=>{
-                let radiusUsed = state.scale.primary.x.map(radius) - xCenter;
-                radiusUsed = Math.abs(radiusUsed) + 0.5*state.grid.primary.x.width%2
+                let xRadiusUsed = state.scale.primary.x.map(radius) - xCenter;
+                let yRadiusUsed = yCenter - state.scale.primary.y.map(radius);
 
                 state.context.canvas.beginPath();
-                state.context.canvas.arc(0, 0, radiusUsed, thetha0, thetha1);
+                state.context.canvas.ellipse(xCenter, yCenter, xRadiusUsed, yRadiusUsed, 0,  thetha0, thetha1);
                 state.context.canvas.stroke();
             });            
 

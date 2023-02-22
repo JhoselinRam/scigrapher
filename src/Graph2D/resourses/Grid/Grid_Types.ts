@@ -29,7 +29,6 @@ Omit<Secondary_Grid_Generator, "draw">{
 }
 
 export interface Grid_Method_Generator extends Method_Generator {
-    getLineDash : (style:string)=>Array<number>,
     getMinMaxCoords : ()=>[number,number, number, number]
 }
 
