@@ -180,6 +180,8 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
 
             
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
+            
             return graphHandler;
         }
     }

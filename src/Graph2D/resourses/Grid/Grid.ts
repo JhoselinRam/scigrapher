@@ -122,6 +122,8 @@ function getMinMaxCoords() : [number, number, number, number]{
 
 
             if(callback != null) callback(props.graphHandler);
+            props.state.dirty.client = true;
+
             return props.graphHandler;
         }
     }
@@ -172,6 +174,8 @@ function getMinMaxCoords() : [number, number, number, number]{
 
 
             if(callback != null) callback(props.graphHandler);
+            props.state.dirty.client = true;
+
             return props.graphHandler;
         }
     }
@@ -219,6 +223,8 @@ function gridStyle(style : Grid_Modifier<string> | void, callback?:(handler?:Gra
 
 
         if(callback != null) callback(props.graphHandler);
+        props.state.dirty.client = true;
+
         return props.graphHandler;
     }
 }
@@ -265,6 +271,8 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:(handler?:Gra
 
 
         if(callback != null) callback(props.graphHandler);
+        props.state.dirty.client = true;
+
         return props.graphHandler;
     }
 }
@@ -285,6 +293,8 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:(handler?:Gra
 
 
             if(callback != null) callback(props.graphHandler);
+            props.state.dirty.client = true;
+            
             return props.graphHandler;
         }
     }

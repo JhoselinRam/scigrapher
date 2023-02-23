@@ -316,6 +316,8 @@ function secondaryGrid(grid : Secondary_Grid_Modifier|void, callback?:(handler?:
 
     
         if(callback != null) callback(graphHandler);
+        state.dirty.client = true;
+        
         return graphHandler;
     }
 }

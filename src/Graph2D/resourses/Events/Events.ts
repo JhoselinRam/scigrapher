@@ -325,6 +325,7 @@ function inClientRect(x:number, y:number) : boolean{
 
         state.compute.client();
         if(moveState.callback != null) moveState.callback(graphHandler);
+        state.dirty.client = true;
         state.draw.client();
     }
 
@@ -333,6 +334,7 @@ function inClientRect(x:number, y:number) : boolean{
 
 function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         if(type === "area"){
+            state.dirty.client = true;
             state.draw.client()
             
             let [initialX, initialY] = [0,0];
@@ -484,6 +486,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
             state.compute.client();
             if(zoomState.callback != null) zoomState.callback(graphHandler);
+            state.dirty.client = true;
             state.draw.client();
     }
 }
@@ -554,6 +557,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         
         state.compute.client();
         if(zoomState.callback != null) zoomState.callback(graphHandler);
+        state.dirty.client = true;
         state.draw.client();
     }
 
@@ -686,6 +690,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         
         state.compute.client();
         if(zoomState.callback != null) zoomState.callback(graphHandler);
+        state.dirty.client = true;
         state.draw.client();
     }
 
@@ -774,6 +779,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
         state.compute.full();
         if(resizeState.callback != null) resizeState.callback(graphHandler);
+        state.dirty.full = true;
         state.draw.full();
 
 
@@ -915,6 +921,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         
         state.compute.client();
         if(callback != null) callback(graphHandler);
+        state.dirty.client = true;
 
 
         return graphHandler;

@@ -138,6 +138,7 @@ function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>> | void, ca
         if(changeX || changeY){
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
         }
 
         return graphHandler;
@@ -209,6 +210,7 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callb
         if(changeX || changeY){
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
         }
 
         return graphHandler;
@@ -252,7 +254,7 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callb
             if(changeX || changeY){
                 state.compute.client();
                 if(callback != null) callback(graphHandler);
-                state.draw.client();
+                state.dirty.client = true;
             }
 
             return graphHandler;
@@ -322,6 +324,8 @@ function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string> | voi
         }
 
         if(callback != null) callback(graphHandler);
+        state.dirty.client = true;
+
         return graphHandler;
     }
 
@@ -392,6 +396,8 @@ function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number> | 
         }
 
         if(callback != null) callback(graphHandler);
+        state.dirty.client = true;
+
         return graphHandler;
     }
 
@@ -437,6 +443,7 @@ function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>> | vo
         if(changeX || changeY){
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
         }
         
         return graphHandler;
@@ -507,7 +514,10 @@ function secondaryAxisBase(base : RecursivePartial<Base_Props> | void, callback?
             }
         }
 
-        if((changeX || changeY) && callback != null) callback(graphHandler);
+        if(changeX || changeY){
+            if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
+        } 
         
         return graphHandler;
     
@@ -611,6 +621,7 @@ function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props> | void, callba
         if(changeX || changeY){
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
         }
         
         return graphHandler;
@@ -696,6 +707,7 @@ function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?
         if(changeX || changeY){
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
         }
         
         return graphHandler;

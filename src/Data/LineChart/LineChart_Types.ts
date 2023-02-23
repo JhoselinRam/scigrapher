@@ -1,17 +1,16 @@
 import { Axis_Property, Line_Style } from "../../Graph2D/Graph2D_Types";
-import { Data_Object } from "../Data_Types";
+import { Data_General, Data_Object_State } from "../Data_Types";
 
 export type Marker_Type = "circle" | "square" | "v-rect" | "h-rect" | "cross" | "star" | "triangle" | "inv-triangle"
 
-export interface Line_Chart extends Data_Object {}
+export interface Line_Chart extends Required<Data_General<Line_Chart>>
+{}
 
 export interface Line_Chart_Options {
     useAxis : Axis_Property<"primary" | "secondary">,
     marker : Marker_Attributes,
     line : Line_Attributes,
-    polar : boolean,
-    x : Array<number> | (()=>Array<number>),
-    y : Array<number> | (()=>Array<number>)
+    polar : boolean
 }
 
 export interface Marker_Attributes {
@@ -31,8 +30,9 @@ export interface Line_Attributes {
     style : Line_Style | string
 }
 
-export interface Line_Chart_State extends Line_Chart_Options {
-    id : string
+export interface Line_Chart_State extends Data_Object_State, Line_Chart_Options {
+    x : Array<number> | (()=>Array<number>),
+    y : Array<number> | (()=>Array<number>),
 }
 
 export interface Line_Chart_Method_Generator {

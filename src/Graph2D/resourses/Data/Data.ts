@@ -7,15 +7,22 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 //---------------- Add Dataset ----------------
 
     function addDataset(dataset : Dataset_Types) : Graph2D {
+        
         state.data.push(dataset);
+        dataset._setDirtifyCallback(state.dirty.dirtify);
+        dataset.index(state.data.length);
+
         return graphHandler;
     }
 
 //---------------------------------------------
 //---------------------------------------------
 
-    function removeDataset(id:string){
-        
+    function removeDataset(id:string) : Graph2D{
+        state.data = state.data.filter(dataset => dataset.id()!==id);
+        state.dirty.data = true;
+
+        return graphHandler;
     }
 
 //---------------------------------------------
@@ -29,6 +36,7 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 
     return {
         addDataset,
+        removeDataset,
         getDatasets
     }
 

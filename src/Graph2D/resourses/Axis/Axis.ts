@@ -63,6 +63,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 
             state.compute.full();
             if(callback != null) callback(graphHandler);
+            state.dirty.full = true;
             
 
             return graphHandler;
@@ -84,6 +85,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             state.axis.type = type;
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
 
             return graphHandler;
         }
@@ -125,6 +127,7 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(han
 
         state.compute.client();
         if(callback != null) callback(graphHandler);
+        state.dirty.client = true;
 
         return graphHandler;
 
@@ -185,6 +188,7 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(han
 
 
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
             
             return graphHandler;
         }
@@ -249,6 +253,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
 
         if(callback != null) callback(graphHandler);
+        state.dirty.client = true;
         
         return graphHandler;
     }
@@ -277,6 +282,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
             
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
             
             return graphHandler;
         }
@@ -323,6 +329,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
 
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
             
             return graphHandler;
         
@@ -389,6 +396,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
             
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
             
 
             return graphHandler;
@@ -442,6 +450,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
 
             return graphHandler;
         }
@@ -479,6 +488,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
             
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
             
 
             return graphHandler;
@@ -509,6 +519,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
         
             
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
 
             return graphHandler;
         }

@@ -24,6 +24,7 @@ function Margin({state, graphHandler}:Method_Generator) : Margin {
             
             state.compute.client();
             if(callback != null) callback(graphHandler);
+            state.dirty.client = true;
 
             return graphHandler;
         }

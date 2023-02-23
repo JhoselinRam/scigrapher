@@ -151,6 +151,7 @@ export interface Graph2D_State extends Graph2D_Options {
     draw : {
         full : ()=>void,
         client : ()=>void,
+        data : ()=>void,
         background : ()=>void,
         backgroundClientRect : ()=>void,
         labels : ()=>void
@@ -170,7 +171,14 @@ export interface Graph2D_State extends Graph2D_Options {
             obj ?: Partial<Axis_Property<Axis_Obj>>
         }
     },
-    data : Array<Dataset_Types>
+    data : Array<Dataset_Types>,
+    dirty : {
+        full : boolean,
+        client : boolean,
+        data : boolean,
+        shouldSort : boolean,
+        dirtify : (sort ?: boolean)=>void
+    }
 }
 
 export interface Method_Generator{

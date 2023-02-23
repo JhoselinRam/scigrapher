@@ -163,7 +163,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         },
         draw : {
             full : fullDraw,
-            client : drawClientArea
+            client : drawClientArea,
+            data : drawData
         },
         context : {
             clientRect : {
@@ -176,6 +177,13 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         },
         axisObj : {},
         data : [],
+        dirty : {
+            full : true,
+            client : true,
+            data : false,
+            shouldSort : false,
+            dirtify
+        },
         background : {...defaultOptions.background, ...options.background},
         margin : {
             x : {...defaultOptions.margin.x, ...options.margin?.x},
@@ -351,9 +359,11 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     //Helper function, draws all elements.
     function fullDraw(){
         const fullState = state as Graph2D_State;
-
-        fullState.draw.background();
-        fullState.draw.labels();
+        
+        if(fullState.dirty.full){
+            fullState.draw.background();
+            fullState.draw.labels();
+        }
         fullState.draw.client();
     }
 
@@ -361,14 +371,35 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     function drawClientArea(){
         const fullState = state as Graph2D_State;
 
-        fullState.draw.backgroundClientRect();
-        fullState.draw.grid();
-        fullState.draw.axis();
-        fullState.draw.secondary();
+        if(fullState.dirty.full || fullState.dirty.client){
+            fullState.draw.backgroundClientRect();
+            fullState.draw.grid();
+            fullState.draw.axis();
+            fullState.draw.secondary();
+        }
+        fullState.draw.data();
+    }
+    
+    //Helper function, draws only the data
+    function drawData(){
+        const fullState = state as Graph2D_State;
+        
+        if(fullState.dirty.full || fullState.dirty.client || fullState.dirty.data){
+            if(fullState.dirty.shouldSort) fullState.data.sort((a,b) => a.index() - b.index());
+            
+            fullState.context.data.clearRect(0,0,fullState.context.data.canvas.width, fullState.context.data.canvas.height);
+            fullState.data.forEach(dataset => dataset._drawData(fullState));
+        }
+        
+        fullState.dirty.full = false;
+        fullState.dirty.client = false;
+        fullState.dirty.data = false;
+    }
 
-        //Clear the data canvas
-        fullState.context.data.clearRect(0,0,fullState.context.data.canvas.width, fullState.context.data.canvas.height);
-        fullState.data.forEach(dataset => dataset._drawData(fullState));
+    //Helpler function, makes the data dirty so it can be redraw
+    function dirtify(sort?:boolean){
+        state.dirty.data = true
+        if(sort != null) state.dirty.shouldSort = true;
     }
 
     //Helper function, set the container properties and adds the canvas element

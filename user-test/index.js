@@ -28,7 +28,7 @@ function yGenerator(){
 
 
 
-const lineChart = LineChart({x:xGenerator, y:yGenerator});
+const lineChart = LineChart();
 
 Graph.addDataset(lineChart).draw();
 
