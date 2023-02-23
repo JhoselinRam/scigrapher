@@ -76,14 +76,20 @@ function drawLines({xPositions, yPositions, state, dataState} : Draw_Line_Helper
 
 function drawMarkers({xPositions, yPositions, state, dataState} : Draw_Line_Helper_Props){
     const marker = createMarker(dataState);
+    const size = typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)?dataState.marker.size() : dataState.marker.size);
+
     state.context.data.strokeStyle = dataState.marker.color;
     state.context.data.fillStyle = dataState.marker.color;
     state.context.data.globalAlpha = dataState.marker.opacity;
     xPositions.forEach((x,i)=>{
         const y = yPositions[i];
+        const scale = typeof size === "number"? size : size[i];
+
         state.context.data.save();
 
         state.context.data.translate(x,y);
+        state.context.data.scale(scale, scale);
+        state.context.data.lineWidth = 1/scale;
         dataState.marker.filled? state.context.data.fill(marker) : state.context.data.stroke(marker);
         
         state.context.data.restore();
@@ -96,8 +102,8 @@ function drawMarkers({xPositions, yPositions, state, dataState} : Draw_Line_Help
 function interpretCoordinates({xScale, yScale, dataState} : Interpret_Line_Coords_Props) : [Array<number>, Array<number>]{
     let xPositions : Array<number> = [];
     let yPositions : Array<number> = [];
-    const xData = isCallable(dataState.x)? dataState.x() : dataState.x;
-    const yData = isCallable(dataState.y)? dataState.y() : dataState.y;
+    const xData = isCallable(dataState.data.x)? dataState.data.x() : dataState.data.x;
+    const yData = isCallable(dataState.data.y)? dataState.data.y() : dataState.data.y;
 
     //Some warning
     if(xData.length !== yData.length) console.error("Length of x and y data arrays are different, this may led to undefined behavior")

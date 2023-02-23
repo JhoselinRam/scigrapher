@@ -1,37 +1,26 @@
 import { Graph2D } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph")).pointerZoom().pointerMove().containerResize();
+const Graph = Graph2D(document.querySelector(".graph")).aspectRatio({anchor:0}).pointerZoom().pointerMove().containerResize();
 
-const linechart = Graph.addDataset("linechart").data({
-    x(){
-        const domain = Graph.axisDomain().x;
-        const n = 200;
+const linechart = Graph.addDataset("linechart").data({x : xData}).data({y:yData});
+
+Graph.draw();
+
+function xData(){
+    const domain = Graph.axisDomain().x;
+        const n = 75;
         const delta = (domain.end - domain.start)/(n-1);
         const positions = [];
         
         for(let i=0; i<n; i++){
-            positions.push(1);
+            positions.push(domain.start + i*delta);
         }
     
-        return positions;    
-    }, 
-    y(){
-        const n = 200;
-        const delta = 2*Math.PI/(n-1);
-        const positions = [];
-        
-        for(let i=0; i<n; i++){
-            positions.push(i*delta);
-        }
-    
-        return positions;    
-    }
-});
+        return positions;  
+}
 
-Graph.draw();
-
-console.dir(linechart.data().x);
-
-
+function yData(){
+    return linechart.data().x.map(coor => Math.sin(coor));
+}
 
 
 

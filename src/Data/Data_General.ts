@@ -19,6 +19,7 @@ function DataGeneral<T extends Dataset_Types, P extends Dataset_States>({dataHan
         
         if(typeof index === "number"){
             dataState.index = index;
+            if(callback != null) callback(dataHandler);
             dataState.dirtify(true);
             return dataHandler;
         }
