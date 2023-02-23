@@ -385,10 +385,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         const fullState = state as Graph2D_State;
         
         if(fullState.dirty.full || fullState.dirty.client || fullState.dirty.data){
-            if(fullState.dirty.shouldSort) fullState.data.sort((a,b) => a.index() - b.index());
+            if(fullState.dirty.shouldSort) fullState.data.sort((a,b) => a.dataset.index() - b.dataset.index());
             
             fullState.context.data.clearRect(0,0,fullState.context.data.canvas.width, fullState.context.data.canvas.height);
-            fullState.data.forEach(dataset => dataset._drawData(fullState));
+            fullState.data.forEach(item => item.draw(fullState));
         }
         
         fullState.dirty.full = false;

@@ -1,36 +1,45 @@
-import { Graph2D, LineChart } from "../dist/lib/index.js";
+import { Graph2D } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph")).pointerZoom().pointerMove().containerResize();
 
-function xGenerator(){
-    const domain = Graph.axisDomain().x;
-    const n = 50;
-    const delta = (domain.end - domain.start)/(n-1);
-    const positions = [];
+const linechart = Graph.addDataset("linechart").data({
+    x(){
+        const domain = Graph.axisDomain().x;
+        const n = 200;
+        const delta = (domain.end - domain.start)/(n-1);
+        const positions = [];
+        
+        for(let i=0; i<n; i++){
+            positions.push(1);
+        }
     
-    for(let i=0; i<n; i++){
-        positions.push(domain.start + i*delta);
-    }
-
-    return positions;
-}
-function yGenerator(){
-    const domain = Graph.axisDomain().x;
-    const n = 50;
-    const delta = (domain.end - domain.start)/(n-1);
-    const positions = [];
+        return positions;    
+    }, 
+    y(){
+        const n = 200;
+        const delta = 2*Math.PI/(n-1);
+        const positions = [];
+        
+        for(let i=0; i<n; i++){
+            positions.push(i*delta);
+        }
     
-    for(let i=0; i<n; i++){
-        positions.push(Math.cos(domain.start + i*delta));
+        return positions;    
     }
+});
 
-    return positions;
-}
+Graph.draw();
+
+console.dir(linechart.data().x);
 
 
 
-const lineChart = LineChart();
 
-Graph.addDataset(lineChart).draw();
+
+
+
+
+
+
 
 function changeBackgroundColor(e){
     const color = e.target.value;

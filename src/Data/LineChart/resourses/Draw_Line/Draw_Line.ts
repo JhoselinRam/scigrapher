@@ -1,14 +1,14 @@
-import { Graph2D_State } from "../../../Graph2D/Graph2D_Types";
-import { getLineDash, getGraphRect } from "../../../tools/Helplers/Helplers.js";
-import { Mapping } from "../../../tools/Mapping/Mapping_Types";
-import { Line_Chart_Method_Generator, Line_Chart_State } from "../LineChart_Types";
-import { Draw, Draw_Helper_Props, Interpret_Coords_Props } from "./Draw_Types";
+import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
+import { getLineDash, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
+import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
+import { Line_Chart_Method_Generator, Line_Chart_State } from "../../LineChart_Types";
+import { Draw_Line, Draw_Line_Helper_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
 
-function Draw({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw{
+function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw_Line{
 
 //--------------- Draw Data -------------------
 
-    function _drawData(state : Graph2D_State){
+    function drawData(state : Graph2D_State){
         //Guard conditions
         if(dataState.useAxis.x === "secondary" && state.scale.secondary.x == null){
             console.error("Dataset uses secondary x axis, but it's not defined yet");
@@ -43,12 +43,12 @@ function Draw({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw{
 //---------------------------------------------
 
     return {
-        _drawData
+        drawData
     }
 
 }
 
-export default Draw;
+export default DrawLine;
 
 
 
@@ -56,7 +56,7 @@ export default Draw;
 
 //--------------- Draw Lines ------------------
 
-function drawLines({xPositions, yPositions, state, dataState} : Draw_Helper_Props){    
+function drawLines({xPositions, yPositions, state, dataState} : Draw_Line_Helper_Props){    
     state.context.data.strokeStyle = dataState.line.color;
     state.context.data.globalAlpha = dataState.line.opacity;
     state.context.data.lineWidth = dataState.line.width;
@@ -74,7 +74,7 @@ function drawLines({xPositions, yPositions, state, dataState} : Draw_Helper_Prop
 //---------------------------------------------
 //------------- Draw Markers ------------------
 
-function drawMarkers({xPositions, yPositions, state, dataState} : Draw_Helper_Props){
+function drawMarkers({xPositions, yPositions, state, dataState} : Draw_Line_Helper_Props){
     const marker = createMarker(dataState);
     state.context.data.strokeStyle = dataState.marker.color;
     state.context.data.fillStyle = dataState.marker.color;
@@ -93,7 +93,7 @@ function drawMarkers({xPositions, yPositions, state, dataState} : Draw_Helper_Pr
 //---------------------------------------------
 //--------- Interpret Coordinates -------------
 
-function interpretCoordinates({xScale, yScale, dataState} : Interpret_Coords_Props) : [Array<number>, Array<number>]{
+function interpretCoordinates({xScale, yScale, dataState} : Interpret_Line_Coords_Props) : [Array<number>, Array<number>]{
     let xPositions : Array<number> = [];
     let yPositions : Array<number> = [];
     const xData = isCallable(dataState.x)? dataState.x() : dataState.x;
@@ -115,13 +115,6 @@ function interpretCoordinates({xScale, yScale, dataState} : Interpret_Coords_Pro
     }
 
     return [xPositions, yPositions];
-}
-
-//---------------------------------------------
-//-------------- Is Callable ------------------
-
-function isCallable(candidate : unknown) :  candidate is Function{
-    return typeof candidate === "function";
 }
 
 //---------------------------------------------

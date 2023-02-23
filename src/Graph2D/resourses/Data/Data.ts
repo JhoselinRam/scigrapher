@@ -1,25 +1,34 @@
-import { Dataset_Types } from "../../../Data/Data_Types";
-import { Graph2D, Method_Generator } from "../../Graph2D_Types";
+import { Datasets, Dataset_Options, Dataset_Types, Draw_Data_Callback } from "../../../Data/Data_Types";
+import { LineChart } from "../../../Data/LineChart/LineChart.js";
+import { Graph2D, Graph2D_State, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
 import { Data } from "./Data_Types";
 
 function Data({state, graphHandler}:Method_Generator) : Data{
 
 //---------------- Add Dataset ----------------
 
-    function addDataset(dataset : Dataset_Types) : Graph2D {
+    function addDataset<T extends Dataset_Types>(type : Datasets, options : RecursivePartial<Dataset_Options> = {}) : T  {
         
-        state.data.push(dataset);
-        dataset._setDirtifyCallback(state.dirty.dirtify);
-        dataset.index(state.data.length);
+        let newDataset : Dataset_Types;
+        let drawDataset : (state : Graph2D_State)=>void;
 
-        return graphHandler;
+        switch(type){
+            case "linechart":
+                [newDataset, drawDataset] = LineChart(options, state.dirty.dirtify);
+                break;
+        }
+
+        state.data.push({dataset : newDataset, draw:drawDataset});
+        newDataset.index(state.data.length);
+
+        return newDataset as T;
     }
 
 //---------------------------------------------
 //---------------------------------------------
 
     function removeDataset(id:string) : Graph2D{
-        state.data = state.data.filter(dataset => dataset.id()!==id);
+        state.data = state.data.filter(item => item.dataset.id()!==id);
         state.dirty.data = true;
 
         return graphHandler;
@@ -28,7 +37,7 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 //---------------------------------------------
 //-------------- Get Datasets -----------------
 
-    function getDatasets() : Array<Dataset_Types>{
+    function getDatasets() : Array<{ dataset : Dataset_Types, draw : Draw_Data_Callback }>{
         return state.data.slice();
     }
 

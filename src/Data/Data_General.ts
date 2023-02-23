@@ -25,18 +25,10 @@ function DataGeneral<T extends Dataset_Types, P extends Dataset_States>({dataHan
     }
 
 //---------------------------------------------
-//---------------------------------------------
-
-    function _setDirtifyCallback(dirtify : (sort?:boolean)=>void){
-        dataState.dirtify = dirtify;
-    }
-
-//---------------------------------------------
 
     return {
         id,
-        index,
-        _setDirtifyCallback
+        index
     }
 }
 

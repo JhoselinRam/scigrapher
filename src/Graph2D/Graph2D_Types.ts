@@ -1,4 +1,4 @@
-import { Dataset_Types } from "../Data/Data_Types";
+import { Dataset_Types, Draw_Data_Callback } from "../Data/Data_Types";
 import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
@@ -171,7 +171,10 @@ export interface Graph2D_State extends Graph2D_Options {
             obj ?: Partial<Axis_Property<Axis_Obj>>
         }
     },
-    data : Array<Dataset_Types>,
+    data : Array<{
+        dataset : Dataset_Types,
+        draw : Draw_Data_Callback
+    }>,
     dirty : {
         full : boolean,
         client : boolean,

@@ -78,3 +78,10 @@ export function getGraphRect(state : Graph2D_State):Rect{
 }
 
 //---------------------------------------------
+//-------------- Is Callable ------------------
+
+export function isCallable(candidate : unknown) :  candidate is Function{
+    return typeof candidate === "function";
+}
+
+//---------------------------------------------

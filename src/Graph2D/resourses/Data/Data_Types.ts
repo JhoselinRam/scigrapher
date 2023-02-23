@@ -1,8 +1,8 @@
-import { Dataset_Types } from "../../../Data/Data_Types";
-import { Graph2D } from "../../Graph2D_Types";
+import { Datasets, Dataset_Options, Dataset_Types, Draw_Data_Callback } from "../../../Data/Data_Types";
+import { Graph2D, RecursivePartial } from "../../Graph2D_Types";
 
 export interface Data {
-    addDataset : (dataset : Dataset_Types)=>Graph2D,
+    addDataset :<T extends Dataset_Types>(type : Datasets, options : RecursivePartial<Dataset_Options>)=>T,
     removeDataset : (id:string)=>Graph2D,
-    getDatasets : ()=>Array<Dataset_Types>
+    getDatasets : ()=>Array<{ dataset : Dataset_Types, draw : Draw_Data_Callback }>
 }

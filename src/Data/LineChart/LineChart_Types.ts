@@ -1,9 +1,12 @@
 import { Axis_Property, Line_Style } from "../../Graph2D/Graph2D_Types";
 import { Data_General, Data_Object_State } from "../Data_Types";
+import { Bind_Line } from "./resourses/Bind_Line/Bind_Line_Types";
 
 export type Marker_Type = "circle" | "square" | "v-rect" | "h-rect" | "cross" | "star" | "triangle" | "inv-triangle"
 
-export interface Line_Chart extends Required<Data_General<Line_Chart>>
+export interface Line_Chart extends 
+Data_General<Line_Chart>,
+Bind_Line
 {}
 
 export interface Line_Chart_Options {
@@ -30,12 +33,11 @@ export interface Line_Attributes {
     style : Line_Style | string
 }
 
-export interface Line_Chart_State extends Data_Object_State, Line_Chart_Options {
-    x : Array<number> | (()=>Array<number>),
-    y : Array<number> | (()=>Array<number>),
-}
+export interface Line_Chart_State extends Data_Object_State, Line_Chart_Options, Axis_Property<Line_Char_Data>{}
 
 export interface Line_Chart_Method_Generator {
     dataState : Line_Chart_State,
     dataHandler : Line_Chart
 }
+
+export type Line_Char_Data = Array<number> | (()=>Array<number>);

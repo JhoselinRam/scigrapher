@@ -1,13 +1,14 @@
-import { RecursivePartial } from "../../Graph2D/Graph2D_Types";
+import {RecursivePartial } from "../../Graph2D/Graph2D_Types";
 import DataGeneral from "../Data_General.js";
-import { SetPartial } from "../Data_Types";
-import Draw from "./Draw/Draw.js";
+import { Draw_Data_Callback } from "../Data_Types";
+import DrawLine from "./resourses/Draw_Line/Draw_Line.js";
 import { Line_Chart, Line_Chart_Options, Line_Chart_State } from "./LineChart_Types";
+import BindLine from "./resourses/Bind_Line/Bind_Line.js";
 
 const defaultOptions : Line_Chart_Options = {
     useAxis : {x:"primary", y:"primary"},
     marker : {
-        enable : true,
+        enable : false,
         color : "#0043e0",
         opacity : 1,
         filled : true,
@@ -21,18 +22,19 @@ const defaultOptions : Line_Chart_Options = {
         style : "solid",
         width : 1
     },
-    polar : false
+    polar : true
     
 };
 
-export function LineChart(options : RecursivePartial<Line_Chart_Options> = {}) : Line_Chart{
+export function LineChart(options : RecursivePartial<Line_Chart_Options>, dirtify:(sort?:boolean)=>void) : [Line_Chart, Draw_Data_Callback]{
     //State of the data set
-    const dataState : SetPartial<Line_Chart_State, "dirtify"> = {
+    const dataState : Line_Chart_State = {
         ...defaultOptions, ...options,
         id : crypto.randomUUID(),
-        x :  [-3,-2,-1,0,1,2,3],
-        y :  [-3,-2,-1,0,1,2,3],
+        x :  [],
+        y :  [],
         index : 0,
+        dirtify,
         useAxis : {...defaultOptions.useAxis, ...options.useAxis},
         marker : {...defaultOptions.marker, ...options.marker},
         line : {...defaultOptions.line, ...options.line}
@@ -42,17 +44,17 @@ export function LineChart(options : RecursivePartial<Line_Chart_Options> = {}) :
 
     //Method generators
     const general = DataGeneral<Line_Chart,Line_Chart_State>({dataHandler : dataHandler as Line_Chart, dataState : dataState as Line_Chart_State});
-    const draw = Draw({dataHandler : dataHandler as Line_Chart, dataState : dataState as Line_Chart_State});
+    const draw = DrawLine({dataHandler : dataHandler as Line_Chart, dataState : dataState as Line_Chart_State});
+    const bind = BindLine({dataHandler : dataHandler as Line_Chart, dataState : dataState as Line_Chart_State});
 
 
     //Main handler population
-    dataHandler._drawData = draw._drawData; //For internal use only
     dataHandler.id = general.id;
     dataHandler.index = general.index;
-    dataHandler._setDirtifyCallback = general._setDirtifyCallback; //For internal use only
+    dataHandler.data = bind.data;
 
 
 //---------------------------------------------
 
-    return dataHandler as Line_Chart
+    return [dataHandler as Line_Chart, draw.drawData];
 }
