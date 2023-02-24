@@ -5,26 +5,43 @@ import { Bind_Line } from "./Bind_Line_Types";
 
 function BindLine({dataHandler, dataState}:Line_Chart_Method_Generator) : Bind_Line{
 
-//----------------- Data ----------------------
+//---------------- X Data ---------------------
 
-    function data(data : Partial<Axis_Property<Line_Char_Data>>, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
-    function data(arg:void) : Axis_Property<Array<number>>;
-    function data(data : Partial<Axis_Property<Line_Char_Data>> | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Axis_Property<Array<number>> | undefined {
+    function xData(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function xData(arg:void) : Array<number>;
+    function xData(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
         if(typeof data === "undefined" && callback == null){
-            const xData = isCallable(dataState.data.x)? dataState.data.x() : dataState.data.x.slice();
-            const yData = isCallable(dataState.data.y)? dataState.data.y() : dataState.data.y.slice();
-
-            return {x : xData, y:yData};
+            const xData = isCallable(dataState.data.x)? dataState.data.x(dataHandler) : dataState.data.x.slice();
+            return xData;
         }
 
-        if(typeof data === "object"){
-            if(data.x == null && data.y == null) return dataHandler;
-            
-            if(data.x != null) dataState.data.x = isCallable(data.x)? data.x : data.x.slice();
-            if(data.y != null) dataState.data.y = isCallable(data.y)? data.y : data.y.slice();
+        if(typeof data === "object" || typeof data === "function"){
+            dataState.data.x = isCallable(data)? data : data.slice();
 
             if(callback != null) callback(dataHandler);
             dataState.dirtify();
+            
+            return dataHandler;
+        }
+    }
+
+//---------------------------------------------
+//---------------- Y Data ---------------------
+
+    function yData(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function yData(arg:void) : Array<number>;
+    function yData(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
+        if(typeof data === "undefined" && callback == null){
+            const yData = isCallable(dataState.data.y)? dataState.data.y(dataHandler) : dataState.data.y.slice();
+            return yData;
+        }
+
+        if(typeof data === "object" || typeof data === "function"){
+            dataState.data.y = isCallable(data)? data : data.slice();
+
+            if(callback != null) callback(dataHandler);
+            dataState.dirtify();
+
             return dataHandler;
         }
     }
@@ -35,8 +52,20 @@ function BindLine({dataHandler, dataState}:Line_Chart_Method_Generator) : Bind_L
     function markerSize(size : Marker_Size, callback?:(handler?:Line_Chart)=>void):Line_Chart;
     function markerSize(arg:void) : number | Array<number>;
     function markerSize(size : Marker_Size | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | number | Array<number> | undefined{
-        if(typeof size === "undefined" && callback==null)
-            return typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)? dataState.marker.size() : dataState.marker.size.slice());
+        if(typeof size === "undefined" && callback==null){
+            if(typeof dataState.marker.size==="number"){
+                return dataState.marker.size;
+            } else if(isCallable(dataState.marker.size)){
+                const xPositions = xData();
+                const y = yData();
+                const callback = dataState.marker.size;
+
+                return xPositions.map((x,i)=>callback(x,y[i],i,dataHandler));
+            }else{
+                return dataState.marker.size.slice();
+            }
+
+        }
 
         if(typeof size !== "undefined"){
             
@@ -51,7 +80,8 @@ function BindLine({dataHandler, dataState}:Line_Chart_Method_Generator) : Bind_L
 //---------------------------------------------
 
     return {
-        data,
+        xData,
+        yData,
         markerSize
     };
 }

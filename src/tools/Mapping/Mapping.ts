@@ -26,7 +26,15 @@ function mapping({from, to, type="linear", base=10}:Mapping_Props) : Mapping{
             }
             map = (value:number) => m*Math.log(Math.abs(value))/baseLog + b;
             invert = (value:number) => Math.exp((value-b)/m*baseLog);
+            break;
 
+        case "sqr":
+            let sign = 1;
+            if(from[0]<=0 && from[0]<=0)
+            m = (to[1] - to[0])/(Math.sqrt(Math.abs(from[1])) - Math.sqrt(Math.abs(from[0])));
+            b  = (Math.sqrt(Math.abs(from[1]))*to[0] - Math.sqrt(Math.abs(from[0]))*to[1]) / (Math.sqrt(Math.abs(from[1])) - Math.sqrt(Math.abs(from[0])));
+            map = (value:number)=> sign * (m*Math.sqrt(Math.abs(value))+b);
+            invert = (value : number)=> sign * Math.pow((Math.abs(value)-b)/m ,2);
             break;
     }
 

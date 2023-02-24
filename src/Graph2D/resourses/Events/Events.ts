@@ -1,5 +1,5 @@
 import mapping from "../../../tools/Mapping/Mapping.js";
-import { Mapping } from "../../../tools/Mapping/Mapping_Types";
+import { Mapping, Mapping_Type } from "../../../tools/Mapping/Mapping_Types";
 import { Axis_Property, Graph2D, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
 import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Resize_Axis, Resize_Event_Props, Resize_State, Scale_Reference, Zoom_Event, Zoom_State } from "./Events_Types";
 
@@ -842,8 +842,8 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         const axisRect = state.context.axisRect();
         let sourseAxis : Primary_Axis | Secondary_Axis = state.axis.x;
         let targetAxis : Primary_Axis | Secondary_Axis = state.axis.y;
-        let sourseType : "log" | "linear" = "linear";
-        let targetType : "log" | "linear" = "linear";
+        let sourseType : Mapping_Type = "linear";
+        let targetType : Mapping_Type = "linear";
         let sourseSize = axisRect.width;
         let targetSize = axisRect.height;
         

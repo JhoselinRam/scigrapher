@@ -16,7 +16,7 @@ const defaultOptions : Line_Chart_Options = {
         type : "circle"
     },
     line : {
-        enable : false,
+        enable : true,
         color : "#0043e0",
         opacity : 1,
         style : "solid",
@@ -56,7 +56,8 @@ export function LineChart(options : RecursivePartial<Line_Chart_Options>, dirtif
     //Main handler population
     dataHandler.id = general.id;
     dataHandler.index = general.index;
-    dataHandler.data = bind.data;
+    dataHandler.xData = bind.xData;
+    dataHandler.yData = bind.yData;
     dataHandler.markerSize = bind.markerSize;
 
 

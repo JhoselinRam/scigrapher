@@ -3,8 +3,8 @@ import { Data_General, Data_Object_State } from "../Data_Types";
 import { Bind_Line } from "./resourses/Bind_Line/Bind_Line_Types";
 
 export type Marker_Type = "circle" | "square" | "v-rect" | "h-rect" | "cross" | "star" | "triangle" | "inv-triangle";
-export type Line_Char_Data = Array<number> | (()=>Array<number>);
-export type Marker_Size = number | Array<number> | (()=>Array<number>);
+export type Line_Char_Data = Array<number> | ((handler?:Line_Chart)=>Array<number>);
+export type Marker_Size = number | Array<number> | ((x?:number, y?:number, index?:number, handler?:Line_Chart)=>number);
 
 export interface Line_Chart extends 
 Data_General<Line_Chart>,

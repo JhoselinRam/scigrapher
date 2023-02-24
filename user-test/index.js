@@ -1,11 +1,15 @@
-import { Graph2D } from "../dist/lib/index.js";
+import { Graph2D, mapping } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph")).aspectRatio({anchor:0}).pointerZoom().pointerMove().containerResize();
-
-const linechart = Graph.addDataset("linechart");
-
-Graph.draw();
+const area = mapping({from:[0,1], to:[0,5], type:"sqr"});
 
 
+
+ const linechart = Graph.addDataset("linechart")
+                        .xData(xData)
+                        .yData(yData)
+                        .markerSize(markerSize);
+
+ Graph.draw();
 
 function xData(){
     const domain = Graph.axisDomain().x;
@@ -20,9 +24,14 @@ function xData(){
         return positions;  
 }
 
-function yData(){
-    return xData();
+function yData(chart){
+    return chart.xData().map(x=>Math.cos(x));
 } 
+
+
+function markerSize(x,y){
+    return area.map(Math.abs(y));
+}
 
 
 

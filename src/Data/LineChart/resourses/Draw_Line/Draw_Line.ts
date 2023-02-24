@@ -21,7 +21,7 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
 
         const xScale = dataState.useAxis.x === "primary"? state.scale.primary.x : state.scale.secondary.x as Mapping;
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
-        const [xPositions, yPositions] = interpretCoordinates({xScale, yScale, dataState});
+        const [xPositions, yPositions] = interpretCoordinates({dataState, dataHandler});
         const clipRect = getGraphRect(state); 
 
         //Common canvas configurations
@@ -32,9 +32,9 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
         state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         if(dataState.line.enable)
-            drawLines({state, dataState, xPositions, yPositions});
+            drawLines({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
         if(dataState.marker.enable)
-            drawMarkers({state, dataState, xPositions, yPositions});
+            drawMarkers({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
 
         state.context.data.restore();
 
@@ -56,54 +56,56 @@ export default DrawLine;
 
 //--------------- Draw Lines ------------------
 
-function drawLines({xPositions, yPositions, state, dataState} : Draw_Line_Helper_Props){    
-    state.context.data.strokeStyle = dataState.line.color;
-    state.context.data.globalAlpha = dataState.line.opacity;
-    state.context.data.lineWidth = dataState.line.width;
-    state.context.data.setLineDash(getLineDash(dataState.line.style));
-    state.context.data.beginPath();
-    state.context.data.moveTo(xPositions[0], yPositions[0]);
-    xPositions.forEach((x,i)=>{
+function drawLines({xPositions, yPositions, context, dataState, xScale, yScale} : Draw_Line_Helper_Props){    
+    context.strokeStyle = dataState.line.color;
+    context.globalAlpha = dataState.line.opacity;
+    context.lineWidth = dataState.line.width;
+    context.setLineDash(getLineDash(dataState.line.style));
+    context.beginPath();
+    context.moveTo(xScale.map(xPositions[0]), yScale.map(yPositions[0]));
+    xPositions.forEach((positionX,i)=>{
         if(i === 0) return;
-        const y = yPositions[i];
-        state.context.data.lineTo(x ,y);
+        const x = xScale.map(positionX);
+        const y = yScale.map(yPositions[i]);
+        context.lineTo(x ,y);
     });
-    state.context.data.stroke();
+    context.stroke();
 }
 
 //---------------------------------------------
 //------------- Draw Markers ------------------
 
-function drawMarkers({xPositions, yPositions, state, dataState} : Draw_Line_Helper_Props){
+function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, xScale, yScale} : Draw_Line_Helper_Props){
     const marker = createMarker(dataState);
-    const size = typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)?dataState.marker.size() : dataState.marker.size);
 
-    state.context.data.strokeStyle = dataState.marker.color;
-    state.context.data.fillStyle = dataState.marker.color;
-    state.context.data.globalAlpha = dataState.marker.opacity;
-    xPositions.forEach((x,i)=>{
-        const y = yPositions[i];
-        const scale = typeof size === "number"? size : size[i];
+    context.strokeStyle = dataState.marker.color;
+    context.fillStyle = dataState.marker.color;
+    context.globalAlpha = dataState.marker.opacity;
+    xPositions.forEach((positionX,i)=>{
+        const positionY = yPositions[i];
+        const x = xScale.map(positionX);
+        const y = yScale.map(positionY);
+        const scale = typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)?dataState.marker.size(positionX,positionY,i,dataHandler) : dataState.marker.size[i]);
 
-        state.context.data.save();
+        context.save();
 
-        state.context.data.translate(x,y);
-        state.context.data.scale(scale, scale);
-        state.context.data.lineWidth = 1/scale;
-        dataState.marker.filled? state.context.data.fill(marker) : state.context.data.stroke(marker);
+        context.translate(x,y);
+        context.scale(scale, scale);
+        context.lineWidth = 1/Math.abs(scale);
+        dataState.marker.filled? context.fill(marker) : context.stroke(marker);
         
-        state.context.data.restore();
+        context.restore();
     })
 }
 
 //---------------------------------------------
 //--------- Interpret Coordinates -------------
 
-function interpretCoordinates({xScale, yScale, dataState} : Interpret_Line_Coords_Props) : [Array<number>, Array<number>]{
+function interpretCoordinates({ dataState, dataHandler } : Interpret_Line_Coords_Props) : [Array<number>, Array<number>]{
     let xPositions : Array<number> = [];
     let yPositions : Array<number> = [];
-    const xData = isCallable(dataState.data.x)? dataState.data.x() : dataState.data.x;
-    const yData = isCallable(dataState.data.y)? dataState.data.y() : dataState.data.y;
+    const xData = isCallable(dataState.data.x)? dataState.data.x(dataHandler) : dataState.data.x;
+    const yData = isCallable(dataState.data.y)? dataState.data.y(dataHandler) : dataState.data.y;
 
     //Some warning
     if(xData.length !== yData.length) console.error("Length of x and y data arrays are different, this may led to undefined behavior")
@@ -112,12 +114,12 @@ function interpretCoordinates({xScale, yScale, dataState} : Interpret_Line_Coord
         xData.forEach((x, i)=>{
             const y = yData[i];
 
-            xPositions.push(xScale.map(x*Math.cos(y)));
-            yPositions.push(yScale.map(x*Math.sin(y)));
+            xPositions.push(x*Math.cos(y));
+            yPositions.push(x*Math.sin(y));
         });
     }else{
-        xPositions = xData.map(point => xScale.map(point));
-        yPositions = yData.map(point => yScale.map(point));
+        xPositions = xData;
+        yPositions = yData;
     }
 
     return [xPositions, yPositions];
