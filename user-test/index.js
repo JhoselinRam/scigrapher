@@ -1,9 +1,11 @@
 import { Graph2D } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph")).aspectRatio({anchor:0}).pointerZoom().pointerMove().containerResize();
 
-const linechart = Graph.addDataset("linechart").data({x : xData}).data({y:yData});
+const linechart = Graph.addDataset("linechart");
 
 Graph.draw();
+
+
 
 function xData(){
     const domain = Graph.axisDomain().x;
@@ -19,8 +21,9 @@ function xData(){
 }
 
 function yData(){
-    return linechart.data().x.map(coor => Math.sin(coor));
-}
+    return xData();
+} 
+
 
 
 
