@@ -1,8 +1,8 @@
 import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { getLineDash, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
-import { Line_Chart_Method_Generator, Line_Chart_State } from "../../LineChart_Types";
-import { Draw_Line, Draw_Line_Helper_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
+import { Line_Chart_Method_Generator } from "../../LineChart_Types";
+import { Create_Error_Props, Create_Marker_Props, Draw_Line, Draw_Line_Helper_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
 
 function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw_Line{
 
@@ -35,6 +35,9 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
             drawLines({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
         if(dataState.marker.enable)
             drawMarkers({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
+        if(dataState.errorBar.x.enable || dataState.errorBar.x.enable)
+            drawErrorBars({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
+
 
         state.context.data.restore();
 
@@ -76,27 +79,39 @@ function drawLines({xPositions, yPositions, context, dataState, xScale, yScale} 
 //------------- Draw Markers ------------------
 
 function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, xScale, yScale} : Draw_Line_Helper_Props){
-    const marker = createMarker(dataState);
 
     context.strokeStyle = dataState.marker.color;
     context.fillStyle = dataState.marker.color;
     context.globalAlpha = dataState.marker.opacity;
+    context.setLineDash(getLineDash(dataState.marker.style));
     xPositions.forEach((positionX,i)=>{
         const positionY = yPositions[i];
         const x = xScale.map(positionX);
         const y = yScale.map(positionY);
-        const scale = typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)?dataState.marker.size(positionX,positionY,i,dataHandler) : dataState.marker.size[i]);
-
+        const size = typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)?dataState.marker.size(positionX,positionY,i,dataHandler) : dataState.marker.size[i]);
+        const marker = createMarker({size, type:dataState.marker.type});
+        
         context.save();
 
         context.translate(x,y);
-        context.scale(scale, scale);
-        context.lineWidth = 1/Math.abs(scale);
+        context.lineWidth = dataState.marker.width;
         dataState.marker.filled? context.fill(marker) : context.stroke(marker);
         
         context.restore();
-    })
+    });
 }
+
+//---------------------------------------------
+//---------------------------------------------
+
+    function drawErrorBars({context, dataHandler, dataState, xPositions, xScale, yPositions, yScale} : Draw_Line_Helper_Props){
+        xPositions.forEach((positionX , i)=>{
+            const positionY = yPositions[i];
+            const x = xScale.map(positionX);
+            const y = yScale.map(positionY);
+            const errorX = dataState.errorBar.x.data;
+        });
+    }
 
 //---------------------------------------------
 //--------- Interpret Coordinates -------------
@@ -128,88 +143,88 @@ function interpretCoordinates({ dataState, dataHandler } : Interpret_Line_Coords
 //---------------------------------------------
 //------------- Create Marker ------------------
 
-function createMarker(dataState : Line_Chart_State) : Path2D {
+function createMarker({type, size} : Create_Marker_Props) : Path2D {
     const path = new Path2D();
     
     
-    switch(dataState.marker.type){
+    switch(type){
         case "circle":{
-            const size = 8;
-            path.ellipse(0, 0, size/2, size/2, 0, 0, 2*Math.PI)
+            const absoluteSize = 8 * size;
+            path.ellipse(0, 0, absoluteSize/2, absoluteSize/2, 0, 0, 2*Math.PI)
         }
         break;
 
         case "square":{
-            const size = 8;
-            path.moveTo(-size/2, size/2);
-            path.lineTo(size/2, size/2);
-            path.lineTo(size/2, -size/2);
-            path.lineTo(-size/2, -size/2);
+            const absoluteSize = 8 * size;
+            path.moveTo(-absoluteSize/2, absoluteSize/2);
+            path.lineTo(absoluteSize/2, absoluteSize/2);
+            path.lineTo(absoluteSize/2, -absoluteSize/2);
+            path.lineTo(-absoluteSize/2, -absoluteSize/2);
             path.closePath();
         }
         break;
             
         case "h-rect":{
-            const size = 11;
-            path.moveTo(-size/2, size/4);
-            path.lineTo(size/2, size/4);
-            path.lineTo(size/2, -size/4);
-            path.lineTo(-size/2, -size/4);
+            const absoluteSize = 11 * size;
+            path.moveTo(-absoluteSize/2, absoluteSize/4);
+            path.lineTo(absoluteSize/2, absoluteSize/4);
+            path.lineTo(absoluteSize/2, -absoluteSize/4);
+            path.lineTo(-absoluteSize/2, -absoluteSize/4);
             path.closePath();
         }
         break;
             
         case "v-rect":{
-            const size = 11;
-            path.moveTo(-size/4, size/2);
-            path.lineTo(size/4, size/2);
-            path.lineTo(size/4, -size/2);
-            path.lineTo(-size/4, -size/2);
+            const absoluteSize = 11 * size;
+            path.moveTo(-absoluteSize/4, absoluteSize/2);
+            path.lineTo(absoluteSize/4, absoluteSize/2);
+            path.lineTo(absoluteSize/4, -absoluteSize/2);
+            path.lineTo(-absoluteSize/4, -absoluteSize/2);
             path.closePath();
         }
         break;
 
         case "triangle":{
-            const size = 11;
-            path.moveTo(0, -size/2);
-            path.lineTo(size/2*Math.cos(7/6*Math.PI), -size/2*Math.sin(7/6*Math.PI));
-            path.lineTo(size/2*Math.cos(11/6*Math.PI), -size/2*Math.sin(11/6*Math.PI));
+            const absoluteSize = 11 * size;
+            path.moveTo(0, -absoluteSize/2);
+            path.lineTo(absoluteSize/2*Math.cos(7/6*Math.PI), -absoluteSize/2*Math.sin(7/6*Math.PI));
+            path.lineTo(absoluteSize/2*Math.cos(11/6*Math.PI), -absoluteSize/2*Math.sin(11/6*Math.PI));
             path.closePath();
         }
         break;
             
         case "inv-triangle":{
-            const size = 11;
-            path.moveTo(0, size/2);
-            path.lineTo(size/2*Math.cos(7/6*Math.PI), size/2*Math.sin(7/6*Math.PI));
-            path.lineTo(size/2*Math.cos(11/6*Math.PI), size/2*Math.sin(11/6*Math.PI));
+            const absoluteSize = 11 * size;
+            path.moveTo(0, absoluteSize/2);
+            path.lineTo(absoluteSize/2*Math.cos(7/6*Math.PI), absoluteSize/2*Math.sin(7/6*Math.PI));
+            path.lineTo(absoluteSize/2*Math.cos(11/6*Math.PI), absoluteSize/2*Math.sin(11/6*Math.PI));
             path.closePath();
         }
         break;
 
         case "cross":{
-            const size = 10;
-            path.moveTo(-size/6, -size/2);
-            path.lineTo(size/6, -size/2);
-            path.lineTo(size/6, -size/6);
-            path.lineTo(size/2, -size/6);
-            path.lineTo(size/2, size/6);
-            path.lineTo(size/6, size/6);
-            path.lineTo(size/6, size/2);
-            path.lineTo(-size/6, size/2);
-            path.lineTo(-size/6, size/6);
-            path.lineTo(-size/2, size/6);
-            path.lineTo(-size/2, -size/6);
-            path.lineTo(-size/6, -size/6);
+            const absoluteSize = 10 * size;
+            path.moveTo(-absoluteSize/6, -absoluteSize/2);
+            path.lineTo(absoluteSize/6, -absoluteSize/2);
+            path.lineTo(absoluteSize/6, -absoluteSize/6);
+            path.lineTo(absoluteSize/2, -absoluteSize/6);
+            path.lineTo(absoluteSize/2, absoluteSize/6);
+            path.lineTo(absoluteSize/6, absoluteSize/6);
+            path.lineTo(absoluteSize/6, absoluteSize/2);
+            path.lineTo(-absoluteSize/6, absoluteSize/2);
+            path.lineTo(-absoluteSize/6, absoluteSize/6);
+            path.lineTo(-absoluteSize/2, absoluteSize/6);
+            path.lineTo(-absoluteSize/2, -absoluteSize/6);
+            path.lineTo(-absoluteSize/6, -absoluteSize/6);
             path.closePath();
         }
         break;
 
         case "star":{
-            const size = 14;
+            const absoluteSize = 14 * size;
             const angle = Math.PI/2;
             const angle0 = angle + 2*Math.PI/10;
-            const r = size/2;
+            const r = absoluteSize/2;
             const r0 = Math.hypot(r*0.22451398828979263, r*0.3090169943749474); //Some algebra
             path.moveTo(0, -r);
             for(let i=1; i<=5; i++){
@@ -221,6 +236,13 @@ function createMarker(dataState : Line_Chart_State) : Path2D {
     }
 
     return path;
+}
+
+//---------------------------------------------
+//---------------------------------------------
+
+function createErrorBar({ x, y, type } : Create_Error_Props) : Path2D{
+
 }
 
 //---------------------------------------------

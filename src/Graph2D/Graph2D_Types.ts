@@ -73,7 +73,7 @@ export interface Primary_Grid {
     style : Line_Style | string
 }
 
-export type Line_Style = "solid" | "dot" | "dash" | "long-dash" | "dash-dot" | "dash-2dot";
+export type Line_Style = "solid" | "dot" | "dash" | "long-dash" | "dash-dot" | "dash-2dot" | string;
 
 export interface Secondary_Grid extends Primary_Grid {
     minSpacing : number,

@@ -2,7 +2,7 @@ import {RecursivePartial } from "../../Graph2D/Graph2D_Types";
 import DataGeneral from "../Data_General.js";
 import { Draw_Data_Callback } from "../Data_Types";
 import DrawLine from "./resourses/Draw_Line/Draw_Line.js";
-import { Line_Chart, Line_Chart_Options, Line_Chart_State, Line_Char_Data, Marker_Size } from "./LineChart_Types";
+import { Error_Bar_Data, Line_Chart, Line_Chart_Options, Line_Chart_State, Line_Char_Data, Marker_Size } from "./LineChart_Types";
 import BindLine from "./resourses/Bind_Line/Bind_Line.js";
 
 const defaultOptions : Line_Chart_Options = {
@@ -11,9 +11,11 @@ const defaultOptions : Line_Chart_Options = {
         enable : true,
         color : "#0043e0",
         opacity : 1,
-        filled : false,
+        filled : true,
         size : 1,
-        type : "circle"
+        type : "circle",
+        width : 1,
+        style : "solid"
     },
     line : {
         enable : true,
@@ -26,6 +28,25 @@ const defaultOptions : Line_Chart_Options = {
     data : {
         x :  [],
         y :  []
+    },
+    errorBar : {
+        type : "tail-cross",
+        x : {
+            enable : true,
+            color : "#002f9e",
+            opacity : 0.8,
+            style: "solid",
+            width : 1,
+            data : 0.1
+        },
+        y : {
+            enable : true,
+            color : "#002f9e",
+            opacity : 0.8,
+            style: "solid",
+            width : 1,
+            data : 0.1
+        }
     }
 };
 
@@ -42,6 +63,17 @@ export function LineChart(options : RecursivePartial<Line_Chart_Options>, dirtif
         data : {
             x : options.data?.x == null ? [] : options.data.x as Line_Char_Data,
             y : options.data?.y == null ? [] : options.data.y as Line_Char_Data
+        },
+        errorBar : {
+            ...defaultOptions.errorBar , ...options.errorBar,
+            x : {
+                ...defaultOptions.errorBar.x, ...options.errorBar?.x,
+                data : options.errorBar?.x?.data == null? 0 : options.errorBar.x.data as Error_Bar_Data
+            },
+            y : {
+                ...defaultOptions.errorBar.y, ...options.errorBar?.y,
+                data : options.errorBar?.y?.data == null? 0 : options.errorBar.y.data as Error_Bar_Data
+            },
         }
     };  
     //Main handler
