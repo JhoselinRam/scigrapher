@@ -110,8 +110,8 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
 //--------------- Draw Polar ------------------
 
     function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
-        const xCenter = state.scale.primary.x.map(0);
-        const yCenter = state.scale.primary.y.map(0);
+        const xCenter = Math.round(state.scale.primary.x.map(0));
+        const yCenter = Math.round(state.scale.primary.y.map(0));
 
         if(axis==="x"){
             const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item)).sort();

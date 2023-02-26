@@ -35,7 +35,7 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
             drawLines({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
         if(dataState.marker.enable)
             drawMarkers({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
-        if(dataState.errorBar.x.enable || dataState.errorBar.x.enable)
+        if(dataState.errorBar.x.enable || dataState.errorBar.y.enable)
             drawErrorBars({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
 
 
@@ -86,8 +86,8 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
     context.setLineDash(getLineDash(dataState.marker.style));
     xPositions.forEach((positionX,i)=>{
         const positionY = yPositions[i];
-        const x = xScale.map(positionX);
-        const y = yScale.map(positionY);
+        const x = Math.round(xScale.map(positionX)) + dataState.marker.width%2 * 0.5;
+        const y = Math.round(yScale.map(positionY)) + dataState.marker.width%2 * 0.5;
         const size = typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)?dataState.marker.size(positionX,positionY,i,dataHandler) : dataState.marker.size[i]);
         const marker = createMarker({size, type:dataState.marker.type});
         
@@ -107,9 +107,38 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
     function drawErrorBars({context, dataHandler, dataState, xPositions, xScale, yPositions, yScale} : Draw_Line_Helper_Props){
         xPositions.forEach((positionX , i)=>{
             const positionY = yPositions[i];
-            const x = xScale.map(positionX);
-            const y = yScale.map(positionY);
-            const errorX = dataState.errorBar.x.data;
+            let xError = 0;
+            let yError = 0;
+            
+            if(dataState.errorBar.x.enable)
+                xError = typeof dataState.errorBar.x.data === "number"? dataState.errorBar.x.data : (isCallable(dataState.errorBar.x.data)? dataState.errorBar.x.data(positionX, positionY, i, dataHandler) : dataState.errorBar.x.data[i]);
+            if(dataState.errorBar.y.enable)
+                yError = typeof dataState.errorBar.y.data === "number"? dataState.errorBar.y.data : (isCallable(dataState.errorBar.y.data)? dataState.errorBar.y.data(positionX, positionY, i, dataHandler) : dataState.errorBar.y.data[i]);
+            
+
+            if(dataState.errorBar.x.enable){
+               const xPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"x"});
+
+                context.save();
+                context.strokeStyle = dataState.errorBar.x.color;
+                context.globalAlpha = dataState.errorBar.x.opacity;
+                context.lineWidth = dataState.errorBar.x.width;
+                context.setLineDash(getLineDash(dataState.errorBar.x.style));
+                context.stroke(xPath);
+                context.restore();
+            }
+            
+            if(dataState.errorBar.y.enable){
+               const yPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"y"});
+
+                context.save();
+                context.strokeStyle = dataState.errorBar.y.color;
+                context.globalAlpha = dataState.errorBar.y.opacity;
+                context.lineWidth = dataState.errorBar.y.width;
+                context.setLineDash(getLineDash(dataState.errorBar.y.style));
+                context.stroke(yPath);
+                context.restore();
+            }
         });
     }
 
@@ -149,13 +178,15 @@ function createMarker({type, size} : Create_Marker_Props) : Path2D {
     
     switch(type){
         case "circle":{
-            const absoluteSize = 8 * size;
+            let absoluteSize = Math.round(8 * size);
+            absoluteSize += absoluteSize%2; 
             path.ellipse(0, 0, absoluteSize/2, absoluteSize/2, 0, 0, 2*Math.PI)
         }
         break;
 
         case "square":{
-            const absoluteSize = 8 * size;
+            let absoluteSize = 8 * size;
+            absoluteSize += absoluteSize%2;
             path.moveTo(-absoluteSize/2, absoluteSize/2);
             path.lineTo(absoluteSize/2, absoluteSize/2);
             path.lineTo(absoluteSize/2, -absoluteSize/2);
@@ -166,56 +197,62 @@ function createMarker({type, size} : Create_Marker_Props) : Path2D {
             
         case "h-rect":{
             const absoluteSize = 11 * size;
-            path.moveTo(-absoluteSize/2, absoluteSize/4);
-            path.lineTo(absoluteSize/2, absoluteSize/4);
-            path.lineTo(absoluteSize/2, -absoluteSize/4);
-            path.lineTo(-absoluteSize/2, -absoluteSize/4);
+            const minor = Math.round(absoluteSize/4);
+            const mayor = Math.round(absoluteSize/2);
+            path.moveTo(-mayor, minor);
+            path.lineTo(mayor, minor);
+            path.lineTo(mayor, -minor);
+            path.lineTo(-mayor, -minor);
             path.closePath();
         }
         break;
             
         case "v-rect":{
             const absoluteSize = 11 * size;
-            path.moveTo(-absoluteSize/4, absoluteSize/2);
-            path.lineTo(absoluteSize/4, absoluteSize/2);
-            path.lineTo(absoluteSize/4, -absoluteSize/2);
-            path.lineTo(-absoluteSize/4, -absoluteSize/2);
+            const minor = Math.round(absoluteSize/4);
+            const mayor = Math.round(absoluteSize/2);
+            path.moveTo(-minor, mayor);
+            path.lineTo(minor, mayor);
+            path.lineTo(minor, -mayor);
+            path.lineTo(-minor, -mayor);
             path.closePath();
         }
         break;
 
         case "triangle":{
             const absoluteSize = 11 * size;
-            path.moveTo(0, -absoluteSize/2);
-            path.lineTo(absoluteSize/2*Math.cos(7/6*Math.PI), -absoluteSize/2*Math.sin(7/6*Math.PI));
-            path.lineTo(absoluteSize/2*Math.cos(11/6*Math.PI), -absoluteSize/2*Math.sin(11/6*Math.PI));
+            path.moveTo(0, Math.round(-absoluteSize/2));
+            path.lineTo(Math.round(absoluteSize/2*Math.cos(7/6*Math.PI)), -Math.round(absoluteSize/2*Math.sin(7/6*Math.PI)));
+            path.lineTo(Math.round(absoluteSize/2*Math.cos(11/6*Math.PI)), -Math.round(absoluteSize/2*Math.sin(11/6*Math.PI)));
             path.closePath();
         }
         break;
             
         case "inv-triangle":{
             const absoluteSize = 11 * size;
-            path.moveTo(0, absoluteSize/2);
-            path.lineTo(absoluteSize/2*Math.cos(7/6*Math.PI), absoluteSize/2*Math.sin(7/6*Math.PI));
-            path.lineTo(absoluteSize/2*Math.cos(11/6*Math.PI), absoluteSize/2*Math.sin(11/6*Math.PI));
+            path.moveTo(0, Math.round(absoluteSize/2));
+            path.lineTo(Math.round(absoluteSize/2*Math.cos(7/6*Math.PI)), Math.round(absoluteSize/2*Math.sin(7/6*Math.PI)));
+            path.lineTo(Math.round(absoluteSize/2*Math.cos(11/6*Math.PI)), Math.round(absoluteSize/2*Math.sin(11/6*Math.PI)));
             path.closePath();
         }
         break;
 
         case "cross":{
             const absoluteSize = 10 * size;
-            path.moveTo(-absoluteSize/6, -absoluteSize/2);
-            path.lineTo(absoluteSize/6, -absoluteSize/2);
-            path.lineTo(absoluteSize/6, -absoluteSize/6);
-            path.lineTo(absoluteSize/2, -absoluteSize/6);
-            path.lineTo(absoluteSize/2, absoluteSize/6);
-            path.lineTo(absoluteSize/6, absoluteSize/6);
-            path.lineTo(absoluteSize/6, absoluteSize/2);
-            path.lineTo(-absoluteSize/6, absoluteSize/2);
-            path.lineTo(-absoluteSize/6, absoluteSize/6);
-            path.lineTo(-absoluteSize/2, absoluteSize/6);
-            path.lineTo(-absoluteSize/2, -absoluteSize/6);
-            path.lineTo(-absoluteSize/6, -absoluteSize/6);
+            const minor = Math.round(absoluteSize/6);
+            const mayor = Math.round(absoluteSize/2);
+            path.moveTo(-minor, -mayor);
+            path.lineTo(minor, -mayor);
+            path.lineTo(minor, -minor);
+            path.lineTo(mayor, -minor);
+            path.lineTo(mayor, minor);
+            path.lineTo(minor, minor);
+            path.lineTo(minor, mayor);
+            path.lineTo(-minor, mayor);
+            path.lineTo(-minor, minor);
+            path.lineTo(-mayor, minor);
+            path.lineTo(-mayor, -minor);
+            path.lineTo(-minor, -minor);
             path.closePath();
         }
         break;
@@ -224,12 +261,12 @@ function createMarker({type, size} : Create_Marker_Props) : Path2D {
             const absoluteSize = 14 * size;
             const angle = Math.PI/2;
             const angle0 = angle + 2*Math.PI/10;
-            const r = absoluteSize/2;
+            const r = Math.round(absoluteSize/2);
             const r0 = Math.hypot(r*0.22451398828979263, r*0.3090169943749474); //Some algebra
             path.moveTo(0, -r);
             for(let i=1; i<=5; i++){
-                path.lineTo(r0*Math.cos(angle0+(i-1)*2*Math.PI/5), -r0*Math.sin(angle0+(i-1)*2*Math.PI/5));
-                path.lineTo(r*Math.cos(angle+i*2*Math.PI/5), -r*Math.sin(angle+i*2*Math.PI/5));
+                path.lineTo(Math.round(r0*Math.cos(angle0+(i-1)*2*Math.PI/5)), Math.round(-r0*Math.sin(angle0+(i-1)*2*Math.PI/5)));
+                path.lineTo(Math.round(r*Math.cos(angle+i*2*Math.PI/5)), Math.round(-r*Math.sin(angle+i*2*Math.PI/5)));
             }
         }
         break;
@@ -241,8 +278,120 @@ function createMarker({type, size} : Create_Marker_Props) : Path2D {
 //---------------------------------------------
 //---------------------------------------------
 
-function createErrorBar({ x, y, type } : Create_Error_Props) : Path2D{
+function createErrorBar({ position, error, scale, type, axis, width } : Create_Error_Props) : Path2D{
+    const path = new Path2D;
 
+    switch(type){
+        case "rectangle":
+            if(axis === "x"){
+                const start = Math.round(scale.x.map(position.x - error.x)) + width.y%2 * 0.5;
+                const end = Math.round(scale.x.map(position.x + error.x)) + width.y%2 * 0.5;
+                const compStart = Math.round(scale.y.map(position.y - error.y)) + width.x%2 * 0.5;
+                const compEnd = Math.round(scale.y.map(position.y + error.y)) + width.x%2 * 0.5;
+                
+                path.moveTo(start, compStart);
+                path.lineTo(end, compStart);
+                path.moveTo(start, compEnd);
+                path.lineTo(end, compEnd);
+            }
+            if(axis === "y"){
+                const start = Math.round(scale.y.map(position.y - error.y)) + width.x%2 * 0.5;
+                const end = Math.round(scale.y.map(position.y + error.y)) + width.x%2 * 0.5;
+                const compStart = Math.round(scale.x.map(position.x - error.x)) + width.y%2 * 0.5;
+                const compEnd = Math.round(scale.x.map(position.x + error.x)) + width.y%2 * 0.5;
+                
+                path.moveTo(compStart, start);
+                path.lineTo(compStart, end);
+                path.moveTo(compEnd, start);
+                path.lineTo(compEnd, end);
+            }
+            break;
+
+        case "corner":{
+            const size = 4;
+            if(axis === "x"){
+                const start = Math.round(scale.x.map(position.x - error.x)) + width.y%2 * 0.5;
+                const end = Math.round(scale.x.map(position.x + error.x)) + width.y%2 * 0.5;
+                const compStart = Math.round(scale.y.map(position.y - error.y)) + width.x%2 * 0.5;
+                const compEnd = Math.round(scale.y.map(position.y + error.y)) + width.x%2 * 0.5;
+
+                path.moveTo(start, compStart);
+                path.lineTo(start+size, compStart);
+                path.moveTo(end-size, compStart);
+                path.lineTo(end, compStart);
+                path.moveTo(start, compEnd);
+                path.lineTo(start+size, compEnd);
+                path.moveTo(end-size, compEnd);
+                path.lineTo(end, compEnd);
+            }
+            if(axis === "y"){
+                const start = Math.round(scale.y.map(position.y - error.y)) + width.x%2 * 0.5;
+                const end = Math.round(scale.y.map(position.y + error.y)) + width.x%2 * 0.5;
+                const compStart = Math.round(scale.x.map(position.x - error.x)) + width.y%2 * 0.5;
+                const compEnd = Math.round(scale.x.map(position.x + error.x)) + width.y%2 * 0.5;
+
+                path.moveTo(compStart, end);
+                path.lineTo(compStart, end+size);
+                path.moveTo(compStart, start-size);
+                path.lineTo(compStart, start);
+                path.moveTo(compEnd, end);
+                path.lineTo(compEnd, end+size);
+                path.moveTo(compEnd, start-size);
+                path.lineTo(compEnd, start);
+            }
+        }
+            break;
+
+        case "cross":
+            if(axis === "x"){
+                const start = Math.round(scale.x.map(position.x-error.x)) + width.x%2 * 0.5;
+                const end = Math.round(scale.x.map(position.x+error.x)) + width.x%2 * 0.5;
+                const comp = Math.round(scale.y.map(position.y)) + width.x%2 * 0.5;
+
+                path.moveTo(start, comp);
+                path.lineTo(end, comp);
+            }
+            if(axis === "y"){
+                const start = Math.round(scale.y.map(position.y-error.y)) + width.y%2 * 0.5;
+                const end = Math.round(scale.y.map(position.y+error.y)) + width.y%2 * 0.5;
+                const comp = Math.round(scale.x.map(position.x)) + width.y%2 * 0.5;
+
+                path.moveTo(comp, start);
+                path.lineTo(comp, end);
+            }
+            break;
+
+        case "tail-cross":{
+            const tail = 3;
+            if(axis === "x"){
+                const start = Math.round(scale.x.map(position.x-error.x)) + width.x%2 * 0.5;
+                const end = Math.round(scale.x.map(position.x+error.x)) + width.x%2 * 0.5;
+                const comp = Math.round(scale.y.map(position.y)) + width.x%2 * 0.5;
+
+                path.moveTo(start, comp);
+                path.lineTo(end, comp);
+                path.moveTo(start, comp+tail);
+                path.lineTo(start, comp-tail);
+                path.moveTo(end, comp+tail);
+                path.lineTo(end, comp-tail);
+            }
+            if(axis === "y"){
+                const start = Math.round(scale.y.map(position.y-error.y)) + width.y%2 * 0.5;
+                const end = Math.round(scale.y.map(position.y+error.y)) + width.y%2 * 0.5;
+                const comp = Math.round(scale.x.map(position.x)) + width.y%2 * 0.5;
+
+                path.moveTo(comp, start);
+                path.lineTo(comp, end);
+                path.moveTo(comp+tail, start);
+                path.lineTo(comp-tail, start);
+                path.moveTo(comp+tail, end);
+                path.lineTo(comp-tail, end);
+            }
+        }
+            break;
+    }
+
+    return path;
 }
 
 //---------------------------------------------

@@ -7,7 +7,7 @@ const area = mapping({from:[0,1], to:[0,5], type:"sqr"});
  const linechart = Graph.addDataset("linechart")
                         .xData(xData)
                         .yData(yData)
-                        //.markerSize(markerSize);
+                        .markerSize(markerSize);
 
  Graph.draw();
 

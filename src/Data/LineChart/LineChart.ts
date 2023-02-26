@@ -11,7 +11,7 @@ const defaultOptions : Line_Chart_Options = {
         enable : true,
         color : "#0043e0",
         opacity : 1,
-        filled : true,
+        filled : false,
         size : 1,
         type : "circle",
         width : 1,
@@ -33,19 +33,19 @@ const defaultOptions : Line_Chart_Options = {
         type : "tail-cross",
         x : {
             enable : true,
-            color : "#002f9e",
-            opacity : 0.8,
+            color : "#666666",
+            opacity : 1,
             style: "solid",
             width : 1,
             data : 0.1
         },
         y : {
             enable : true,
-            color : "#002f9e",
-            opacity : 0.8,
+            color : "#666666",
+            opacity : 1,
             style: "solid",
             width : 1,
-            data : 0.1
+            data : 0.2
         }
     }
 };
@@ -68,11 +68,11 @@ export function LineChart(options : RecursivePartial<Line_Chart_Options>, dirtif
             ...defaultOptions.errorBar , ...options.errorBar,
             x : {
                 ...defaultOptions.errorBar.x, ...options.errorBar?.x,
-                data : options.errorBar?.x?.data == null? 0 : options.errorBar.x.data as Error_Bar_Data
+                data : options.errorBar?.x?.data == null? defaultOptions.errorBar.x.data : options.errorBar.x.data as Error_Bar_Data
             },
             y : {
                 ...defaultOptions.errorBar.y, ...options.errorBar?.y,
-                data : options.errorBar?.y?.data == null? 0 : options.errorBar.y.data as Error_Bar_Data
+                data : options.errorBar?.y?.data == null? defaultOptions.errorBar.y.data : options.errorBar.y.data as Error_Bar_Data
             },
         }
     };  

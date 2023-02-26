@@ -61,8 +61,8 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
 //--------------- Draw Polar ------------------
 
     function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
-        const xCenter = state.scale.primary.x.map(0);
-        const yCenter = state.scale.primary.y.map(0);
+        const xCenter = Math.round(state.scale.primary.x.map(0));
+        const yCenter = Math.round(state.scale.primary.y.map(0));
 
         if(axis === "x"){
             const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>).x.positions.map(item => Math.abs(item));
@@ -81,8 +81,8 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
             state.context.canvas.lineWidth = state.grid.primary.x.width;
             state.context.canvas.setLineDash(getLineDash(state.grid.primary.x.style));
             radii.forEach(radius=>{
-                let xRadiusUsed = state.scale.primary.x.map(radius) - xCenter;
-                let yRadiusUsed = yCenter - state.scale.primary.y.map(radius);
+                let xRadiusUsed = Math.round(state.scale.primary.x.map(radius) - xCenter) + state.grid.primary.x.width%2 * 0.5;
+                let yRadiusUsed = Math.round(yCenter - state.scale.primary.y.map(radius)) + state.grid.primary.x.width%2 * 0.5;
 
                 state.context.canvas.beginPath();
                 state.context.canvas.ellipse(xCenter, yCenter, xRadiusUsed, yRadiusUsed, 0,  thetha0, thetha1);
