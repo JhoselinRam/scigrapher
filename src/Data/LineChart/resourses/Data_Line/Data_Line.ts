@@ -1,11 +1,9 @@
-import { Axis_Property } from "../../../../Graph2D/Graph2D_Types";
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
-import { Line_Chart, Line_Chart_Method_Generator, Line_Char_Data, Marker_Size } from "../../LineChart_Types";
-import { Bind_Line } from "./Bind_Line_Types";
+import { Line_Chart, Line_Chart_Method_Generator, Line_Char_Data } from "../../LineChart_Types";
+import { Data_Line } from "./Data_Line_Types";
 
-function BindLine({dataHandler, dataState}:Line_Chart_Method_Generator) : Bind_Line{
-
-//---------------- X Data ---------------------
+function DataLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Data_Line{
+    //---------------- X Data ---------------------
 
     function xData(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
     function xData(arg:void) : Array<number>;
@@ -47,43 +45,11 @@ function BindLine({dataHandler, dataState}:Line_Chart_Method_Generator) : Bind_L
     }
 
 //---------------------------------------------
-//---------------------------------------------
-
-    function markerSize(size : Marker_Size, callback?:(handler?:Line_Chart)=>void):Line_Chart;
-    function markerSize(arg:void) : number | Array<number>;
-    function markerSize(size : Marker_Size | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | number | Array<number> | undefined{
-        if(typeof size === "undefined" && callback==null){
-            if(typeof dataState.marker.size==="number"){
-                return dataState.marker.size;
-            } else if(isCallable(dataState.marker.size)){
-                const xPositions = xData();
-                const y = yData();
-                const callback = dataState.marker.size;
-
-                return xPositions.map((x,i)=>callback(x,y[i],i,dataHandler));
-            }else{
-                return dataState.marker.size.slice();
-            }
-
-        }
-
-        if(typeof size !== "undefined"){
-            
-            dataState.marker.size = typeof size === "object"? size.slice() : size;
-            
-            if(callback != null) callback(dataHandler);
-            dataState.dirtify();
-            return dataHandler;
-        }
-    }
-
-//---------------------------------------------
 
     return {
         xData,
-        yData,
-        markerSize
-    };
+        yData
+    }
 }
 
-export default BindLine;
+export default DataLine;

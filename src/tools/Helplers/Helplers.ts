@@ -2,9 +2,13 @@ import { Graph2D_State, Rect } from "../../Graph2D/Graph2D_Types";
 
 //------------- Get Line Dash -----------------
 export function getLineDash(style : string) : Array<number> {
-    let lineDash : Array<number> = [] //style = "solid";
+    let lineDash : Array<number> //style = "solid";
 
     switch(style){
+        case "solid":
+            lineDash = [];
+            break;
+
         case "dot":
             lineDash = [2, 3];
             break;

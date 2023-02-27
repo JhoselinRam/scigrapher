@@ -1,5 +1,6 @@
 import { Datasets, Dataset_Options, Dataset_Types, Draw_Data_Callback } from "../../../Data/Data_Types";
 import { LineChart } from "../../../Data/LineChart/LineChart.js";
+import { Partialize } from "../../../Data/LineChart/LineChart_Types";
 import { Graph2D, Graph2D_State, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
 import { Data } from "./Data_Types";
 
@@ -7,7 +8,7 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 
 //---------------- Add Dataset ----------------
 
-    function addDataset<T extends Dataset_Types>(type : Datasets, options : RecursivePartial<Dataset_Options> = {}) : T  {
+    function addDataset<T extends Dataset_Types>(type : Datasets, options : Partialize<Dataset_Options> = {}) : T  {
         
         let newDataset : Dataset_Types;
         let drawDataset : (state : Graph2D_State)=>void;

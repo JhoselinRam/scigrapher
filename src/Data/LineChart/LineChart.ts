@@ -2,8 +2,9 @@ import {RecursivePartial } from "../../Graph2D/Graph2D_Types";
 import DataGeneral from "../Data_General.js";
 import { Draw_Data_Callback } from "../Data_Types";
 import DrawLine from "./resourses/Draw_Line/Draw_Line.js";
-import { Error_Bar_Data, Line_Chart, Line_Chart_Options, Line_Chart_State, Line_Char_Data, Marker_Size } from "./LineChart_Types";
-import BindLine from "./resourses/Bind_Line/Bind_Line.js";
+import { Line_Chart, Line_Chart_Options, Line_Chart_State, Partialize } from "./LineChart_Types";
+import DataLine from "./resourses/Data_Line/Data_Line.js";
+import MarkerLine from "./resourses/Marker_Line/Marker_Line.js";
 
 const defaultOptions : Line_Chart_Options = {
     useAxis : {x:"primary", y:"primary"},
@@ -50,7 +51,7 @@ const defaultOptions : Line_Chart_Options = {
     }
 };
 
-export function LineChart(options : RecursivePartial<Line_Chart_Options>, dirtify:(sort?:boolean)=>void) : [Line_Chart, Draw_Data_Callback]{
+export function LineChart(options : Partialize<Line_Chart_Options>, dirtify:(sort?:boolean)=>void) : [Line_Chart, Draw_Data_Callback]{
     //State of the data set
     const dataState : Line_Chart_State = {
         ...defaultOptions, ...options,
@@ -58,39 +59,38 @@ export function LineChart(options : RecursivePartial<Line_Chart_Options>, dirtif
         index : 0,
         dirtify,
         useAxis : {...defaultOptions.useAxis, ...options.useAxis},
-        marker : {...defaultOptions.marker, ...options.marker, size : options.marker?.size==null? defaultOptions.marker.size : options.marker.size as Marker_Size},
+        marker : {...defaultOptions.marker, ...options.marker},
         line : {...defaultOptions.line, ...options.line},
-        data : {
-            x : options.data?.x == null ? [] : options.data.x as Line_Char_Data,
-            y : options.data?.y == null ? [] : options.data.y as Line_Char_Data
-        },
+        data : {...defaultOptions.data, ...options.data},
         errorBar : {
             ...defaultOptions.errorBar , ...options.errorBar,
-            x : {
-                ...defaultOptions.errorBar.x, ...options.errorBar?.x,
-                data : options.errorBar?.x?.data == null? defaultOptions.errorBar.x.data : options.errorBar.x.data as Error_Bar_Data
-            },
-            y : {
-                ...defaultOptions.errorBar.y, ...options.errorBar?.y,
-                data : options.errorBar?.y?.data == null? defaultOptions.errorBar.y.data : options.errorBar.y.data as Error_Bar_Data
-            },
+            x : { ...defaultOptions.errorBar.x, ...options.errorBar?.x },
+            y : { ...defaultOptions.errorBar.y, ...options.errorBar?.y },
         }
     };  
     //Main handler
     const dataHandler : RecursivePartial<Line_Chart> = {};
 
     //Method generators
-    const general = DataGeneral<Line_Chart,Line_Chart_State>({dataHandler : dataHandler as Line_Chart, dataState : dataState as Line_Chart_State});
-    const draw = DrawLine({dataHandler : dataHandler as Line_Chart, dataState : dataState as Line_Chart_State});
-    const bind = BindLine({dataHandler : dataHandler as Line_Chart, dataState : dataState as Line_Chart_State});
+    const general = DataGeneral<Line_Chart,Line_Chart_State>({dataHandler : dataHandler as Line_Chart, dataState});
+    const draw = DrawLine({dataHandler : dataHandler as Line_Chart, dataState});
+    const data = DataLine({dataHandler : dataHandler as Line_Chart, dataState});
+    const marker = MarkerLine({dataHandler : dataHandler as Line_Chart, dataState});
 
 
     //Main handler population
     dataHandler.id = general.id;
     dataHandler.index = general.index;
-    dataHandler.xData = bind.xData;
-    dataHandler.yData = bind.yData;
-    dataHandler.markerSize = bind.markerSize;
+    dataHandler.xData = data.xData;
+    dataHandler.yData = data.yData;
+    dataHandler.markerSize = marker.markerSize;
+    dataHandler.markerColor = marker.markerColor;
+    dataHandler.markerOpacity = marker.markerOpacity;
+    dataHandler.markerWidth = marker.markerWidth;
+    dataHandler.markerStyle = marker.markerStyle;
+    dataHandler.markerType = marker.markerType;
+    dataHandler.markerFilled = marker.markerFilled;
+    dataHandler.markerEnable = marker.markerEnable;
 
 
 //---------------------------------------------

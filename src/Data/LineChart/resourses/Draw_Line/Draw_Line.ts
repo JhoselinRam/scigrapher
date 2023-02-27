@@ -2,7 +2,7 @@ import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { getLineDash, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_Method_Generator } from "../../LineChart_Types";
-import { Create_Error_Props, Create_Marker_Props, Draw_Line, Draw_Line_Helper_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
+import { Create_Error_Props, Create_Marker_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
 
 function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw_Line{
 
@@ -59,20 +59,51 @@ export default DrawLine;
 
 //--------------- Draw Lines ------------------
 
-function drawLines({xPositions, yPositions, context, dataState, xScale, yScale} : Draw_Line_Helper_Props){    
-    context.strokeStyle = dataState.line.color;
-    context.globalAlpha = dataState.line.opacity;
-    context.lineWidth = dataState.line.width;
-    context.setLineDash(getLineDash(dataState.line.style));
-    context.beginPath();
-    context.moveTo(xScale.map(xPositions[0]), yScale.map(yPositions[0]));
-    xPositions.forEach((positionX,i)=>{
-        if(i === 0) return;
-        const x = xScale.map(positionX);
-        const y = yScale.map(yPositions[i]);
-        context.lineTo(x ,y);
-    });
-    context.stroke();
+function drawLines({xPositions, yPositions, context, dataState, xScale, yScale, dataHandler} : Draw_Line_Helper_Props){    
+    
+    //The simple and more efficient way
+    if(typeof dataState.line.color === "string" &&
+        typeof dataState.line.opacity === "number" &&
+        typeof dataState.line.width === "number"  &&
+        typeof dataState.line.style === "string"){
+            
+            const offset = dataState.line.width%2*0.5
+
+            context.strokeStyle = dataState.line.color;
+            context.globalAlpha = dataState.line.opacity;
+            context.lineWidth = dataState.line.width;
+            context.setLineDash(getLineDash(dataState.line.style));
+            context.beginPath();
+            context.moveTo(Math.round(xScale.map(xPositions[0]))+dataState.line.width%2*0.5, Math.round(yScale.map(yPositions[0]))+dataState.line.width%2*0.5);
+            xPositions.forEach((positionX,i)=>{
+                if(i === 0) return;
+                const x = Math.round(xScale.map(positionX)) + offset;
+                const y = Math.round(yScale.map(yPositions[i])) + offset;
+                
+                context.lineTo(x ,y);
+            });
+            context.stroke();
+    } else{ //A little more complex but necessary if some of the properties are dynamic
+        xPositions.forEach((positionX, i)=>{
+            if(i === 0) return;
+            const width = extractProperty({property:dataState.line.width, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
+            context.strokeStyle = extractProperty({property:dataState.line.color, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
+            context.globalAlpha = extractProperty({property:dataState.line.opacity, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
+            context.lineWidth = width;
+            context.setLineDash(getLineDash(extractProperty({property:dataState.line.style, x:positionX, y:yPositions[i], index:i, handler:dataHandler})));
+
+            const x0 = Math.round(xScale.map(xPositions[i-1])) - width%2 * 0.5;
+            const y0 = Math.round(yScale.map(yPositions[i-1])) - width%2 * 0.5;
+            const x1 = Math.round(xScale.map(positionX)) - width%2 * 0.5;
+            const y1 = Math.round(yScale.map(yPositions[i])) - width%2 * 0.5;
+
+            context.beginPath();
+            context.moveTo(x0, y0);
+            context.lineTo(x1, y1);
+            context.stroke();
+        })
+    }
+    
 }
 
 //---------------------------------------------
@@ -80,25 +111,58 @@ function drawLines({xPositions, yPositions, context, dataState, xScale, yScale} 
 
 function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, xScale, yScale} : Draw_Line_Helper_Props){
 
-    context.strokeStyle = dataState.marker.color;
-    context.fillStyle = dataState.marker.color;
-    context.globalAlpha = dataState.marker.opacity;
-    context.setLineDash(getLineDash(dataState.marker.style));
-    xPositions.forEach((positionX,i)=>{
-        const positionY = yPositions[i];
-        const x = Math.round(xScale.map(positionX)) + dataState.marker.width%2 * 0.5;
-        const y = Math.round(yScale.map(positionY)) + dataState.marker.width%2 * 0.5;
-        const size = typeof dataState.marker.size === "number"? dataState.marker.size : (isCallable(dataState.marker.size)?dataState.marker.size(positionX,positionY,i,dataHandler) : dataState.marker.size[i]);
-        const marker = createMarker({size, type:dataState.marker.type});
-        
-        context.save();
+    if(typeof dataState.marker.color === "string" &&
+       typeof dataState.marker.opacity === "number" &&
+       typeof dataState.marker.style === "string" &&
+       typeof dataState.marker.width === "number" &&
+       typeof dataState.marker.size === "number" &&
+       typeof dataState.marker.type === "string" &&
+       typeof dataState.marker.filled === "boolean"){
+           
+        const marker = createMarker({size:dataState.marker.size, type:dataState.marker.type});
+        const offset = dataState.marker.width%2*0.5;
+        const filled = dataState.marker.filled;
+           
+        context.strokeStyle = dataState.marker.color;
+        context.fillStyle = dataState.marker.color;
+        context.globalAlpha = dataState.marker.opacity;
+        context.lineWidth  = dataState.marker.width;
+        context.setLineDash(getLineDash(dataState.marker.style));
+        xPositions.forEach((positionX,i)=>{
+            const positionY = yPositions[i];
+            const x = Math.round(xScale.map(positionX)) + offset;
+            const y = Math.round(yScale.map(positionY)) + offset;
+            
+            context.save();
+            context.translate(x,y);
+            filled ? context.fill(marker) : context.stroke(marker);
+            context.restore();
+        });
+    } else{
+        xPositions.forEach((positionX, i)=>{
+            const positionY = yPositions[i];
+            const size = extractProperty({property:dataState.marker.size, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const color = extractProperty({property:dataState.marker.color, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const type = extractProperty({property:dataState.marker.type, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const width = extractProperty({property:dataState.marker.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const filled = extractProperty({property:dataState.marker.filled, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const marker = createMarker({type, size});
+            const x = Math.round(xScale.map(positionX)) + width%2 * 0.5;
+            const y = Math.round(yScale.map(positionY)) + width%2 * 0.5;
 
-        context.translate(x,y);
-        context.lineWidth = dataState.marker.width;
-        dataState.marker.filled? context.fill(marker) : context.stroke(marker);
-        
-        context.restore();
-    });
+            context.strokeStyle = color;
+            context.fillStyle = color;
+            context.globalAlpha = extractProperty({property:dataState.marker.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
+            context.lineWidth = width;
+            context.setLineDash(getLineDash(extractProperty({property:dataState.marker.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
+
+            context.save();
+            context.translate(x,y);
+            filled ? context.fill(marker) : context.stroke(marker);
+            context.restore();
+        });
+    }
+    
 }
 
 //---------------------------------------------
@@ -110,34 +174,86 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
             let xError = 0;
             let yError = 0;
             
+            //Check for error bar enable
             if(dataState.errorBar.x.enable)
                 xError = typeof dataState.errorBar.x.data === "number"? dataState.errorBar.x.data : (isCallable(dataState.errorBar.x.data)? dataState.errorBar.x.data(positionX, positionY, i, dataHandler) : dataState.errorBar.x.data[i]);
             if(dataState.errorBar.y.enable)
                 yError = typeof dataState.errorBar.y.data === "number"? dataState.errorBar.y.data : (isCallable(dataState.errorBar.y.data)? dataState.errorBar.y.data(positionX, positionY, i, dataHandler) : dataState.errorBar.y.data[i]);
             
 
+            //Draw part x of error bar
             if(dataState.errorBar.x.enable){
-               const xPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"x"});
+                //Most common configuration, more efficient daw
+                if(typeof dataState.errorBar.type === "string" &&
+                    typeof dataState.errorBar.x.color === "string" &&
+                    typeof dataState.errorBar.x.opacity === "number" &&
+                    typeof dataState.errorBar.x.style === "string" &&
+                    typeof dataState.errorBar.x.width === "number" && 
+                    typeof dataState.errorBar.y.width === "number"){
 
-                context.save();
-                context.strokeStyle = dataState.errorBar.x.color;
-                context.globalAlpha = dataState.errorBar.x.opacity;
-                context.lineWidth = dataState.errorBar.x.width;
-                context.setLineDash(getLineDash(dataState.errorBar.x.style));
-                context.stroke(xPath);
-                context.restore();
+                        const xPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"x"});
+         
+                         context.save();
+                         context.strokeStyle = dataState.errorBar.x.color;
+                         context.globalAlpha = dataState.errorBar.x.opacity;
+                         context.lineWidth = dataState.errorBar.x.width;
+                         context.setLineDash(getLineDash(dataState.errorBar.x.style));
+                         context.stroke(xPath);
+                         context.restore();
+                
+                //For dynamic properties, little less efficient draw mechanism
+                }else{
+                    const xWidth = extractProperty({property:dataState.errorBar.x.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const yWidth = extractProperty({property:dataState.errorBar.y.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const type = extractProperty({property:dataState.errorBar.type, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const xPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:xWidth, y :yWidth}, type, axis:"x"});
+
+                    context.save();
+                    context.strokeStyle = extractProperty({property:dataState.errorBar.x.color, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.globalAlpha = extractProperty({property:dataState.errorBar.x.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.lineWidth = xWidth;
+                    context.setLineDash(getLineDash(extractProperty({property:dataState.errorBar.x.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
+                    context.stroke(xPath);
+                    context.restore();
+                }
             }
             
+            
+            //Draw part y of error bar
             if(dataState.errorBar.y.enable){
-               const yPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"y"});
+                //Most common configuration, more efficient daw
+                if(typeof dataState.errorBar.type === "string" &&
+                    typeof dataState.errorBar.y.color === "string" &&
+                    typeof dataState.errorBar.y.opacity === "number" &&
+                    typeof dataState.errorBar.y.style === "string" &&
+                    typeof dataState.errorBar.y.width === "number" && 
+                    typeof dataState.errorBar.x.width === "number"){
 
-                context.save();
-                context.strokeStyle = dataState.errorBar.y.color;
-                context.globalAlpha = dataState.errorBar.y.opacity;
-                context.lineWidth = dataState.errorBar.y.width;
-                context.setLineDash(getLineDash(dataState.errorBar.y.style));
-                context.stroke(yPath);
-                context.restore();
+                        const yPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"y"});
+         
+                         context.save();
+                         context.strokeStyle = dataState.errorBar.y.color;
+                         context.globalAlpha = dataState.errorBar.y.opacity;
+                         context.lineWidth = dataState.errorBar.y.width;
+                         context.setLineDash(getLineDash(dataState.errorBar.y.style));
+                         context.stroke(yPath);
+                         context.restore();
+                
+                //For dynamic properties, little less efficient draw mechanism
+                }else{
+                    const xWidth = extractProperty({property:dataState.errorBar.x.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const yWidth = extractProperty({property:dataState.errorBar.y.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const type = extractProperty({property:dataState.errorBar.type, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const yPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:xWidth, y :yWidth}, type, axis:"y"});
+
+                    context.save();
+                    context.strokeStyle = extractProperty({property:dataState.errorBar.y.color, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.globalAlpha = extractProperty({property:dataState.errorBar.y.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.lineWidth = yWidth;
+                    context.setLineDash(getLineDash(extractProperty({property:dataState.errorBar.y.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
+                    context.stroke(yPath);
+                    context.restore();
+                }
             }
         });
     }
@@ -392,6 +508,23 @@ function createErrorBar({ position, error, scale, type, axis, width } : Create_E
     }
 
     return path;
+}
+
+//---------------------------------------------
+//------------- Extract Property --------------
+
+function extractProperty<T>({ x, y, index, handler, property} : Extract_Property_Props<T>) : T {
+    let value : T;
+    
+    if(isCallable(property)){
+        value = property(x, y, index, handler);
+    } else if(typeof property !== "object"){
+        value  = property
+    } else{
+        value = (property as Array<T>)[index];
+    }
+
+    return value;
 }
 
 //---------------------------------------------

@@ -7,13 +7,14 @@ const area = mapping({from:[0,1], to:[0,5], type:"sqr"});
  const linechart = Graph.addDataset("linechart")
                         .xData(xData)
                         .yData(yData)
-                        .markerSize(markerSize);
+                        .markerSize(markerSize)
+                        .markerStyle(markerSome)
 
  Graph.draw();
 
 function xData(){
     const domain = Graph.axisDomain().x;
-        const n = 40;
+        const n = 20;
         const delta = (domain.end - domain.start)/(n-1);
         const positions = [];
         
@@ -31,6 +32,10 @@ function yData(chart){
 
 function markerSize(x,y){
     return area.map(Math.abs(y));
+}
+
+function markerSome(x,y){
+    return y>0? "dot" : "solid"
 }
 
 
