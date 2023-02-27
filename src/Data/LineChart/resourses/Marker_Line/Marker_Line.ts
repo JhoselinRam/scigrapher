@@ -1,18 +1,18 @@
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
-import { Line_Chart, Line_Chart_Method_Generator, Property_Generator } from "../../LineChart_Types";
-import { Marker_Line, Marker_Properties, Property_Modifier } from "./Marker_Line_Types";
+import { Line_Chart, Line_Chart_Method_Generator, Property_Generator, Property_Modifier } from "../../LineChart_Types";
+import { Marker_Line, Marker_Properties } from "./Marker_Line_Types";
 
 function MarkerLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Marker_Line{
 
 //------------ Generated Methods --------------
 
-const markerSize = generatePropertyModifier<number>(dataState.marker.size, "size");
-const markerColor = generatePropertyModifier<string>(dataState.marker.color, "color");
-const markerOpacity = generatePropertyModifier<number>(dataState.marker.opacity, "opacity");
-const markerWidth = generatePropertyModifier<number>(dataState.marker.width, "width");
-const markerStyle = generatePropertyModifier<string>(dataState.marker.style, "style");
-const markerType = generatePropertyModifier<string>(dataState.marker.type, "type");
-const markerFilled = generatePropertyModifier<boolean>(dataState.marker.filled, "filled");
+const markerSize = generateMarkerModifier<number>(dataState.marker.size, "size");
+const markerColor = generateMarkerModifier<string>(dataState.marker.color, "color");
+const markerOpacity = generateMarkerModifier<number>(dataState.marker.opacity, "opacity");
+const markerWidth = generateMarkerModifier<number>(dataState.marker.width, "width");
+const markerStyle = generateMarkerModifier<string>(dataState.marker.style, "style");
+const markerType = generateMarkerModifier<string>(dataState.marker.type, "type");
+const markerFilled = generateMarkerModifier<boolean>(dataState.marker.filled, "filled");
 
 //---------------------------------------------
 //---------------- Enable ---------------------
@@ -37,15 +37,15 @@ const markerFilled = generatePropertyModifier<boolean>(dataState.marker.filled, 
 //---------------------------------------------
 //--------------- Generator -------------------
 
-    function generatePropertyModifier<T>(container:Property_Generator<T>, property:Marker_Properties) : Property_Modifier<T>{
+    function generateMarkerModifier<T>(container:Property_Generator<T>, property:Marker_Properties) : Property_Modifier<T>{
         
         function markerProperty(value : Property_Generator<T>, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
         function markerProperty(arg : void) : T | Array<T>;
         function markerProperty(value : Property_Generator<T> | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | T | Array<T> | undefined{
             if(typeof value === "undefined" && callback == null){
                 if(isCallable(container)){
-                    const xPositions = dataHandler.xData();
-                    const y = dataHandler.yData();
+                    const xPositions = dataHandler.dataX();
+                    const y = dataHandler.dataY();
                     const generator = container;
 
                     return xPositions.map((x,i)=>generator(x,y[i],i,dataHandler));

@@ -5,10 +5,8 @@ const area = mapping({from:[0,1], to:[0,5], type:"sqr"});
 
 
  const linechart = Graph.addDataset("linechart")
-                        .xData(xData)
-                        .yData(yData)
-                        .markerSize(markerSize)
-                        .markerStyle(markerSome)
+                        .dataX(xData)
+                        .dataY(yData);
 
  Graph.draw();
 
@@ -26,17 +24,8 @@ function xData(){
 }
 
 function yData(chart){
-    return chart.xData().map(x=>Math.cos(x));
+    return chart.dataX().map(x=>Math.cos(x));
 } 
-
-
-function markerSize(x,y){
-    return area.map(Math.abs(y));
-}
-
-function markerSome(x,y){
-    return y>0? "dot" : "solid"
-}
 
 
 

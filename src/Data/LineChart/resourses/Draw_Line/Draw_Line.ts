@@ -21,7 +21,10 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
 
         const xScale = dataState.useAxis.x === "primary"? state.scale.primary.x : state.scale.secondary.x as Mapping;
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
-        const [xPositions, yPositions] = interpretCoordinates({dataState, dataHandler});
+        const [xPositions, yPositions] = interpretCoordinates({dataState, dataHandler, target:"line"});
+        if(dataState.area.enable){
+
+        }
         const clipRect = getGraphRect(state); 
 
         //Common canvas configurations

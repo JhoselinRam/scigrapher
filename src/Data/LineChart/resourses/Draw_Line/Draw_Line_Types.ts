@@ -18,8 +18,9 @@ export interface Draw_Line_Helper_Props {
 }
 
 export interface Interpret_Line_Coords_Props {
-    dataState : Line_Chart_State,
-    dataHandler : Line_Chart
+    polar : boolean,
+    
+    dataHandler : Line_Chart,
 }
 
 export interface Create_Marker_Props {

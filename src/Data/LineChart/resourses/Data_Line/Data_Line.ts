@@ -3,11 +3,12 @@ import { Line_Chart, Line_Chart_Method_Generator, Line_Char_Data } from "../../L
 import { Data_Line } from "./Data_Line_Types";
 
 function DataLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Data_Line{
-    //---------------- X Data ---------------------
+    
+//---------------- X Data ---------------------
 
-    function xData(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
-    function xData(arg:void) : Array<number>;
-    function xData(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
+    function dataX(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function dataX(arg:void) : Array<number>;
+    function dataX(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
         if(typeof data === "undefined" && callback == null){
             const xData = isCallable(dataState.data.x)? dataState.data.x(dataHandler) : dataState.data.x.slice();
             return xData;
@@ -26,9 +27,9 @@ function DataLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Data
 //---------------------------------------------
 //---------------- Y Data ---------------------
 
-    function yData(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
-    function yData(arg:void) : Array<number>;
-    function yData(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
+    function dataY(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function dataY(arg:void) : Array<number>;
+    function dataY(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
         if(typeof data === "undefined" && callback == null){
             const yData = isCallable(dataState.data.y)? dataState.data.y(dataHandler) : dataState.data.y.slice();
             return yData;
@@ -47,8 +48,8 @@ function DataLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Data
 //---------------------------------------------
 
     return {
-        xData,
-        yData
+        dataX,
+        dataY
     }
 }
 
