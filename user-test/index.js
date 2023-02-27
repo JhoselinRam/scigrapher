@@ -12,7 +12,7 @@ const area = mapping({from:[0,1], to:[0,5], type:"sqr"});
 
 function xData(){
     const domain = Graph.axisDomain().x;
-        const n = 20;
+        const n = 100;
         const delta = (domain.end - domain.start)/(n-1);
         const positions = [];
         

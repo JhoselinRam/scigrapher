@@ -1,5 +1,6 @@
 import { Axis_Property, Line_Style } from "../../Graph2D/Graph2D_Types";
 import { Data_General, Data_Object_State } from "../Data_Types";
+import { Area } from "./resourses/Area/Area_Types";
 import { Data_Line } from "./resourses/Data_Line/Data_Line_Types";
 import { Error_Line } from "./resourses/Error_Line/Error_Line_Types";
 import { Line } from "./resourses/Line/Line_Types";
@@ -14,7 +15,8 @@ Data_General<Line_Chart>,
 Data_Line,
 Marker_Line,
 Error_Line,
-Line
+Line,
+Area
 {}
 
 export interface Line_Chart_Options {
@@ -57,7 +59,7 @@ interface Line_Area_Atributes {
     enable : boolean,
     color : string,
     opacity : number,
-    base : Axis_Property<Line_Char_Data | "auto">,
+    base : Axis_Property<Line_Char_Data>,
     polar : boolean
 }
 

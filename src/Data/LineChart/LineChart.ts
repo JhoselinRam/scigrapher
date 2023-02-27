@@ -7,11 +7,12 @@ import DataLine from "./resourses/Data_Line/Data_Line.js";
 import MarkerLine from "./resourses/Marker_Line/Marker_Line.js";
 import ErrorLine from "./resourses/Error_Line/Error_Line.js";
 import Line from "./resourses/Line/Line.js";
+import Area from "./resourses/Area/Area.js";
 
 const defaultOptions : Line_Chart_Options = {
     useAxis : {x:"primary", y:"primary"},
     marker : {
-        enable : true,
+        enable :false,
         color : "#0043e0",
         opacity : 1,
         filled : true,
@@ -40,7 +41,7 @@ const defaultOptions : Line_Chart_Options = {
             opacity : 1,
             style: "solid",
             width : 1,
-            data : 0.1
+            data : 0
         },
         y : {
             enable : false,
@@ -48,7 +49,7 @@ const defaultOptions : Line_Chart_Options = {
             opacity : 1,
             style: "solid",
             width : 1,
-            data : 0.2
+            data : 0
         }
     },
     area : {
@@ -57,8 +58,8 @@ const defaultOptions : Line_Chart_Options = {
         opacity : 0.3,
         polar : false,
         base : {
-            x : "auto",
-            y : "auto"
+            x : [],
+            y : []
         }
     }
 };
@@ -97,6 +98,7 @@ export function LineChart(options : Partialize<Line_Chart_Options>, dirtify:(sor
     const marker = MarkerLine({dataHandler : dataHandler as Line_Chart, dataState});
     const error = ErrorLine({dataHandler : dataHandler as Line_Chart, dataState});
     const line = Line({dataHandler : dataHandler as Line_Chart, dataState});
+    const area = Area({dataHandler : dataHandler as Line_Chart, dataState});
 
 
     //Main handler population
@@ -129,6 +131,12 @@ export function LineChart(options : Partialize<Line_Chart_Options>, dirtify:(sor
     dataHandler.lineOpacity = line.lineOpacity;
     dataHandler.lineStyle = line.lineStyle;
     dataHandler.lineWidth = line.lineWidth;
+    dataHandler.areaColor = area.areaColor;
+    dataHandler.areaDataX = area.areaDataX;
+    dataHandler.areaDataY = area.areaDataY;
+    dataHandler.areaEnable = area.areaEnable;
+    dataHandler.areaOpacity = area.areaOpacity;
+    dataHandler.areaPolar = area.areaPolar;
     
 //---------------------------------------------
 

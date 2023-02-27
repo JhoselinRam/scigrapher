@@ -2,7 +2,7 @@ import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { getLineDash, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_Method_Generator } from "../../LineChart_Types";
-import { Create_Error_Props, Create_Marker_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
+import { Create_Error_Props, Create_Marker_Props, Draw_Area_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
 
 function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw_Line{
 
@@ -21,10 +21,7 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
 
         const xScale = dataState.useAxis.x === "primary"? state.scale.primary.x : state.scale.secondary.x as Mapping;
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
-        const [xPositions, yPositions] = interpretCoordinates({dataState, dataHandler, target:"line"});
-        if(dataState.area.enable){
-
-        }
+        const [xPositions, yPositions] = interpretCoordinates({xGenerator:dataState.data.x, yGenerator:dataState.data.y, dataHandler, polar:dataState.polar});
         const clipRect = getGraphRect(state); 
 
         //Common canvas configurations
@@ -34,6 +31,12 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
         state.context.data.clip();
         state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
 
+        if(dataState.area.enable){
+            const [xAreaPositions, yAreaPositions] = interpretCoordinates({xGenerator:dataState.area.base.x, yGenerator:dataState.area.base.y, dataHandler, polar:dataState.area.polar});
+            xAreaPositions.reverse();
+            yAreaPositions.reverse();
+            drawArea({context:state.context.data, dataHandler, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale});
+        }
         if(dataState.line.enable)
             drawLines({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
         if(dataState.marker.enable)
@@ -262,18 +265,43 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
     }
 
 //---------------------------------------------
+//--------------- Draw Area -------------------
+
+    function drawArea({context, dataHandler, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale} : Draw_Area_Props){
+        context.fillStyle = dataState.area.color;
+        context.globalAlpha = dataState.area.opacity;
+        context.beginPath();
+        context.moveTo(Math.round(xScale.map(xPositions[0])), Math.round(yScale.map(yPositions[0])));
+        xPositions.forEach((positionX, i) =>{
+            if(i === 0) return;
+            const x = Math.round(xScale.map(positionX));
+            const y = Math.round(yScale.map(yPositions[i]));
+            
+            context.lineTo(x ,y);
+        });
+        xAreaPositions.forEach((positionX, i)=>{
+            const x = Math.round(xScale.map(positionX));
+            const y = Math.round(yScale.map(yAreaPositions[i]));
+
+            context.lineTo(x, y);
+        })
+        context.closePath();
+        context.fill();
+    }
+
+//---------------------------------------------
 //--------- Interpret Coordinates -------------
 
-function interpretCoordinates({ dataState, dataHandler } : Interpret_Line_Coords_Props) : [Array<number>, Array<number>]{
+function interpretCoordinates({ xGenerator, yGenerator,  dataHandler, polar } : Interpret_Line_Coords_Props) : [Array<number>, Array<number>]{
     let xPositions : Array<number> = [];
     let yPositions : Array<number> = [];
-    const xData = isCallable(dataState.data.x)? dataState.data.x(dataHandler) : dataState.data.x;
-    const yData = isCallable(dataState.data.y)? dataState.data.y(dataHandler) : dataState.data.y;
+    const xData = isCallable(xGenerator)? xGenerator(dataHandler) : xGenerator.slice();
+    const yData = isCallable(yGenerator)? yGenerator(dataHandler) : yGenerator.slice();
 
     //Some warning
     if(xData.length !== yData.length) console.error("Length of x and y data arrays are different, this may led to undefined behavior")
 
-    if(dataState.polar){
+    if(polar){
         xData.forEach((x, i)=>{
             const y = yData[i];
 

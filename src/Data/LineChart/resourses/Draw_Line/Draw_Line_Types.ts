@@ -1,7 +1,7 @@
 import { Axis_Property } from "../../../../Graph2D/Graph2D_Types";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Draw_Data_Callback } from "../../../Data_Types";
-import { Error_Bar_Types, Line_Chart, Line_Chart_State, Marker_Type, Property_Generator } from "../../LineChart_Types";
+import { Error_Bar_Types, Line_Chart, Line_Chart_State, Line_Char_Data, Marker_Type, Property_Generator } from "../../LineChart_Types";
 
 export interface Draw_Line {
     drawData : Draw_Data_Callback
@@ -17,9 +17,15 @@ export interface Draw_Line_Helper_Props {
     yScale : Mapping
 }
 
+export interface Draw_Area_Props extends Draw_Line_Helper_Props{
+    xAreaPositions : Array<number>,
+    yAreaPositions : Array<number>
+}
+
 export interface Interpret_Line_Coords_Props {
     polar : boolean,
-    
+    xGenerator : Line_Char_Data,
+    yGenerator : Line_Char_Data,
     dataHandler : Line_Chart,
 }
 
