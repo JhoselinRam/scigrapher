@@ -879,7 +879,7 @@
                     </div>
                     <div>
                         <label for="markerOpacity">Marker Opacity</label>
-                        <input type="number" name="markerOpacity" id="markerOpacity" min="0" step="0.05" value="1" class="number-input">
+                        <input type="number" name="markerOpacity" id="markerOpacity" min="0" step="0.05" value="1" max="1" class="number-input">
                     </div>
                 </div>
                 <div class="flex-control">
@@ -889,7 +889,7 @@
                     </div>
                     <div>
                         <label for="markerSize">Marker Size</label>
-                        <input type="number" name="markerSize" id="markerSize" min="0" step="0.01" value="1" class="number-input">
+                        <input type="number" name="markerSize" id="markerSize" min="0" step="0.5" value="1" class="number-input">
                     </div>
                 </div>
                 <div class="flex-control">
@@ -911,13 +911,50 @@
                             <option value="square">Square</option>
                             <option value="v-rect">V-Rect</option>
                             <option value="h-rect">H-Rect</option>
-                            <option value="trinagle">Triangle</option>
-                            <option value="inv-trinagle">Inv-Triangle</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="inv-triangle">Inv-Triangle</option>
                             <option value="cross">Cross</option>
                             <option value="star">Star</option>
                         </select>
                     </div>
                 </div>
+
+                <div class="flex-control">
+                    <label for="errorType">Error Bars</label>
+                    <select name="errorType" id="errorType" value="tail-cross">
+                        <option value="tail-cross">Tail Cross</option>
+                        <option value="rect">Rect</option>
+                        <option value="corner">Corners</option>
+                        <option value="cross">Cross</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="control-row">
+
+                <div class="flex-control">
+                    <div>
+                        <label for="errorEnableX">Enable X</label>
+                        <input type="checkbox" name="errorEnableX" id="errorEnableX">
+                    </div>
+                    <div>
+                        <label for="errorEnableY">Enable Y</label>
+                        <input type="checkbox" name="errorEnableY" id="errorEnableY">
+                    </div>
+                </div>
+
+                <div class="flex-control">
+                    <div>
+                        <label for="errorColorX">Color X</label>
+                        <input type="color" name="errorColorX" id="errorColorX" value="#666666" class="color-input">
+                    </div>
+                    <div>
+                        <label for="errorColorY">Color Y</label>
+                        <input type="color" name="errorColorY" id="errorColorY" value="#666666" class="color-input">
+                    </div>
+                </div>
+
 
             </div>
 

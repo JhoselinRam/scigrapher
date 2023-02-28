@@ -1366,12 +1366,12 @@ function main(){
     document.querySelector("#functionOpacity").addEventListener("input", changeFunction);
     document.querySelector("#functionWidth").addEventListener("input", changeFunction);
     document.querySelector("#functionStyle").addEventListener("change", changeFunction);
-    document.querySelector("#markerColor").addEventListener("change", changeMarker);
-    document.querySelector("#markerOpacity").addEventListener("change", changeMarker);
+    document.querySelector("#markerColor").addEventListener("input", changeMarker);
+    document.querySelector("#markerOpacity").addEventListener("input", changeMarker);
     document.querySelector("#markerEnable").addEventListener("change", changeMarker);
-    document.querySelector("#markerFilled").addEventListener("change", changeMarker);
-    document.querySelector("#markerWidth").addEventListener("change", changeMarker);
-    document.querySelector("#markerSize").addEventListener("change", changeMarker);
+    document.querySelector("#markerFill").addEventListener("change", changeMarker);
+    document.querySelector("#markerWidth").addEventListener("input", changeMarker);
+    document.querySelector("#markerSize").addEventListener("input", changeMarker);
     document.querySelector("#markerStyle").addEventListener("change", changeMarker);
     document.querySelector("#markerType").addEventListener("change", changeMarker);
 }
