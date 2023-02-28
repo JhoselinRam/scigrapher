@@ -361,7 +361,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             pointerY += pointerY === initialY? 2 : 0;
 
             state.context.canvas.save();
-
+            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
             state.context.canvas.fillStyle = zoomState.rect.background;
             state.context.canvas.globalAlpha = zoomState.rect.opacity;
             state.context.canvas.fillRect(initialX, initialY, pointerX-initialX, pointerY-initialY);

@@ -6,29 +6,29 @@ const Graph = Graph2D(document.querySelector(".graph"))
                     .containerResize()
                     .draw();
 
-const analitic = Graph.addDataset("linechart")
-                        .dataX(analiticX)
-                        .dataY(analiticY);
+// const analitic = Graph.addDataset("linechart")
+//                         .dataX(analiticX)
+//                         .dataY(analiticY);
 
-const scatter = Graph.addDataset("linechart")
-                        .dataX(generateDataX())
-                        .dataY(generateDataY())
-                        .lineEnable(false)
-                        .markerEnable(true)
-                        .markerSize(0.5)
-                        .markerFilled(false)
-                        .markerWidth(2)
-                        .markerColor("#002e99")
-                        .errorbarEnable({x:true, y:true})
-                        .errorbarDataX(0.05)
-                        .errorbarDataY(generateError())
+// const scatter = Graph.addDataset("linechart")
+//                         .dataX(generateDataX())
+//                         .dataY(generateDataY())
+//                         .lineEnable(false)
+//                         .markerEnable(true)
+//                         .markerSize(0.5)
+//                         .markerFilled(false)
+//                         .markerWidth(2)
+//                         .markerColor("#002e99")
+//                         .errorbarEnable({x:true, y:true})
+//                         .errorbarDataX(0.05)
+//                         .errorbarDataY(generateError())
                         
 
-Graph.draw();
+// Graph.draw();
 
 function analiticX(){
     const maxX = Graph.axisDomain().x.end+1;
-    const delta = 0.05;
+    const delta = 0.04;
     const n = Math.ceil(maxX/delta);
     const position = [];
 
@@ -999,6 +999,235 @@ function changeResizeEvent(){
     Graph.containerResize({enable, preserveAspectRatio, delay, anchor:[anchorX,anchorY]});
 }
 
+function generateLinear(){
+    const x = [];
+    const y = [];
+    
+    const start = -10;
+    const end = 10;
+    const b = 0;
+    const m =  0.7;
+    const steps = 15;
+    const delta = (end-start)/(steps-1);
+    
+    for(let i=0; i<steps; i++)
+        x.push(start + i*delta);
+
+    x.forEach(x=>{
+        y.push(m*x+b);
+    });
+
+    return {
+        x,
+        y
+    }   
+}
+
+function generateCuadratic(){
+    const x = [];
+    const y = [];
+    
+    const start = -5;
+    const end = 5;
+    const b = 0;
+    const m =  0.5;
+    const steps = 21;
+    const delta = (end-start)/(steps-1);
+    
+    for(let i=0; i<steps; i++)
+        x.push(start + i*delta);
+
+    x.forEach(x=>{
+        y.push(m*x*x+b);
+    });
+
+    return {
+        x,
+        y
+    }   
+}
+
+function generateCosine(){
+    const x = [];
+    const y = [];
+    
+    const start = -10;
+    const end = 10;
+    const b = 0;
+    const m =  1;
+    const w = 1;
+    const steps = 50;
+    const delta = (end-start)/(steps-1);
+    
+    for(let i=0; i<steps; i++)
+        x.push(start + i*delta);
+
+    x.forEach(x=>{
+        y.push(m*Math.cos(w*x)+b);
+    });
+
+    return {
+        x,
+        y
+    }   
+}
+
+function generateLog(){
+    const x = [];
+    const y = [];
+    
+    const start = 0.01;
+    const end = 7;
+    const b = 0;
+    const m =  1;
+    const steps = 25;
+    const delta = (end-start)/(steps-1);
+    
+    for(let i=0; i<steps; i++)
+        x.push(start + i*delta);
+
+    x.forEach(x=>{
+        y.push(m*Math.log10(x)+b);
+    });
+
+    return {
+        x,
+        y
+    }   
+}
+
+function generateCircle(){
+    const x = [];
+    const y = [];
+    
+    const start = 0;
+    const end = 2*Math.PI;
+    const steps = 30;
+    const delta = (end-start)/(steps-1);
+    
+    for(let i=0; i<steps; i++)
+        x.push(1);
+
+    x.forEach((x,i)=>{
+        y.push(start + i*delta);
+    });
+
+    return {
+        x,
+        y
+    }   
+}
+
+function generateLissajous(){
+    const x = [];
+    const y = [];
+    
+    const start = 0;
+    const end = 2*Math.PI;
+    const steps = 100;
+    const delta = (end-start)/(steps-1);
+    const A = 1;
+    const B = 1;
+    const a = 3;
+    const b = 4;
+    
+    for(let i=0; i<steps; i++)
+        x.push(Math.hypot(A*Math.cos(a*delta*i), B*Math.sin(b*delta*i)))
+
+    x.forEach((x,i)=>{
+        y.push(Math.atan2(B*Math.sin(b*delta*i), A*Math.cos(a*delta*i)));
+    });
+
+    return {
+        x,
+        y
+    }   
+}
+
+const staticFunctions= {
+    functionLinear : Graph.addDataset("linechart", {data:{x:generateLinear().x, y:generateLinear().y},line:{enable:false}}),
+    functionCuadratic : Graph.addDataset("linechart", {data:{x:generateCuadratic().x, y:generateCuadratic().y},line:{enable:false}}),
+    functionCosine : Graph.addDataset("linechart", {data:{x:generateCosine().x, y:generateCosine().y},line:{enable:false}}),
+    functionLog : Graph.addDataset("linechart", {data:{x:generateLog().x, y:generateLog().y},line:{enable:false}}),
+    functionCircle : Graph.addDataset("linechart", {data:{x:generateCircle().x, y:generateCircle().y},line:{enable:false},polar:true}),
+    functionLissajous : Graph.addDataset("linechart", {data:{x:generateLissajous().x, y:generateLissajous().y},line:{enable:false}, polar:true})
+}
+
+
+function changeFunctionEnable(e){
+    const target = e.target.id;
+    const enable = e.target.checked;
+    
+    staticFunctions[target].lineEnable(enable)
+
+    Graph.draw();
+}
+
+function changeFunction(){
+    const target = document.querySelector("#targetFunction").value;
+    const color = document.querySelector("#functionColor").value;
+    const opacity = parseFloat(document.querySelector("#functionOpacity").value);
+    const width = parseFloat(document.querySelector("#functionWidth").value);
+    const style = document.querySelector("#functionStyle").value;
+
+    staticFunctions[target]
+        .lineColor(color)
+        .lineOpacity(opacity)
+        .lineWidth(width)
+        .lineStyle(style);
+
+    Graph.draw();
+}
+
+function changeMarker(){
+    const target = document.querySelector("#targetFunction").value;
+    const enable = document.querySelector("#markerEnable").checked;
+    const fill = document.querySelector("#markerFill").checked;
+    const color = document.querySelector("#markerColor").value;
+    const opacity = parseFloat(document.querySelector("#markerOpacity").value);
+    const width = parseFloat(document.querySelector("#markerWidth").value);
+    const size = parseFloat(document.querySelector("#markerSize").value);
+    const style = document.querySelector("#markerStyle").value;
+    const type = document.querySelector("#markerType").value;
+    
+    staticFunctions[target]
+        .markerEnable(enable)
+        .markerFilled(fill)
+        .markerColor(color)
+        .markerOpacity(opacity)
+        .markerWidth(width)
+        .markerSize(size)
+        .markerStyle(style)
+        .markerType(type);
+
+    Graph.draw();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1127,5 +1356,23 @@ function main(){
     document.querySelector("#resizeDelay").addEventListener("input", changeResizeEvent);
     document.querySelector("#resizeAnchorX").addEventListener("input", changeResizeEvent);
     document.querySelector("#resizeAnchorY").addEventListener("input", changeResizeEvent);
+    document.querySelector("#functionLinear").addEventListener("change", changeFunctionEnable);
+    document.querySelector("#functionCuadratic").addEventListener("change", changeFunctionEnable);
+    document.querySelector("#functionCosine").addEventListener("change", changeFunctionEnable);
+    document.querySelector("#functionLog").addEventListener("change", changeFunctionEnable);
+    document.querySelector("#functionCircle").addEventListener("change", changeFunctionEnable);
+    document.querySelector("#functionLissajous").addEventListener("change", changeFunctionEnable);
+    document.querySelector("#functionColor").addEventListener("input", changeFunction);
+    document.querySelector("#functionOpacity").addEventListener("input", changeFunction);
+    document.querySelector("#functionWidth").addEventListener("input", changeFunction);
+    document.querySelector("#functionStyle").addEventListener("change", changeFunction);
+    document.querySelector("#markerColor").addEventListener("change", changeMarker);
+    document.querySelector("#markerOpacity").addEventListener("change", changeMarker);
+    document.querySelector("#markerEnable").addEventListener("change", changeMarker);
+    document.querySelector("#markerFilled").addEventListener("change", changeMarker);
+    document.querySelector("#markerWidth").addEventListener("change", changeMarker);
+    document.querySelector("#markerSize").addEventListener("change", changeMarker);
+    document.querySelector("#markerStyle").addEventListener("change", changeMarker);
+    document.querySelector("#markerType").addEventListener("change", changeMarker);
 }
 main();

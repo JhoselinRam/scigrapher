@@ -855,7 +855,7 @@
                 <div class="flex-control">
                     <div>
                         <label for="functionStyle">Style</label>
-                        <select name="functionStyle id="functionStyle>
+                        <select name="functionStyle" id="functionStyle" value="solid">
                             <option value="solid">Solid</option>
                             <option value="dot">Dot</option>
                             <option value="dash">Dash</option>
@@ -867,6 +867,8 @@
                     <div>
                         <label for="markerEnable">Marker</label>
                         <input type="checkbox" name="markerEnable" id="markerEnable">
+                        <label for="markerFill">Fill</label>
+                        <input type="checkbox" name="markerFill" id="markerFill" checked>
                     </div>
                 </div>
 
@@ -878,6 +880,42 @@
                     <div>
                         <label for="markerOpacity">Marker Opacity</label>
                         <input type="number" name="markerOpacity" id="markerOpacity" min="0" step="0.05" value="1" class="number-input">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="markerWidth">Marker Width</label>
+                        <input type="number" name="markerWidth" id="markerWidth" min="0" step="1" value="1" class="number-input">
+                    </div>
+                    <div>
+                        <label for="markerSize">Marker Size</label>
+                        <input type="number" name="markerSize" id="markerSize" min="0" step="0.01" value="1" class="number-input">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="markerStyle">Marker Style</label>
+                        <select name="markerStyle" id="markerStyle" value="solid">
+                            <option value="solid">Solid</option>
+                            <option value="dot">Dot</option>
+                            <option value="dash">Dash</option>
+                            <option value="long-dash">Long Dash</option>
+                            <option value="dash-dot">Dash-Dot</option>
+                            <option value="dash-2dot">Dash-2Dot</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="markerType">Marker Type</label>
+                        <select name="markerType" id="markerType" value="circle">
+                            <option value="circle">Circle</option>
+                            <option value="square">Square</option>
+                            <option value="v-rect">V-Rect</option>
+                            <option value="h-rect">H-Rect</option>
+                            <option value="trinagle">Triangle</option>
+                            <option value="inv-trinagle">Inv-Triangle</option>
+                            <option value="cross">Cross</option>
+                            <option value="star">Star</option>
+                        </select>
                     </div>
                 </div>
 

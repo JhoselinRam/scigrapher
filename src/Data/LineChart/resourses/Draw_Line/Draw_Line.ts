@@ -80,11 +80,11 @@ function drawLines({xPositions, yPositions, context, dataState, xScale, yScale, 
             context.lineWidth = dataState.line.width;
             context.setLineDash(getLineDash(dataState.line.style));
             context.beginPath();
-            context.moveTo(Math.round(xScale.map(xPositions[0]))+dataState.line.width%2*0.5, Math.round(yScale.map(yPositions[0]))+dataState.line.width%2*0.5);
+            context.moveTo(xScale.map(xPositions[0]), yScale.map(yPositions[0]));
             xPositions.forEach((positionX,i)=>{
                 if(i === 0) return;
-                const x = Math.round(xScale.map(positionX)) + offset;
-                const y = Math.round(yScale.map(yPositions[i])) + offset;
+                const x = xScale.map(positionX);
+                const y = yScale.map(yPositions[i]);
                 
                 context.lineTo(x ,y);
             });
@@ -98,10 +98,10 @@ function drawLines({xPositions, yPositions, context, dataState, xScale, yScale, 
             context.lineWidth = width;
             context.setLineDash(getLineDash(extractProperty({property:dataState.line.style, x:positionX, y:yPositions[i], index:i, handler:dataHandler})));
 
-            const x0 = Math.round(xScale.map(xPositions[i-1])) - width%2 * 0.5;
-            const y0 = Math.round(yScale.map(yPositions[i-1])) - width%2 * 0.5;
-            const x1 = Math.round(xScale.map(positionX)) - width%2 * 0.5;
-            const y1 = Math.round(yScale.map(yPositions[i])) - width%2 * 0.5;
+            const x0 = xScale.map(xPositions[i-1]);
+            const y0 = yScale.map(yPositions[i-1]);
+            const x1 = xScale.map(positionX);
+            const y1 = yScale.map(yPositions[i]);
 
             context.beginPath();
             context.moveTo(x0, y0);
