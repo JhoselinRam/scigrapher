@@ -1,40 +1,5 @@
 import { Graph2D, mapping } from "../dist/lib/index.js";
-const Graph = Graph2D(document.querySelector(".graph")).aspectRatio({anchor:0}).pointerZoom().pointerMove().containerResize();
-const area = mapping({from:[0,1], to:[0,5], type:"sqr"});
-
-
-
- const linechart = Graph.addDataset("linechart")
-                        .dataX(xData)
-                        .dataY(yData);
-
- Graph.draw();
-
-function xData(){
-    const domain = Graph.axisDomain().x;
-        const n = 100;
-        const delta = (domain.end - domain.start)/(n-1);
-        const positions = [];
-        
-        for(let i=0; i<n; i++){
-            positions.push(domain.start + i*delta);
-        }
-    
-        return positions;  
-}
-
-function yData(chart){
-    return chart.dataX().map(x=>Math.cos(x));
-} 
-
-
-
-
-
-
-
-
-
+const Graph = Graph2D(document.querySelector(".graph")).aspectRatio({anchor:0}).pointerZoom().pointerMove().containerResize().draw();
 
 function changeBackgroundColor(e){
     const color = e.target.value;

@@ -776,13 +776,6 @@
                             <input type="number" name="resizeDelay" id="resizeDelay" class="number-input" min="0" step="1" value="12">
                         </div>
                 </div>
-
-
-
-
-
-
-
             </div>
     
         </header>
@@ -793,6 +786,107 @@
         <div class="graph-backplate">
             <div class="graph"></div>
         </div>
+
+
+
+        <div class="controls">
+            <div class="control-row">
+
+                <div class="flex-control">
+                    <div style="align-self : end">
+                        <label for="functionLinear">Linear</label>
+                        <input type="checkbox" name="functionLinear" id="functionLinear">
+                    </div>
+                    <div style="align-self : end">
+                        <label for="functionCuadratic">Cuadratic</label>
+                        <input type="checkbox" name="functionCuadratic" id="functionCuadratic">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div style="align-self : end">
+                        <label for="functionCosine">Cosine</label>
+                        <input type="checkbox" name="functionCosine" id="functionCosine">
+                    </div>
+                    <div style="align-self : end">
+                        <label for="functionLog">Log</label>
+                        <input type="checkbox" name="functionLog" id="functionLog">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div style="align-self : end">
+                        <label for="functionCircle">Circle</label>
+                        <input type="checkbox" name="functionCircle" id="functionCircle">
+                    </div>
+                    <div style="align-self : end">
+                        <label for="functionLissajous">Lissajous</label>
+                        <input type="checkbox" name="functionLissajous" id="functionLissajous">
+                    </div>
+                </div>
+
+                <div class="flex-control">
+                    <div>
+                        <label for="targetFunction">Customize:</label>
+                        <select name="targetFunction" id="targetFunction" value="functionLinear">
+                            <option value="functionLinear">Linear</option>
+                            <option value="functionCuadratic">Cuadratic</option>
+                            <option value="functionCosine">Cosine</option>
+                            <option value="functionLog">Log</option>
+                            <option value="functionCircle">Circle</option>
+                            <option value="functionLissajous">Lissajous</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="functionColor">Color</label>
+                        <input type="color" name="functionColor" id="functionColor" value="#0043e0" class="color-input">
+                    </div>
+                </div>
+
+                <div class="flex-control">
+                    <div>
+                        <label for="functionOpacity">Opacity</label>
+                        <input type="number" name="functionOpacity" id="functionOpacity"  class="number-input" value="1" min="0" step="0.05" max="1">
+                    </div>
+                    <div>
+                        <label for="functionWidth">Width</label>
+                        <input type="number" name="functionWidth" id="functionWidth"  class="number-input" min="0" step="1" value="1">
+                    </div>
+                </div>
+
+                <div class="flex-control">
+                    <div>
+                        <label for="functionStyle">Style</label>
+                        <select name="functionStyle id="functionStyle>
+                            <option value="solid">Solid</option>
+                            <option value="dot">Dot</option>
+                            <option value="dash">Dash</option>
+                            <option value="long-dash">Long Dash</option>
+                            <option value="dash-dot">Dash-Dot</option>
+                            <option value="dash-2dot">Dash-2Dot</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="markerEnable">Marker</label>
+                        <input type="checkbox" name="markerEnable" id="markerEnable">
+                    </div>
+                </div>
+
+                <div class="flex-control">
+                    <div>
+                        <label for="markerColor">Marker Color</label>
+                        <input type="color" name="markerColor" id="markerColor" value="#0043e0" class="color-input">
+                    </div>
+                    <div>
+                        <label for="markerOpacity">Marker Opacity</label>
+                        <input type="number" name="markerOpacity" id="markerOpacity" min="0" step="0.05" value="1" class="number-input">
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
     </main>
     <script src="index.js" type="module"></script>
 </body>
