@@ -73,20 +73,20 @@ function generateDataY(){
     return y;
 }
 
-function generateError(){
-    const n = 25;
-    const A = 0.3;
-    const w = 3;
-    const delta = 10/(n-1);
-    const dx = 0.05;
-    const y = [];
+// function generateError(){
+//     const n = 25;
+//     const A = 0.3;
+//     const w = 3;
+//     const delta = 10/(n-1);
+//     const dx = 0.05;
+//     const y = [];
 
-    for(let i=0; i<n; i++){
-        const x = i*delta
-        y.push( 0.3*Math.random() );
-    }
-    return y;
-}
+//     for(let i=0; i<n; i++){
+//         const x = i*delta
+//         y.push( 0.3*Math.random() );
+//     }
+//     return y;
+// }
 
 
 
@@ -1144,13 +1144,24 @@ function generateLissajous(){
     }   
 }
 
+function generateError(n){
+    const min = 0.05;
+    const range = 0.2;
+    const value = [];
+
+    for(let i=0; i<n ; i++)
+        value.push(range*Math.random()+min);
+
+    return value
+}
+
 const staticFunctions= {
-    functionLinear : Graph.addDataset("linechart", {data:{x:generateLinear().x, y:generateLinear().y},line:{enable:false}}),
-    functionCuadratic : Graph.addDataset("linechart", {data:{x:generateCuadratic().x, y:generateCuadratic().y},line:{enable:false}}),
-    functionCosine : Graph.addDataset("linechart", {data:{x:generateCosine().x, y:generateCosine().y},line:{enable:false}}),
-    functionLog : Graph.addDataset("linechart", {data:{x:generateLog().x, y:generateLog().y},line:{enable:false}}),
-    functionCircle : Graph.addDataset("linechart", {data:{x:generateCircle().x, y:generateCircle().y},line:{enable:false},polar:true}),
-    functionLissajous : Graph.addDataset("linechart", {data:{x:generateLissajous().x, y:generateLissajous().y},line:{enable:false}, polar:true})
+    functionLinear : Graph.addDataset("linechart", {data:{x:generateLinear().x, y:generateLinear().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(15)}}}),
+    functionCuadratic : Graph.addDataset("linechart", {data:{x:generateCuadratic().x, y:generateCuadratic().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(21)}}}),
+    functionCosine : Graph.addDataset("linechart", {data:{x:generateCosine().x, y:generateCosine().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(50)}}}),
+    functionLog : Graph.addDataset("linechart", {data:{x:generateLog().x, y:generateLog().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(25)}}}),
+    functionCircle : Graph.addDataset("linechart", {data:{x:generateCircle().x, y:generateCircle().y},line:{enable:false},polar:true, errorBar:{x:{data:0.12}, y:{data:generateError(30)}}}),
+    functionLissajous : Graph.addDataset("linechart", {data:{x:generateLissajous().x, y:generateLissajous().y},line:{enable:false}, polar:true, errorBar:{x:{data:0.12}, y:{data:generateError(100)}}})
 }
 
 
@@ -1202,6 +1213,35 @@ function changeMarker(){
 
     Graph.draw();
 
+}
+
+function changeError(){
+    const target = document.querySelector("#targetFunction").value;
+    const type = document.querySelector("#errorType").value;
+    const enableX = document.querySelector("#errorEnableX").checked;
+    const enableY = document.querySelector("#errorEnableY").checked;
+    const colorX = document.querySelector("#errorColorX").value;
+    const colorY = document.querySelector("#errorColorY").value;
+    const opacityX = parseFloat(document.querySelector("#errorOpacityX").value);
+    const opacityY = parseFloat(document.querySelector("#errorOpacityY").value);
+    const styleX = document.querySelector("#errorStyleX").value;
+    const styleY = document.querySelector("#errorStyleY").value;
+    const widthX = parseFloat(document.querySelector("#errorWidthX").value);
+    const widthY = parseFloat(document.querySelector("#errorWidthY").value);
+    
+    staticFunctions[target]
+        .errorbarEnable({x:enableX, y:enableY})
+        .errorbarColorX(colorX)
+        .errorbarColorY(colorY)
+        .errorbarOpacityX(opacityX)
+        .errorbarOpacityY(opacityY)
+        .errorbarStyleX(styleX)
+        .errorbarStyleY(styleY)
+        .errorbarWidthX(widthX)
+        .errorbarWidthY(widthY)
+        .errorbarType(type);
+
+    Graph.draw();
 }
 
 
@@ -1374,5 +1414,16 @@ function main(){
     document.querySelector("#markerSize").addEventListener("input", changeMarker);
     document.querySelector("#markerStyle").addEventListener("change", changeMarker);
     document.querySelector("#markerType").addEventListener("change", changeMarker);
+    document.querySelector("#errorType").addEventListener("change", changeError);
+    document.querySelector("#errorEnableX").addEventListener("change", changeError);
+    document.querySelector("#errorEnableY").addEventListener("change", changeError);
+    document.querySelector("#errorColorX").addEventListener("input", changeError);
+    document.querySelector("#errorColorY").addEventListener("input", changeError);
+    document.querySelector("#errorOpacityX").addEventListener("input", changeError);
+    document.querySelector("#errorOpacityY").addEventListener("input", changeError);
+    document.querySelector("#errorStyleX").addEventListener("change", changeError);
+    document.querySelector("#errorStyleY").addEventListener("change", changeError);
+    document.querySelector("#errorWidthX").addEventListener("input", changeError);
+    document.querySelector("#errorWidthY").addEventListener("input", changeError);
 }
 main();

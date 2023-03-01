@@ -919,19 +919,20 @@
                     </div>
                 </div>
 
-                <div class="flex-control">
-                    <label for="errorType">Error Bars</label>
-                    <select name="errorType" id="errorType" value="tail-cross">
-                        <option value="tail-cross">Tail Cross</option>
-                        <option value="rect">Rect</option>
-                        <option value="corner">Corners</option>
-                        <option value="cross">Cross</option>
-                    </select>
-                </div>
 
             </div>
 
             <div class="control-row">
+
+                <div class="flex-control">
+                    <label for="errorType">Error Bars</label>
+                    <select name="errorType" id="errorType" value="tail-cross">
+                        <option value="tail-cross">Tail Cross</option>
+                        <option value="rectangle">Rect</option>
+                        <option value="corner">Corners</option>
+                        <option value="cross">Cross</option>
+                    </select>
+                </div>
 
                 <div class="flex-control">
                     <div>
@@ -955,6 +956,51 @@
                     </div>
                 </div>
 
+                <div class="flex-control">
+                    <div>
+                        <label for="errorOpacityX">Opacity X</label>
+                        <input type="number" class="number-input" name="errorOpacityX" id="errorOpacityX" min="0" max="1" value="1" step="0.05">
+                    </div>
+                    <div>
+                        <label for="errorOpacityY">Opacity Y</label>
+                        <input type="number" class="number-input" name="errorOpacityY" id="errorOpacityY" min="0" max="1" value="1" step="0.05">
+                    </div>
+                </div>
+                <div class="flex-control">
+                    <div>
+                        <label for="errorStyleX">Style X</label>
+                        <select name="errorStyleX" id="errorStyleX" value="solid">
+                            <option value="solid">Solid</option>
+                            <option value="dot">Dot</option>
+                            <option value="dash">Dash</option>
+                            <option value="long-dash">Long Dash</option>
+                            <option value="dash-dot">Dash-Dot</option>
+                            <option value="dash-2dot">Dash-2Dot</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="errorStyleY">Style Y</label>
+                        <select name="errorStyleY" id="errorStyleY" value="solid">
+                            <option value="solid">Solid</option>
+                            <option value="dot">Dot</option>
+                            <option value="dash">Dash</option>
+                            <option value="long-dash">Long Dash</option>
+                            <option value="dash-dot">Dash-Dot</option>
+                            <option value="dash-2dot">Dash-2Dot</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex-control">
+                    <div>
+                        <label for="errorWidthX">Width X</label>
+                        <input type="number" name="errorWidthX" id="errorWidthX" min="0" step="1" value="1" class="number-input">
+                    </div>
+                    <div>
+                        <label for="errorWidthY">Width Y</label>
+                        <input type="number" name="errorWidthY" id="errorWidthY" min="0" step="1" value="1" class="number-input">
+                    </div>
+                </div>
 
             </div>
 
