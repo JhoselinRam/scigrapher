@@ -1244,6 +1244,68 @@ function changeError(){
     Graph.draw();
 }
 
+function getAreaLimits(target, from, to){
+    const n = 50;
+    const delta = (to-from)/(n-1);
+    const positions = [];
+
+    for(let i=0; i<n; i++){
+        switch(target){
+            case "axis":
+                positions.push(from + i*delta);
+                break;
+            case "base":
+                positions.push(0);
+                break;
+            case "linear":
+                positions.push(0.7*(from + i*delta));
+                break;
+
+            case "cuadratic":
+                positions.push(0.5*(from + i*delta)**2);
+                break;
+
+            case "cosine":
+                positions.push(Math.cos(from + i*delta));
+                break;
+
+            case "log":{
+                    const x = from + i*delta;
+                    x>0?positions.push(Math.log10(x)):positions.push(0);
+                }
+                break;
+        }
+    }
+
+    return positions;
+}
+
+const Area = Graph.addDataset("linechart").lineEnable(false);
+
+function changeArea(){
+    const enable = document.querySelector("#areaEnable").checked;
+    const top = document.querySelector("#areaTop").value;
+    const bottom = document.querySelector("#areaBottom").value;
+    const color = document.querySelector("#areaColor").value;
+    const opacity = parseFloat(document.querySelector("#areaOpacity").value);
+    const from = parseFloat(document.querySelector("#areaFrom").value);
+    const to = parseFloat(document.querySelector("#areaTo").value);
+
+    const data = getAreaLimits(top, from, to);
+    const base = getAreaLimits(bottom, from, to);
+    const x = getAreaLimits("axis", from, to);
+
+    Area.dataX(x)
+        .dataY(data)
+        .areaEnable(enable)
+        .areaColor(color)
+        .areaOpacity(opacity)
+        .areaDataX(x)
+        .areaDataY(base);
+
+    Graph.draw();
+
+}
 
 
 
@@ -1425,5 +1487,13 @@ function main(){
     document.querySelector("#errorStyleY").addEventListener("change", changeError);
     document.querySelector("#errorWidthX").addEventListener("input", changeError);
     document.querySelector("#errorWidthY").addEventListener("input", changeError);
+    document.querySelector("#areaEnable").addEventListener("change", changeArea);
+    document.querySelector("#areaTop").addEventListener("change", changeArea);
+    document.querySelector("#areaBottom").addEventListener("change", changeArea);
+    document.querySelector("#areaColor").addEventListener("input", changeArea);
+    document.querySelector("#areaOpacity").addEventListener("input", changeArea);
+    document.querySelector("#areaFrom").addEventListener("input", changeArea);
+    document.querySelector("#areaTo").addEventListener("input", changeArea);
+    
 }
 main();
