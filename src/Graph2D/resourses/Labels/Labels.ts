@@ -1,4 +1,4 @@
-import { Graph2D, LabelProperties, Method_Generator } from "../../Graph2D_Types";
+import { Graph2D, graphCallback, LabelProperties, Method_Generator } from "../../Graph2D_Types";
 import { Draw_Text_Props, Get_Coords_Props, Labels, Text_Height_Props } from "./Labels_Types";
 
 function Labels({state, graphHandler}:Method_Generator) : Labels{
@@ -317,9 +317,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
 //----------------- Title ---------------------
 
-    function title(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
+    function title(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function title(arg : void) : LabelProperties | undefined;
-    function title(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+    function title(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
         if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.title);
             
@@ -333,7 +333,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.title = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.full = true;
 
             return graphHandler;
@@ -344,9 +344,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Subtitle --------------------
 
-    function subtitle(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
+    function subtitle(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function subtitle(arg : void) : LabelProperties | undefined;
-    function subtitle(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+    function subtitle(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
         if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.subtitle);
             
@@ -359,7 +359,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             
             state.labels.subtitle = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.full = true;
 
             return graphHandler;
@@ -370,9 +370,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label x --------------------
 
-    function xLabel(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
+    function xLabel(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function xLabel(arg : void) : LabelProperties | undefined;
-    function xLabel(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+    function xLabel(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
         if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.xPrimary);
             
@@ -383,7 +383,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         
             state.labels.xPrimary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.full = true;
 
             return graphHandler;
@@ -394,9 +394,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label y --------------------
 
-    function yLabel(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
+    function yLabel(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function yLabel(arg : void) : LabelProperties | undefined;
-    function yLabel(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+    function yLabel(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
         if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.yPrimary);
             
@@ -407,7 +407,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.yPrimary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.full = true;
 
             return graphHandler;
@@ -418,9 +418,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label x secondary --------------------
 
-    function xLabelSecondary(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
+    function xLabelSecondary(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function xLabelSecondary(arg : void) : LabelProperties | undefined;
-    function xLabelSecondary(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+    function xLabelSecondary(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
         if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.xSecondary);
             
@@ -432,7 +432,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.xSecondary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.full = true;
 
             return graphHandler;
@@ -443,9 +443,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 //---------------------------------------------
 //--------------- Label y secondary --------------------
 
-    function yLabelSecondary(label : Partial<LabelProperties>, callback?:(handler:Graph2D)=>void) : Graph2D;
+    function yLabelSecondary(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function yLabelSecondary(arg : void) : LabelProperties | undefined;
-    function yLabelSecondary(label : Partial<LabelProperties> | void, callback?:(handler:Graph2D)=>void) : Graph2D | LabelProperties | undefined{
+    function yLabelSecondary(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
         if(typeof label === null && callback == null)
             return Object.assign({}, state.labels.ySecondary);
             
@@ -457,7 +457,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.ySecondary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.full = true;
 
             return graphHandler;

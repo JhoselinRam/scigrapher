@@ -1,8 +1,8 @@
-import {RecursivePartial } from "../../Graph2D/Graph2D_Types";
+import {Graph2D, RecursivePartial } from "../../Graph2D/Graph2D_Types";
 import DataGeneral from "../Data_General.js";
-import { Draw_Data_Callback } from "../Data_Types";
+import { Draw_Data_Callback, Partialize } from "../Data_Types";
 import DrawLine from "./resourses/Draw_Line/Draw_Line.js";
-import { Line_Chart, Line_Chart_Options, Line_Chart_State, Partialize } from "./LineChart_Types";
+import { Line_Chart, Line_Chart_Options, Line_Chart_State } from "./LineChart_Types";
 import DataLine from "./resourses/Data_Line/Data_Line.js";
 import MarkerLine from "./resourses/Marker_Line/Marker_Line.js";
 import ErrorLine from "./resourses/Error_Line/Error_Line.js";
@@ -64,7 +64,7 @@ const defaultOptions : Line_Chart_Options = {
     }
 };
 
-export function LineChart(options : Partialize<Line_Chart_Options>, dirtify:(sort?:boolean)=>void) : [Line_Chart, Draw_Data_Callback]{
+export function LineChart(options : Partialize<Line_Chart_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Line_Chart, Draw_Data_Callback]{
     //State of the data set
     const dataState : Line_Chart_State = {
         ...defaultOptions, ...options,
@@ -92,13 +92,13 @@ export function LineChart(options : Partialize<Line_Chart_Options>, dirtify:(sor
     const dataHandler : RecursivePartial<Line_Chart> = {};
 
     //Method generators
-    const general = DataGeneral<Line_Chart,Line_Chart_State>({dataHandler : dataHandler as Line_Chart, dataState});
-    const draw = DrawLine({dataHandler : dataHandler as Line_Chart, dataState});
-    const data = DataLine({dataHandler : dataHandler as Line_Chart, dataState});
-    const marker = MarkerLine({dataHandler : dataHandler as Line_Chart, dataState});
-    const error = ErrorLine({dataHandler : dataHandler as Line_Chart, dataState});
-    const line = Line({dataHandler : dataHandler as Line_Chart, dataState});
-    const area = Area({dataHandler : dataHandler as Line_Chart, dataState});
+    const general = DataGeneral<Line_Chart,Line_Chart_State>({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
+    const draw = DrawLine({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
+    const data = DataLine({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
+    const marker = MarkerLine({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
+    const error = ErrorLine({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
+    const line = Line({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
+    const area = Area({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
 
 
     //Main handler population

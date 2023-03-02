@@ -1,30 +1,30 @@
-import { Graph2D, LabelProperties } from "../../Graph2D_Types"
+import { Graph2D, graphCallback, LabelProperties } from "../../Graph2D_Types"
 
 export interface Labels {
     compute : ()=>void,
     draw : ()=>void,
     title : {
-        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
+        (label:Partial<LabelProperties>, callback?:graphCallback):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     subtitle : {
-        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
+        (label:Partial<LabelProperties>, callback?:graphCallback):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     xLabel : {
-        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
+        (label:Partial<LabelProperties>, callback?:graphCallback):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     yLabel : {
-        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
+        (label:Partial<LabelProperties>, callback?:graphCallback):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     xLabelSecondary : {
-        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
+        (label:Partial<LabelProperties>, callback?:graphCallback):Graph2D,
         (arg:void):LabelProperties | undefined
     },
     yLabelSecondary : {
-        (label:Partial<LabelProperties>, callback?:(handler:Graph2D)=>void):Graph2D,
+        (label:Partial<LabelProperties>, callback?:graphCallback):Graph2D,
         (arg:void):LabelProperties | undefined
     },
 }

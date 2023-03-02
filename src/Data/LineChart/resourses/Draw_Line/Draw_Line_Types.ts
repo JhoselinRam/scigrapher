@@ -1,4 +1,4 @@
-import { Axis_Property } from "../../../../Graph2D/Graph2D_Types";
+import { Axis_Property, Graph2D } from "../../../../Graph2D/Graph2D_Types";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Draw_Data_Callback } from "../../../Data_Types";
 import { Error_Bar_Types, Line_Chart, Line_Chart_State, Line_Char_Data, Marker_Type, Property_Generator } from "../../LineChart_Types";
@@ -13,6 +13,7 @@ export interface Draw_Line_Helper_Props {
     xPositions : Array<number>,
     yPositions : Array<number>,
     dataHandler : Line_Chart,
+    graphHandler : Graph2D,
     xScale : Mapping,
     yScale : Mapping
 }
@@ -27,6 +28,7 @@ export interface Interpret_Line_Coords_Props {
     xGenerator : Line_Char_Data,
     yGenerator : Line_Char_Data,
     dataHandler : Line_Chart,
+    graphHandler : Graph2D
 }
 
 export interface Create_Marker_Props {
@@ -47,6 +49,9 @@ export interface Extract_Property_Props<T> {
     x : number,
     y : number,
     index : number,
+    xPositions : Array<number>,
+    yPositions : Array<number>,
     handler : Line_Chart,
+    graphHandler : Graph2D,
     property : Property_Generator<T>
 }

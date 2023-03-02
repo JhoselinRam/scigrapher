@@ -1,5 +1,5 @@
 import { Axis_Property } from "../../../../Graph2D/Graph2D_Types"
-import { Line_Chart, Property_Modifier } from "../../LineChart_Types"
+import { Line_Chart, Line_Chart_Callback, Property_Modifier } from "../../LineChart_Types"
 
 export interface Error_Line {
     errorbarType : Property_Modifier<string>,
@@ -14,7 +14,7 @@ export interface Error_Line {
     errorbarStyleY : Property_Modifier<string>,
     errorbarDataY : Property_Modifier<number>,
     errorbarEnable : {
-        (enable:Partial<Axis_Property<boolean>>, callback?:(handler?:Line_Chart)=>void) : Line_Chart,
+        (enable:Partial<Axis_Property<boolean>>, callback?:Line_Chart_Callback) : Line_Chart,
         (arg : void) : Axis_Property<boolean>
     }
 }

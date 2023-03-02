@@ -4,7 +4,7 @@ import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_Method_Generator } from "../../LineChart_Types";
 import { Create_Error_Props, Create_Marker_Props, Draw_Area_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
 
-function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw_Line{
+function DrawLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generator) : Draw_Line{
 
 //--------------- Draw Data -------------------
 
@@ -21,7 +21,8 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
 
         const xScale = dataState.useAxis.x === "primary"? state.scale.primary.x : state.scale.secondary.x as Mapping;
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
-        const [xPositions, yPositions] = interpretCoordinates({xGenerator:dataState.data.x, yGenerator:dataState.data.y, dataHandler, polar:dataState.polar});
+        const xPositions = isCallable(dataState.data.x)? dataState.data.x(dataHandler, graphHandler) : dataState.data.x.slice();
+        const yPositions = isCallable(dataState.data.y)? dataState.data.y(dataHandler, graphHandler) : dataState.data.y.slice();
         const clipRect = getGraphRect(state); 
 
         //Common canvas configurations
@@ -32,17 +33,18 @@ function DrawLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Draw
         state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         if(dataState.area.enable){
-            const [xAreaPositions, yAreaPositions] = interpretCoordinates({xGenerator:dataState.area.base.x, yGenerator:dataState.area.base.y, dataHandler, polar:dataState.area.polar});
+            const xAreaPositions = isCallable(dataState.area.base.x)? dataState.area.base.x(dataHandler, graphHandler) : dataState.area.base.x.slice();
+            const yAreaPositions = isCallable(dataState.area.base.y)? dataState.area.base.y(dataHandler, graphHandler) : dataState.area.base.y.slice();
             xAreaPositions.reverse();
             yAreaPositions.reverse();
-            drawArea({context:state.context.data, dataHandler, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale});
+            drawArea({context:state.context.data, dataHandler, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale, graphHandler});
         }
         if(dataState.line.enable)
-            drawLines({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
+            drawLines({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale, graphHandler});
         if(dataState.marker.enable)
-            drawMarkers({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
+            drawMarkers({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale, graphHandler});
         if(dataState.errorBar.x.enable || dataState.errorBar.y.enable)
-            drawErrorBars({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale});
+            drawErrorBars({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale, graphHandler});
 
 
         state.context.data.restore();
@@ -65,26 +67,35 @@ export default DrawLine;
 
 //--------------- Draw Lines ------------------
 
-function drawLines({xPositions, yPositions, context, dataState, xScale, yScale, dataHandler} : Draw_Line_Helper_Props){    
+function drawLines({xPositions, yPositions, context, dataState, xScale, yScale, dataHandler, graphHandler} : Draw_Line_Helper_Props){    
     
     //The simple and more efficient way
     if(typeof dataState.line.color === "string" &&
         typeof dataState.line.opacity === "number" &&
         typeof dataState.line.width === "number"  &&
         typeof dataState.line.style === "string"){
-            
-            const offset = dataState.line.width%2*0.5
 
+            let xStart = xPositions[0];
+            let yStart = yPositions[0];
+            if(dataState.polar){
+                xStart = xPositions[0] * Math.cos(yPositions[0]);
+                yStart = xPositions[0] * Math.sin(yPositions[0]);
+            }
             context.strokeStyle = dataState.line.color;
             context.globalAlpha = dataState.line.opacity;
             context.lineWidth = dataState.line.width;
             context.setLineDash(getLineDash(dataState.line.style));
             context.beginPath();
-            context.moveTo(xScale.map(xPositions[0]), yScale.map(yPositions[0]));
+            context.moveTo(xScale.map(xStart), yScale.map(yStart));
             xPositions.forEach((positionX,i)=>{
                 if(i === 0) return;
-                const x = xScale.map(positionX);
-                const y = yScale.map(yPositions[i]);
+                let x = xScale.map(positionX);
+                let y = yScale.map(yPositions[i]);
+                
+                if(dataState.polar){
+                    x = xScale.map(positionX*Math.cos(yPositions[i]));
+                    y = yScale.map(positionX*Math.sin(yPositions[i]));
+                }
                 
                 context.lineTo(x ,y);
             });
@@ -92,16 +103,28 @@ function drawLines({xPositions, yPositions, context, dataState, xScale, yScale, 
     } else{ //A little more complex but necessary if some of the properties are dynamic
         xPositions.forEach((positionX, i)=>{
             if(i === 0) return;
-            const width = extractProperty({property:dataState.line.width, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
-            context.strokeStyle = extractProperty({property:dataState.line.color, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
-            context.globalAlpha = extractProperty({property:dataState.line.opacity, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
-            context.lineWidth = width;
-            context.setLineDash(getLineDash(extractProperty({property:dataState.line.style, x:positionX, y:yPositions[i], index:i, handler:dataHandler})));
+            context.strokeStyle = extractProperty({xPositions, yPositions, graphHandler, property:dataState.line.color, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
+            context.globalAlpha = extractProperty({xPositions, yPositions, graphHandler, property:dataState.line.opacity, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
+            context.lineWidth = extractProperty({xPositions, yPositions, graphHandler, property:dataState.line.width, x:positionX, y:yPositions[i], index:i, handler:dataHandler});
+            context.setLineDash(getLineDash(extractProperty({xPositions, yPositions, graphHandler, property:dataState.line.style, x:positionX, y:yPositions[i], index:i, handler:dataHandler})));
+            
+            let xCoord0 = xPositions[i-1];
+            let yCoord0 = yPositions[i-1];
+            let xCoord1 = positionX;
+            let yCoord1 = yPositions[i];
 
-            const x0 = xScale.map(xPositions[i-1]);
-            const y0 = yScale.map(yPositions[i-1]);
-            const x1 = xScale.map(positionX);
-            const y1 = yScale.map(yPositions[i]);
+            if(dataState.polar){
+                xCoord0 = xPositions[i-1] * Math.cos(yPositions[i-1]);
+                yCoord0 = xPositions[i-1] * Math.sin(yPositions[i-1]);
+                xCoord1 = positionX * Math.cos(yPositions[i]);
+                yCoord1 = xPositions[i] * Math.sin(yPositions[i]);
+            }
+
+
+            const x0 = xScale.map(xCoord0);
+            const y0 = yScale.map(yCoord0);
+            const x1 = xScale.map(xCoord1);
+            const y1 = yScale.map(yCoord1);
 
             context.beginPath();
             context.moveTo(x0, y0);
@@ -115,7 +138,7 @@ function drawLines({xPositions, yPositions, context, dataState, xScale, yScale, 
 //---------------------------------------------
 //------------- Draw Markers ------------------
 
-function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, xScale, yScale} : Draw_Line_Helper_Props){
+function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, xScale, yScale, graphHandler} : Draw_Line_Helper_Props){
 
     if(typeof dataState.marker.color === "string" &&
        typeof dataState.marker.opacity === "number" &&
@@ -136,8 +159,14 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
         context.setLineDash(getLineDash(dataState.marker.style));
         xPositions.forEach((positionX,i)=>{
             const positionY = yPositions[i];
-            const x = Math.round(xScale.map(positionX)) + offset;
-            const y = Math.round(yScale.map(positionY)) + offset;
+            
+            let x = Math.round(xScale.map(positionX)) + offset;
+            let y = Math.round(yScale.map(positionY)) + offset;
+
+            if(dataState.polar){
+                x = Math.round(xScale.map(positionX * Math.cos(positionY))) + offset;
+                y = Math.round(yScale.map(positionX * Math.sin(positionY))) + offset;
+            }
             
             context.save();
             context.translate(x,y);
@@ -147,20 +176,26 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
     } else{
         xPositions.forEach((positionX, i)=>{
             const positionY = yPositions[i];
-            const size = extractProperty({property:dataState.marker.size, x:positionX, y:positionY, index:i, handler:dataHandler});
-            const color = extractProperty({property:dataState.marker.color, x:positionX, y:positionY, index:i, handler:dataHandler});
-            const type = extractProperty({property:dataState.marker.type, x:positionX, y:positionY, index:i, handler:dataHandler});
-            const width = extractProperty({property:dataState.marker.width, x:positionX, y:positionY, index:i, handler:dataHandler});
-            const filled = extractProperty({property:dataState.marker.filled, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const size = extractProperty({xPositions, yPositions, graphHandler, property:dataState.marker.size, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const color = extractProperty({xPositions, yPositions, graphHandler, property:dataState.marker.color, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const type = extractProperty({xPositions, yPositions, graphHandler, property:dataState.marker.type, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const width = extractProperty({xPositions, yPositions, graphHandler, property:dataState.marker.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+            const filled = extractProperty({xPositions, yPositions, graphHandler, property:dataState.marker.filled, x:positionX, y:positionY, index:i, handler:dataHandler});
             const marker = createMarker({type, size});
-            const x = Math.round(xScale.map(positionX)) + width%2 * 0.5;
-            const y = Math.round(yScale.map(positionY)) + width%2 * 0.5;
+            
+            let x = Math.round(xScale.map(positionX)) + width%2 * 0.5;
+            let y = Math.round(yScale.map(positionY)) + width%2 * 0.5;
+
+            if(dataState.polar){
+                x = Math.round(xScale.map(positionX * Math.cos(positionY))) + width%2 * 0.5;
+                y = Math.round(yScale.map(positionX * Math.sin(positionY))) + width%2 * 0.5;
+            }
 
             context.strokeStyle = color;
             context.fillStyle = color;
-            context.globalAlpha = extractProperty({property:dataState.marker.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
+            context.globalAlpha = extractProperty({xPositions, yPositions, graphHandler, property:dataState.marker.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
             context.lineWidth = width;
-            context.setLineDash(getLineDash(extractProperty({property:dataState.marker.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
+            context.setLineDash(getLineDash(extractProperty({xPositions, yPositions, graphHandler, property:dataState.marker.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
 
             context.save();
             context.translate(x,y);
@@ -174,17 +209,25 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
 //---------------------------------------------
 //---------------------------------------------
 
-    function drawErrorBars({context, dataHandler, dataState, xPositions, xScale, yPositions, yScale} : Draw_Line_Helper_Props){
+    function drawErrorBars({context, graphHandler, dataHandler, dataState, xPositions, xScale, yPositions, yScale} : Draw_Line_Helper_Props){
         xPositions.forEach((positionX , i)=>{
             const positionY = yPositions[i];
             let xError = 0;
             let yError = 0;
+
+            let x = positionX;
+            let y = positionY;
+
+            if(dataState.polar){
+                x = positionX * Math.cos(positionY);
+                y = positionX * Math.sin(positionY);
+            }
             
             //Check for error bar enable
             if(dataState.errorBar.x.enable)
-                xError = typeof dataState.errorBar.x.data === "number"? dataState.errorBar.x.data : (isCallable(dataState.errorBar.x.data)? dataState.errorBar.x.data(positionX, positionY, i, dataHandler) : dataState.errorBar.x.data[i]);
+                xError = typeof dataState.errorBar.x.data === "number"? dataState.errorBar.x.data : (isCallable(dataState.errorBar.x.data)? dataState.errorBar.x.data(positionX, positionY, i,xPositions, yPositions, dataHandler, graphHandler) : dataState.errorBar.x.data[i]);
             if(dataState.errorBar.y.enable)
-                yError = typeof dataState.errorBar.y.data === "number"? dataState.errorBar.y.data : (isCallable(dataState.errorBar.y.data)? dataState.errorBar.y.data(positionX, positionY, i, dataHandler) : dataState.errorBar.y.data[i]);
+                yError = typeof dataState.errorBar.y.data === "number"? dataState.errorBar.y.data : (isCallable(dataState.errorBar.y.data)? dataState.errorBar.y.data(positionX, positionY, i, xPositions, yPositions, dataHandler, graphHandler) : dataState.errorBar.y.data[i]);
             
 
             //Draw part x of error bar
@@ -197,7 +240,7 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
                     typeof dataState.errorBar.x.width === "number" && 
                     typeof dataState.errorBar.y.width === "number"){
 
-                        const xPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"x"});
+                        const xPath = createErrorBar({position:{x, y}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"x"});
          
                          context.save();
                          context.strokeStyle = dataState.errorBar.x.color;
@@ -209,16 +252,16 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
                 
                 //For dynamic properties, little less efficient draw mechanism
                 }else{
-                    const xWidth = extractProperty({property:dataState.errorBar.x.width, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    const yWidth = extractProperty({property:dataState.errorBar.y.width, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    const type = extractProperty({property:dataState.errorBar.type, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    const xPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:xWidth, y :yWidth}, type, axis:"x"});
+                    const xWidth = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.x.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const yWidth = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.y.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const type = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.type, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const xPath = createErrorBar({position:{x, y}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:xWidth, y :yWidth}, type, axis:"x"});
 
                     context.save();
-                    context.strokeStyle = extractProperty({property:dataState.errorBar.x.color, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    context.globalAlpha = extractProperty({property:dataState.errorBar.x.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.strokeStyle = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.x.color, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.globalAlpha = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.x.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
                     context.lineWidth = xWidth;
-                    context.setLineDash(getLineDash(extractProperty({property:dataState.errorBar.x.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
+                    context.setLineDash(getLineDash(extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.x.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
                     context.stroke(xPath);
                     context.restore();
                 }
@@ -235,7 +278,7 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
                     typeof dataState.errorBar.y.width === "number" && 
                     typeof dataState.errorBar.x.width === "number"){
 
-                        const yPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"y"});
+                        const yPath = createErrorBar({position:{x, y}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:dataState.errorBar.x.width, y :dataState.errorBar.y.width}, type:dataState.errorBar.type, axis:"y"});
          
                          context.save();
                          context.strokeStyle = dataState.errorBar.y.color;
@@ -247,16 +290,16 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
                 
                 //For dynamic properties, little less efficient draw mechanism
                 }else{
-                    const xWidth = extractProperty({property:dataState.errorBar.x.width, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    const yWidth = extractProperty({property:dataState.errorBar.y.width, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    const type = extractProperty({property:dataState.errorBar.type, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    const yPath = createErrorBar({position:{x:positionX,y:positionY}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:xWidth, y :yWidth}, type, axis:"y"});
+                    const xWidth = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.x.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const yWidth = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.y.width, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const type = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.type, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    const yPath = createErrorBar({position:{x, y}, error:{x:xError, y:yError}, scale:{x:xScale, y:yScale}, width:{x:xWidth, y :yWidth}, type, axis:"y"});
 
                     context.save();
-                    context.strokeStyle = extractProperty({property:dataState.errorBar.y.color, x:positionX, y:positionY, index:i, handler:dataHandler});
-                    context.globalAlpha = extractProperty({property:dataState.errorBar.y.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.strokeStyle = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.y.color, x:positionX, y:positionY, index:i, handler:dataHandler});
+                    context.globalAlpha = extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.y.opacity, x:positionX, y:positionY, index:i, handler:dataHandler});
                     context.lineWidth = yWidth;
-                    context.setLineDash(getLineDash(extractProperty({property:dataState.errorBar.y.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
+                    context.setLineDash(getLineDash(extractProperty({xPositions, yPositions, graphHandler, property:dataState.errorBar.y.style, x:positionX, y:positionY, index:i, handler:dataHandler})));
                     context.stroke(yPath);
                     context.restore();
                 }
@@ -267,54 +310,38 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
 //---------------------------------------------
 //--------------- Draw Area -------------------
 
-    function drawArea({context, dataHandler, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale} : Draw_Area_Props){
+    function drawArea({context, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale} : Draw_Area_Props){
         context.fillStyle = dataState.area.color;
         context.globalAlpha = dataState.area.opacity;
         context.beginPath();
         context.moveTo(Math.round(xScale.map(xPositions[0])), Math.round(yScale.map(yPositions[0])));
         xPositions.forEach((positionX, i) =>{
             if(i === 0) return;
-            const x = Math.round(xScale.map(positionX));
-            const y = Math.round(yScale.map(yPositions[i]));
+            let x = Math.round(xScale.map(positionX));
+            let y = Math.round(yScale.map(yPositions[i]));
+
+            if(dataState.polar){
+                x = Math.round(xScale.map(positionX * Math.cos(yPositions[i])));
+                y = Math.round(yScale.map(positionX * Math.sin(yPositions[i])));
+            }
             
             context.lineTo(x ,y);
         });
         xAreaPositions.forEach((positionX, i)=>{
-            const x = Math.round(xScale.map(positionX));
-            const y = Math.round(yScale.map(yAreaPositions[i]));
+            let x = Math.round(xScale.map(positionX));
+            let y = Math.round(yScale.map(yAreaPositions[i]));
+
+            if(dataState.polar){
+                x = Math.round(xScale.map(positionX * Math.cos(yAreaPositions[i])));
+                y = Math.round(yScale.map(positionX * Math.sin(yAreaPositions[i])));
+            }
+
 
             context.lineTo(x, y);
         })
         context.closePath();
         context.fill();
     }
-
-//---------------------------------------------
-//--------- Interpret Coordinates -------------
-
-function interpretCoordinates({ xGenerator, yGenerator,  dataHandler, polar } : Interpret_Line_Coords_Props) : [Array<number>, Array<number>]{
-    let xPositions : Array<number> = [];
-    let yPositions : Array<number> = [];
-    const xData = isCallable(xGenerator)? xGenerator(dataHandler) : xGenerator.slice();
-    const yData = isCallable(yGenerator)? yGenerator(dataHandler) : yGenerator.slice();
-
-    //Some warning
-    if(xData.length !== yData.length) console.error("Length of x and y data arrays are different, this may led to undefined behavior")
-
-    if(polar){
-        xData.forEach((x, i)=>{
-            const y = yData[i];
-
-            xPositions.push(x*Math.cos(y));
-            yPositions.push(x*Math.sin(y));
-        });
-    }else{
-        xPositions = xData;
-        yPositions = yData;
-    }
-
-    return [xPositions, yPositions];
-}
 
 //---------------------------------------------
 //------------- Create Marker ------------------
@@ -544,11 +571,11 @@ function createErrorBar({ position, error, scale, type, axis, width } : Create_E
 //---------------------------------------------
 //------------- Extract Property --------------
 
-function extractProperty<T>({ x, y, index, handler, property} : Extract_Property_Props<T>) : T {
+function extractProperty<T>({ x, y, index, handler, property, graphHandler, xPositions, yPositions} : Extract_Property_Props<T>) : T {
     let value : T;
     
     if(isCallable(property)){
-        value = property(x, y, index, handler);
+        value = property(x, y, index,xPositions, yPositions, handler, graphHandler);
     } else if(typeof property !== "object"){
         value  = property
     } else{

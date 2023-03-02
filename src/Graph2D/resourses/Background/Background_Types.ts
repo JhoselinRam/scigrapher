@@ -1,14 +1,14 @@
-import { Graph2D } from "../../Graph2D_Types";
+import { Graph2D, graphCallback } from "../../Graph2D_Types";
 
 export interface Background{
     draw : ()=>void,
     drawClientRect : ()=>void,
     backgroundColor : {
-        (color:string, callback?:(handler?:Graph2D)=>void):Graph2D,
+        (color:string, callback?:graphCallback):Graph2D,
         (arg:void):string
     },
     backgroundOpacity : {
-        (opacity:number, callback?:(handler?:Graph2D)=>void):Graph2D,
+        (opacity:number, callback?:graphCallback):Graph2D,
         (arg:void):number
     }
 }

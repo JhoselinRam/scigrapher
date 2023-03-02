@@ -203,3 +203,5 @@ export type Axis_Property<T> = {
     x : T,
     y : T
 }
+
+export type graphCallback = (handler?:Graph2D, datasets?:Array<Dataset_Types>)=>void

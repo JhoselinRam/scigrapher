@@ -1,6 +1,6 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
 import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
-import { Axis_Property, Graph2D, Secondary_Grid } from "../../../Graph2D_Types";
+import { Axis_Property, Graph2D, graphCallback, Secondary_Grid } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
 import { Secondary_Grid_Generator, Secondary_Grid_Modifier } from "./Grid_Secondary_Types";
 
@@ -253,9 +253,9 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
 //---------- Customization Methods ------------
 //------------- Secondary Grid ----------------
 
-function secondaryGrid(grid : Secondary_Grid_Modifier, callback?:(handler?:Graph2D)=>void) : Graph2D;
+function secondaryGrid(grid : Secondary_Grid_Modifier, callback?:graphCallback) : Graph2D;
 function secondaryGrid(arg : void) : Axis_Property<Secondary_Grid>;
-function secondaryGrid(grid : Secondary_Grid_Modifier|void, callback?:(handler?:Graph2D)=>void) : Graph2D|Axis_Property<Secondary_Grid>|undefined{
+function secondaryGrid(grid : Secondary_Grid_Modifier|void, callback?:graphCallback) : Graph2D|Axis_Property<Secondary_Grid>|undefined{
     if(typeof grid === "undefined" && callback == null)
         return {...state.grid.secondary};
 
@@ -315,7 +315,7 @@ function secondaryGrid(grid : Secondary_Grid_Modifier|void, callback?:(handler?:
         if(grid.y?.maxDensity !=null) state.grid.secondary.y.maxDensity = grid.y.maxDensity;
 
     
-        if(callback != null) callback(graphHandler);
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
         state.dirty.client = true;
         
         return graphHandler;

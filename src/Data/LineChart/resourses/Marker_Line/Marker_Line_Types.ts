@@ -1,4 +1,4 @@
-import { Line_Chart, Property_Modifier } from "../../LineChart_Types"
+import { Line_Chart, Line_Chart_Callback, Property_Modifier } from "../../LineChart_Types"
 
 export interface Marker_Line {
     markerSize : Property_Modifier<number>,
@@ -9,7 +9,7 @@ export interface Marker_Line {
     markerStyle : Property_Modifier<string>,
     markerType : Property_Modifier<string>,
     markerEnable : {
-        (enable : boolean, callback?:(handler?:Line_Chart)=>void) : Line_Chart,
+        (enable : boolean, callback?:Line_Chart_Callback) : Line_Chart,
         (arg : void) : boolean
     }
 }

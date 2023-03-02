@@ -1,6 +1,6 @@
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Mapping, Mapping_Type } from "../../../tools/Mapping/Mapping_Types";
-import { Axis_Property, Graph2D, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
+import { Axis_Property, Graph2D, graphCallback, Method_Generator, Primary_Axis, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
 import { Aspect_Ratio, Events, Event_Cursor, Move_Event, Move_State, Pointer_Move_Props, Pointer_State, Pointer_Zoom_Props, Resize_Axis, Resize_Event_Props, Resize_State, Scale_Reference, Zoom_Event, Zoom_State } from "./Events_Types";
 
 function Events({state, graphHandler} : Method_Generator) : Events {
@@ -812,7 +812,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 //---------- Customization Methods ------------
 //-------------- Aspect Ratio -----------------
 
-    function aspectRatio(args ?: Partial<Aspect_Ratio>, callback?:(handler?:Graph2D)=>void) : Graph2D{
+    function aspectRatio(args ?: Partial<Aspect_Ratio>, callback?:graphCallback) : Graph2D{
         //Combines the default values and the arguments pased
         const options : Aspect_Ratio = {
             ratio : 1,
@@ -920,7 +920,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
         
         state.compute.client();
-        if(callback != null) callback(graphHandler);
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
         state.dirty.client = true;
 
 

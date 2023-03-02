@@ -1,26 +1,26 @@
-import { Datasets, Dataset_Options, Dataset_Types, Draw_Data_Callback } from "../../../Data/Data_Types";
+import { Datasets, Dataset_Options, Dataset_Types, Draw_Data_Callback, Partialize } from "../../../Data/Data_Types";
 import { LineChart } from "../../../Data/LineChart/LineChart.js";
-import { Partialize } from "../../../Data/LineChart/LineChart_Types";
-import { Graph2D, Graph2D_State, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Graph2D, Graph2D_State, graphCallback, Method_Generator } from "../../Graph2D_Types";
 import { Data } from "./Data_Types";
 
 function Data({state, graphHandler}:Method_Generator) : Data{
 
 //---------------- Add Dataset ----------------
 
-    function addDataset<T extends Dataset_Types>(type : Datasets, options : Partialize<Dataset_Options> = {}) : T  {
+    function addDataset<T extends Dataset_Types>(type : Datasets, options : Partialize<Dataset_Options> = {}, callback?:graphCallback) : T  {
         
         let newDataset : Dataset_Types;
         let drawDataset : (state : Graph2D_State)=>void;
 
         switch(type){
             case "linechart":
-                [newDataset, drawDataset] = LineChart(options, state.dirty.dirtify);
+                [newDataset, drawDataset] = LineChart(options, graphHandler , state.dirty.dirtify);
                 break;
         }
 
         state.data.push({dataset : newDataset, draw:drawDataset});
         newDataset.index(state.data.length);
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
 
         return newDataset as T;
     }
@@ -28,9 +28,10 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 //---------------------------------------------
 //---------------------------------------------
 
-    function removeDataset(id:string) : Graph2D{
+    function removeDataset(id:string, callback?:graphCallback) : Graph2D{
         state.data = state.data.filter(item => item.dataset.id()!==id);
         state.dirty.data = true;
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
 
         return graphHandler;
     }

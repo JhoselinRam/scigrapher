@@ -1,12 +1,12 @@
-import { Line_Chart, Line_Char_Data } from "../../LineChart_Types";
+import { Line_Chart, Line_Chart_Callback, Line_Char_Data } from "../../LineChart_Types";
 
 export interface Area {
     areaDataX : {
-        (data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart,
+        (data : Line_Char_Data, callback?:Line_Chart_Callback) : Line_Chart,
         (arg:void) : Array<number>
     },
     areaDataY : {
-        (data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart,
+        (data : Line_Char_Data, callback?:Line_Chart_Callback) : Line_Chart,
         (arg:void) : Array<number>
     },
     areaEnable : Area_Modifier<boolean>,
@@ -23,6 +23,6 @@ export interface Area_Property_Generator<T> {
 }
 
 export type Area_Modifier<T> = {
-    (value : T, callback?:(handler?:Line_Chart)=>void) : Line_Chart,
+    (value : T, callback?:Line_Chart_Callback) : Line_Chart,
     (arg : void) : T
 }

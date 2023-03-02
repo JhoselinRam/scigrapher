@@ -1,5 +1,5 @@
-import { Axis_Property, Graph2D_State } from "../Graph2D/Graph2D_Types";
-import { Line_Chart, Line_Chart_Options, Line_Chart_State } from "./LineChart/LineChart_Types";
+import { Axis_Property, Graph2D, Graph2D_State } from "../Graph2D/Graph2D_Types";
+import { Line_Chart, Line_Chart_Options, Line_Chart_State, Line_Char_Data } from "./LineChart/LineChart_Types";
 import { Vector_Field, Vector_Field_Options, Vector_Field_State } from "./VectorField/Vector_Field_Types";
 
 export type Datasets = "linechart";
@@ -17,7 +17,8 @@ export type Dataset_Options = Line_Chart_Options | Vector_Field_Options;
 
 export interface Data_General_Generator<T extends Dataset_Types, P extends Dataset_States> {
     dataHandler : T,
-    dataState : P
+    dataState : P,
+    graphHandler : Graph2D
 }
 
 export interface Data_General<T extends Dataset_Types> {
@@ -28,8 +29,16 @@ export interface Data_General<T extends Dataset_Types> {
     }
 }
 
+export type Partialize<T> = {
+    [P in keyof T] ?: 
+        T[P] extends (infer U)[] ? T[P] :
+        T[P] extends Line_Char_Data ? T[P] : 
+        T[P] extends object ? Partialize<T[P]> :
+        T[P]
+}
+
 export type Draw_Data_Callback = (state : Graph2D_State)=>void;
 
-export type Field_Data<T> = Array<Array<T>>;
+export type Field_Property<T> = Array<Array<T>>;
 
-export type Field_Property_Generator<T> = T | Field_Data<T> | (()=>Field_Data<T>)
+export type Field_Property_Generator<T> = T | Field_Property<T> | (()=>Field_Property<T>)

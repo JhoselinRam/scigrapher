@@ -1,4 +1,4 @@
-import { Graph2D, Method_Generator } from "../../Graph2D_Types";
+import { Graph2D, graphCallback, Method_Generator } from "../../Graph2D_Types";
 import { Grid, Grid_Modifier, Grid_Property } from "./Grid_Types";
 import PrimaryGrid from "./Primary/Grid_Primary.js";
 import SecondaryGrid from "./Secondary/Grid_Secondary.js";
@@ -82,9 +82,9 @@ function getMinMaxCoords() : [number, number, number, number]{
 //---------- Customization Methods ------------
 //----------------- Color ---------------------
 
-    function gridColor(color : Grid_Modifier<string>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function gridColor(color : Grid_Modifier<string>, callback?:graphCallback) : Graph2D;
     function gridColor(arg : void) : Grid_Property<string>;
-    function gridColor(color : Grid_Modifier<string> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<string> | undefined{
+    function gridColor(color : Grid_Modifier<string> | void, callback?:graphCallback) : Graph2D | Grid_Property<string> | undefined{
         if(typeof color === "undefined" && callback == null)
             return {
                 x : {
@@ -121,7 +121,7 @@ function getMinMaxCoords() : [number, number, number, number]{
 
 
 
-            if(callback != null) callback(props.graphHandler);
+            if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
             props.state.dirty.client = true;
 
             return props.graphHandler;
@@ -131,9 +131,9 @@ function getMinMaxCoords() : [number, number, number, number]{
 //---------------------------------------------
 //---------------- Opacity --------------------
 
-    function gridOpacity(opacity : Grid_Modifier<number>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function gridOpacity(opacity : Grid_Modifier<number>, callback?:graphCallback) : Graph2D;
     function gridOpacity(arg : void) : Grid_Property<number>;
-    function gridOpacity(opacity : Grid_Modifier<number> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<number> | undefined{
+    function gridOpacity(opacity : Grid_Modifier<number> | void, callback?:graphCallback) : Graph2D | Grid_Property<number> | undefined{
         if(typeof opacity === "undefined" && callback == null)
             return {
                 x : {
@@ -173,7 +173,7 @@ function getMinMaxCoords() : [number, number, number, number]{
             
 
 
-            if(callback != null) callback(props.graphHandler);
+            if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
             props.state.dirty.client = true;
 
             return props.graphHandler;
@@ -183,9 +183,9 @@ function getMinMaxCoords() : [number, number, number, number]{
 //---------------------------------------------
 //----------------- Style ---------------------
 
-function gridStyle(style : Grid_Modifier<string>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+function gridStyle(style : Grid_Modifier<string>, callback?:graphCallback) : Graph2D;
 function gridStyle(arg : void) : Grid_Property<string>;
-function gridStyle(style : Grid_Modifier<string> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<string> | undefined{
+function gridStyle(style : Grid_Modifier<string> | void, callback?:graphCallback) : Graph2D | Grid_Property<string> | undefined{
     if(typeof style === "undefined" && callback == null)
         return {
             x : {
@@ -222,7 +222,7 @@ function gridStyle(style : Grid_Modifier<string> | void, callback?:(handler?:Gra
 
 
 
-        if(callback != null) callback(props.graphHandler);
+        if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
         props.state.dirty.client = true;
 
         return props.graphHandler;
@@ -232,9 +232,9 @@ function gridStyle(style : Grid_Modifier<string> | void, callback?:(handler?:Gra
 //---------------------------------------------
 //----------------- Width ---------------------
 
-function gridWidth(width : Grid_Modifier<number>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+function gridWidth(width : Grid_Modifier<number>, callback?:graphCallback) : Graph2D;
 function gridWidth(arg : void) : Grid_Property<number>;
-function gridWidth(width : Grid_Modifier<number> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Grid_Property<number> | undefined{
+function gridWidth(width : Grid_Modifier<number> | void, callback?:graphCallback) : Graph2D | Grid_Property<number> | undefined{
     if(typeof width === "undefined" && callback == null)
         return {
             x : {
@@ -270,7 +270,7 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:(handler?:Gra
         if(width.y?.secondary != null) props.state.grid.secondary.y.width = width.y.secondary;
 
 
-        if(callback != null) callback(props.graphHandler);
+        if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
         props.state.dirty.client = true;
 
         return props.graphHandler;
@@ -280,9 +280,9 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:(handler?:Gra
 //---------------------------------------------
 //---------------------------------------------
 
-    function polarGrid(density : number, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function polarGrid(density : number, callback?:graphCallback) : Graph2D;
     function polarGrid(arg : void) : number;
-    function polarGrid(density : number | void, callback?:(handler?:Graph2D)=>void) : Graph2D | number | undefined{
+    function polarGrid(density : number | void, callback?:graphCallback) : Graph2D | number | undefined{
         if(typeof density === "undefined" && callback == null)
             return props.state.grid.polarGrid;
 
@@ -292,7 +292,7 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:(handler?:Gra
             props.state.grid.polarGrid = density;
 
 
-            if(callback != null) callback(props.graphHandler);
+            if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
             props.state.dirty.client = true;
             
             return props.graphHandler;

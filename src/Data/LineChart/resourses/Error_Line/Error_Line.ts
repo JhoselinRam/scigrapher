@@ -1,9 +1,9 @@
 import { Axis_Property } from "../../../../Graph2D/Graph2D_Types.js";
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
-import { Line_Chart, Line_Chart_Method_Generator, Property_Generator, Property_Modifier } from "../../LineChart_Types";
+import { Line_Chart, Line_Chart_Callback, Line_Chart_Method_Generator, Property_Generator, Property_Modifier } from "../../LineChart_Types";
 import { Error_Line, Error_Properties } from "./Error_Line_Types";
 
-function ErrorLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Error_Line {
+function ErrorLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generator) : Error_Line {
 
 //------------ Generated Methods --------------
 
@@ -22,9 +22,9 @@ function ErrorLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Err
 //---------------------------------------------
 //---------------- Enable ---------------------
 
-    function errorbarEnable(enable:Partial<Axis_Property<boolean>>, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function errorbarEnable(enable:Partial<Axis_Property<boolean>>, callback?:Line_Chart_Callback) : Line_Chart;
     function errorbarEnable(arg : void) : Axis_Property<boolean>;
-    function errorbarEnable(enable:Partial<Axis_Property<boolean>> | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Axis_Property<boolean> | undefined{
+    function errorbarEnable(enable:Partial<Axis_Property<boolean>> | void, callback?:Line_Chart_Callback) : Line_Chart | Axis_Property<boolean> | undefined{
         if(typeof enable === "undefined" && callback == null)
             return {
                 x : dataState.errorBar.x.enable,
@@ -38,7 +38,7 @@ function ErrorLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Err
             if(enable.x != null) dataState.errorBar.x.enable = enable.x;
             if(enable.y != null) dataState.errorBar.y.enable = enable.y;
 
-            if(callback != null) callback(dataHandler);
+            if(callback != null) callback(dataHandler, graphHandler);
             dataState.dirtify();
             return dataHandler;
         }
@@ -50,16 +50,16 @@ function ErrorLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Err
 
 function generateErrorModifier<T>(container:Property_Generator<T>, property:Error_Properties, axis:"x"|"y") : Property_Modifier<T>{ 
         
-    function errorbarProperty(value : Property_Generator<T>, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function errorbarProperty(value : Property_Generator<T>, callback?:Line_Chart_Callback) : Line_Chart;
     function errorbarProperty(arg : void) : T | Array<T>;
-    function errorbarProperty(value : Property_Generator<T> | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | T | Array<T> | undefined{
+    function errorbarProperty(value : Property_Generator<T> | void, callback?:Line_Chart_Callback) : Line_Chart | T | Array<T> | undefined{
         if(typeof value === "undefined" && callback == null){
             if(isCallable(container)){
                 const xPositions = dataHandler.dataX();
                 const y = dataHandler.dataY();
                 const generator = container;
 
-                return xPositions.map((x,i)=>generator(x,y[i],i,dataHandler));
+                return xPositions.map((x,i)=>generator(x, y[i], i, xPositions, y, dataHandler, graphHandler));
             }else if(typeof container !== "object"){
                 return container;
             }else{
@@ -72,7 +72,7 @@ function generateErrorModifier<T>(container:Property_Generator<T>, property:Erro
             else
                 (dataState.errorBar[axis][property] as Property_Generator<T>) = typeof value === "object"? (value as Array<T>).slice() : value;
 
-            if(callback != null) callback(dataHandler);
+            if(callback != null) callback(dataHandler, graphHandler);
             dataState.dirtify();
             return dataHandler;
         }

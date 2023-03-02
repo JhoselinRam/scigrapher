@@ -1,4 +1,4 @@
-import { Graph2D, Method_Generator } from "../../Graph2D_Types";
+import { Graph2D, graphCallback, Method_Generator } from "../../Graph2D_Types";
 import { Background } from "./Background_Types";
 
 function Background({state, graphHandler} : Method_Generator) : Background{
@@ -41,9 +41,9 @@ function Background({state, graphHandler} : Method_Generator) : Background{
     //------------------- Color -------------------
     //---------------------------------------------
     
-    function backgroundColor(color:string, callback?:(handler?:Graph2D)=>void):Graph2D;
+    function backgroundColor(color:string, callback?:graphCallback):Graph2D;
     function backgroundColor(arg:void):string;
-    function backgroundColor(color : string | void, callback?:(handler?:Graph2D)=>void): Graph2D | string | undefined{
+    function backgroundColor(color : string | void, callback?:graphCallback): Graph2D | string | undefined{
         if(typeof color === "undefined" && callback == null)
             return state.background.color;
         
@@ -53,7 +53,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
             state.background.color = color;
             
             
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
 
             return graphHandler;    
@@ -62,9 +62,9 @@ function Background({state, graphHandler} : Method_Generator) : Background{
     //---------------------------------------------
     //------------------ Opacity ------------------
 
-    function backgroundOpacity(opacity:number, callback?:(handler?:Graph2D)=>void):Graph2D;
+    function backgroundOpacity(opacity:number, callback?:graphCallback):Graph2D;
     function backgroundOpacity(arg:void):number;
-    function backgroundOpacity(opacity : number | void, callback?:(handler?:Graph2D)=>void): Graph2D | number | undefined{
+    function backgroundOpacity(opacity : number | void, callback?:graphCallback): Graph2D | number | undefined{
         if(typeof opacity === "undefined" && callback == null)
             return state.background.opacity;
         
@@ -75,7 +75,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
             
 
             
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
 
             return graphHandler;    

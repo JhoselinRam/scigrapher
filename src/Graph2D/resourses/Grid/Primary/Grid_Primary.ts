@@ -1,6 +1,6 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
 import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
-import { Axis_Property, Graph2D, Primary_Grid } from "../../../Graph2D_Types";
+import { Axis_Property, Graph2D, graphCallback, Primary_Grid } from "../../../Graph2D_Types";
 import { Grid_Method_Generator } from "../Grid_Types";
 import { Primary_Grid_Generator, Primary_Grid_Modifier } from "./Grid_Primary_Types";
 
@@ -135,9 +135,9 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
 //---------- Customization Methods ------------
 //-------------- Primary Grid -----------------
 
-    function primaryGrid(grid : Primary_Grid_Modifier, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function primaryGrid(grid : Primary_Grid_Modifier, callback?:graphCallback) : Graph2D;
     function primaryGrid(arg : void) : Axis_Property<Primary_Grid>;
-    function primaryGrid(grid : Primary_Grid_Modifier|void, callback?:(handler?:Graph2D)=>void) : Graph2D|Axis_Property<Primary_Grid>|undefined{
+    function primaryGrid(grid : Primary_Grid_Modifier|void, callback?:graphCallback) : Graph2D|Axis_Property<Primary_Grid>|undefined{
         if(typeof grid === "undefined" && callback == null)
             return {...state.grid.primary};
 
@@ -179,7 +179,7 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
             if(grid.y?.width !=null) state.grid.primary.y.width = grid.y.width;
 
             
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
             
             return graphHandler;

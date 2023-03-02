@@ -1,8 +1,8 @@
-import { Line_Chart, Property_Modifier } from "../../LineChart_Types"
+import { Line_Chart, Line_Chart_Callback, Property_Modifier } from "../../LineChart_Types"
 
 export interface Line {
     lineEnable : {
-        (enable : boolean, callback?:(handler?:Line_Chart)=>void) : Line_Chart,
+        (enable : boolean, callback?:Line_Chart_Callback) : Line_Chart,
         (arg : void) : boolean
     },
     lineColor : Property_Modifier<string>,

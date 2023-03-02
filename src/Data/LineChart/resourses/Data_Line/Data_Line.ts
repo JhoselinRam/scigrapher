@@ -1,23 +1,23 @@
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
-import { Line_Chart, Line_Chart_Method_Generator, Line_Char_Data } from "../../LineChart_Types";
+import { Line_Chart, Line_Chart_Callback, Line_Chart_Method_Generator, Line_Char_Data } from "../../LineChart_Types";
 import { Data_Line } from "./Data_Line_Types";
 
-function DataLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Data_Line{
+function DataLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generator) : Data_Line{
     
 //---------------- X Data ---------------------
 
-    function dataX(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function dataX(data : Line_Char_Data, callback?:Line_Chart_Callback) : Line_Chart;
     function dataX(arg:void) : Array<number>;
-    function dataX(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
+    function dataX(data : Line_Char_Data | void, callback?:Line_Chart_Callback) : Line_Chart | Array<number> | undefined {
         if(typeof data === "undefined" && callback == null){
-            const xData = isCallable(dataState.data.x)? dataState.data.x(dataHandler) : dataState.data.x.slice();
+            const xData = isCallable(dataState.data.x)? dataState.data.x(dataHandler, graphHandler) : dataState.data.x.slice();
             return xData;
         }
 
         if(typeof data === "object" || typeof data === "function"){
             dataState.data.x = isCallable(data)? data : data.slice();
 
-            if(callback != null) callback(dataHandler);
+            if(callback != null) callback(dataHandler, graphHandler);
             dataState.dirtify();
             
             return dataHandler;
@@ -27,18 +27,18 @@ function DataLine({dataHandler, dataState} : Line_Chart_Method_Generator) : Data
 //---------------------------------------------
 //---------------- Y Data ---------------------
 
-    function dataY(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function dataY(data : Line_Char_Data, callback?:Line_Chart_Callback) : Line_Chart;
     function dataY(arg:void) : Array<number>;
-    function dataY(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
+    function dataY(data : Line_Char_Data | void, callback?:Line_Chart_Callback) : Line_Chart | Array<number> | undefined {
         if(typeof data === "undefined" && callback == null){
-            const yData = isCallable(dataState.data.y)? dataState.data.y(dataHandler) : dataState.data.y.slice();
+            const yData = isCallable(dataState.data.y)? dataState.data.y(dataHandler, graphHandler) : dataState.data.y.slice();
             return yData;
         }
 
         if(typeof data === "object" || typeof data === "function"){
             dataState.data.y = isCallable(data)? data : data.slice();
 
-            if(callback != null) callback(dataHandler);
+            if(callback != null) callback(dataHandler, graphHandler);
             dataState.dirtify();
 
             return dataHandler;

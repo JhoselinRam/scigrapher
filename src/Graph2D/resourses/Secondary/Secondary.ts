@@ -1,6 +1,6 @@
 import CreateAxis from "../../../tools/Axis_Obj/Axis_Obj.js";
 import { Axis_Obj } from "../../../tools/Axis_Obj/Axis_Obj_Types";
-import { Axis_Property, Graph2D, Method_Generator, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
+import { Axis_Property, Graph2D, graphCallback, Method_Generator, RecursivePartial, Secondary_Axis } from "../../Graph2D_Types";
 import { Base_Props, Domain_Props, Text_Props, Ticks_Props } from "../Axis/Axis_Types.js";
 import { Secondary, Secondary_Axis_Modifier, Secondary_Axis_Modifier_Props } from "./Secondary_Types";
 
@@ -86,9 +86,9 @@ const defaultSecondaryAxis : Secondary_Axis = {
 //---------- Customization Methods ------------
 //---------------- Enable ---------------------
 
-function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>>, callback?:graphCallback) : Graph2D;
 function secondaryAxisEnable(arg : void) : Partial<Axis_Property<boolean>>;
-function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Partial<Axis_Property<boolean>> | undefined {
+function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>> | void, callback?:graphCallback) : Graph2D | Partial<Axis_Property<boolean>> | undefined {
     if(typeof enable === "undefined" && callback == null){
         const axisEnabled : Partial<Axis_Property<boolean>> = {};
 
@@ -137,7 +137,7 @@ function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>> | void, ca
 
         if(changeX || changeY){
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
         }
 
@@ -148,9 +148,9 @@ function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>> | void, ca
 //---------------------------------------------
 //----------------- Domain --------------------
 
-function secondaryAxisDomain(domain:RecursivePartial<Domain_Props>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisDomain(domain:RecursivePartial<Domain_Props>, callback?:graphCallback) : Graph2D;
 function secondaryAxisDomain(arg:void) : RecursivePartial<Domain_Props>;
-function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(handler:Graph2D)=>void) : Graph2D | RecursivePartial<Domain_Props> | undefined{
+function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:graphCallback) : Graph2D | RecursivePartial<Domain_Props> | undefined{
     if(typeof domain === "undefined" && callback == null){
         let xDomain : {start:number, end:number} | undefined = undefined;
         let yDomain : {start:number, end:number} | undefined = undefined;
@@ -209,7 +209,7 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callb
 
         if(changeX || changeY){
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
         }
 
@@ -221,9 +221,9 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callb
 //---------------------------------------------
 //---------------- Axis Type ------------------
 
-    function secondaryAxisType(types : Partial<Axis_Property<"rectangular"|"log">>, callback?:(handler:Graph2D)=>void) : Graph2D;
+    function secondaryAxisType(types : Partial<Axis_Property<"rectangular"|"log">>, callback?:graphCallback) : Graph2D;
     function secondaryAxisType(arg : void) : Partial<Axis_Property<"rectangular"|"log">>;
-    function secondaryAxisType(types : Partial<Axis_Property<"rectangular"|"log">> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Partial<Axis_Property<"rectangular"|"log">> | undefined{
+    function secondaryAxisType(types : Partial<Axis_Property<"rectangular"|"log">> | void, callback?:graphCallback) : Graph2D | Partial<Axis_Property<"rectangular"|"log">> | undefined{
         if(typeof types === "undefined" && callback == null){
             const axisTypes : Partial<Axis_Property<"rectangular"|"log">> = {};
             if(state.secondary.x != null)
@@ -253,7 +253,7 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callb
 
             if(changeX || changeY){
                 state.compute.client();
-                if(callback != null) callback(graphHandler);
+                if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
                 state.dirty.client = true;
             }
 
@@ -266,9 +266,9 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callb
 //---------------------------------------------
 //-------------- Axis Color -------------------
 
-function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string>, callback?:graphCallback) : Graph2D;
 function secondaryAxisColor(arg : void) : Secondary_Axis_Modifier<string>;
-function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Secondary_Axis_Modifier<string> | undefined{
+function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string> | void, callback?:graphCallback) : Graph2D | Secondary_Axis_Modifier<string> | undefined{
     if(typeof colors === "undefined" && callback == null){
         const axisColors : Secondary_Axis_Modifier<string> = {base:{}, tick:{}, text:{}};
         
@@ -323,7 +323,7 @@ function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string> | voi
             if(colors.text?.y != null) state.secondary.y.textColor = colors.text.y;    
         }
 
-        if(callback != null) callback(graphHandler);
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
         state.dirty.client = true;
 
         return graphHandler;
@@ -334,9 +334,9 @@ function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string> | voi
 //---------------------------------------------
 //-------------- Axis Opacity -------------------
 
-function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number>, callback?:graphCallback) : Graph2D;
 function secondaryAxisOpacity(arg : void) : Secondary_Axis_Modifier<number>;
-function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Secondary_Axis_Modifier<number> | undefined{
+function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number> | void, callback?:graphCallback) : Graph2D | Secondary_Axis_Modifier<number> | undefined{
     if(typeof opacity === "undefined" && callback == null){
         const axisOpacity : Secondary_Axis_Modifier<number> = {base:{}, tick:{}, text:{}};
         
@@ -395,7 +395,7 @@ function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number> | 
             if(opacity.text?.y != null) state.secondary.y.textOpacity = opacity.text.y<0?0:(opacity.text.y>1?1:opacity.text.y);    
         }
 
-        if(callback != null) callback(graphHandler);
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
         state.dirty.client = true;
 
         return graphHandler;
@@ -406,9 +406,9 @@ function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number> | 
 //---------------------------------------------
 //--------------- Axis Unit -------------------
 
-function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>>, callback?:graphCallback) : Graph2D;
 function secondaryAxisUnits(arg : void) : Partial<Axis_Property<string>>;
-function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Partial<Axis_Property<string>> | undefined{
+function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>> | void, callback?:graphCallback) : Graph2D | Partial<Axis_Property<string>> | undefined{
     if(typeof units === "undefined" && callback == null){
         const axisUnits : Partial<Axis_Property<string>> = {};
 
@@ -442,7 +442,7 @@ function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>> | vo
 
         if(changeX || changeY){
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
         }
         
@@ -453,9 +453,9 @@ function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>> | vo
 //---------------------------------------------
 //------------------ Base ---------------------
 
-function secondaryAxisBase(base : RecursivePartial<Base_Props>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisBase(base : RecursivePartial<Base_Props>, callback?:graphCallback) : Graph2D;
 function secondaryAxisBase(arg : void) : Partial<Base_Props>;
-function secondaryAxisBase(base : RecursivePartial<Base_Props> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Partial<Base_Props> | undefined{
+function secondaryAxisBase(base : RecursivePartial<Base_Props> | void, callback?:graphCallback) : Graph2D | Partial<Base_Props> | undefined{
     if(typeof base === "undefined" && callback == null){
         const axisBase : Partial<Base_Props> = {};
 
@@ -515,7 +515,7 @@ function secondaryAxisBase(base : RecursivePartial<Base_Props> | void, callback?
         }
 
         if(changeX || changeY){
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
         } 
         
@@ -527,9 +527,9 @@ function secondaryAxisBase(base : RecursivePartial<Base_Props> | void, callback?
 //---------------------------------------------
 //----------------- Ticks ---------------------
 
-function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props>, callback?:graphCallback) : Graph2D;
 function secondaryAxisTicks(arg : void) : Partial<Ticks_Props>;
-function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Partial<Ticks_Props> | undefined{
+function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props> | void, callback?:graphCallback) : Graph2D | Partial<Ticks_Props> | undefined{
     if(typeof ticks === "undefined" && callback == null){
         const axisTicks : Partial<Ticks_Props> = {};
 
@@ -620,7 +620,7 @@ function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props> | void, callba
 
         if(changeX || changeY){
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
         }
         
@@ -632,9 +632,9 @@ function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props> | void, callba
 //---------------------------------------------
 //------------------ Text ---------------------
 
-function secondaryAxisText(text : RecursivePartial<Text_Props>, callback?:(handler:Graph2D)=>void) : Graph2D;
+function secondaryAxisText(text : RecursivePartial<Text_Props>, callback?:graphCallback) : Graph2D;
 function secondaryAxisText(arg : void) : Partial<Text_Props>;
-function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?:(handler:Graph2D)=>void) : Graph2D | Partial<Text_Props> | undefined{
+function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?:graphCallback) : Graph2D | Partial<Text_Props> | undefined{
     if(typeof text === "undefined" && callback == null){
         const axisText : Partial<Text_Props> = {};
 
@@ -706,7 +706,7 @@ function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?
         
         if(changeX || changeY){
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
         }
         

@@ -1,23 +1,23 @@
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
-import { Line_Chart, Line_Chart_Method_Generator, Line_Char_Data } from "../../LineChart_Types";
+import { Line_Chart, Line_Chart_Callback, Line_Chart_Method_Generator, Line_Char_Data } from "../../LineChart_Types";
 import { Area, Area_Modifier, Area_Property_Generator } from "./Area_Types";
 
-function Area({dataHandler, dataState}:Line_Chart_Method_Generator) : Area {
+function Area({dataHandler, dataState, graphHandler}:Line_Chart_Method_Generator) : Area {
 
 //--------------- Data X ----------------------
 
-    function areaDataX(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function areaDataX(data : Line_Char_Data, callback?:Line_Chart_Callback) : Line_Chart;
     function areaDataX(arg:void) : Array<number>;
-    function areaDataX(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
+    function areaDataX(data : Line_Char_Data | void, callback?:Line_Chart_Callback) : Line_Chart | Array<number> | undefined {
         if(typeof data === "undefined" && callback == null){
-            const xData = isCallable(dataState.area.base.x)? dataState.area.base.x(dataHandler) : dataState.area.base.x.slice();
+            const xData = isCallable(dataState.area.base.x)? dataState.area.base.x(dataHandler, graphHandler) : dataState.area.base.x.slice();
             return xData;
         }
 
         if(typeof data === "object" || typeof data === "function"){
             dataState.area.base.x = isCallable(data)? data : data.slice();
 
-            if(callback != null) callback(dataHandler);
+            if(callback != null) callback(dataHandler, graphHandler);
             dataState.dirtify();
             
             return dataHandler;
@@ -27,18 +27,18 @@ function Area({dataHandler, dataState}:Line_Chart_Method_Generator) : Area {
 //---------------------------------------------
 //--------------- Data Y ----------------------
 
-    function areaDataY(data : Line_Char_Data, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+    function areaDataY(data : Line_Char_Data, callback?:Line_Chart_Callback) : Line_Chart;
     function areaDataY(arg:void) : Array<number>;
-    function areaDataY(data : Line_Char_Data | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | Array<number> | undefined {
+    function areaDataY(data : Line_Char_Data | void, callback?:Line_Chart_Callback) : Line_Chart | Array<number> | undefined {
         if(typeof data === "undefined" && callback == null){
-            const yData = isCallable(dataState.area.base.y)? dataState.area.base.y(dataHandler) : dataState.area.base.y.slice();
+            const yData = isCallable(dataState.area.base.y)? dataState.area.base.y(dataHandler, graphHandler) : dataState.area.base.y.slice();
             return yData;
         }
 
         if(typeof data === "object" || typeof data === "function"){
             dataState.area.base.y = isCallable(data)? data : data.slice();
 
-            if(callback != null) callback(dataHandler);
+            if(callback != null) callback(dataHandler, graphHandler);
             dataState.dirtify();
             
             return dataHandler;
@@ -58,9 +58,9 @@ function Area({dataHandler, dataState}:Line_Chart_Method_Generator) : Area {
 
     function generateAreaModifier<T>({container, property} : Area_Property_Generator<T>) : Area_Modifier<T>{
 
-        function areaProperty(value : T, callback?:(handler?:Line_Chart)=>void) : Line_Chart;
+        function areaProperty(value : T, callback?:Line_Chart_Callback) : Line_Chart;
         function areaProperty(arg : void) : T;
-        function areaProperty(value : T | void, callback?:(handler?:Line_Chart)=>void) : Line_Chart | T | undefined{
+        function areaProperty(value : T | void, callback?:Line_Chart_Callback) : Line_Chart | T | undefined{
             if(typeof value === "undefined" && callback == null)
                 return dataState.area[property] as T;
 
@@ -68,7 +68,7 @@ function Area({dataHandler, dataState}:Line_Chart_Method_Generator) : Area {
                 if(value === dataState.area[property]) return dataHandler;
 
                 (dataState.area[property] as T) = value;
-                if(callback != null) callback(dataHandler);
+                if(callback != null) callback(dataHandler, graphHandler);
                 dataState.dirtify();
                 
                 return dataHandler;

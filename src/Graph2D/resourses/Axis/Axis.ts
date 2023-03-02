@@ -1,5 +1,5 @@
 import CreateAxis from "../../../tools/Axis_Obj/Axis_Obj.js";
-import { Axis_Position, Axis_Property, Axis_Type, Graph2D, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Axis_Position, Axis_Property, Axis_Type, Graph2D, graphCallback, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
 import { Axis, Axis_Modifier, Axis_Modifier_Props, Axis_Overlap, Base_Props, Domain_Props, Dynamic_Props, Text_Props, Ticks_Props } from "./Axis_Types";
 
 function Axis({state, graphHandler}:Method_Generator) : Axis{
@@ -50,9 +50,9 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 
 //-------------- Axis Position ----------------
 
-    function axisPosition(position : Axis_Position, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisPosition(position : Axis_Position, callback?:graphCallback) : Graph2D;
     function axisPosition(arg : void) : Axis_Position;
-    function axisPosition(position : Axis_Position | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Axis_Position | undefined {
+    function axisPosition(position : Axis_Position | void, callback?:graphCallback) : Graph2D | Axis_Position | undefined {
         if(typeof position === "undefined" && callback==null)
             return state.axis.position;
 
@@ -62,7 +62,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             state.axis.position = position;
 
             state.compute.full();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.full = true;
             
 
@@ -73,9 +73,9 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 //---------------------------------------------
 //---------------- Axis Type ------------------
 
-    function axisType(type : Axis_Type, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisType(type : Axis_Type, callback?:graphCallback) : Graph2D;
     function axisType(arg : void) : Axis_Type;
-    function axisType(type : Axis_Type | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Axis_Type | undefined{
+    function axisType(type : Axis_Type | void, callback?:graphCallback) : Graph2D | Axis_Type | undefined{
         if(typeof type === "undefined" && callback==null)
             return state.axis.type;
 
@@ -84,7 +84,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 
             state.axis.type = type;
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
 
             return graphHandler;
@@ -94,9 +94,9 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 //---------------------------------------------
 //----------------- Domain --------------------
 
-function axisDomain(domain:RecursivePartial<Domain_Props>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+function axisDomain(domain:RecursivePartial<Domain_Props>, callback?:graphCallback) : Graph2D;
 function axisDomain(arg:void) : Domain_Props;
-function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Domain_Props | undefined{
+function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:graphCallback) : Graph2D | Domain_Props | undefined{
     if(typeof domain === "undefined" && callback==null)
         return {
             x : {
@@ -126,7 +126,7 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(han
         }
 
         state.compute.client();
-        if(callback != null) callback(graphHandler);
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
         state.dirty.client = true;
 
         return graphHandler;
@@ -138,9 +138,9 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(han
 //---------------------------------------------
 //-------------- Axis Color -------------------
 
-    function axisColor(colors : Axis_Modifier_Props<string>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisColor(colors : Axis_Modifier_Props<string>, callback?:graphCallback) : Graph2D;
     function axisColor(arg : void) : Axis_Modifier<string>;
-    function axisColor(colors : Axis_Modifier_Props<string> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Axis_Modifier<string> | undefined{
+    function axisColor(colors : Axis_Modifier_Props<string> | void, callback?:graphCallback) : Graph2D | Axis_Modifier<string> | undefined{
         if(typeof colors === "undefined" && callback == null)
             return {
                 base : {
@@ -187,7 +187,7 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(han
             if(colors.text?.y != null) state.axis.y.textColor = colors.text.y;
 
 
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
             
             return graphHandler;
@@ -199,9 +199,9 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:(han
 //---------------------------------------------
 //-------------- Axis Opacity -------------------
 
-function axisOpacity(opacity : Axis_Modifier_Props<number>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+function axisOpacity(opacity : Axis_Modifier_Props<number>, callback?:graphCallback) : Graph2D;
 function axisOpacity(arg : void) : Axis_Modifier<number>;
-function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Axis_Modifier<number> | undefined{
+function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:graphCallback) : Graph2D | Axis_Modifier<number> | undefined{
     if(typeof opacity == "undefined" && callback == null)
         return {
             base : {
@@ -252,7 +252,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
 
 
-        if(callback != null) callback(graphHandler);
+        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
         state.dirty.client = true;
         
         return graphHandler;
@@ -263,9 +263,9 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 //---------------------------------------------
 //--------------- Axis Unit -------------------
 
-    function axisUnits(units : RecursivePartial<Axis_Property<string>>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisUnits(units : RecursivePartial<Axis_Property<string>>, callback?:graphCallback) : Graph2D;
     function axisUnits(arg : void) : Axis_Property<string>;
-    function axisUnits(units : RecursivePartial<Axis_Property<string>> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Axis_Property<string> | undefined{
+    function axisUnits(units : RecursivePartial<Axis_Property<string>> | void, callback?:graphCallback) : Graph2D | Axis_Property<string> | undefined{
         if(typeof units === "undefined" && callback == null)
             return {
                 x : state.axis.x.unit,
@@ -281,7 +281,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
             
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
             
             return graphHandler;
@@ -291,9 +291,9 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 //---------------------------------------------
 //------------------ Base ---------------------
 
-    function axisBase(base : RecursivePartial<Base_Props>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisBase(base : RecursivePartial<Base_Props>, callback?:graphCallback) : Graph2D;
     function axisBase(arg : void) : Base_Props;
-    function axisBase(base : RecursivePartial<Base_Props> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Base_Props | undefined{
+    function axisBase(base : RecursivePartial<Base_Props> | void, callback?:graphCallback) : Graph2D | Base_Props | undefined{
         if(typeof base === "undefined" && callback == null)
             return {
                 x : {
@@ -328,7 +328,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
         
 
 
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
             
             return graphHandler;
@@ -339,9 +339,9 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 //---------------------------------------------
 //------------------ Ticks --------------------
 
-    function axisTicks(ticks : RecursivePartial<Ticks_Props>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisTicks(ticks : RecursivePartial<Ticks_Props>, callback?:graphCallback) : Graph2D;
     function axisTicks(arg : void) : Ticks_Props;
-    function axisTicks(ticks : RecursivePartial<Ticks_Props> | void , callback?:(handler?:Graph2D)=>void) : Graph2D | Ticks_Props | undefined{
+    function axisTicks(ticks : RecursivePartial<Ticks_Props> | void , callback?:graphCallback) : Graph2D | Ticks_Props | undefined{
         if(typeof ticks === "undefined" && callback == null)
             return {
                 x : {
@@ -395,7 +395,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
             
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
             
 
@@ -406,9 +406,9 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 //---------------------------------------------
 //------------------ Text ---------------------
 
-    function axisText(text : RecursivePartial<Text_Props>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisText(text : RecursivePartial<Text_Props>, callback?:graphCallback) : Graph2D;
     function axisText(arg : void) : Text_Props;
-    function axisText(text : RecursivePartial<Text_Props> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Text_Props | undefined{
+    function axisText(text : RecursivePartial<Text_Props> | void, callback?:graphCallback) : Graph2D | Text_Props | undefined{
         if(typeof text === "undefined" && callback == null)
             return {
                 x : {
@@ -449,7 +449,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
 
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
 
             return graphHandler;
@@ -459,9 +459,9 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 //---------------------------------------------
 //----------------- Dynamic -------------------
 
-    function axisDynamic(options : RecursivePartial<Dynamic_Props>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisDynamic(options : RecursivePartial<Dynamic_Props>, callback?:graphCallback) : Graph2D;
     function axisDynamic(arg : void) : Dynamic_Props;
-    function axisDynamic(options : RecursivePartial<Dynamic_Props> | void, callback?:(handler?:Graph2D)=>void) : Graph2D | Dynamic_Props | undefined{
+    function axisDynamic(options : RecursivePartial<Dynamic_Props> | void, callback?:graphCallback) : Graph2D | Dynamic_Props | undefined{
         if(typeof options === "undefined" && callback == null)
             return {
                 x : {
@@ -487,7 +487,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
             
             state.compute.client();
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
             
 
@@ -498,9 +498,9 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 //---------------------------------------------
 //-------------- Axis Overlap -----------------
 
-    function axisOverlap(overlap : RecursivePartial<Axis_Overlap>, callback?:(handler?:Graph2D)=>void) : Graph2D;
+    function axisOverlap(overlap : RecursivePartial<Axis_Overlap>, callback?:graphCallback) : Graph2D;
     function axisOverlap(arg : void) : Axis_Overlap;
-    function axisOverlap(overlap:RecursivePartial<Axis_Overlap>|void, callback?:(handler?:Graph2D)=>void) : Graph2D|Axis_Overlap|undefined{
+    function axisOverlap(overlap:RecursivePartial<Axis_Overlap>|void, callback?:graphCallback) : Graph2D|Axis_Overlap|undefined{
         if(typeof overlap === "undefined" && callback == null)
             return {
                 priority : state.axis.overlapPriority,
@@ -518,7 +518,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:(ha
 
         
             
-            if(callback != null) callback(graphHandler);
+            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;
 
             return graphHandler;

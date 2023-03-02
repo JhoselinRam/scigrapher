@@ -1,6 +1,6 @@
 import { Dataset_States, Dataset_Types, Data_General, Data_General_Generator } from "./Data_Types";
 
-function DataGeneral<T extends Dataset_Types, P extends Dataset_States>({dataHandler, dataState} : Data_General_Generator<T,P>) : Data_General<T>{
+function DataGeneral<T extends Dataset_Types, P extends Dataset_States>({dataHandler, dataState, graphHandler} : Data_General_Generator<T,P>) : Data_General<T>{
 
 //------------------- Id ----------------------
 

@@ -1,10 +1,10 @@
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
-import { Axis_Property, Graph2D, RecursivePartial } from "../../Graph2D_Types"
+import { Axis_Property, Graph2D, graphCallback, RecursivePartial } from "../../Graph2D_Types"
 
 export type Aspect_Ratio_Axis = "x" | "y" | "xSecondary" | "ySecondary"
 
 export interface Events {
-    aspectRatio : (options : Partial<Aspect_Ratio>, callback?:(handler?:Graph2D)=>void)=>Graph2D,
+    aspectRatio : (options : Partial<Aspect_Ratio>, callback?:graphCallback)=>Graph2D,
     pointerMove : (options : Partial<Pointer_Move_Props>)=>Graph2D,
     pointerZoom : (options : RecursivePartial<Pointer_Zoom_Props>)=>Graph2D,
     containerResize : (options : RecursivePartial<Resize_Event_Props>)=>Graph2D
