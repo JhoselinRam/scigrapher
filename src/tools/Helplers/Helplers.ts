@@ -89,3 +89,41 @@ export function isCallable(candidate : unknown) :  candidate is Function{
 }
 
 //---------------------------------------------
+//--------------- Linspace --------------------
+
+export function linspace(start:number, end:number, n:number) : Array<number> {
+    const ans : Array<number> = [];
+    const delta = (end - start)/(n-1);
+    
+    for(let i=0; i<n; i++)
+        ans.push(start+i*delta);
+
+    return ans;
+}
+
+//---------------------------------------------
+//--------------- Meshgrid --------------------
+export interface Mesh_Axis_Generator {start:number, end:number, n:number};
+export type Mesgrid = [Array<Array<number>>, Array<Array<number>>];
+
+export function meshgrid(x:Array<number>, y:Array<number>) : Mesgrid;
+export function meshgrid(x:Mesh_Axis_Generator, y:Mesh_Axis_Generator) : Mesgrid;
+export function meshgrid(x:Array<number> | Mesh_Axis_Generator, y:Array<number> | Mesh_Axis_Generator) : Mesgrid{
+    const xMesh : Array<Array<number>> = [];
+    const yMesh : Array<Array<number>> = [];
+    const xCoords = Array.isArray(x)? x : linspace(x.start, x.end, x.n);
+    const yCoords = Array.isArray(y)? y : linspace(y.start, y.end, y.n);
+    yCoords.reverse();
+
+    for(let j=0; j<yCoords.length; j++){
+        xMesh.push(xCoords.slice());
+        yMesh.push([]);
+        for(let i=0; i<xCoords.length; i++)
+            yMesh[j].push(yCoords[j]);
+    }
+
+
+    return [xMesh, yMesh];
+}
+
+//---------------------------------------------

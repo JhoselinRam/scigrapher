@@ -2,7 +2,7 @@ import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { getLineDash, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_Method_Generator } from "../../LineChart_Types";
-import { Create_Error_Props, Create_Marker_Props, Draw_Area_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props, Interpret_Line_Coords_Props } from "./Draw_Line_Types";
+import { Create_Error_Props, Create_Marker_Props, Draw_Area_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props } from "./Draw_Line_Types";
 
 function DrawLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generator) : Draw_Line{
 
