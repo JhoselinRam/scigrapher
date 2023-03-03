@@ -6,17 +6,36 @@ import { Vector_Field, Vector_Field_Options, Vector_Field_State } from "./Vector
 
 const defaultOptions : Vector_Field_Options = {
     useAxis : {x:"primary", y:"primary"},
-    mesh : {x:[[]], y:[[]]},
-    data : {x:[[]], y:[[]]},
+    mesh : {x:[[-1, -0.5, 0, 0.5, 1],
+               [-1, -0.5, 0, 0.5, 1],
+               [-1, -0.5, 0, 0.5, 1],
+               [-1, -0.5, 0, 0.5, 1],
+               [-1, -0.5, 0, 0.5, 1]], 
+            
+            y:[[1, 1, 1, 1, 1],
+               [0.5, 0.5, 0.5, 0.5, 0.5],
+               [0, 0, 0, 0, 0],
+               [-0.5, -0.5, -0.5, -0.5, -0.5],
+               [-1, -1, -1, -1, -1]]
+        },
+    data : {x:[[1,1,1,1,1],
+               [1,1,1,1,1],
+               [1,1,1,1,1],
+               [1,1,1,1,1],
+               [1,1,1,1,1],], 
+            
+           y:[[1,1,1,1,1],
+              [1,1,1,1,1],
+              [1,1,1,1,1],
+              [1,1,1,1,1],
+              [1,1,1,1,1],]},
     color : "#000000",
     opacity : 1,
     width : 1,
     style  : "solid",
     normalized : true,
     maxLenght : 20,
-    enable : true,
-    polar : false,
-    dataPolar : false
+    enable : true
 }
 
 export function VectorField(options : Partialize<Vector_Field_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Vector_Field, Draw_Data_Callback] {

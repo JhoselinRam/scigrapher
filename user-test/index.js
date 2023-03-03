@@ -1,4 +1,4 @@
-import { Graph2D } from "../dist/lib/index.js";
+import { Graph2D, meshgrid } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
                     .aspectRatio({anchor:0})
                     .pointerZoom()
@@ -88,8 +88,8 @@ function generateDataY(){
 //     return y;
 // }
 
-
-
+Graph.addDataset("vectorfield");
+Graph.draw();
 
 
 

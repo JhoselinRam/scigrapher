@@ -16,9 +16,7 @@ export interface Vector_Field_Options extends Make_Generator<{
     normalized : boolean,
     maxLenght : number,
     useAxis : Axis_Property<"primary" | "secondary">,
-    enable : boolean,
-    polar : boolean,
-    dataPolar : boolean
+    enable : boolean
 }
 
 export interface Vector_Field_State extends Data_Object_State, Vector_Field_Options {}
