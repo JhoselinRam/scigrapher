@@ -1,8 +1,8 @@
 import {  Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
-import { getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
+import { getGraphRect, getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Vector_Field_Method_Generator } from "../../Vector_Field_Types";
-import { Draw_Vector, Get_Scale, Vector_Draw_Helpler } from "./Draw_Vector_Types";
+import { Draw_Vector, Get_Scale, Vector_Draw_Dynamic, Vector_Draw_Static } from "./Draw_Vector_Types";
 
 function DrawVector({dataHandler, dataState, graphHandler}:Vector_Field_Method_Generator) : Draw_Vector {
 
@@ -38,7 +38,7 @@ function DrawVector({dataHandler, dataState, graphHandler}:Vector_Field_Method_G
         typeof dataState.opacity === "number" &&
         typeof dataState.style === "string" &&
         typeof dataState.width === "number"){
-            drawStatic({context:state.context.data, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, xScale, yScale, scale});
+            drawStatic({context:state.context.data, dataX, dataY, meshX, meshY, xScale, yScale, scale, color:dataState.color, opacity:dataState.opacity, style:dataState.style, width:dataState.width});
         }else{
             drawDynamic({context:state.context.data, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, xScale, yScale, scale});
         }
@@ -64,14 +64,32 @@ export default DrawVector;
 
 //-------------- Draw Static ------------------
 
-function drawStatic({context, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, scale, xScale, yScale}:Vector_Draw_Helpler){
+function drawStatic({context, dataX, dataY, meshX, meshY, scale, xScale, yScale, color, opacity, style, width}:Vector_Draw_Static){
+    context.strokeStyle = color;
+    context.globalAlpha = opacity;
+    context.lineWidth = width;
+    context.setLineDash(getLineDash(style));
+
+    context.beginPath();
+    for(let i=0; i<meshX.length; i++){
+        for(let j=0; j<meshX[0].length; j++){
+            const xStart = Math.round(xScale.map(meshX[i][j])) + width%2 * 0.5;
+            const yStart = Math.round(yScale.map(meshY[i][j])) + width%2 * 0.5;
+            const xEnd = Math.round(xScale.map(meshX[i][j] + dataX[i][j])) + width%2 * 0.5;
+            const yEnd = Math.round(yScale.map(meshY[i][j] + dataY[i][j])) + width%2 * 0.5;
+
+            context.moveTo(xStart, yStart);
+            context.lineTo(xEnd, yEnd);
+        }
+    }
+    context.stroke();
 
 }
 
 //---------------------------------------------
 //------------- Draw Dynamic ------------------
 
-function drawDynamic({context, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, scale, xScale, yScale}:Vector_Draw_Helpler){
+function drawDynamic({context, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, scale, xScale, yScale}:Vector_Draw_Dynamic){
 
 }
 
@@ -95,8 +113,13 @@ function getScale({dataX, dataY, maxLength, meshX, meshY, xScale, yScale} : Get_
         }
     }
 
-    const xRangeSize = Math.abs(xScale.map(meshX[iMax][jMax]) - xScale.map(dataX[iMax][jMax]));
-    const yRangeSize = Math.abs(yScale.map(meshY[iMax][jMax]) - yScale.map(dataY[iMax][jMax]));
+    const xStart = meshX[iMax][jMax];
+    const xEnd = meshX[iMax][jMax] + dataX[iMax][jMax];
+    const yStart = meshY[iMax][jMax];
+    const yEnd = meshY[iMax][jMax] + dataY[iMax][jMax];
+
+    const xRangeSize = Math.abs(xScale.map(xStart) - xScale.map(xEnd));
+    const yRangeSize = Math.abs(yScale.map(yStart) - yScale.map(yEnd));
 
     return maxLength/Math.hypot(xRangeSize, yRangeSize);
 }

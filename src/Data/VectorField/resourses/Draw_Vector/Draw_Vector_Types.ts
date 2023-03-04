@@ -7,7 +7,7 @@ export interface Draw_Vector {
     drawData : Draw_Data_Callback
 }
 
-export interface Vector_Draw_Helpler {
+export interface Vector_Draw_Dynamic {
     context : CanvasRenderingContext2D,
     dataState : Vector_Field_State,
     dataHandler : Vector_Field,
@@ -19,6 +19,13 @@ export interface Vector_Draw_Helpler {
     xScale : Mapping,
     yScale : Mapping,
     scale : number
+}
+
+export interface Vector_Draw_Static extends Omit<Vector_Draw_Dynamic, "dataState" | "dataHandler" | "graphHandler"> {
+    color : string,
+    opacity : number,
+    style : string,
+    width : number
 }
 
 export interface Get_Scale {
