@@ -1,40 +1,15 @@
 import { Graph2D, RecursivePartial } from "../../Graph2D/Graph2D_Types";
-import { linspace, meshgrid } from "../../tools/Helplers/Helplers.js";
 import DataGeneral from "../Data_General.js";
 import { Draw_Data_Callback, Partialize } from "../Data_Types";
+import DataVector from "./resourses/Data_Vector/Data_Vector.js";
 import DrawVector from "./resourses/Draw_Vector/Draw_Vector.js";
+import PropertiesVector from "./resourses/Properties_Vector/Properties_Vector.js";
 import { Vector_Field, Vector_Field_Options, Vector_Field_State } from "./Vector_Field_Types";
-
-const x = linspace(-1.5,1.5,25);
-const y = linspace(-1.5,1.5,25);
-const [X,Y] = meshgrid(x,y);
-
-const [dataX, dataY] = (function(){
-    const dataX : Array<Array<number>> = [];
-    const dataY : Array<Array<number>> = [];
-
-    for(let i=0; i<X.length; i++){
-        dataX.push([]);
-        dataY.push([]);
-        for(let j=0; j<X[0].length; j++){
-            const w = Math.atan2(Y[i][j], X[i][j]) + Math.PI/2;
-            const r = Math.hypot(X[i][j], Y[i][j]);
-
-            dataX[i].push(r*Math.cos(w));
-            dataY[i].push(r*Math.sin(w));
-        }
-    }
-
-    return [dataX, dataY];
-})();
-
-
-
 
 const defaultOptions : Vector_Field_Options = {
     useAxis : {x:"primary", y:"primary"},
-    mesh : {x:X, y:Y },
-    data : { x:dataX, y:dataY },
+    mesh : {x:[], y:[] },
+    data : { x:[], y:[] },
     color : "#303030",
     opacity : 1,
     width : 1,
@@ -61,10 +36,27 @@ export function VectorField(options : Partialize<Vector_Field_Options>, graphHan
     //Method generators
     const general = DataGeneral<Vector_Field, Vector_Field_State>({dataHandler : dataHandler as Vector_Field, dataState, graphHandler});
     const draw = DrawVector({dataHandler : dataHandler as Vector_Field, dataState, graphHandler});
+    const data = DataVector({dataHandler : dataHandler as Vector_Field, dataState, graphHandler});
+    const properties = PropertiesVector({dataHandler : dataHandler as Vector_Field, dataState, graphHandler});
 
     //Main handler population
     dataHandler.id = general.id;
     dataHandler.index = general.index;
+    dataHandler.dataX = data.dataX;
+    dataHandler.dataY = data.dataY;
+    dataHandler.meshX = data.meshX;
+    dataHandler.meshY = data.meshY;
+    dataHandler.axisUsed = data.axisUsed;
+    dataHandler.vectorColor = properties.vectorColor;
+    dataHandler.vectorEnable = properties.vectorEnable;
+    dataHandler.vectorMaxLength = properties.vectorMaxLength;
+    dataHandler.vectorNormalized = properties.vectorNormalized;
+    dataHandler.vectorOpacity = properties.vectorOpacity;
+    dataHandler.vectorStyle = properties.vectorStyle;
+    dataHandler.vectorWidth = properties.vectorWidth;
 
+
+
+//---------------------------------------------
     return [dataHandler as Vector_Field, draw.drawData];
 }

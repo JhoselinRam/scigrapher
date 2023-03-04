@@ -1,4 +1,4 @@
-import { Graph2D, meshgrid } from "../dist/lib/index.js";
+import { Graph2D } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
                     .aspectRatio({anchor:0})
                     .pointerZoom()
@@ -6,87 +6,7 @@ const Graph = Graph2D(document.querySelector(".graph"))
                     .containerResize()
                     .draw();
 
-// const analitic = Graph.addDataset("linechart")
-//                         .dataX(analiticX)
-//                         .dataY(analiticY);
 
-// const scatter = Graph.addDataset("linechart")
-//                         .dataX(generateDataX())
-//                         .dataY(generateDataY())
-//                         .lineEnable(false)
-//                         .markerEnable(true)
-//                         .markerSize(0.5)
-//                         .markerFilled(false)
-//                         .markerWidth(2)
-//                         .markerColor("#002e99")
-//                         .errorbarEnable({x:true, y:true})
-//                         .errorbarDataX(0.05)
-//                         .errorbarDataY(generateError())
-                        
-
-// Graph.draw();
-
-function analiticX(){
-    const maxX = Graph.axisDomain().x.end+1;
-    const delta = 0.04;
-    const n = Math.ceil(maxX/delta);
-    const position = [];
-
-    for(let i=1; i<n; i++){
-        position.push(i*delta);
-    }
-
-    return position;
-}
-
-function analiticY(handler){
-    const A = 0.3;
-    const w = 3;
-
-    return handler.dataX().map(x=>A*x*Math.sin(w*x));
-}
-
-function generateDataX(){
-    const n = 25;
-    const delta = 10/(n-1);
-    const x = [];
-
-    for(let i=0; i<n; i++){
-        x.push(i*delta);
-    }
-
-    return x;
-}
-
-function generateDataY(){
-    const n = 25;
-    const A = 0.3;
-    const w = 3;
-    const delta = 10/(n-1);
-    const y = [];
-
-    for(let i=0; i<n; i++){
-        const x = i*delta
-        y.push(A*x*Math.sin(w*x)+Math.random()*0.1);
-    }
-
-    return y;
-}
-
-// function generateError(){
-//     const n = 25;
-//     const A = 0.3;
-//     const w = 3;
-//     const delta = 10/(n-1);
-//     const dx = 0.05;
-//     const y = [];
-
-//     for(let i=0; i<n; i++){
-//         const x = i*delta
-//         y.push( 0.3*Math.random() );
-//     }
-//     return y;
-// }
 
 Graph.addDataset("vectorfield");
 Graph.draw()

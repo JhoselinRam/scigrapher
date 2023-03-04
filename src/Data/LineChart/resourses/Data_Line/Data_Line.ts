@@ -1,3 +1,4 @@
+import { Axis_Property, graphCallback } from "../../../../Graph2D/Graph2D_Types.js";
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Line_Chart, Line_Chart_Callback, Line_Chart_Method_Generator, Line_Char_Data } from "../../LineChart_Types";
 import { Data_Line } from "./Data_Line_Types";
@@ -46,10 +47,33 @@ function DataLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Gen
     }
 
 //---------------------------------------------
+//---------------- Axis Used ------------------
+
+    function axisUsed(axis:Partial<Axis_Property<"primary" | "secondary">>, callback?:Line_Chart_Callback) : Line_Chart;
+    function axisUsed(arg:void) : Axis_Property<"primary" | "secondary">;
+    function axisUsed(axis:Partial<Axis_Property<"primary" | "secondary">> | void, callback?:Line_Chart_Callback) : Line_Chart | Axis_Property<"primary" | "secondary"> | undefined{
+        if(typeof axis === "undefined" && callback == null)
+            return {...dataState.useAxis};
+        
+        if(typeof axis === "object"){
+            if(axis.x == null && axis.y == null) return dataHandler;
+            if(axis.x === dataState.useAxis.x && axis.y === dataState.useAxis.y) return dataHandler;
+
+            if(axis.x != null) dataState.useAxis.x = axis.x;
+            if(axis.y != null) dataState.useAxis.y = axis.y;
+
+            if(callback != null) callback(dataHandler, graphHandler);
+            dataState.dirtify();
+            return dataHandler;
+        }
+    }
+
+//---------------------------------------------
 
     return {
         dataX,
-        dataY
+        dataY,
+        axisUsed
     }
 }
 

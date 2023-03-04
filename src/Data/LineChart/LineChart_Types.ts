@@ -1,5 +1,5 @@
 import { Axis_Property, Graph2D, Line_Style } from "../../Graph2D/Graph2D_Types";
-import { Data_General, Data_Object_State } from "../Data_Types";
+import { Dataset_Callback, Data_General, Data_Object_State } from "../Data_Types";
 import { Area } from "./resourses/Area/Area_Types";
 import { Data_Line } from "./resourses/Data_Line/Data_Line_Types";
 import { Error_Line } from "./resourses/Error_Line/Error_Line_Types";
@@ -82,5 +82,5 @@ export type Property_Modifier<T> = {
     (arg:void) : T | Array<T>
 }
 
-export type Line_Chart_Callback = (dataset?:Line_Chart, graph?:Graph2D)=>void;
+export type Line_Chart_Callback = Dataset_Callback<Line_Chart>;
  

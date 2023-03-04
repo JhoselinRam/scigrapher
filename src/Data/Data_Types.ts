@@ -24,7 +24,7 @@ export interface Data_General_Generator<T extends Dataset_Types, P extends Datas
 export interface Data_General<T extends Dataset_Types> {
     id : ()=>string,
     index : {
-        (index : number, callback?:(handler:T)=>void) : T,
+        (index : number, callback?:(handler?:T)=>void) : T,
         (arg:void) : number
     }
 }
@@ -42,4 +42,6 @@ export type Draw_Data_Callback = (state : Graph2D_State)=>void;
 
 export type Field_Property<T> = Array<Array<T>>;
 
-export type Field_Data<T extends Dataset_Types> = Field_Property<number> | ((dataset:T, graph:Graph2D)=>Field_Property<number>);
+export type Field_Data<T extends Dataset_Types> = Field_Property<number> | ((dataset?:T, graph?:Graph2D)=>Field_Property<number>);
+
+export type Dataset_Callback<T extends Dataset_Types> = (dataset?:T, graph?:Graph2D)=>void;

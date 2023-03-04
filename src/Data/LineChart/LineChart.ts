@@ -106,6 +106,7 @@ export function LineChart(options : Partialize<Line_Chart_Options>, graphHandler
     dataHandler.index = general.index;
     dataHandler.dataX = data.dataX;
     dataHandler.dataY = data.dataY;
+    dataHandler.axisUsed = data.axisUsed;
     dataHandler.markerSize = marker.markerSize;
     dataHandler.markerColor = marker.markerColor;
     dataHandler.markerOpacity = marker.markerOpacity;
