@@ -89,7 +89,7 @@ function generateDataY(){
 // }
 
 Graph.addDataset("vectorfield");
-Graph.draw();
+Graph.draw()
 
 
 

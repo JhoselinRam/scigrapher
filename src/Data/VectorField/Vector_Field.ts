@@ -1,40 +1,46 @@
 import { Graph2D, RecursivePartial } from "../../Graph2D/Graph2D_Types";
+import { linspace, meshgrid } from "../../tools/Helplers/Helplers.js";
 import DataGeneral from "../Data_General.js";
 import { Draw_Data_Callback, Partialize } from "../Data_Types";
 import DrawVector from "./resourses/Draw_Vector/Draw_Vector.js";
 import { Vector_Field, Vector_Field_Options, Vector_Field_State } from "./Vector_Field_Types";
 
+const x = linspace(-1.5,1.5,25);
+const y = linspace(-1.5,1.5,25);
+const [X,Y] = meshgrid(x,y);
+
+const [dataX, dataY] = (function(){
+    const dataX : Array<Array<number>> = [];
+    const dataY : Array<Array<number>> = [];
+
+    for(let i=0; i<X.length; i++){
+        dataX.push([]);
+        dataY.push([]);
+        for(let j=0; j<X[0].length; j++){
+            const w = Math.atan2(Y[i][j], X[i][j]) + Math.PI/2;
+            const r = Math.hypot(X[i][j], Y[i][j]);
+
+            dataX[i].push(r*Math.cos(w));
+            dataY[i].push(r*Math.sin(w));
+        }
+    }
+
+    return [dataX, dataY];
+})();
+
+
+
+
 const defaultOptions : Vector_Field_Options = {
     useAxis : {x:"primary", y:"primary"},
-    mesh : {x:[[-1, -0.5, 0, 0.5, 1],
-               [-1, -0.5, 0, 0.5, 1],
-               [-1, -0.5, 0, 0.5, 1],
-               [-1, -0.5, 0, 0.5, 1],
-               [-1, -0.5, 0, 0.5, 1]], 
-            
-            y:[[1, 1, 1, 1, 1],
-               [0.5, 0.5, 0.5, 0.5, 0.5],
-               [0, 0, 0, 0, 0],
-               [-0.5, -0.5, -0.5, -0.5, -0.5],
-               [-1, -1, -1, -1, -1]]
-        },
-    data : {x:[[0.2,0.2,0.2,0.2,0.2],
-               [0.2,0.2,0.2,0.2,0.2],
-               [0.2,0.2,0.2,0.2,0.2],
-               [0.2,0.2,0.2,0.2,0.2],
-               [0.2,0.2,0.2,0.2,0.2],], 
-            
-           y:[[0.2,0.2,0.2,0.2,0.2],
-              [0.2,0.2,0.2,0.2,0.2],
-              [0.2,0.2,0.2,0.2,0.2],
-              [0.2,0.2,0.2,0.2,0.2],
-              [0.2,0.2,0.2,0.2,0.2],]},
-    color : "#000000",
+    mesh : {x:X, y:Y },
+    data : { x:dataX, y:dataY },
+    color : "#303030",
     opacity : 1,
     width : 1,
     style  : "solid",
-    normalized : true,
-    maxLenght : 20,
+    normalized :true,
+    maxLenght :20,
     enable : true
 }
 
