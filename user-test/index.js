@@ -1,4 +1,4 @@
-import { Graph2D } from "../dist/lib/index.js";
+import { Graph2D, linspace, meshgrid } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
                     .aspectRatio({anchor:0})
                     .pointerZoom()
@@ -8,8 +8,101 @@ const Graph = Graph2D(document.querySelector(".graph"))
 
 
 
-Graph.addDataset("vectorfield");
-Graph.draw()
+// const vector = Graph.addDataset("vectorfield");
+
+// const x = linspace(-5,5,70);
+// const y = linspace(-2,2,40)
+// const [X,Y] = meshgrid(x,y);
+
+// function dipole(x,y){
+//     const a = 0.5;
+//     const K = 1;
+//     const rPlus = Math.hypot(x+a, y);
+//     const rMinus = Math.hypot(x-a, y);
+
+//     const xValue = K * ( (x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
+//     const yValue = K * ( y/Math.pow(rPlus,3) - y/Math.pow(rMinus,3) );
+//     const size = Math.hypot(xValue, yValue); 
+    
+//     return [xValue/size, yValue/size, size];
+// }
+
+// function getDipoleData(){
+//     const dataX = [];
+//     const dataY = [];
+//     const color = []
+
+//     for(let i=0; i<X.length; i++){
+//         dataX.push([]);
+//         dataY.push([]);
+//         color.push([]);
+//         for(let j=0; j<X[0].length; j++){
+//             const [fieldX, fieldY] = dipole(X[i][j], Y[i][j]);
+//             dataX[i].push(fieldX);
+//             dataY[i].push(fieldY);
+            
+//             let w = Math.atan2(fieldY, fieldX);
+//             w = w<0? 2*Math.PI+w : w;
+//             color[i].push(interpolator("#0000ff", "#ff0000", w/(2*Math.PI)));
+//         }
+//     }
+
+//     return [dataX, dataY, color];
+// }
+
+// // function colorData(size){
+// //     const color = [];
+// //     const from = "#0000ff";
+// //     const to = "#ff0000";
+    
+// //     let max = 0;
+// //     size.forEach(row=>{
+// //         const maxRow = Math.max(...row);
+// //         if(maxRow>max)
+// //             max = maxRow;
+// //     });
+
+// //     for(let i=0; i<X.length; i++){
+// //         color.push([]);
+// //         for(let j=0; j<X[0].length; j++){
+// //             color[i].push(interpolator(from, to, size[i][j]/max));
+// //         }
+// //     }
+
+// //     return color;
+// // }
+
+// function interpolator(color0, color1, t){
+//     const from = {
+//         r : parseInt(color0.replace("#","").slice(0,2), 16),
+//         g : parseInt(color0.replace("#","").slice(2,4), 16),
+//         b : parseInt(color0.replace("#","").slice(4,6), 16),
+//     }
+//     const to = {
+//         r : parseInt(color1.replace("#","").slice(0,2), 16),
+//         g : parseInt(color1.replace("#","").slice(2,4), 16),
+//         b : parseInt(color1.replace("#","").slice(4,6), 16),
+//     }
+//     const ans = {
+//         r : Math.round((from.r + (to.r - from.r)*t)),
+//         g : Math.round((from.g + (to.g - from.g)*t)),
+//         b : Math.round((from.b + (to.b - from.b)*t)),
+//     }
+
+//     ans.r = ans.r<16? `0${ans.r.toString(16)}` : ans.r.toString(16);
+//     ans.g = ans.g<16? `0${ans.g.toString(16)}` : ans.g.toString(16);
+//     ans.b = ans.b<16? `0${ans.b.toString(16)}` : ans.b.toString(16);
+    
+//     return `#${ans.r}${ans.g}${ans.b}`
+
+// }
+
+
+// const [dataX, dataY, color] = getDipoleData();
+// //const color = colorData(size);
+// //console.dir(color)
+// vector.meshX(X).meshY(Y).dataX(dataX).dataY(dataY).vectorColor(color);
+// Graph.draw()
 
 
 

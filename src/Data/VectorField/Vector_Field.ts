@@ -8,8 +8,8 @@ import { Vector_Field, Vector_Field_Options, Vector_Field_State } from "./Vector
 
 const defaultOptions : Vector_Field_Options = {
     useAxis : {x:"primary", y:"primary"},
-    mesh : {x:[], y:[] },
-    data : { x:[], y:[] },
+    mesh : {x:[[]], y:[[]] },
+    data : { x:[[]], y:[[]] },
     color : "#303030",
     opacity : 1,
     width : 1,
