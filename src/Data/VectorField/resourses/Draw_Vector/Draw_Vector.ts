@@ -76,7 +76,7 @@ function drawStatic({context, dataX, dataY, meshX, meshY, scale, xScale, yScale,
 
     context.beginPath();
     for(let i=0; i<meshX.length; i++){
-        for(let j=0; j<meshX[0].length; j++){
+        for(let j=0; j<meshX[i].length; j++){
             const xStart = Math.round(xScale.map(meshX[i][j])) + width%2 * 0.5;
             const yStart = Math.round(yScale.map(meshY[i][j])) + width%2 * 0.5;
             const xEnd = Math.round(xScale.map(meshX[i][j] + dataX[i][j]*scale)) + width%2 * 0.5;
@@ -106,7 +106,7 @@ function drawStatic({context, dataX, dataY, meshX, meshY, scale, xScale, yScale,
 
 function drawDynamic({context, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, scale, xScale, yScale, maxLenght, normalized}:Vector_Draw_Dynamic){
     for(let i=0; i<meshX.length; i++){
-        for(let j=0; j<meshX[0].length; j++){
+        for(let j=0; j<meshX[i].length; j++){
             const extractionProps = {dataHandler, graphHandler, i, j, meshX, meshY, positionX:meshX[i][j], positionY:meshY[i][j], valuesX:dataX, valuesY:dataY, vectorX:dataX[i][j], vectorY:dataY[i][j]};
             
             const width = extractProperty({container:dataState.width, ...extractionProps});
@@ -149,7 +149,7 @@ function getScale({dataX, dataY, maxLength, meshX, meshY, xScale, yScale} : Get_
 
     //Finds the longest vector
     for(let i=0; i<meshX.length; i++){
-        for(let j=0; j<meshX[0].length; j++){
+        for(let j=0; j<meshX[i].length; j++){
             const size = Math.hypot(dataX[i][j], dataY[i][j]);
             if(size > maxSize){
                 maxSize = size;

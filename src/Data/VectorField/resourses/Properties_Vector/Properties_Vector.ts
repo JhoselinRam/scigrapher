@@ -79,7 +79,7 @@ function generateDynamicPropertyMethod<T>({dataHandler, dataState, graphHandler,
                 
                 for(let i=0; i<meshX.length; i++){
                     values.push([]);
-                    for(let j=0; j<meshX[0].length; j++){
+                    for(let j=0; j<meshX[i].length; j++){
                         values[i].push(candidate(x[i][j], y[i][j], meshX[i][j], meshY[i][j], i, j, x, y, meshX, meshY, dataHandler, graphHandler));
                     }
                 }

@@ -1,4 +1,4 @@
-import { Graph2D, linspace, meshgrid } from "../dist/lib/index.js";
+import { Graph2D, linspace, meshgrid, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
                     .aspectRatio({anchor:0})
                     .pointerZoom()
@@ -1336,7 +1336,47 @@ function changeArea(){
 
 
 
+function setColorTest(){
+    const RGB = document.querySelectorAll("#color-RGB .color-element");
+    const HSV = document.querySelectorAll("#color-HSV .color-element");
+    const XYZ = document.querySelectorAll("#color-XYZ .color-element");
+    const LAB = document.querySelectorAll("#color-LAB .color-element");
+    const LCH = document.querySelectorAll("#color-LCH .color-element");
 
+    const colorA = "#dbdb03";
+    const colorB = "#ffffff";
+    
+    const rgbMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"rgb"});
+    const hsvMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"hsv"});
+    const xyzMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"xyz"});
+    const labMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"lab"});
+    const lchMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"lch"});
+
+    
+    RGB.forEach((item, i)=>{
+        item.style.backgroundColor = rgbMap.map(i);
+    });
+    
+    HSV.forEach((item, i)=>{
+        item.style.backgroundColor = hsvMap.map(i);
+    });
+    
+    XYZ.forEach((item, i)=>{
+        item.style.backgroundColor = xyzMap.map(i);
+    });
+    
+    LAB.forEach((item, i)=>{
+        item.style.backgroundColor = labMap.map(i);
+    });
+    
+    LCH.forEach((item, i)=>{
+        item.style.backgroundColor = lchMap.map(i);
+    });
+
+
+
+}
+setColorTest();
 
 
 
