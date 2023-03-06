@@ -90,6 +90,10 @@ body{
     justify-items: center;
 }
 
+.color-type p{
+    width : 100px;
+}
+
 .color-row{
     width: 100%;
     height: 100%;

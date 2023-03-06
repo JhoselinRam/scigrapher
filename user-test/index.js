@@ -1,4 +1,4 @@
-import { Graph2D, linspace, meshgrid, colorMap } from "../dist/lib/index.js";
+import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
                     .aspectRatio({anchor:0})
                     .pointerZoom()
@@ -1343,14 +1343,14 @@ function setColorTest(){
     const LAB = document.querySelectorAll("#color-LAB .color-element");
     const LCH = document.querySelectorAll("#color-LCH .color-element");
 
-    const colorA = "#dbdb03";
-    const colorB = "#ffffff";
+    const colorA = "#f6fafe";
+    const colorB = "#08306b";
     
-    const rgbMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"rgb"});
-    const hsvMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"hsv"});
-    const xyzMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"xyz"});
-    const labMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"lab"});
-    const lchMap = colorMap({from:[0,RGB.length-1], to:[colorA, colorB], space:"lch"});
+    const rgbMap = colorInterpolator({from:[0,RGB.length-1], to:[colorA, colorB], space:"rgb"});
+    const hsvMap = colorInterpolator({from:[0,RGB.length-1], to:[colorA, colorB], space:"hsv"});
+    const xyzMap = colorInterpolator({from:[0,RGB.length-1], to:[colorA, colorB], space:"xyz"});
+    const labMap = colorInterpolator({from:[0,RGB.length-1], to:[colorA, colorB], space:"lab"});
+    const lchMap = colorInterpolator({from:[0,RGB.length-1], to:[colorA, colorB], space:"lch"});
 
     
     RGB.forEach((item, i)=>{
@@ -1372,6 +1372,35 @@ function setColorTest(){
     LCH.forEach((item, i)=>{
         item.style.backgroundColor = lchMap.map(i);
     });
+
+
+    const plasmaElement =  document.querySelectorAll("#plasma .color-element");
+    const viridisElement =  document.querySelectorAll("#viridis .color-element");
+    const magmaElement =  document.querySelectorAll("#magma .color-element");
+
+    const plasma = colorMap({from:0, to:plasmaElement.length-1, type:"plasma"});
+    const viridis = colorMap({from:0, to:viridisElement.length-1, type:"viridis"});
+    const magma = colorMap({from:0, to:magmaElement.length-1, type:"magma"});
+
+    plasmaElement.forEach((item, i)=>{
+        item.style.backgroundColor = plasma(i);
+    });
+    
+    viridisElement.forEach((item, i)=>{
+        item.style.backgroundColor = viridis(i);
+    });
+    
+    magmaElement.forEach((item, i)=>{
+        item.style.backgroundColor = magma(i);
+    });
+
+
+
+
+
+
+
+
 
 
 

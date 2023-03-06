@@ -1,6 +1,6 @@
-import { Color_Map, Color_Map_Props, Color_To_Space, hsvColor, labColor, lchColor, rgbColor, Space_To_Color, xyzColor } from "./Color_Map_Types";
+import { Color_Interpolator, Color_Interpolator_Props, Color_To_Space, hsvColor, labColor, lchColor, rgbColor, Space_To_Color, xyzColor } from "./Color_Interpolator_Types";
 
-function colorMap({from, space="lch", to} : Color_Map_Props) : Color_Map{
+function colorInterpolator({from, space="lch", to} : Color_Interpolator_Props) : Color_Interpolator{
     const rgbA = string2rgb(to[0]);
     const rgbB = string2rgb(to[1]);
 
@@ -63,7 +63,7 @@ function colorMap({from, space="lch", to} : Color_Map_Props) : Color_Map{
 //---------------------------------------------
 
     function map(value:number) : string{
-        const t = value/(from[1] - from[0]);
+        const t = (value - from[0])/(from[1] - from[0]);
         const interpolation : [number, number, number] = [0,0,0];
 
         interpolation[0] = colorA[0] + (colorB[0] - colorA[0])*t;
@@ -85,7 +85,7 @@ function colorMap({from, space="lch", to} : Color_Map_Props) : Color_Map{
     }
 }
 
-export default colorMap;
+export default colorInterpolator;
 
 
 
@@ -225,7 +225,6 @@ function xyz2rgb(color:xyzColor) : rgbColor{
     g = g<0? 0 : (g>255? 255 : g);
     b = b<0? 0 : (b>255? 255 : b);
     
-    console.log(r,g,b)
     return {r, g, b};
 }
 //---------------------------------------------

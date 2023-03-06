@@ -1,13 +1,13 @@
 export type Color_Space = "rgb" | "hsv" | "xyz" | "lab" | "lch";
 
-export interface Color_Map_Props {
+export interface Color_Interpolator_Props {
     from : [number, number],
     to : [string, string],
-    space : Color_Space
+    space ?: Color_Space
 }
 
 
-export interface Color_Map{
+export interface Color_Interpolator{
     map : (value:number) => string,
     domain : [number, number],
     range : [string, string],
