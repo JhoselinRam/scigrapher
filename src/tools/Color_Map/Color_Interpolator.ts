@@ -109,7 +109,7 @@ function string2rgb(color:string) : rgbColor{
 }
 //---------------------------------------------
 //------------- RGB to String -----------------
-function rgb2string(color:rgbColor):string{
+export function rgb2string(color:rgbColor):string{
     //8 bit colors only
     const candidate : rgbColor = {
         r : Math.round(color.r),
@@ -157,7 +157,7 @@ function rgb2hsv(color:rgbColor) : hsvColor{
 }
 //---------------------------------------------
 //------------- HSV to RGB --------------------
-function hsv2rgb(color:hsvColor):rgbColor{
+export function hsv2rgb(color:hsvColor):rgbColor{
     const H = color.h<0 ? 3/Math.PI*color.h+6 : Math.PI/3*color.h   // h ==> [0, 6]
     const S = color.s;
     const V = color.v;

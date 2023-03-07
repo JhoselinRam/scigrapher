@@ -6,4 +6,6 @@ export interface Color_Map_Props {
     to : number
 }
 
-export type Color_Map_types = "viridis" | "plasma" | "magma"
+export type Color_Map_types = "viridis" | "plasma" | "magma" |                                              //Secuential 
+                              "magnet" | "inv_magnet" | "fairy" | "inv_fairy" | "swamp" | "inv_swamp" |     //Diverging
+                              "fire" | "royal" | "hsv"

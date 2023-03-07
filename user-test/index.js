@@ -8,101 +8,110 @@ const Graph = Graph2D(document.querySelector(".graph"))
 
 
 
-// const vector = Graph.addDataset("vectorfield");
+const vector = Graph.addDataset("vectorfield");
 
-// const x = linspace(-5,5,70);
-// const y = linspace(-2,2,40)
-// const [X,Y] = meshgrid(x,y);
+const x = linspace(-5,5,70);
+const y = linspace(-5,5,70)
+const [X,Y] = meshgrid(x,y);
+const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});
 
-// function dipole(x,y){
-//     const a = 0.5;
-//     const K = 1;
-//     const rPlus = Math.hypot(x+a, y);
-//     const rMinus = Math.hypot(x-a, y);
+function dipole(x,y){
+    const a = 1;
+    const K = 1;
+    const rPlus = Math.hypot(x+a, y);
+    const rMinus = Math.hypot(x-a, y);
 
-//     const xValue = K * ( (x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
-//     const yValue = K * ( y/Math.pow(rPlus,3) - y/Math.pow(rMinus,3) );
-//     const size = Math.hypot(xValue, yValue); 
+    const xValue = K * ( (x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
+    const yValue = K * ( y/Math.pow(rPlus,3) -  y/Math.pow(rMinus,3) );
+    const size = Math.hypot(xValue, yValue);
     
-//     return [xValue/size, yValue/size, size];
-// }
+    return [xValue/size, yValue/size];
+}
 
-// function getDipoleData(){
-//     const dataX = [];
-//     const dataY = [];
-//     const color = []
+function getDipoleData(){
+    const dataX = [];
+    const dataY = [];
+    const color = []
 
-//     for(let i=0; i<X.length; i++){
-//         dataX.push([]);
-//         dataY.push([]);
-//         color.push([]);
-//         for(let j=0; j<X[0].length; j++){
-//             const [fieldX, fieldY] = dipole(X[i][j], Y[i][j]);
-//             dataX[i].push(fieldX);
-//             dataY[i].push(fieldY);
+    for(let i=0; i<X.length; i++){
+        dataX.push([]);
+        dataY.push([]);
+        color.push([]);
+        for(let j=0; j<X[0].length; j++){
+            const [fieldX, fieldY] = dipole(X[i][j], Y[i][j]);
+            dataX[i].push(fieldX);
+            dataY[i].push(fieldY);
             
-//             let w = Math.atan2(fieldY, fieldX);
-//             w = w<0? 2*Math.PI+w : w;
-//             color[i].push(interpolator("#0000ff", "#ff0000", w/(2*Math.PI)));
-//         }
-//     }
+            let w = Math.atan2(fieldY, fieldX);
+            color[i].push(colorfun(w));
+        }
+    }
 
-//     return [dataX, dataY, color];
-// }
+    return [dataX, dataY, color];
+}
 
-// // function colorData(size){
-// //     const color = [];
-// //     const from = "#0000ff";
-// //     const to = "#ff0000";
+function setColor(x, y){
+    const angle = Math.atan2(y,x);
+    return colorfun(angle);
+}
+
+function setMeshX(data, graph){
+    const domain = graph.axisDomain();
+    const n = 50;
+    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+    const x = linspace(domain.x.start, domain.x.end, n); 
+    const y = linspace(domain.y.start, domain.y.end, m);
+    const [X, Y] = meshgrid(x,y);
+
+    return X;
+} 
+function setMeshY(data, graph){
+    const domain = graph.axisDomain();
+    const n = 50;
+    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+    const x = linspace(domain.x.start, domain.x.end, n); 
+    const y = linspace(domain.y.start, domain.y.end, m);
+    const [X, Y] = meshgrid(x,y);
     
-// //     let max = 0;
-// //     size.forEach(row=>{
-// //         const maxRow = Math.max(...row);
-// //         if(maxRow>max)
-// //             max = maxRow;
-// //     });
+    return Y;
+} 
+function setDataX(data){
+    const meshX = data.meshX();
+    const meshY = data.meshY();
+    const x = [];
 
-// //     for(let i=0; i<X.length; i++){
-// //         color.push([]);
-// //         for(let j=0; j<X[0].length; j++){
-// //             color[i].push(interpolator(from, to, size[i][j]/max));
-// //         }
-// //     }
+    for(let i=0; i<meshX.length; i++){
+        x.push([]);
+        for(let j=0; j<meshX[i].length; j++){
+            const data = dipole(meshX[i][j], meshY[i][j])
+            x[i].push(data[0]);
+        }
+    }
 
-// //     return color;
-// // }
+    return x;
+}
+function setDataY(data){
+    const meshX = data.meshX();
+    const meshY = data.meshY();
+    const y = [];
 
-// function interpolator(color0, color1, t){
-//     const from = {
-//         r : parseInt(color0.replace("#","").slice(0,2), 16),
-//         g : parseInt(color0.replace("#","").slice(2,4), 16),
-//         b : parseInt(color0.replace("#","").slice(4,6), 16),
-//     }
-//     const to = {
-//         r : parseInt(color1.replace("#","").slice(0,2), 16),
-//         g : parseInt(color1.replace("#","").slice(2,4), 16),
-//         b : parseInt(color1.replace("#","").slice(4,6), 16),
-//     }
-//     const ans = {
-//         r : Math.round((from.r + (to.r - from.r)*t)),
-//         g : Math.round((from.g + (to.g - from.g)*t)),
-//         b : Math.round((from.b + (to.b - from.b)*t)),
-//     }
+    for(let i=0; i<meshX.length; i++){
+        y.push([]);
+        for(let j=0; j<meshX[i].length; j++){
+            const data = dipole(meshX[i][j], meshY[i][j])
+            y[i].push(data[1]);
+        }
+    }
 
-//     ans.r = ans.r<16? `0${ans.r.toString(16)}` : ans.r.toString(16);
-//     ans.g = ans.g<16? `0${ans.g.toString(16)}` : ans.g.toString(16);
-//     ans.b = ans.b<16? `0${ans.b.toString(16)}` : ans.b.toString(16);
-    
-//     return `#${ans.r}${ans.g}${ans.b}`
-
-// }
+    return y;
+}
 
 
-// const [dataX, dataY, color] = getDipoleData();
-// //const color = colorData(size);
-// //console.dir(color)
-// vector.meshX(X).meshY(Y).dataX(dataX).dataY(dataY).vectorColor(color);
-// Graph.draw()
+const [dataX, dataY] = getDipoleData();
+
+
+vector.meshX(setMeshX).meshY(setMeshY).dataX(setDataX).dataY(setDataY).vectorColor(setColor);
+Graph.draw()
 
 
 
@@ -1343,8 +1352,8 @@ function setColorTest(){
     const LAB = document.querySelectorAll("#color-LAB .color-element");
     const LCH = document.querySelectorAll("#color-LCH .color-element");
 
-    const colorA = "#f6fafe";
-    const colorB = "#08306b";
+    const colorA = "#0000f4";
+    const colorB = "#f40000";
     
     const rgbMap = colorInterpolator({from:[0,RGB.length-1], to:[colorA, colorB], space:"rgb"});
     const hsvMap = colorInterpolator({from:[0,RGB.length-1], to:[colorA, colorB], space:"hsv"});
@@ -1377,10 +1386,28 @@ function setColorTest(){
     const plasmaElement =  document.querySelectorAll("#plasma .color-element");
     const viridisElement =  document.querySelectorAll("#viridis .color-element");
     const magmaElement =  document.querySelectorAll("#magma .color-element");
+    const magnetElement =  document.querySelectorAll("#magnet .color-element");
+    const inv_magnetElement =  document.querySelectorAll("#inv_magnet .color-element");
+    const fairyElement =  document.querySelectorAll("#fairy .color-element");
+    const inv_fairyElement =  document.querySelectorAll("#inv_fairy .color-element");
+    const swampElement =  document.querySelectorAll("#swamp .color-element");
+    const inv_swampElement =  document.querySelectorAll("#inv_swamp .color-element");
+    const fireElement =  document.querySelectorAll("#fire .color-element");
+    const royalElement =  document.querySelectorAll("#royal .color-element");
+    const hsvElement =  document.querySelectorAll("#hsv .color-element");
 
     const plasma = colorMap({from:0, to:plasmaElement.length-1, type:"plasma"});
     const viridis = colorMap({from:0, to:viridisElement.length-1, type:"viridis"});
     const magma = colorMap({from:0, to:magmaElement.length-1, type:"magma"});
+    const magnet = colorMap({from:0, to:magnetElement.length-1, type:"magnet"});
+    const inv_magnet = colorMap({from:0, to:inv_magnetElement.length-1, type:"inv_magnet"});
+    const fairy = colorMap({from:0, to:fairyElement.length-1, type:"fairy"});
+    const inv_fairy = colorMap({from:0, to:inv_fairyElement.length-1, type:"inv_fairy"});
+    const swamp = colorMap({from:0, to:swampElement.length-1, type:"swamp"});
+    const inv_swamp = colorMap({from:0, to:inv_swampElement.length-1, type:"inv_swamp"});
+    const fire = colorMap({from:0, to:fireElement.length-1, type:"fire"});
+    const royal = colorMap({from:0, to:royalElement.length-1, type:"royal"});
+    const hsv = colorMap({from:0, to:hsvElement.length-1, type:"hsv"});
 
     plasmaElement.forEach((item, i)=>{
         item.style.backgroundColor = plasma(i);
@@ -1393,15 +1420,42 @@ function setColorTest(){
     magmaElement.forEach((item, i)=>{
         item.style.backgroundColor = magma(i);
     });
-
-
-
-
-
-
-
-
-
+    
+    magnetElement.forEach((item, i)=>{
+        item.style.backgroundColor = magnet(i);
+    });
+    
+    inv_magnetElement.forEach((item, i)=>{
+        item.style.backgroundColor = inv_magnet(i);
+    });
+    
+    fairyElement.forEach((item, i)=>{
+        item.style.backgroundColor = fairy(i);
+    });
+    
+    inv_fairyElement.forEach((item, i)=>{
+        item.style.backgroundColor = inv_fairy(i);
+    });
+    
+    swampElement.forEach((item, i)=>{
+        item.style.backgroundColor = swamp(i);
+    });
+    
+    inv_swampElement.forEach((item, i)=>{
+        item.style.backgroundColor = inv_swamp(i);
+    });
+    
+    fireElement.forEach((item, i)=>{
+        item.style.backgroundColor = fire(i);
+    });
+    
+    royalElement.forEach((item, i)=>{
+        item.style.backgroundColor = royal(i);
+    });
+    
+    hsvElement.forEach((item, i)=>{
+        item.style.backgroundColor = hsv(i);
+    });
 
 
 }

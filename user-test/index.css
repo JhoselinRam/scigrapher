@@ -85,7 +85,7 @@ body{
 .color-type{
     display : flex;
     flex-direction : row;
-    height: 100px;
+    height: 50px;
     align-items: center;
     justify-items: center;
 }
