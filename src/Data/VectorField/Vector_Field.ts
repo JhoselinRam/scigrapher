@@ -30,7 +30,7 @@ export function VectorField(options : Partialize<Vector_Field_Options>, graphHan
         mesh : {...defaultOptions.mesh, ...options.mesh},
         data : {...defaultOptions.data, ...options.data}
     };
-     //Main handler
+    //Main handler
     const dataHandler : RecursivePartial<Vector_Field> = {};
 
     //Method generators

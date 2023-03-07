@@ -26,8 +26,25 @@ function DrawVector({dataHandler, dataState, graphHandler}:Vector_Field_Method_G
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
         const meshX = isCallable(dataState.mesh.x)? dataState.mesh.x(dataHandler, graphHandler) : dataState.mesh.x.slice();
         const meshY = isCallable(dataState.mesh.y)? dataState.mesh.y(dataHandler, graphHandler) : dataState.mesh.y.slice();
-        const dataX = isCallable(dataState.data.x)? dataState.data.x(dataHandler, graphHandler) : dataState.data.x.slice();
-        const dataY = isCallable(dataState.data.y)? dataState.data.y(dataHandler, graphHandler) : dataState.data.y.slice();
+        
+        let dataX : Field_Property<number> = [];
+        let dataY : Field_Property<number> = [];
+        
+        if(isCallable(dataState.data.x) || isCallable(dataState.data.y)){
+            for(let i=0; i<meshX.length; i++){
+                dataX.push([]);
+                dataY.push([]);
+                for(let j=0; j<meshX[i].length; j++){
+                    if(isCallable(dataState.data.x)) dataX[i].push(dataState.data.x(meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataHandler, graphHandler));
+                    if(isCallable(dataState.data.y)) dataY[i].push(dataState.data.y(meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataHandler, graphHandler));
+                }
+            }
+        }
+
+        if(!isCallable(dataState.data.x)) dataX = dataState.data.x;
+        if(!isCallable(dataState.data.y)) dataY = dataState.data.y;
+        
+        
         const scale = dataState.normalized? getScale({xScale, yScale, meshX, meshY, dataX, dataY, maxLength:dataState.maxLenght}) : 1;
         const clipRect = getGraphRect(state); 
 

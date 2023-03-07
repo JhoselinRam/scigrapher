@@ -1,5 +1,5 @@
 import { Axis_Property, Graph2D, Line_Style } from "../../Graph2D/Graph2D_Types";
-import { Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Property } from "../Data_Types";
+import { Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Position, Field_Property } from "../Data_Types";
 import { Data_Vector } from "./resourses/Data_Vector/Data_Vector_Types";
 import { Properties_Vector } from "./resourses/Properties_Vector/Properties_Vector_Types";
 
@@ -15,7 +15,7 @@ export interface Vector_Field_Options extends Make_Generator<{
     width : number,
     style : Line_Style
 }>{
-    mesh : Axis_Property<Field_Data<Vector_Field>>,
+    mesh : Axis_Property<Field_Position<Vector_Field>>,
     data : Axis_Property<Field_Data<Vector_Field>>,
     normalized : boolean,
     maxLenght : number,
