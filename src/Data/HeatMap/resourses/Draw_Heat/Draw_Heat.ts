@@ -164,11 +164,7 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
             context.putImageData(pixelData, clip.x, clip.y);
         }
     }else{
-        const serialData : Array<number> = ([] as Array<number>).concat(...data);
-        const serialMeshX : Array<number> = ([] as Array<number>).concat(...meshX);
-        const serialMeshY : Array<number> = ([] as Array<number>).concat(...meshY);
-
-        console.dir(serialData)
+        const threads = 4;
     }
 }
 
