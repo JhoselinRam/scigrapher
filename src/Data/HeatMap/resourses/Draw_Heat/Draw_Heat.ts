@@ -127,41 +127,48 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
     const getColor = getColorFunction({data, dataState});
     const pixelData = context.getImageData(clip.x, clip.y, clip.width, clip.height);
 
-    if(typeof dataState.opacity === "number"){
-        context.globalAlpha = dataState.opacity;    // <-- Difference
-
-        for(let i=0; i<meshX.length-1; i++){
-            for(let j=0; j<meshX[i].length-1; j++){
-                let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
-                let xEnd = Math.round(xScale.map(meshX[i][j+1]) - clip.x + client.x )
-                let yStart = Math.round(yScale.map(meshY[i][j]) - clip.y + client.y);
-                let yEnd = Math.round(yScale.map(meshY[i+1][j]) - clip.y + client.y);
-                [xStart, xEnd] = [Math.min(xStart, xEnd), Math.max(xStart, xEnd)];
-                [yStart, yEnd] = [Math.min(yStart, yEnd), Math.max(yStart, yEnd)];
-
-                const xDelta = xEnd - xStart;
-                const yDelta = yEnd - yStart;
-                const data00 = data[i][j];
-                const data01 = data[i][j+1];
-                const data10 = data[i+1][j];
-                const data11 = data[i+1][j+1];
-
-
-                
-                for(let m=0; m<=xDelta; m++){
-                    for(let n=0; n<=yDelta; n++){
-                        const dataStartX = data00 + m*(data01-data00)/xDelta;
-                        const dataEndX = data10 + m*(data11-data10)/xDelta;
-                        const intData = dataStartX + n*(dataEndX - dataStartX)/yDelta;
-                        const color = getColor(intData, meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataset, graph);
-                        drawPixel(pixelData, xStart+m, yStart+n, color, dataState.opacity);
+    if(typeof Worker === "undefined"){
+        if(typeof dataState.opacity === "number"){
+            context.globalAlpha = dataState.opacity;    // <-- Difference
+    
+            for(let i=0; i<meshX.length-1; i++){
+                for(let j=0; j<meshX[i].length-1; j++){
+                    let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
+                    let xEnd = Math.round(xScale.map(meshX[i][j+1]) - clip.x + client.x )
+                    let yStart = Math.round(yScale.map(meshY[i][j]) - clip.y + client.y);
+                    let yEnd = Math.round(yScale.map(meshY[i+1][j]) - clip.y + client.y);
+                    [xStart, xEnd] = [Math.min(xStart, xEnd), Math.max(xStart, xEnd)];
+                    [yStart, yEnd] = [Math.min(yStart, yEnd), Math.max(yStart, yEnd)];
+    
+                    const xDelta = xEnd - xStart;
+                    const yDelta = yEnd - yStart;
+                    const data00 = data[i][j];
+                    const data01 = data[i][j+1];
+                    const data10 = data[i+1][j];
+                    const data11 = data[i+1][j+1];
+    
+    
+                    
+                    for(let m=0; m<=xDelta; m++){
+                        for(let n=0; n<=yDelta; n++){
+                            const dataStartX = data00 + m*(data01-data00)/xDelta;
+                            const dataEndX = data10 + m*(data11-data10)/xDelta;
+                            const t = 3*Math.pow(n/yDelta,2) - 2*Math.pow(n/yDelta,3) 
+                            const intData = dataStartX + (dataEndX - dataStartX)*t;
+                            const color = getColor(intData, meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataset, graph);
+                            drawPixel(pixelData, xStart+m, yStart+n, color, dataState.opacity);
+                        }
                     }
                 }
             }
+            context.putImageData(pixelData, clip.x, clip.y);
         }
-        
-        context.putImageData(pixelData, clip.x, clip.y);
+    }else{
+        const serialData : Array<number> = ([] as Array<number>).concat(...data);
+        const serialMeshX : Array<number> = ([] as Array<number>).concat(...meshX);
+        const serialMeshY : Array<number> = ([] as Array<number>).concat(...meshY);
 
+        console.dir(serialData)
     }
 }
 
