@@ -18,7 +18,7 @@ body{
 }
 
 .graph{
-    width: 95%;
+    width: 538px; /*98%*/
     height: 95%;
     resize: both;
     overflow: hidden;

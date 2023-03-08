@@ -100,7 +100,7 @@ export default colorInterpolator;
 
 //------------ Space Conversions --------------
 //------------- String To RGB -----------------
-function string2rgb(color:string) : rgbColor{
+export function string2rgb(color:string) : rgbColor{
     return {
         r : parseInt(color.replace("#","").slice(0,2), 16),
         g : parseInt(color.replace("#","").slice(2,4), 16),

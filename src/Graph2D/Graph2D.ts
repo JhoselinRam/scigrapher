@@ -429,7 +429,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         state.context.canvas.scale(dpi, dpi);
         state.context.canvas.imageSmoothingEnabled = false;
         
-        state.context.data = state.canvasDataElement.getContext("2d") as CanvasRenderingContext2D;
+        state.context.data = state.canvasDataElement.getContext("2d", {willReadFrequently: true}) as CanvasRenderingContext2D;
         state.context.data.scale(dpi, dpi);
         state.context.data.imageSmoothingEnabled = false;
     }

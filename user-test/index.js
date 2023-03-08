@@ -1,6 +1,7 @@
 import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
                     .axisPosition("bottom-left")
+                    .axisDomain({x:{start:-2.2, end:2.2}})
                     .primaryGrid({grid:{enable:false}})
                     .secondaryGrid({grid:{enable:false}})
                     .aspectRatio({anchor:0})
@@ -64,6 +65,9 @@ const Graph = Graph2D(document.querySelector(".graph"))
 // vector.meshX(setMeshX).meshY(setMeshY).dataX(setDataX).dataY(setDataY).vectorColor(setColor);
 // Graph.draw()
 
+
+const heat = Graph.addDataset("heatmap");
+Graph.draw();
 
 
 
