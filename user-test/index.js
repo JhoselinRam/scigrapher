@@ -1,7 +1,6 @@
 import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
                     .axisPosition("bottom-left")
-                    .axisDomain({x:{start:-2.2, end:2.2}})
                     .primaryGrid({grid:{enable:false}})
                     .secondaryGrid({grid:{enable:false}})
                     .aspectRatio({anchor:0})
@@ -67,6 +66,39 @@ const Graph = Graph2D(document.querySelector(".graph"))
 
 
 const heat = Graph.addDataset("heatmap");
+
+//------------ Counterfit Data ----------------
+//---------------------------------------------
+
+const x = linspace(-1, 1, 50);
+const y = linspace(-1, 1, 50);
+const [X,Y] = meshgrid(x,y);
+
+function counterData(){
+    const a = 1;
+    const w = 4*Math.PI;
+    const data = [];
+
+    for(let i=0; i<X.length; i++){
+        data.push([]);
+        for(let j=0; j<X[i].length; j++){
+            const r = Math.hypot(X[i][j], Y[i][j]);
+            data[i].push(a*Math.cos(w*r));
+        }
+    }
+    return data;
+}
+
+function counterOpacity(value, x, y){
+    let r = Math.hypot(x,y);
+    r =  r>1?1:r;
+    const t = 3*Math.pow(r,2) - 2*Math.pow(r,3);
+    return 1 - t;
+}
+
+//---------------------------------------------
+//---------------------------------------------
+
 Graph.draw();
 
 

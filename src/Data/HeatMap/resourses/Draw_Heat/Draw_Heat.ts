@@ -127,49 +127,114 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
     const getColor = getColorFunction({data, dataState});
     const pixelData = context.getImageData(clip.x, clip.y, clip.width, clip.height);
 
-    if(typeof Worker === "undefined"){
-        if(typeof dataState.opacity === "number"){
-            context.globalAlpha = dataState.opacity;    // <-- Difference
-    
-            for(let i=0; i<meshX.length-1; i++){
-                for(let j=0; j<meshX[i].length-1; j++){
-                    let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
-                    let xEnd = Math.round(xScale.map(meshX[i][j+1]) - clip.x + client.x )
-                    let yStart = Math.round(yScale.map(meshY[i][j]) - clip.y + client.y);
-                    let yEnd = Math.round(yScale.map(meshY[i+1][j]) - clip.y + client.y);
-                    [xStart, xEnd] = [Math.min(xStart, xEnd), Math.max(xStart, xEnd)];
-                    [yStart, yEnd] = [Math.min(yStart, yEnd), Math.max(yStart, yEnd)];
-    
-                    const xDelta = xEnd - xStart;
-                    const yDelta = yEnd - yStart;
-                    const data00 = data[i][j];
-                    const data01 = data[i][j+1];
-                    const data10 = data[i+1][j];
-                    const data11 = data[i+1][j+1];
-    
-    
-                    
-                    for(let m=0; m<=xDelta; m++){
-                        for(let n=0; n<=yDelta; n++){
-                            const dataStartX = data00 + m*(data01-data00)/xDelta;
-                            const dataEndX = data10 + m*(data11-data10)/xDelta;
-                            const t = 3*Math.pow(n/yDelta,2) - 2*Math.pow(n/yDelta,3) 
-                            const intData = dataStartX + (dataEndX - dataStartX)*t;
-                            const color = getColor(intData, meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataset, graph);
-                            drawPixel(pixelData, xStart+m, yStart+n, color, dataState.opacity);
-                        }
+
+    if(typeof dataState.opacity === "number"){
+        context.globalAlpha = dataState.opacity;    // <-- Difference
+
+        for(let i=0; i<meshX.length-1; i++){
+            for(let j=0; j<meshX[i].length-1; j++){
+                let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
+                let xEnd = Math.round(xScale.map(meshX[i][j+1]) - clip.x + client.x )
+                let yStart = Math.round(yScale.map(meshY[i][j]) - clip.y + client.y);
+                let yEnd = Math.round(yScale.map(meshY[i+1][j]) - clip.y + client.y);
+                [xStart, xEnd] = [Math.min(xStart, xEnd), Math.max(xStart, xEnd)];
+                [yStart, yEnd] = [Math.min(yStart, yEnd), Math.max(yStart, yEnd)];
+
+                const xDelta = xEnd - xStart;
+                const yDelta = yEnd - yStart;
+                const data00 = data[i][j];
+                const data01 = data[i][j+1];
+                const data10 = data[i+1][j];
+                const data11 = data[i+1][j+1];
+                const x00 = meshX[i][j];
+                const x01 = meshX[i][j+1];
+                const y10 = meshY[i+1][j];
+                const y11 = meshY[i+1][j+1];
+
+
+                
+                for(let m=0; m<=xDelta; m++){
+                    for(let n=0; n<=yDelta; n++){
+                        const tx = 3*Math.pow(m/xDelta,2) - 2*Math.pow(m/xDelta,3) 
+                        const ty = 3*Math.pow(n/yDelta,2) - 2*Math.pow(n/yDelta,3) 
+                        //Bilinear interpolation
+                        const dataStartX = data00 + (data01-data00)*tx;
+                        const dataEndX = data10 + (data11-data10)*tx;
+                        const dataInterpolated = dataStartX + (dataEndX - dataStartX)*ty;
+
+                        const xInterpolated = x00 + (x01-x00)*tx; 
+                        const yInterpolated = y10 + (y11-y10)*ty;
+
+                        const color = getColor(dataInterpolated, xInterpolated, yInterpolated, i, j, meshX, meshY, dataset, graph);
+                        drawPixel(pixelData, xStart+m, yStart+n, color, dataState.opacity);
                     }
                 }
             }
-            context.putImageData(pixelData, clip.x, clip.y);
         }
+        context.putImageData(pixelData, clip.x, clip.y);
     }else{
-        const threads = 4;
+        for(let i=0; i<meshX.length-1; i++){
+            for(let j=0; j<meshX[i].length-1; j++){
+                let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
+                let xEnd = Math.round(xScale.map(meshX[i][j+1]) - clip.x + client.x )
+                let yStart = Math.round(yScale.map(meshY[i][j]) - clip.y + client.y);
+                let yEnd = Math.round(yScale.map(meshY[i+1][j]) - clip.y + client.y);
+                [xStart, xEnd] = [Math.min(xStart, xEnd), Math.max(xStart, xEnd)];
+                [yStart, yEnd] = [Math.min(yStart, yEnd), Math.max(yStart, yEnd)];
+
+                const xDelta = xEnd - xStart;
+                const yDelta = yEnd - yStart;
+                const data00 = data[i][j];
+                const data01 = data[i][j+1];
+                const data10 = data[i+1][j];
+                const data11 = data[i+1][j+1];
+                const x00 = meshX[i][j];
+                const x01 = meshX[i][j+1];
+                const y10 = meshY[i+1][j];
+                const y11 = meshY[i+1][j+1];
+
+
+                
+                for(let m=0; m<=xDelta; m++){
+                    for(let n=0; n<=yDelta; n++){
+                        const tx = 3*Math.pow(m/xDelta,2) - 2*Math.pow(m/xDelta,3) 
+                        const ty = 3*Math.pow(n/yDelta,2) - 2*Math.pow(n/yDelta,3) 
+                        //Bilinear interpolation
+                        const dataStartX = data00 + (data01-data00)*tx;
+                        const dataEndX = data10 + (data11-data10)*tx;
+                        const dataInterpolated = dataStartX + (dataEndX - dataStartX)*ty;
+
+                        const xInterpolated = x00 + (x01-x00)*tx; 
+                        const yInterpolated = y10 + (y11-y10)*ty;
+
+                        const color = getColor(dataInterpolated, xInterpolated, yInterpolated, i, j, meshX, meshY, dataset, graph);
+                        
+                        let opacity : number;
+                        if(isCallable(dataState.opacity)){
+                            opacity = dataState.opacity(dataInterpolated, xInterpolated, yInterpolated, i, j, meshX, meshY, dataset, graph);
+                        }else{
+                            const opacity00 = dataState.opacity[i][j];
+                            const opacity01 = dataState.opacity[i][j+1];
+                            const opacity10 = dataState.opacity[i+1][j];
+                            const opacity11 = dataState.opacity[i+1][j+1];
+
+                            const opacityStartX = opacity00  + (opacity01 - opacity00)*tx;
+                            const opacityEndX = opacity10  + (opacity11 - opacity10)*tx;
+                            
+                            opacity = opacityStartX  + (opacityEndX - opacityStartX)*ty;
+                        }
+
+                        drawPixel(pixelData, xStart+m, yStart+n, color, opacity);
+                    }
+                }
+            }
+        }
+        context.putImageData(pixelData, clip.x, clip.y);
     }
 }
 
 //---------------------------------------------
-//---------------------------------------------
+//------------- Color Function ----------------
 
 function getColorFunction({data, dataState} : Get_Color_Function) : Heat_Property_Generator<string> {
     let colorFunction : Heat_Property_Generator<string> = ()=>"";

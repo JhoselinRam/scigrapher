@@ -87,7 +87,7 @@ function generatePositionMethod(container:Axis_Property<Field_Position<Vector_Fi
 
 }
 //---------------------------------------------
-//-------- Generate Position Method -----------
+//----------- Generate Data Method ------------
 function generateDataMethod(container:Axis_Property<Field_Data<Vector_Field>>, axis:"x"|"y", dataHandler:Vector_Field, graphHandler:Graph2D, dataState:Vector_Field_State) : Data_Method_Generator{
 
     //---------------------------------------------
