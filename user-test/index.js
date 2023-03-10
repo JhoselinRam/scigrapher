@@ -1,9 +1,9 @@
 import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
-                    .axisPosition("bottom-left")
-                    .primaryGrid({grid:{enable:false}})
-                    .secondaryGrid({grid:{enable:false}})
-                    .aspectRatio({anchor:0})
+                    // .axisPosition("bottom-left")
+                    // .primaryGrid({grid:{enable:false}})
+                    // .secondaryGrid({grid:{enable:false}})
+                    // .aspectRatio({anchor:0})
                     .pointerZoom()
                     .pointerMove()
                     .containerResize()
