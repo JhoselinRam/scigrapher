@@ -4,6 +4,7 @@ import { Draw_Data_Callback, Partialize } from "../Data_Types";
 import { Heat_Map, Heat_Map_Options, Heat_Map_State } from "./Heat_Map_Types";
 import DataHeat from "./resourses/Data_Heat/Data_Heat.js";
 import DrawHeat from "./resourses/Draw_Heat/Draw_Heat.js";
+import PropertiesHeat from "./resourses/Properties_Heat/Properties_Heat.js";
 
 const defaultOptions : Heat_Map_Options = {
     enable : true,
@@ -11,7 +12,7 @@ const defaultOptions : Heat_Map_Options = {
     mesh : {x:[[0]] , y:[[0]]},
     data : [[0]],
     color : "viridis",
-    smooth : true,
+    smooth : false,
     opacity : 1
 }
 
@@ -33,6 +34,7 @@ export function HeatMap(options:Partialize<Heat_Map_Options>, graphHandler : Gra
     const general = DataGeneral<Heat_Map, Heat_Map_State>({dataHandler : dataHandler as Heat_Map, dataState, graphHandler});
     const draw = DrawHeat({dataHandler : dataHandler as Heat_Map, dataState, graphHandler});
     const data = DataHeat({dataHandler : dataHandler as Heat_Map, dataState, graphHandler});
+    const properties = PropertiesHeat({dataHandler : dataHandler as Heat_Map, dataState, graphHandler});
 
     //Main handler population
     dataHandler.id = general.id;
@@ -40,6 +42,11 @@ export function HeatMap(options:Partialize<Heat_Map_Options>, graphHandler : Gra
     dataHandler.data = data.data;
     dataHandler.meshX = data.meshX;
     dataHandler.meshY = data.meshY;
+    dataHandler.enable = properties.enable;
+    dataHandler.useAxis = properties.useAxis;
+    dataHandler.smooth = properties.smooth;
+    dataHandler.color = properties.color;
+    dataHandler.opacity = properties.opacity;
 
 
 //---------------------------------------------

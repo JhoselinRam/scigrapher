@@ -1,11 +1,10 @@
 import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { string2rgb } from "../../../../tools/Color_Map/Color_Interpolator.js";
-import colorMap from "../../../../tools/Color_Map/Predefined/Color_Map.js";
-import { getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
+import { getColorFunction, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Field_Property } from "../../../Data_Types";
-import { Heat_Map_Method_Generator, Heat_Property_Generator } from "../../Heat_Map_Types";
-import { Draw_Heat, Draw_Heat_Helper, Get_Color_Function } from "./Draw_Heat_Types";
+import { Heat_Map_Method_Generator } from "../../Heat_Map_Types";
+import { Draw_Heat, Draw_Heat_Helper } from "./Draw_Heat_Types";
 
 function DrawHeat({dataHandler, dataState, graphHandler} : Heat_Map_Method_Generator) : Draw_Heat {
 
@@ -85,6 +84,7 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
     if(typeof dataState.opacity === "number"){
         context.globalAlpha = dataState.opacity;    // <-- Difference
 
+        //Center positions
         for(let i=1; i<meshX.length-1; i++){
             for(let j=1; j<meshX[i].length-1; j++){
                 const x = Math.round(xScale.map(meshX[i][j] - (meshX[i][j] - meshX[i][j-1])/2));
@@ -92,15 +92,81 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
                 const y = Math.round(yScale.map(meshY[i][j] - (meshY[i][j] - meshY[i-1][j])/2));
                 const height = Math.round(Math.abs(y - yScale.map(meshY[i][j] + (meshY[i+1][j] - meshY[i][j])/2)));
 
-                context.fillStyle = getColor(data[i][j], meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataset, graph);
+                context.fillStyle = getColor(data[i][j], meshX[i][j], meshY[i][j], i, j, data, meshX, meshY, dataset, graph);
                 context.beginPath();
                 context.fillRect(x, y, width, height);
                 context.fill();
                 
             }
         }
+
+        //Left and right strips 
+        for(let i=0; i<meshX.length; i++){
+            const final = meshX[i].length-1;
+            let xLeft = Math.round(xScale.map(meshX[i][0]));
+            let xRight = Math.round(xScale.map(meshX[i][final-1] + (meshX[i][final] - meshX[i][final-1])/2));
+            let yLeft = 0;
+            let yRight = 0;
+            let widthLeft = Math.round(Math.abs(xLeft - xScale.map(meshX[i][0] + (meshX[i][1] - meshX[i][0])/2)));
+            let widthRight = Math.round(Math.abs(xRight - xScale.map(meshX[i][final])));
+            let heightLeft = 0;
+            let heightRight = 0;
+
+            if(i === 0){
+                yLeft = Math.round(yScale.map(meshY[0][0]));
+                yRight = Math.round(yScale.map(meshY[0][final]));
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[1][0] - (meshY[1][0] - meshY[0][0])/2)));
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[1][final] - (meshY[1][final] - meshY[0][final])/2)));
+            }else if(i === meshX.length -1){
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0])));
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[i][final])));
+            }else{
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0] + (meshY[i+1][0] - meshY[i][0])/2)));
+                heightRight = Math.round(Math.abs(yLeft - yScale.map(meshY[i][final] + (meshY[i+1][final] - meshY[i][final])/2)));
+            }
+
+            context.fillStyle = getColor(data[i][0], meshX[i][0], meshY[i][0], i, 0, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xLeft, yLeft, widthLeft, heightLeft);
+            context.fill();
+            
+            context.fillStyle = getColor(data[i][final], meshX[i][final], meshY[i][final], i, final, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xRight, yRight, widthRight, heightRight);
+            context.fill();
+        }
+
+        //Top and bottom strips
+        for(let j=1; j<meshX[0].length-1; j++){
+            const final = meshX.length-1;
+            let xTop = Math.round(xScale.map(meshX[0][j] - (meshX[0][j] - meshX[0][j-1])/2));
+            let xBottom = Math.round(xScale.map(meshX[final][j] - (meshX[final][j] - meshX[final][j-1])/2));
+            let yTop = Math.round(yScale.map(meshY[0][j]));
+            let yBottom = Math.round(yScale.map(meshY[final][j] - (meshY[final][j] - meshY[final-1][j])/2));
+            let widthTop = Math.round(Math.abs(xTop - xScale.map(meshX[0][j+1] - (meshX[0][j+1] - meshX[0][j])/2)));
+            let widthBottom = Math.round(Math.abs(xBottom - xScale.map(meshX[final][j+1] - (meshX[final][j+1] - meshX[final][j])/2)));
+            let heightTop = Math.round(Math.abs(yTop - yScale.map(meshY[1][j] - (meshY[1][j] - meshY[0][j])/2)));
+            let heightBottom = Math.round(Math.abs(yBottom - yScale.map(meshY[final][j])));
+
+            context.fillStyle = getColor(data[0][j], meshX[0][j], meshY[0][j], 0, j, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xTop, yTop, widthTop, heightTop);
+            context.fill();
+            
+            context.fillStyle = getColor(data[final][j], meshX[final][j], meshY[final][j], final, j, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xBottom, yBottom, widthBottom, heightBottom);
+            context.fill();
+        }
+
     }else{
         const opacity = dataState.opacity;
+
+        //Center positions
         for(let i=1; i<meshX.length-1; i++){
             for(let j=1; j<meshX[i].length-1; j++){
                 const x = Math.round(xScale.map(meshX[i][j] - (meshX[i][j] - meshX[i][j-1])/2));
@@ -108,12 +174,79 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
                 const y = Math.round(yScale.map(meshY[i][j] - (meshY[i][j] - meshY[i-1][j])/2));
                 const height = Math.round(Math.abs(y - yScale.map(meshY[i][j] + (meshY[i+1][j] - meshY[i][j])/2)));
                 
-                context.globalAlpha = isCallable(opacity) ? opacity(data[i][j], meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataset, graph) : opacity[i][j]; //<-- Here
-                context.fillStyle = getColor(data[i][j], meshX[i][j], meshY[i][j], i, j, meshX, meshY, dataset, graph);
+                context.globalAlpha = isCallable(opacity) ? opacity(data[i][j], meshX[i][j], meshY[i][j], i, j, data, meshX, meshY, dataset, graph) : opacity[i][j]; //<-- Here
+                context.fillStyle = getColor(data[i][j], meshX[i][j], meshY[i][j], i, j, data, meshX, meshY, dataset, graph);
                 context.beginPath();
                 context.fillRect(x, y, width, height);
                 context.fill(); 
             }
+        }
+
+        //Left and right strips 
+        for(let i=0; i<meshX.length; i++){
+            const final = meshX[i].length-1;
+            let xLeft = Math.round(xScale.map(meshX[i][0]));
+            let xRight = Math.round(xScale.map(meshX[i][final-1] + (meshX[i][final] - meshX[i][final-1])/2));
+            let yLeft = 0;
+            let yRight = 0;
+            let widthLeft = Math.round(Math.abs(xLeft - xScale.map(meshX[i][0] + (meshX[i][1] - meshX[i][0])/2)));
+            let widthRight = Math.round(Math.abs(xRight - xScale.map(meshX[i][final])));
+            let heightLeft = 0;
+            let heightRight = 0;
+
+            if(i === 0){
+                yLeft = Math.round(yScale.map(meshY[0][0]));
+                yRight = Math.round(yScale.map(meshY[0][final]));
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[1][0] - (meshY[1][0] - meshY[0][0])/2)));
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[1][final] - (meshY[1][final] - meshY[0][final])/2)));
+            }else if(i === meshX.length -1){
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0])));
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[i][final])));
+            }else{
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0] + (meshY[i+1][0] - meshY[i][0])/2)));
+                heightRight = Math.round(Math.abs(yLeft - yScale.map(meshY[i][final] + (meshY[i+1][final] - meshY[i][final])/2)));
+            }
+
+            context.globalAlpha = isCallable(opacity) ? opacity(data[i][0], meshX[i][0], meshY[i][0], i, 0, data, meshX, meshY, dataset, graph) : opacity[i][0];
+            context.fillStyle = getColor(data[i][0], meshX[i][0], meshY[i][0], i, 0, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xLeft, yLeft, widthLeft, heightLeft);
+            context.fill();
+            
+            context.globalAlpha = isCallable(opacity) ? opacity(data[i][final], meshX[i][final], meshY[i][final], i, final, data, meshX, meshY, dataset, graph) : opacity[i][final];
+            context.fillStyle = getColor(data[i][final], meshX[i][final], meshY[i][final], i, final, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xRight, yRight, widthRight, heightRight);
+            context.fill();
+        }
+
+        //Top and bottom strips
+        for(let j=1; j<meshX[0].length-1; j++){
+            const final = meshX.length-1;
+            let xTop = Math.round(xScale.map(meshX[0][j] - (meshX[0][j] - meshX[0][j-1])/2));
+            let xBottom = Math.round(xScale.map(meshX[final][j] - (meshX[final][j] - meshX[final][j-1])/2));
+            let yTop = Math.round(yScale.map(meshY[0][j]));
+            let yBottom = Math.round(yScale.map(meshY[final][j] - (meshY[final][j] - meshY[final-1][j])/2));
+            let widthTop = Math.round(Math.abs(xTop - xScale.map(meshX[0][j+1] - (meshX[0][j+1] - meshX[0][j])/2)));
+            let widthBottom = Math.round(Math.abs(xBottom - xScale.map(meshX[final][j+1] - (meshX[final][j+1] - meshX[final][j])/2)));
+            let heightTop = Math.round(Math.abs(yTop - yScale.map(meshY[1][j] - (meshY[1][j] - meshY[0][j])/2)));
+            let heightBottom = Math.round(Math.abs(yBottom - yScale.map(meshY[final][j])));
+
+            context.globalAlpha = isCallable(opacity) ? opacity(data[0][j], meshX[0][j], meshY[0][j], 0, j, data, meshX, meshY, dataset, graph) : opacity[0][j];
+            context.fillStyle = getColor(data[0][j], meshX[0][j], meshY[0][j], 0, j, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xTop, yTop, widthTop, heightTop);
+            context.fill();
+            
+            context.globalAlpha = isCallable(opacity) ? opacity(data[final][j], meshX[final][j], meshY[final][j], final, j, data, meshX, meshY, dataset, graph) : opacity[final][j];
+            context.fillStyle = getColor(data[final][j], meshX[final][j], meshY[final][j], final, j, data, meshX, meshY, dataset, graph);
+            context.beginPath();
+            context.fillRect(xBottom, yBottom, widthBottom, heightBottom);
+            context.fill();
         }
     }
 }
@@ -146,10 +279,10 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
                 const data01 = data[i][j+1];
                 const data10 = data[i+1][j];
                 const data11 = data[i+1][j+1];
-                const x00 = meshX[i][j];
-                const x01 = meshX[i][j+1];
-                const y10 = meshY[i+1][j];
-                const y11 = meshY[i+1][j+1];
+                const x0 = meshX[i][j];
+                const x1 = meshX[i][j+1];
+                const y0 = meshY[i][j];
+                const y1 = meshY[i+1][j];
 
 
                 
@@ -162,10 +295,10 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
                         const dataEndX = data10 + (data11-data10)*tx;
                         const dataInterpolated = dataStartX + (dataEndX - dataStartX)*ty;
 
-                        const xInterpolated = x00 + (x01-x00)*tx; 
-                        const yInterpolated = y10 + (y11-y10)*ty;
+                        const xInterpolated = x0 + (x1-x0)*tx; 
+                        const yInterpolated = y0 + (y1-y0)*ty;
 
-                        const color = getColor(dataInterpolated, xInterpolated, yInterpolated, i, j, meshX, meshY, dataset, graph);
+                        const color = getColor(dataInterpolated, xInterpolated, yInterpolated, i, j, data, meshX, meshY, dataset, graph);
                         drawPixel(pixelData, xStart+m, yStart+n, color, dataState.opacity);
                     }
                 }
@@ -173,6 +306,7 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
         }
         context.putImageData(pixelData, clip.x, clip.y);
     }else{
+        console.log("here")
         for(let i=0; i<meshX.length-1; i++){
             for(let j=0; j<meshX[i].length-1; j++){
                 let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
@@ -188,10 +322,10 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
                 const data01 = data[i][j+1];
                 const data10 = data[i+1][j];
                 const data11 = data[i+1][j+1];
-                const x00 = meshX[i][j];
-                const x01 = meshX[i][j+1];
-                const y10 = meshY[i+1][j];
-                const y11 = meshY[i+1][j+1];
+                const x0 = meshX[i][j];
+                const x1 = meshX[i][j+1];
+                const y0 = meshY[i][j];
+                const y1 = meshY[i+1][j];
 
 
                 
@@ -204,14 +338,14 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
                         const dataEndX = data10 + (data11-data10)*tx;
                         const dataInterpolated = dataStartX + (dataEndX - dataStartX)*ty;
 
-                        const xInterpolated = x00 + (x01-x00)*tx; 
-                        const yInterpolated = y10 + (y11-y10)*ty;
+                        const xInterpolated = x0 + (x1-x0)*tx; 
+                        const yInterpolated = y0 + (y1-y0)*ty;
 
-                        const color = getColor(dataInterpolated, xInterpolated, yInterpolated, i, j, meshX, meshY, dataset, graph);
+                        const color = getColor(dataInterpolated, xInterpolated, yInterpolated, i, j, data, meshX, meshY, dataset, graph);
                         
                         let opacity : number;
                         if(isCallable(dataState.opacity)){
-                            opacity = dataState.opacity(dataInterpolated, xInterpolated, yInterpolated, i, j, meshX, meshY, dataset, graph);
+                            opacity = dataState.opacity(dataInterpolated, xInterpolated, yInterpolated, i, j, data, meshX, meshY, dataset, graph);
                         }else{
                             const opacity00 = dataState.opacity[i][j];
                             const opacity01 = dataState.opacity[i][j+1];
@@ -234,35 +368,6 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
 }
 
 //---------------------------------------------
-//------------- Color Function ----------------
-
-function getColorFunction({data, dataState} : Get_Color_Function) : Heat_Property_Generator<string> {
-    let colorFunction : Heat_Property_Generator<string> = ()=>"";
-
-    if(typeof dataState.color === "string"){
-        let min = data[0][0];
-        let max = data[0][0];
-
-        for(let i=0; i<data.length; i++){
-            for(let j=0; j<data[i].length; j++){
-                if(data[i][j] < min)
-                    min = data[i][j];
-                if(data[i][j] > max)
-                    max = data[i][j];
-            }
-        }
-
-        const cmap = colorMap({from:min, to:max, type:dataState.color});
-        colorFunction = value=>cmap(value as number);
-    }else if(isCallable(dataState.color)){
-        colorFunction =  dataState.color;
-    }else if(typeof dataState.color === "object"){
-        colorFunction = (value, x, y, i, j)=>(dataState.color as Field_Property<string>)[i as number][j as number];
-    }
-
-    return colorFunction;
-}
-
 //------------- Draw Pixel --------------------
 
 function drawPixel(image:ImageData, x:number, y:number, color:string, alpha:number){
@@ -278,5 +383,4 @@ function drawPixel(image:ImageData, x:number, y:number, color:string, alpha:numb
     image.data[index+3] = alpha*255;
 }
 
-//---------------------------------------------
 //---------------------------------------------

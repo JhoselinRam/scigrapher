@@ -65,8 +65,6 @@ const Graph = Graph2D(document.querySelector(".graph"))
 // Graph.draw()
 
 
-const heat = Graph.addDataset("heatmap");
-
 //------------ Counterfit Data ----------------
 //---------------------------------------------
 
@@ -90,8 +88,9 @@ function counterData(){
 }
 
 function counterOpacity(value, x, y){
+    //console.log(x,y)
     let r = Math.hypot(x,y);
-    r =  r>1?1:r;
+    r =  r>1?1:0;
     const t = 3*Math.pow(r,2) - 2*Math.pow(r,3);
     return 1 - t;
 }
@@ -99,6 +98,7 @@ function counterOpacity(value, x, y){
 //---------------------------------------------
 //---------------------------------------------
 
+//const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(counterData()).smooth(false);
 Graph.draw();
 
 

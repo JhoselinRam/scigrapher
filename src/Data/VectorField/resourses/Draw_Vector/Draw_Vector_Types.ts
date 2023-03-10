@@ -19,8 +19,8 @@ export interface Vector_Draw_Dynamic {
     xScale : Mapping,
     yScale : Mapping,
     scale : number,
-    normalized : boolean,
-    maxLenght : number
+    normalize : boolean,
+    maxLength : number
 }
 
 export interface Vector_Draw_Static extends Omit<Vector_Draw_Dynamic, "dataState" | "dataHandler" | "graphHandler"> {

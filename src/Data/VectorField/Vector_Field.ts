@@ -14,8 +14,8 @@ const defaultOptions : Vector_Field_Options = {
     opacity : 1,
     width : 1,
     style  : "solid",
-    normalized :true,
-    maxLenght :20,
+    normalize :true,
+    maxLength :20,
     enable : true
 }
 
@@ -47,13 +47,13 @@ export function VectorField(options : Partialize<Vector_Field_Options>, graphHan
     dataHandler.meshX = data.meshX;
     dataHandler.meshY = data.meshY;
     dataHandler.axisUsed = data.axisUsed;
-    dataHandler.vectorColor = properties.vectorColor;
-    dataHandler.vectorEnable = properties.vectorEnable;
-    dataHandler.vectorMaxLength = properties.vectorMaxLength;
-    dataHandler.vectorNormalized = properties.vectorNormalized;
-    dataHandler.vectorOpacity = properties.vectorOpacity;
-    dataHandler.vectorStyle = properties.vectorStyle;
-    dataHandler.vectorWidth = properties.vectorWidth;
+    dataHandler.color = properties.color;
+    dataHandler.enable = properties.enable;
+    dataHandler.maxLength = properties.maxLength;
+    dataHandler.normalize = properties.normalize;
+    dataHandler.opacity = properties.opacity;
+    dataHandler.style = properties.style;
+    dataHandler.width = properties.width;
 
 
 

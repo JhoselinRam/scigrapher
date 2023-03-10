@@ -45,7 +45,7 @@ function DrawVector({dataHandler, dataState, graphHandler}:Vector_Field_Method_G
         if(!isCallable(dataState.data.y)) dataY = dataState.data.y;
         
         
-        const scale = dataState.normalized? getScale({xScale, yScale, meshX, meshY, dataX, dataY, maxLength:dataState.maxLenght}) : 1;
+        const scale = dataState.normalize? getScale({xScale, yScale, meshX, meshY, dataX, dataY, maxLength:dataState.maxLength}) : 1;
         const clipRect = getGraphRect(state); 
 
         state.context.data.save();
@@ -58,9 +58,9 @@ function DrawVector({dataHandler, dataState, graphHandler}:Vector_Field_Method_G
         typeof dataState.opacity === "number" &&
         typeof dataState.style === "string" &&
         typeof dataState.width === "number"){
-            drawStatic({context:state.context.data, dataX, dataY, meshX, meshY, xScale, yScale, scale, color:dataState.color, opacity:dataState.opacity, style:dataState.style, width:dataState.width, normalized:dataState.normalized, maxLenght:dataState.maxLenght});
+            drawStatic({context:state.context.data, dataX, dataY, meshX, meshY, xScale, yScale, scale, color:dataState.color, opacity:dataState.opacity, style:dataState.style, width:dataState.width, normalize:dataState.normalize, maxLength:dataState.maxLength});
         }else{
-            drawDynamic({context:state.context.data, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, xScale, yScale, scale, normalized:dataState.normalized, maxLenght:dataState.maxLenght});
+            drawDynamic({context:state.context.data, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, xScale, yScale, scale, normalize:dataState.normalize, maxLength:dataState.maxLength});
         }
 
         state.context.data.restore();
@@ -84,7 +84,7 @@ export default DrawVector;
 
 //-------------- Draw Static ------------------
 
-function drawStatic({context, dataX, dataY, meshX, meshY, scale, xScale, yScale, color, opacity, style, width, normalized, maxLenght}:Vector_Draw_Static){
+function drawStatic({context, dataX, dataY, meshX, meshY, scale, xScale, yScale, color, opacity, style, width, normalize, maxLength}:Vector_Draw_Static){
     
     context.strokeStyle = color;
     context.globalAlpha = opacity;
@@ -100,7 +100,7 @@ function drawStatic({context, dataX, dataY, meshX, meshY, scale, xScale, yScale,
             const yEnd = Math.round(yScale.map(meshY[i][j] + dataY[i][j]*scale)) + width%2 * 0.5;
             const length = Math.hypot(xEnd-xStart, yEnd-yStart);
             const theta = Math.atan2(yEnd-yStart, xEnd-xStart);
-            const arrowScale = normalized? length/maxLenght : 1;
+            const arrowScale = normalize? length/maxLength : 1;
 
 
             context.save();
@@ -121,7 +121,7 @@ function drawStatic({context, dataX, dataY, meshX, meshY, scale, xScale, yScale,
 //---------------------------------------------
 //------------- Draw Dynamic ------------------
 
-function drawDynamic({context, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, scale, xScale, yScale, maxLenght, normalized}:Vector_Draw_Dynamic){
+function drawDynamic({context, dataHandler, dataState, dataX, dataY, graphHandler, meshX, meshY, scale, xScale, yScale, maxLength, normalize}:Vector_Draw_Dynamic){
     for(let i=0; i<meshX.length; i++){
         for(let j=0; j<meshX[i].length; j++){
             const extractionProps = {dataHandler, graphHandler, i, j, meshX, meshY, positionX:meshX[i][j], positionY:meshY[i][j], valuesX:dataX, valuesY:dataY, vectorX:dataX[i][j], vectorY:dataY[i][j]};
@@ -134,7 +134,7 @@ function drawDynamic({context, dataHandler, dataState, dataX, dataY, graphHandle
             const yEnd = Math.round(yScale.map(meshY[i][j] + dataY[i][j]*scale)) + width%2 * 0.5;
             const length = Math.hypot(xEnd-xStart, yEnd-yStart);
             const theta = Math.atan2(yEnd-yStart, xEnd-xStart);
-            const arrowScale = normalized? length/maxLenght : 1;
+            const arrowScale = normalize? length/maxLength : 1;
 
             context.strokeStyle = extractProperty({container:dataState.color, ...extractionProps});
             context.globalAlpha = extractProperty({container:dataState.opacity, ...extractionProps});

@@ -17,8 +17,8 @@ export interface Vector_Field_Options extends Make_Generator<{
 }>{
     mesh : Axis_Property<Field_Position<Vector_Field>>,
     data : Axis_Property<Field_Data<Vector_Field>>,
-    normalized : boolean,
-    maxLenght : number,
+    normalize : boolean,
+    maxLength : number,
     useAxis : Axis_Property<"primary" | "secondary">,
     enable : boolean
 }

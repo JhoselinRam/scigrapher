@@ -3,16 +3,16 @@ import { Field_Property } from "../../../Data_Types";
 import { Vector_Field, Vector_Field_Callback, Vector_Field_State, Vector_Property_Generator } from "../../Vector_Field_Types";
 
 export interface Properties_Vector{
-    vectorColor : Dynamic_Property_Method<string>,
-    vectorOpacity : Dynamic_Property_Method<number>,
-    vectorWidth : Dynamic_Property_Method<number>,
-    vectorStyle : Dynamic_Property_Method<string>,
-    vectorEnable : Static_Property_Method<boolean>,
-    vectorNormalized : Static_Property_Method<boolean>,
-    vectorMaxLength : Static_Property_Method<number>
+    color : Dynamic_Property_Method<string>,
+    opacity : Dynamic_Property_Method<number>,
+    width : Dynamic_Property_Method<number>,
+    style : Dynamic_Property_Method<string>,
+    enable : Static_Property_Method<boolean>,
+    normalize : Static_Property_Method<boolean>,
+    maxLength : Static_Property_Method<number>
 }
 
-export type Static_Properties = "normalized" | "maxLenght" | "enable";
+export type Static_Properties = "normalize" | "maxLength" | "enable";
 
 export type Dynamic_Properties = "color" | "opacity" | "width" | "style";
 

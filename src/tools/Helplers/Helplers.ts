@@ -1,4 +1,7 @@
+import { Field_Property } from "../../Data/Data_Types";
+import { Heat_Map_State, Heat_Property_Generator } from "../../Data/HeatMap/Heat_Map_Types";
 import { Graph2D_State, Rect } from "../../Graph2D/Graph2D_Types";
+import colorMap from "../Color_Map/Predefined/Color_Map.js";
 
 //------------- Get Line Dash -----------------
 export function getLineDash(style : string) : Array<number> {
@@ -124,6 +127,41 @@ export function meshgrid(x:Array<number> | Mesh_Axis_Generator, y:Array<number> 
 
 
     return [xMesh, yMesh];
+}
+
+//---------------------------------------------
+//------------- Color Function ----------------
+
+export interface Get_Color_Function{
+    data : Field_Property<number>,
+    dataState : Heat_Map_State
+}
+
+export function getColorFunction({data, dataState} : Get_Color_Function) : Heat_Property_Generator<string> {
+    let colorFunction : Heat_Property_Generator<string> = ()=>"";
+
+    if(typeof dataState.color === "string"){
+        let min = data[0][0];
+        let max = data[0][0];
+
+        for(let i=0; i<data.length; i++){
+            for(let j=0; j<data[i].length; j++){
+                if(data[i][j] < min)
+                    min = data[i][j];
+                if(data[i][j] > max)
+                    max = data[i][j];
+            }
+        }
+
+        const cmap = colorMap({from:min, to:max, type:dataState.color});
+        colorFunction = value=>cmap(value as number);
+    }else if(isCallable(dataState.color)){
+        colorFunction =  dataState.color;
+    }else if(typeof dataState.color === "object"){
+        colorFunction = (value, x, y, i, j)=>(dataState.color as Field_Property<string>)[i as number][j as number];
+    }
+
+    return colorFunction;
 }
 
 //---------------------------------------------

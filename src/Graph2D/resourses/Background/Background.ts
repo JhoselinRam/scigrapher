@@ -54,7 +54,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
             
             
             if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
-            state.dirty.client = true;
+            state.dirty.full = true;
 
             return graphHandler;    
         }
@@ -76,7 +76,7 @@ function Background({state, graphHandler} : Method_Generator) : Background{
 
             
             if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
-            state.dirty.client = true;
+            state.dirty.full = true;
 
             return graphHandler;    
         }

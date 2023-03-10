@@ -19,8 +19,3 @@ export interface Draw_Heat_Helper {
     graph : Graph2D,
     clip : Rect
 }
-
-export interface Get_Color_Function{
-    data : Field_Property<number>,
-    dataState : Heat_Map_State
-}

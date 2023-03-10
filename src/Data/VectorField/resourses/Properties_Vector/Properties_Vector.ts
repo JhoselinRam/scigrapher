@@ -7,25 +7,26 @@ function PropertiesVector({dataHandler, dataState, graphHandler} : Vector_Field_
 
 //----------- Generated Methods ---------------
     const props = {dataState, dataHandler, graphHandler}
-    const vectorColor = generateDynamicPropertyMethod<string>({property:"color", ...props});
-    const vectorOpacity = generateDynamicPropertyMethod<number>({property:"opacity", ...props});
-    const vectorStyle = generateDynamicPropertyMethod<string>({property:"style", ...props});
-    const vectorWidth = generateDynamicPropertyMethod<number>({property:"width", ...props});
+    
+    const color = generateDynamicPropertyMethod<string>({property:"color", ...props});
+    const opacity = generateDynamicPropertyMethod<number>({property:"opacity", ...props});
+    const style = generateDynamicPropertyMethod<string>({property:"style", ...props});
+    const width = generateDynamicPropertyMethod<number>({property:"width", ...props});
 
-    const vectorNormalized = generateStaticPropertyMethod<boolean>({property:"normalized", ...props});
-    const vectorMaxLength = generateStaticPropertyMethod<number>({property:"maxLenght", ...props});
-    const vectorEnable = generateStaticPropertyMethod<boolean>({property:"enable", ...props});
+    const normalize = generateStaticPropertyMethod<boolean>({property:"normalize", ...props});
+    const maxLength = generateStaticPropertyMethod<number>({property:"maxLength", ...props});
+    const enable = generateStaticPropertyMethod<boolean>({property:"enable", ...props});
 
 //---------------------------------------------
 
     return {
-        vectorColor,
-        vectorEnable,
-        vectorMaxLength,
-        vectorNormalized,
-        vectorOpacity,
-        vectorStyle,
-        vectorWidth
+        color,
+        enable,
+        maxLength,
+        normalize,
+        opacity,
+        style,
+        width
     }
 }
 
