@@ -79,7 +79,7 @@ function Scale({state}:Method_Generator) : Scale{
         // Set auxiliar dummy scales
         const auxScaleX = mapping({
             from:[state.axis.x.start, state.axis.x.end], 
-            to:[state.margin.x.start, state.context.clientRect.width - state.margin.x.end],
+            to:[0, state.context.clientRect.width],
             type : state.axis.type==="x-log"||state.axis.type==="log-log"?"log":"linear"
         });
         const auxPositionsX = computePositions(auxScaleX, state.axis.x.ticks, state.axis.x.minSpacing);
@@ -90,7 +90,7 @@ function Scale({state}:Method_Generator) : Scale{
         
         const auxScaleY = mapping({
             from:[state.axis.y.start, state.axis.y.end], 
-            to:[state.context.clientRect.height - state.margin.y.start - axisHeight, state.margin.y.end],
+            to:[state.context.clientRect.height, 0],
             type : state.axis.type==="y-log"||state.axis.type==="log-log"?"log":"linear"
         });
         const auxPositionsY = computePositions(auxScaleY, state.axis.y.ticks, state.axis.y.minSpacing);
@@ -101,7 +101,7 @@ function Scale({state}:Method_Generator) : Scale{
         if(state.secondary.x != null && state.secondary.x.enable){
             const secondaryScaleX = mapping({
                 from:[state.secondary.x.start, state.secondary.x.end], 
-                to:[state.margin.x.start, state.context.clientRect.width - state.margin.x.end]
+                to:[0, state.context.clientRect.width]
             });
             const secondaryPositionsX = computePositions(secondaryScaleX, state.secondary.x.ticks, state.secondary.x.minSpacing);
             const secondaryLabelsX = createLabels(secondaryPositionsX, "x", state, "secondary");
@@ -112,7 +112,7 @@ function Scale({state}:Method_Generator) : Scale{
         if(state.secondary.y != null && state.secondary.y.enable){
             const secondaryScaleY = mapping({
                 from:[state.secondary.y.start, state.secondary.y.end], 
-                to:[state.context.clientRect.height - state.margin.y.start, state.margin.y.end]
+                to:[state.context.clientRect.height, 0]
             });
             const secondaryPositionsY = computePositions(secondaryScaleY, state.secondary.y.ticks, state.secondary.y.minSpacing);
             const secondaryLabelsY = createLabels(secondaryPositionsY, "y", state, "secondary");

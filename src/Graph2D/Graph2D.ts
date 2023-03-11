@@ -10,19 +10,10 @@ import Scale from "./resourses/Scale/Scale.js";
 import Secondary from "./resourses/Secondary/Secondary.js";
 
 const defaultOptions : Graph2D_Options = {
-    background : {
-        color : "#ffffff",
-        opacity : 1
-    },
+    background : { color : "#ffffff", opacity : 1 },
     margin : {
-        x : {
-            start : 5,
-            end : 5
-        },
-        y : {
-            start : 5,
-            end : 5
-        }
+        x : { start : "auto", end : "auto" },
+        y : { start : "auto", end : "auto" }
     },
     axis : {
         position : "center",
@@ -173,7 +164,12 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 width  : container.clientWidth,
                 height : container.clientHeight
             },
-            axisRect
+            //axisRect
+        },
+        marginUsed : {
+            defaultMargin : 5,
+            x : {start : 0, end : 0},
+            y : {start : 0, end : 0}
         },
         axisObj : {},
         data : [],
@@ -264,6 +260,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     state.compute.axis = axis.compute;
     state.compute.secondary = secondary.compute;
     state.compute.labels = labels.compute;
+    state.compute.margin = margin.compute;
     state.draw.background = background.draw;
     state.draw.backgroundClientRect = background.drawClientRect;
     state.draw.labels = labels.draw;
@@ -317,7 +314,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.getDatasets = data.getDatasets;
 
     //Generates graph handler methods
-    graphHandler.axisRect = axisRect;
+    //graphHandler.axisRect = axisRect;
     graphHandler.canvasElements = ()=>{
         return [state.canvasElement, state.canvasDataElement];
     }
@@ -351,6 +348,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     function computeClient(){
         const fullState = state as Graph2D_State;
 
+        fullState.compute.margin();
         fullState.compute.scale();
         fullState.compute.axis();   
         fullState.compute.secondary();   
@@ -435,55 +433,55 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     }
 
     //Helper function that computes the graph rect, this includes the axis width and height and the margins
-    function axisRect() : Readonly<Rect>{
-        const fullState = state as Graph2D_State;
-        const primaryWidth = fullState.axisObj.primary.width;
-        const primaryHeight = fullState.axisObj.primary.height;
-        const secondaryWidth = fullState.axisObj.secondary.width;
-        const secondaryHeight = fullState.axisObj.secondary.height;
+    // function axisRect() : Readonly<Rect>{
+    //     const fullState = state as Graph2D_State;
+    //     const primaryWidth = fullState.axisObj.primary.width;
+    //     const primaryHeight = fullState.axisObj.primary.height;
+    //     const secondaryWidth = fullState.axisObj.secondary.width;
+    //     const secondaryHeight = fullState.axisObj.secondary.height;
 
-        switch(fullState.axis.position){
-            case "center":
-                return {
-                    x : state.margin.x.start,
-                    y : fullState.context.clientRect.y + state.margin.y.end,
-                    width : fullState.context.clientRect.width - state.margin.x.start - state.margin.x.end,
-                    height : fullState.context.clientRect.height - state.margin.y.start - state.margin.y.end
-                };
+    //     switch(fullState.axis.position){
+    //         case "center":
+    //             return {
+    //                 x : state.margin.x.start,
+    //                 y : fullState.context.clientRect.y + state.margin.y.end,
+    //                 width : fullState.context.clientRect.width - state.margin.x.start - state.margin.x.end,
+    //                 height : fullState.context.clientRect.height - state.margin.y.start - state.margin.y.end
+    //             };
             
-            case "bottom-left":
-                return {
-                    x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
-                    y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-                };
+    //         case "bottom-left":
+    //             return {
+    //                 x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
+    //                 y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
+    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+    //             };
             
-            case "bottom-right": 
-                return {
-                    x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
-                    y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-                };
+    //         case "bottom-right": 
+    //             return {
+    //                 x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
+    //                 y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
+    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+    //             };
 
-            case "top-left": 
-                return {
-                    x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
-                    y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-                };
+    //         case "top-left": 
+    //             return {
+    //                 x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
+    //                 y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
+    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+    //             };
 
-            case "top-right": 
-                return {
-                    x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
-                    y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
-                    width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-                    height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-                };
-        }
-    }
+    //         case "top-right": 
+    //             return {
+    //                 x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
+    //                 y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
+    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
+    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
+    //             };
+    //     }
+    // }
 
     //---------------------------------------------
 

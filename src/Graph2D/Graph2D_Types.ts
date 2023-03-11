@@ -16,7 +16,7 @@ export interface Graph2D extends
     Omit<Labels,"compute" | "draw">,
     Omit<Grid, "compute" | "draw">,
     Omit<Secondary, "compute" | "draw">,
-    Margin,
+    Omit<Margin, "compute">,
     Events,
     Data{
         canvasElements : ()=>Array<HTMLCanvasElement>,
@@ -41,8 +41,8 @@ export interface Graph2D_Options{
         opacity : number
     },
     margin : Axis_Property<{
-        start : number,
-        end : number
+        start : number | "auto",
+        end : number | "auto"
     }>,
     axis : {
         type : Axis_Type,
@@ -125,6 +125,10 @@ export interface Graph2D_State extends Graph2D_Options {
     canvasDataElement : HTMLCanvasElement,
     render : ()=>void,
     labelOffset : number,
+    marginUsed : Axis_Property<{
+        start : number,
+        end : number
+    }> & {defaultMargin : number},
     context : {
         clientRect : {
             x : number,
@@ -134,7 +138,7 @@ export interface Graph2D_State extends Graph2D_Options {
         },
         canvas : CanvasRenderingContext2D,
         data : CanvasRenderingContext2D,
-        axisRect : ()=>Readonly<Rect>
+        //axisRect : ()=>Readonly<Rect>
     },
     scale : {
         primary : Axis_Property<Mapping>
@@ -146,7 +150,8 @@ export interface Graph2D_State extends Graph2D_Options {
         scale : ()=>void,
         axis : ()=>void,
         labels : ()=>void,
-        secondary : ()=>void
+        secondary : ()=>void,
+        margin : ()=>void
     },
     draw : {
         full : ()=>void,

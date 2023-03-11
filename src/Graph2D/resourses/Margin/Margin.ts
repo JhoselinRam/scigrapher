@@ -3,6 +3,17 @@ import { Margin, Margin_Props } from "./Margin_Types";
 
 function Margin({state, graphHandler}:Method_Generator) : Margin {
  
+//----------------- Compute -------------------
+
+    function compute(){
+
+    }
+
+//---------------------------------------------
+
+
+
+
 //----------------- Margin --------------------
 
     function margin(margins:RecursivePartial<Margin_Props>, callback?:graphCallback):Graph2D;
@@ -33,7 +44,8 @@ function Margin({state, graphHandler}:Method_Generator) : Margin {
 //---------------------------------------------
 
     return {
-        margin
+        margin,
+        compute
     };
 
 }
