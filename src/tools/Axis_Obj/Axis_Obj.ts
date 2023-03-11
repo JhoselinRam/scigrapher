@@ -389,138 +389,54 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 //-------------- Compute Sizes ----------------
 
     function computeSizes(state:Graph2D_State, axis:"x"|"y", compScale:Mapping, scale:"primary"|"secondary") : Compute_Sizes{
+        const graphRect = state.context.graphRect();
         let translation = 0;
         let axisStart = 0;
-        let axisEnd = 0;
+        let axisEnd = axis==="x" ? graphRect.width : graphRect.height;
 
 
         switch(state.axis.position){
-            case "center":
-                translation = compScale.map(0);
-                let marginStart = 0;
-                let marginEnd = 0;
-                let clientSize = 0;
+            case "center":{
+                    const containedTolerance = 5;
+                    const maxTranslation = axis==="x" ? graphRect.height : graphRect.width;
 
-                if(axis === "x"){
-                    marginStart = state.margin["y"].start;
-                    marginEnd = state.margin["y"].end;
-                    clientSize = state.context.clientRect.height;
-                    axisEnd = state.context.clientRect.width;
-                }
-                if(axis === "y"){
-                    marginStart = state.margin["x"].start;
-                    marginEnd = state.margin["x"].end;
-                    clientSize = state.context.clientRect.width;
-                    axisEnd = state.context.clientRect.height;
-                }
-
-                if(state.axis[axis].contained){
-                    if(translation < marginStart)
-                        translation = marginStart;
-                    
-                    if(translation > clientSize - marginEnd)
-                        translation = clientSize - marginEnd;
+                    translation = compScale.map(0);
+                    if(state.axis[axis].contained){
+                        if(translation>maxTranslation - containedTolerance)
+                            translation = maxTranslation - containedTolerance
+                        
+                        if(translation < containedTolerance)
+                            translation = containedTolerance;
+                    }
                 }
                 break;
 
             case "bottom-left":
-                if(axis === "x"){
-                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
-                    if(scale === "secondary")
-                        translation = state.margin.y.end + state.axisObj.secondary.height;
-
-                    axisStart = state.margin.x.start + state.axisObj.primary.width;
-                    axisEnd = state.context.clientRect.width - secondaryEnabled*(state.margin.x.end + state.axisObj.secondary.width);
-                }
-                if(axis==="y"){
-                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.margin.x.start + state.axisObj.primary.width;
-                    if(scale === "secondary") 
-                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.secondary.width;
-
-                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.height);
-                    axisEnd = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
-                }
+                if(axis === "x")
+                    translation = scale==="primary" ? graphRect.height - state.axisObj.primary.height : state.axisObj.secondary.height;      
+                if(axis==="y")
+                    translation = scale==="primary" ? state.axisObj.primary.width : graphRect.width - state.axisObj.secondary.width;
                 break;
 
             case "bottom-right":
-                if(axis === "x"){
-                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
-                    if(scale === "secondary")
-                        translation = state.margin.y.end + state.axisObj.secondary.height;
-
-                    axisStart = secondaryEnabled*(state.margin.x.start + state.axisObj.secondary.width);
-                    axisEnd = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
-                }
-                if(axis==="y"){
-                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
-                    if(scale === "secondary") 
-                        translation = state.margin.x.start + state.axisObj.secondary.width;
-
-                    axisStart = secondaryEnabled*(state.margin.y.end + state.axisObj.secondary.height);
-                    axisEnd = state.context.clientRect.height - state.margin.y.start - state.axisObj.primary.height;
-                }
+                if(axis === "x")
+                    translation = scale==="primary" ? graphRect.height - state.axisObj.primary.height : state.axisObj.secondary.height;
+                if(axis==="y")
+                    translation = scale==="primary" ? graphRect.width - state.axisObj.primary.width : state.axisObj.secondary.width;
                 break;
 
             case "top-left":
-                if(axis === "x"){
-                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.margin.y.end + state.axisObj.primary.height;
-                    if(scale === "secondary")
-                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.secondary.height;
-
-                    axisStart = state.margin.x.start + state.axisObj.primary.width;
-                    axisEnd = state.context.clientRect.width - secondaryEnabled*(state.margin.x.end + state.axisObj.secondary.width);
-                }
-                if(axis==="y"){
-                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.margin.x.start + state.axisObj.primary.width;
-                    if(scale === "secondary") 
-                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.secondary.width;
-
-                    axisStart = state.margin.y.end + state.axisObj.primary.height;
-                    axisEnd = state.context.clientRect.height - secondaryEnabled*(state.margin.y.start + state.axisObj.secondary.height);
-                }
+                if(axis === "x")
+                    translation = scale==="primary" ? state.axisObj.primary.height : graphRect.height - state.axisObj.secondary.height;
+                if(axis==="y")
+                    translation = scale==="primary" ? state.axisObj.primary.width : graphRect.width - state.axisObj.secondary.width;
                 break;
 
             case "top-right":
-                if(axis === "x"){
-                    const secondaryEnabled = state.axisObj.secondary.width>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.margin.y.end + state.axisObj.primary.height;
-                    if(scale === "secondary")
-                        translation = state.context.clientRect.height - state.margin.y.start - state.axisObj.secondary.height;
-
-                    axisStart = secondaryEnabled*(state.margin.x.start + state.axisObj.secondary.width);
-                    axisEnd = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
-                }
-                if(axis==="y"){
-                    const secondaryEnabled = state.axisObj.secondary.height>0? 1 : 0;
-                    
-                    if(scale === "primary")
-                        translation = state.context.clientRect.width - state.margin.x.end - state.axisObj.primary.width;
-                    if(scale === "secondary") 
-                        translation = state.margin.x.start + state.axisObj.secondary.width;
-
-                    axisStart = state.margin.y.end + state.axisObj.primary.height;
-                    axisEnd = state.context.clientRect.height - secondaryEnabled*(state.margin.y.start + state.axisObj.secondary.height);
-                }
+                if(axis === "x")
+                    translation = scale==="primary" ? state.axisObj.primary.height : graphRect.height - state.axisObj.secondary.height;
+                if(axis==="y")
+                    translation = scale==="primary" ? graphRect.width - state.axisObj.primary.width : state.axisObj.secondary.width;
                 break;
         }
 

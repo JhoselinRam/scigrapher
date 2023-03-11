@@ -1,5 +1,5 @@
 import {  Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
-import { getGraphRect, getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
+import { getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Field_Property } from "../../../Data_Types";
 import { Vector_Field_Method_Generator } from "../../Vector_Field_Types";
@@ -46,7 +46,7 @@ function DrawVector({dataHandler, dataState, graphHandler}:Vector_Field_Method_G
         
         
         const scale = dataState.normalize? getScale({xScale, yScale, meshX, meshY, dataX, dataY, maxLength:dataState.maxLength}) : 1;
-        const clipRect = getGraphRect(state); 
+        const clipRect = graphHandler.graphRect();
 
         state.context.data.save();
         state.context.data.beginPath();

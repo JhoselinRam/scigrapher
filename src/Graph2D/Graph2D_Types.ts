@@ -8,6 +8,7 @@ import { Events } from "./resourses/Events/Events_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
 import { Margin } from "./resourses/Margin/Margin_Types";
+import { Properties } from "./resourses/Properties/Properties_Types";
 import { Secondary } from "./resourses/Secondary/Secondary_Types";
 
 export interface Graph2D extends 
@@ -18,12 +19,9 @@ export interface Graph2D extends
     Omit<Secondary, "compute" | "draw">,
     Omit<Margin, "compute">,
     Events,
-    Data{
-        canvasElements : ()=>Array<HTMLCanvasElement>,
-        clientRect : ()=> Readonly<Rect>,
-        axisRect : ()=>Readonly<Rect>,
-        draw : ()=>Graph2D,
-    }
+    Data,
+    Properties
+    {}
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
 export type Axis_Type = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -138,7 +136,7 @@ export interface Graph2D_State extends Graph2D_Options {
         },
         canvas : CanvasRenderingContext2D,
         data : CanvasRenderingContext2D,
-        //axisRect : ()=>Readonly<Rect>
+        graphRect : ()=>Rect
     },
     scale : {
         primary : Axis_Property<Mapping>

@@ -1,6 +1,6 @@
 import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { string2rgb } from "../../../../tools/Color_Map/Color_Interpolator.js";
-import { getColorFunction, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
+import { getColorFunction, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Field_Property } from "../../../Data_Types";
 import { Heat_Map_Method_Generator } from "../../Heat_Map_Types";
@@ -40,7 +40,7 @@ function DrawHeat({dataHandler, dataState, graphHandler} : Heat_Map_Method_Gener
 
 
 
-        const clipRect = getGraphRect(state); 
+        const clipRect = graphHandler.graphRect(); 
 
         state.context.data.save();
         state.context.data.beginPath();

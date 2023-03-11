@@ -6,6 +6,7 @@ import Events from "./resourses/Events/Events.js";
 import Grid from "./resourses/Grid/Grid.js";
 import Labels from "./resourses/Labels/Labels.js";
 import Margin from "./resourses/Margin/Margin.js";
+import Properties from "./resourses/Properties/Properties.js";
 import Scale from "./resourses/Scale/Scale.js";
 import Secondary from "./resourses/Secondary/Secondary.js";
 
@@ -163,8 +164,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 y : 0,
                 width  : container.clientWidth,
                 height : container.clientHeight
-            },
-            //axisRect
+            }
         },
         marginUsed : {
             defaultMargin : 5,
@@ -254,6 +254,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const secondary = Secondary({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const events  = Events({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const data = Data({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const properties = Properties({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -267,6 +268,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     state.draw.axis = axis.draw;
     state.draw.secondary = secondary.draw;
     state.draw.grid = grid.draw;
+    state.context.graphRect = properties.graphRect;
 
 
     //Main object population
@@ -312,21 +314,12 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.containerResize = events.containerResize;
     graphHandler.addDataset = data.addDataset;
     graphHandler.getDatasets = data.getDatasets;
+    graphHandler.canvasElements = properties.canvasElements;
+    graphHandler.clientRect = properties.clientRect;
+    graphHandler.graphRect = properties.graphRect;
+    graphHandler.draw = properties.draw;
 
-    //Generates graph handler methods
-    //graphHandler.axisRect = axisRect;
-    graphHandler.canvasElements = ()=>{
-        return [state.canvasElement, state.canvasDataElement];
-    }
-    graphHandler.clientRect = ()=>{
-        return {...state.context.clientRect};
-    }
-    graphHandler.draw = ()=>{
-        fullDraw();
-        return graphHandler;
-    }
-
-
+    
     //Setup configurations
     setup();
     render();

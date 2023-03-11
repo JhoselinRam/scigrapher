@@ -1,4 +1,4 @@
-import { Axis_Property, graphCallback } from "../../../../Graph2D/Graph2D_Types.js";
+import { Axis_Property } from "../../../../Graph2D/Graph2D_Types.js";
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Line_Chart, Line_Chart_Callback, Line_Chart_Method_Generator, Line_Char_Data } from "../../LineChart_Types";
 import { Data_Line } from "./Data_Line_Types";

@@ -1,5 +1,5 @@
 import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
-import { getLineDash, getGraphRect, isCallable } from "../../../../tools/Helplers/Helplers.js";
+import { getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_Method_Generator } from "../../LineChart_Types";
 import { Create_Error_Props, Create_Marker_Props, Draw_Area_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props } from "./Draw_Line_Types";
@@ -23,7 +23,7 @@ function DrawLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Gen
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
         const xPositions = isCallable(dataState.data.x)? dataState.data.x(dataHandler, graphHandler) : dataState.data.x.slice();
         const yPositions = isCallable(dataState.data.y)? dataState.data.y(dataHandler, graphHandler) : dataState.data.y.slice();
-        const clipRect = getGraphRect(state); 
+        const clipRect = graphHandler.graphRect(); 
 
         //Common canvas configurations
         state.context.data.save();

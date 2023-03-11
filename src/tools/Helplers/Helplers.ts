@@ -1,6 +1,5 @@
 import { Field_Property } from "../../Data/Data_Types";
 import { Heat_Map_State, Heat_Property_Generator } from "../../Data/HeatMap/Heat_Map_Types";
-import { Graph2D_State, Rect } from "../../Graph2D/Graph2D_Types";
 import colorMap from "../Color_Map/Predefined/Color_Map.js";
 
 //------------- Get Line Dash -----------------
@@ -39,51 +38,6 @@ export function getLineDash(style : string) : Array<number> {
 
     return lineDash;
 }
-//---------------------------------------------
-//------------- Get Graph Rect------------------
-
-export function getGraphRect(state : Graph2D_State):Rect{
-    const initialRect = {...state.context.axisRect()};
-    const xSecondaryActive = state.secondary.x != null && state.secondary.x.enable ? 0 : 1;
-    const ySecondaryActive = state.secondary.y != null && state.secondary.y.enable ? 0 : 1;
-
-    switch(state.axis.position){
-        case "center":
-            initialRect.x = 0;
-            initialRect.y -= state.margin.y.end;
-            initialRect.width += state.margin.x.start + state.margin.x.end;
-            initialRect.height += state.margin.y.start + state.margin.y.end;
-            break;
-            
-        case "bottom-left":
-            initialRect.y -= xSecondaryActive * state.margin.y.end;
-            initialRect.width += ySecondaryActive * state.margin.x.end;
-            initialRect.height += xSecondaryActive * state.margin.y.end;
-            break;
-
-        case "bottom-right":
-            initialRect.x -= ySecondaryActive * state.margin.x.start;
-            initialRect.y -= xSecondaryActive * state.margin.y.end;
-            initialRect.width += ySecondaryActive * state.margin.x.start;
-            initialRect.height += xSecondaryActive * state.margin.y.end;
-            break;
-        
-        case "top-left":
-            initialRect.width += ySecondaryActive * state.margin.x.end;
-            initialRect.height += xSecondaryActive * state.margin.y.start;
-            break;
-
-        case "top-right":
-            initialRect.x -= ySecondaryActive * state.margin.x.start;
-            initialRect.width += ySecondaryActive * state.margin.x.start;
-            initialRect.height += xSecondaryActive * state.margin.y.start;
-            break;
-        
-    }
-
-    return initialRect;
-}
-
 //---------------------------------------------
 //-------------- Is Callable ------------------
 

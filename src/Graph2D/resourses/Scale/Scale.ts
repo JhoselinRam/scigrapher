@@ -1,4 +1,3 @@
-import { computePositions, createLabels } from "../../../tools/Axis_Obj/Axis_Obj.js";
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types.js";
 import { Axis_Property, Method_Generator } from "../../Graph2D_Types";
@@ -9,7 +8,9 @@ function Scale({state}:Method_Generator) : Scale{
 //--------------- Compute Scale ---------------
 
     function compute(){
-        const {xMin, xMax, yMin, yMax} = getMinMaxCoords();
+        //const {xMin, xMax, yMin, yMax} = getMinMaxCoords();
+        const graphRect = state.context.graphRect();
+
         let xType : "linear" | "log" = "linear";
         let yType : "linear" | "log" = "linear";
 
@@ -28,13 +29,15 @@ function Scale({state}:Method_Generator) : Scale{
                 break;
         }
 
-        const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[xMin, xMax], type:xType});
-        const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[yMin, yMax], type:yType});
+        const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[0, graphRect.width], type:xType});
+        const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[0, graphRect.height], type:yType});
 
         state.scale.primary = {
             x : primaryScaleX,
             y : primaryScaleY
         }; 
+
+
 
         if(state.axis.position === "center") return;
 
@@ -46,7 +49,7 @@ function Scale({state}:Method_Generator) : Scale{
             
             secondaryScale.x = mapping({
                 from:[state.secondary.x.start, state.secondary.x.end], 
-                to:[xMin, xMax],
+                to:[0, graphRect.width],
                 type
             });
         }
@@ -55,7 +58,7 @@ function Scale({state}:Method_Generator) : Scale{
             
             secondaryScale.y = mapping({
                 from:[state.secondary.y.start, state.secondary.y.end], 
-                to:[yMin, yMax],
+                to:[0, graphRect.height],
                 type
             });
         }
@@ -72,101 +75,41 @@ function Scale({state}:Method_Generator) : Scale{
         let xMax : number;
         let yMin : number;
         let yMax : number;
-
-        let secondaryAxisHeight = 0;
-        let secondaryAxisWidth = 0;
-
-        // Set auxiliar dummy scales
-        const auxScaleX = mapping({
-            from:[state.axis.x.start, state.axis.x.end], 
-            to:[0, state.context.clientRect.width],
-            type : state.axis.type==="x-log"||state.axis.type==="log-log"?"log":"linear"
-        });
-        const auxPositionsX = computePositions(auxScaleX, state.axis.x.ticks, state.axis.x.minSpacing);
-        const labelsX = createLabels(auxPositionsX, "x", state, "primary");
-        const axisHeight = labelsX.maxHeight + state.labelOffset + state.axis.x.tickSize;
-        
-        
-        
-        const auxScaleY = mapping({
-            from:[state.axis.y.start, state.axis.y.end], 
-            to:[state.context.clientRect.height, 0],
-            type : state.axis.type==="y-log"||state.axis.type==="log-log"?"log":"linear"
-        });
-        const auxPositionsY = computePositions(auxScaleY, state.axis.y.ticks, state.axis.y.minSpacing);
-        const labelsY = createLabels(auxPositionsY, "y", state, "primary");
-        const axisWidth = labelsY.maxWidth + state.labelOffset + state.axis.y.tickSize;
-
-        
-        if(state.secondary.x != null && state.secondary.x.enable){
-            const secondaryScaleX = mapping({
-                from:[state.secondary.x.start, state.secondary.x.end], 
-                to:[0, state.context.clientRect.width]
-            });
-            const secondaryPositionsX = computePositions(secondaryScaleX, state.secondary.x.ticks, state.secondary.x.minSpacing);
-            const secondaryLabelsX = createLabels(secondaryPositionsX, "x", state, "secondary");
-
-            secondaryAxisHeight = secondaryLabelsX.maxHeight + state.labelOffset + state.secondary.x.tickSize;
-        }
-        
-        if(state.secondary.y != null && state.secondary.y.enable){
-            const secondaryScaleY = mapping({
-                from:[state.secondary.y.start, state.secondary.y.end], 
-                to:[state.context.clientRect.height, 0]
-            });
-            const secondaryPositionsY = computePositions(secondaryScaleY, state.secondary.y.ticks, state.secondary.y.minSpacing);
-            const secondaryLabelsY = createLabels(secondaryPositionsY, "y", state, "secondary");
-
-            secondaryAxisWidth = secondaryLabelsY.maxWidth + state.labelOffset + state.secondary.y.tickSize;
-        }
-        
-
-        //Compute axis size
-
-        state.axisObj.primary = {
-            width : axisWidth,
-            height : axisHeight
-        }
-        
-        state.axisObj.secondary = {
-            width : secondaryAxisWidth,
-            height : secondaryAxisHeight
-        }
         
         switch(state.axis.position){
             case "center":
-                xMin = state.margin.x.start;
-                xMax = state.context.clientRect.width - state.margin.x.end;
-                yMin = state.context.clientRect.height - state.margin.y.start;
-                yMax = state.margin.y.end;
+                xMin = state.marginUsed.x.start;
+                xMax = state.context.clientRect.width - state.marginUsed.x.end;
+                yMin = state.context.clientRect.height - state.marginUsed.y.start;
+                yMax = state.marginUsed.y.end;
                 break;
 
             case "bottom-left":
-                xMin = state.margin.x.start + axisWidth;
-                xMax= state.context.clientRect.width - state.margin.x.end - secondaryAxisWidth;
-                yMin = state.context.clientRect.height - state.margin.y.start - axisHeight;
-                yMax = state.margin.y.end + secondaryAxisHeight;
+                xMin = state.marginUsed.x.start + state.axisObj.primary.width;
+                xMax= state.context.clientRect.width - state.marginUsed.x.end - state.axisObj.secondary.width;
+                yMin = state.context.clientRect.height - state.marginUsed.y.start - state.axisObj.primary.height;
+                yMax = state.marginUsed.y.end + state.axisObj.secondary.height;
                 break;
 
             case "bottom-right":
-                xMin = state.margin.x.start + secondaryAxisWidth;
-                xMax= state.context.clientRect.width - state.margin.x.end - axisWidth;
-                yMin = state.context.clientRect.height - state.margin.y.start - axisHeight;
-                yMax = state.margin.y.end + secondaryAxisHeight;
+                xMin = state.marginUsed.x.start + state.axisObj.secondary.width;
+                xMax= state.context.clientRect.width - state.marginUsed.x.end - state.axisObj.primary.width;
+                yMin = state.context.clientRect.height - state.marginUsed.y.start - state.axisObj.primary.height;
+                yMax = state.marginUsed.y.end + state.axisObj.secondary.height;
                 break;
 
             case "top-left":
-                xMin = state.margin.x.start + axisWidth;
-                xMax= state.context.clientRect.width - state.margin.x.end - secondaryAxisWidth;
-                yMin = state.context.clientRect.height - state.margin.y.start - secondaryAxisHeight;
-                yMax = state.margin.y.end + axisHeight;
+                xMin = state.marginUsed.x.start + state.axisObj.primary.width;
+                xMax= state.context.clientRect.width - state.marginUsed.x.end - state.axisObj.secondary.width;
+                yMin = state.context.clientRect.height - state.marginUsed.y.start - state.axisObj.secondary.height;
+                yMax = state.marginUsed.y.end + state.axisObj.primary.height;
                 break;
 
             case "top-right":
-                xMin = state.margin.x.start + secondaryAxisWidth;
-                xMax= state.context.clientRect.width - state.margin.x.end - axisWidth;
-                yMin = state.context.clientRect.height - state.margin.y.start - secondaryAxisHeight;
-                yMax = state.margin.y.end + axisHeight;
+                xMin = state.marginUsed.x.start + state.axisObj.secondary.width;
+                xMax= state.context.clientRect.width - state.marginUsed.x.end - state.axisObj.primary.width;
+                yMin = state.context.clientRect.height - state.marginUsed.y.start - state.axisObj.secondary.height;
+                yMax = state.marginUsed.y.end + state.axisObj.primary.height;
                 break;
         }
 
