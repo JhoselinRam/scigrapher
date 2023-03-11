@@ -17,10 +17,11 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
     
     function draw(){
         const margin = 2;
+        const graphRect = state.context.graphRect();
         const translationUsed = Math.round(translation) + axisUsed.baseWidth%2 * 0.5;
 
         state.context.canvas.save();
-        state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+        state.context.canvas.translate(graphRect.x, graphRect.y);
 
         //Base
         state.context.canvas.strokeStyle = axisUsed.baseColor;
@@ -315,6 +316,7 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
 //--------------- Compute rects ---------------
 
 function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y", state:Graph2D_State, translation:number, scaleUsed : Mapping, scale:"primary"|"secondary") : Array<Label_Rect>{
+    const graphRect = state.context.graphRect();
     let rects : Array<Label_Rect> = [];
 
     positions.forEach((item, index)=>{
@@ -323,24 +325,24 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
         let coord2 = translation; //coordinate 2
 
         if(state.axis[axis].dynamic && state.axis.position==="center"){
-            const textDistance = axis==="x" ? textSize.height : textSize.width;
-            const margin = axis==="x" ? state.margin.y.end : state.margin.x.start;
-            let threshold = -margin -textDistance -state.labelOffset -state.axis[axis].tickSize;
-            threshold = axis==="x" ? threshold + state.context.clientRect.height : threshold;
-            const auxTranslation = axis==="x"? translation : -translation
-            
-            if(auxTranslation > threshold){
-                const maxOffset = 2*state.labelOffset + 2*state.axis[axis].tickSize + textDistance;
-                if(axis==="x"){
+
+            if(axis==="x"){
+                const threshold =  graphRect.height -state.marginUsed.defaultMargin -textSize.height -state.labelOffset -state.axis.x.tickSize;
+                if(translation> threshold){
+                    const maxOffset = 2*state.labelOffset + 2*state.axis.x.tickSize + textSize.height;
                     const offset = mapping({
-                        from : [threshold, threshold+textDistance+state.labelOffset+state.axis[axis].tickSize],
+                        from : [threshold, graphRect.height -state.marginUsed.defaultMargin],
                         to : [0, maxOffset]
                     }).map(translation);
-                    coord2 -= offset > maxOffset ? maxOffset : offset;    
+                    coord2 -= offset > maxOffset ? maxOffset : offset;
                 }
-                if(axis==="y"){
+            }
+            if(axis==="y"){
+                const threshold = state.marginUsed.defaultMargin +textSize.width +state.labelOffset +state.axis.y.tickSize;
+                if(translation<threshold){
+                    const maxOffset = 2*state.labelOffset + 2*state.axis.y.tickSize + textSize.width;
                     const offset = mapping({
-                        from : [-threshold, -threshold-textDistance-state.labelOffset-state.axis[axis].tickSize],
+                        from : [threshold, state.marginUsed.defaultMargin],
                         to : [0, maxOffset]
                     }).map(translation);
                     coord2 += offset > maxOffset ? maxOffset : offset;
@@ -397,46 +399,45 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
 
         switch(state.axis.position){
             case "center":{
-                    const containedTolerance = 5;
                     const maxTranslation = axis==="x" ? graphRect.height : graphRect.width;
 
                     translation = compScale.map(0);
                     if(state.axis[axis].contained){
-                        if(translation>maxTranslation - containedTolerance)
-                            translation = maxTranslation - containedTolerance
+                        if(translation>maxTranslation - state.marginUsed.defaultMargin)
+                            translation = maxTranslation - state.marginUsed.defaultMargin
                         
-                        if(translation < containedTolerance)
-                            translation = containedTolerance;
+                        if(translation < state.marginUsed.defaultMargin)
+                            translation = state.marginUsed.defaultMargin;
                     }
                 }
                 break;
 
             case "bottom-left":
                 if(axis === "x")
-                    translation = scale==="primary" ? graphRect.height - state.axisObj.primary.height : state.axisObj.secondary.height;      
+                    translation = scale==="primary" ? graphRect.height : 0;      
                 if(axis==="y")
-                    translation = scale==="primary" ? state.axisObj.primary.width : graphRect.width - state.axisObj.secondary.width;
+                    translation = scale==="primary" ? 0 : graphRect.width;
                 break;
 
             case "bottom-right":
                 if(axis === "x")
-                    translation = scale==="primary" ? graphRect.height - state.axisObj.primary.height : state.axisObj.secondary.height;
+                    translation = scale==="primary" ? graphRect.height : 0;
                 if(axis==="y")
-                    translation = scale==="primary" ? graphRect.width - state.axisObj.primary.width : state.axisObj.secondary.width;
+                    translation = scale==="primary" ? graphRect.width : 0;
                 break;
 
             case "top-left":
                 if(axis === "x")
-                    translation = scale==="primary" ? state.axisObj.primary.height : graphRect.height - state.axisObj.secondary.height;
+                    translation = scale==="primary" ? 0 : graphRect.height;
                 if(axis==="y")
-                    translation = scale==="primary" ? state.axisObj.primary.width : graphRect.width - state.axisObj.secondary.width;
+                    translation = scale==="primary" ? 0 : graphRect.width;
                 break;
 
             case "top-right":
                 if(axis === "x")
-                    translation = scale==="primary" ? state.axisObj.primary.height : graphRect.height - state.axisObj.secondary.height;
+                    translation = scale==="primary" ? 0 : graphRect.height;
                 if(axis==="y")
-                    translation = scale==="primary" ? graphRect.width - state.axisObj.primary.width : state.axisObj.secondary.width;
+                    translation = scale==="primary" ? graphRect.width : 0;
                 break;
         }
 

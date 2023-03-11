@@ -1,38 +1,36 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
 import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
-import { Axis_Property, Graph2D, graphCallback, Primary_Grid } from "../../../Graph2D_Types";
-import { Grid_Method_Generator } from "../Grid_Types";
+import { Axis_Property, Graph2D, graphCallback, Method_Generator, Primary_Grid, Rect } from "../../../Graph2D_Types";
 import { Primary_Grid_Generator, Primary_Grid_Modifier } from "./Grid_Primary_Types";
 
-function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Grid_Generator {
+function PrimaryGrid({state, graphHandler} : Method_Generator) : Primary_Grid_Generator {
 
 //----------------- Draw ----------------------
 
-    function draw(xMin : number, xMax : number, yMin : number, yMax:number){
+    function draw(graphRect : Rect){
         if(state.grid.primary.x.enable){
             if(state.axis.type === "polar")
-                drawPolar("x", xMin, xMax, yMin, yMax);
+                drawPolar("x", graphRect);
             else
-                drawRectangular("x", yMin, yMax, xMin, xMax);
-            
+                drawRectangular("x", graphRect);
         }
         
         if(state.grid.primary.y.enable){
             if(state.axis.type === "polar")
-            drawPolar("y", xMin, xMax, yMin, yMax);
+            drawPolar("y", graphRect);
         else
-            drawRectangular("y", xMin, xMax, yMin, yMax);
+            drawRectangular("y", graphRect);
         }
     }
 
 //---------------------------------------------
 //------------- Draw Rectangular --------------
 
-    function drawRectangular(axis : "x" | "y", start:number, end:number, limitMin:number, limitMax:number){
+    function drawRectangular(axis : "x" | "y", graphRect : Rect){
         const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions;
 
         state.context.canvas.save();
-        state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+        state.context.canvas.translate(graphRect.x, graphRect.y);
 
         state.context.canvas.strokeStyle = state.grid.primary[axis].color;
         state.context.canvas.globalAlpha = state.grid.primary[axis].opacity;
@@ -41,15 +39,14 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
         state.context.canvas.beginPath();
         positions.forEach(item=>{
             const coord = Math.round(state.scale.primary[axis].map(item)) + state.grid.primary[axis].width%2 * 0.5;
-            if(coord < limitMin || coord > limitMax) return;
 
             if(axis === "x"){
-                state.context.canvas.moveTo(coord, start);
-                state.context.canvas.lineTo(coord, end);
+                state.context.canvas.moveTo(coord, 0);
+                state.context.canvas.lineTo(coord, graphRect.height);
             }
             if(axis === "y"){
-                state.context.canvas.moveTo(start, coord);
-                state.context.canvas.lineTo(end, coord);
+                state.context.canvas.moveTo(0, coord);
+                state.context.canvas.lineTo(graphRect.width, coord);
             }
         });
         state.context.canvas.stroke();
@@ -60,7 +57,7 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
 //---------------------------------------------
 //--------------- Draw Polar ------------------
 
-    function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
+    function drawPolar(axis : "x"|"y", graphRect : Rect){
         const xCenter = Math.round(state.scale.primary.x.map(0));
         const yCenter = Math.round(state.scale.primary.y.map(0));
 
@@ -71,9 +68,9 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
             const thetha1 = 2*Math.PI;
 
             state.context.canvas.save();
-            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.translate(graphRect.x, graphRect.y);
             state.context.canvas.beginPath();
-            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.rect(0, 0, graphRect.width, graphRect.height);
             state.context.canvas.clip();
 
             state.context.canvas.strokeStyle = state.grid.primary.x.color;
@@ -97,9 +94,9 @@ function PrimaryGrid({state, graphHandler} : Grid_Method_Generator) : Primary_Gr
             const maxRadius = Math.max(Math.hypot(state.axis.x.start,state.axis.y.start), Math.hypot(state.axis.x.start,state.axis.y.end), Math.hypot(state.axis.x.end,state.axis.y.start), Math.hypot(state.axis.x.end,state.axis.y.end));
 
             state.context.canvas.save();
-            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.translate(graphRect.x, graphRect.y);
             state.context.canvas.beginPath();
-            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.rect(0, 0, graphRect.width, graphRect.height);
             state.context.canvas.clip();
 
             state.context.canvas.strokeStyle = state.grid.primary.y.color;

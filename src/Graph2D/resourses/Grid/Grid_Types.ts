@@ -28,10 +28,6 @@ Omit<Secondary_Grid_Generator, "draw">{
     }
 }
 
-export interface Grid_Method_Generator extends Method_Generator {
-    getMinMaxCoords : ()=>[number,number, number, number]
-}
-
 export interface Grid_Property<T> extends Axis_Property<{
     primary : T,
     secondary : T

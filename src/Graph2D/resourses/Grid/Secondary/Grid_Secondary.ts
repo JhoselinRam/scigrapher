@@ -1,45 +1,44 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
 import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
-import { Axis_Property, Graph2D, graphCallback, Secondary_Grid } from "../../../Graph2D_Types";
-import { Grid_Method_Generator } from "../Grid_Types";
+import { Axis_Property, Graph2D, graphCallback, Method_Generator, Rect, Secondary_Grid } from "../../../Graph2D_Types";
 import { Secondary_Grid_Generator, Secondary_Grid_Modifier } from "./Grid_Secondary_Types";
 
-function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_Grid_Generator {
+function SecondaryGrid({state, graphHandler}:Method_Generator) : Secondary_Grid_Generator {
 
 //----------------- Draw ----------------------
 
-    function draw(xMin : number, xMax : number, yMin : number, yMax:number){
+    function draw(graphRect : Rect){
         if(state.grid.secondary.x.enable){
             if(state.axis.type === "rectangular" || state.axis.type === "y-log")
-                drawRectangular("x", yMin, yMax, xMin, xMax);
+                drawRectangular("x", graphRect);
                 
             if(state.axis.type === "polar")
-                drawPolar("x", xMin, xMax, yMin, yMax);
+                drawPolar("x", graphRect);
 
             if(state.axis.type === "x-log" || state.axis.type === "log-log")
-                drawLog("x", yMin, yMax, xMin, xMax);
+                drawLog("x", graphRect);
         }
         if(state.grid.secondary.y.enable){
             if(state.axis.type === "rectangular" || state.axis.type === "x-log")
-                drawRectangular("y", xMin, xMax, yMin, yMax);
+                drawRectangular("y", graphRect);
                 
             if(state.axis.type === "polar")
-                drawPolar("y", xMin, xMax, yMin, yMax);
+                drawPolar("y", graphRect);
 
             if(state.axis.type === "y-log" || state.axis.type === "log-log")
-                drawLog("y", xMin, xMax, yMin, yMax);
+                drawLog("y", graphRect);
         }
     }
 
 //---------------------------------------------
 //------------- Draw Rectangular --------------
 
-    function drawRectangular(axis:"x"|"y", start:number, end:number, limitMin:number, limitMax:number){
+    function drawRectangular(axis:"x"|"y", graphRect:Rect){
+        const scaleUsed = state.scale.primary[axis];
         const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions;
-        const drawAt = positions.map(item=>state.scale.primary[axis].map(item));    //Maps to "linear space" so it works on log scales
-        drawAt.push(drawAt[drawAt.length-1] + drawAt[1]-drawAt[0]); //Adds one more position at the end
-        const partition = getPartition(axis, Math.abs(drawAt[1]-drawAt[0]));
-        const spacing = (drawAt[1]-drawAt[0])/partition;
+        positions.push(positions[positions.length-1] + positions[1]-positions[0]); //Adds one more position at the end
+        const partition = getPartition(axis, Math.abs(scaleUsed.map(positions[1])-scaleUsed.map(positions[0])));
+        const spacing = (scaleUsed.map(positions[1])-scaleUsed.map(positions[0]))/partition;
 
         state.context.canvas.save();
         state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
@@ -49,18 +48,20 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
         state.context.canvas.lineWidth = state.grid.secondary[axis].width;
         state.context.canvas.setLineDash(getLineDash(state.grid.secondary[axis].style));
         state.context.canvas.beginPath();
-        drawAt.forEach(item=>{
-            for(let i=1; i<partition; i++){
-                const coord = Math.round(item-i*spacing) + state.grid.secondary[axis].width%2 * 0.5;
-                if(coord < limitMin || coord > limitMax) continue;
+        positions.forEach(item=>{
 
+            for(let i=1; i<partition; i++){
+                const coord = Math.round(scaleUsed.map(item) - i*spacing) + state.grid.secondary[axis].width%2 * 0.5;
+                
                 if(axis === "x"){
-                    state.context.canvas.moveTo(coord, start);
-                    state.context.canvas.lineTo(coord, end);
+                    if(coord < 0 || coord > graphRect.width) continue;
+                    state.context.canvas.moveTo(coord, 0);
+                    state.context.canvas.lineTo(coord, graphRect.height);
                 }
                 if(axis === "y"){
-                    state.context.canvas.moveTo(start, coord);
-                    state.context.canvas.lineTo(end, coord);
+                    if(coord < 0 || coord > graphRect.height) continue;
+                    state.context.canvas.moveTo(0, coord);
+                    state.context.canvas.lineTo(graphRect.width, coord);
                 }
             }
         });
@@ -109,7 +110,7 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
 //---------------------------------------------
 //--------------- Draw Polar ------------------
 
-    function drawPolar(axis : "x"|"y", xMin : number, xMax : number, yMin : number, yMax:number){
+    function drawPolar(axis : "x"|"y", graphRect:Rect){
         const xCenter = Math.round(state.scale.primary.x.map(0));
         const yCenter = Math.round(state.scale.primary.y.map(0));
 
@@ -136,9 +137,9 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
             const yCompression = (yCenter - state.scale.primary.y.map(1)) / (state.scale.primary.x.map(1) - xCenter);
  
             state.context.canvas.save();
-            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.translate(graphRect.x, graphRect.y);
             state.context.canvas.beginPath();
-            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.rect(0, 0, graphRect.width, graphRect.height);
             state.context.canvas.clip();
             state.context.canvas.translate(xCenter, yCenter);
             state.context.canvas.scale(1,yCompression);
@@ -169,9 +170,9 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
             const maxRadius = Math.max(Math.hypot(state.axis.x.start,state.axis.y.start), Math.hypot(state.axis.x.start,state.axis.y.end), Math.hypot(state.axis.x.end,state.axis.y.start), Math.hypot(state.axis.x.end,state.axis.y.end));
 
             state.context.canvas.save();
-            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.translate(graphRect.x, graphRect.y);
             state.context.canvas.beginPath();
-            state.context.canvas.rect(xMin, yMin, xMax-xMin, yMax-yMin);
+            state.context.canvas.rect(0, 0, graphRect.width, graphRect.height);
             state.context.canvas.clip();
 
             state.context.canvas.strokeStyle = state.grid.secondary.y.color;
@@ -199,14 +200,14 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
 //---------------------------------------------
 //-------------- Draw Log ---------------------
 
-    function drawLog(axis:"x"|"y", start:number, end:number, limitMin:number, limitMax:number){
+    function drawLog(axis:"x"|"y", graphRect:Rect){
         const drawAt = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions.slice();
         const magnitudeLeap = Math.floor(Math.log10(Math.abs(drawAt[1]))) - Math.floor(Math.log10(Math.abs(drawAt[0])));
         drawAt.push(drawAt[drawAt.length-1]*Math.pow(10,magnitudeLeap));
         const partition = getPartition(axis, 0, Math.abs(drawAt[0]), Math.abs(drawAt[1]));
 
         state.context.canvas.save();
-        state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+        state.context.canvas.translate(graphRect.x, graphRect.y);
 
         state.context.canvas.strokeStyle = state.grid.secondary[axis].color;
         state.context.canvas.globalAlpha = state.grid.secondary[axis].opacity;
@@ -219,15 +220,15 @@ function SecondaryGrid({state, graphHandler}:Grid_Method_Generator) : Secondary_
             for(let i=1; i<partition; i++){ 
                 const coord = Math.round(state.scale.primary[axis].map(item-i*spacing)) + state.grid.secondary[axis].width%2 * 0.5;
 
-                if(coord < limitMin || coord > limitMax) continue;
-
+                
                 if(axis === "x"){
-                    state.context.canvas.moveTo(coord, start);
-                    state.context.canvas.lineTo(coord, end);
+                    if(coord < 0 || coord > graphRect.width) continue;
+                    state.context.canvas.moveTo(coord, 0);
+                    state.context.canvas.lineTo(coord, graphRect.height);
                 }
                 if(axis === "y"){
-                    state.context.canvas.moveTo(start, coord);
-                    state.context.canvas.lineTo(end, coord);
+                    state.context.canvas.moveTo(0, coord);
+                    state.context.canvas.lineTo(graphRect.width, coord);
                 }
             }
             

@@ -356,6 +356,12 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             fullState.draw.labels();
         }
         fullState.draw.client();
+
+        const graphRect = fullState.context.graphRect();
+        fullState.context.canvas.save();
+        fullState.context.canvas.strokeStyle = "red";
+        fullState.context.canvas.strokeRect(graphRect.x, graphRect.y, graphRect.width, graphRect.height);
+        fullState.context.canvas.restore();
     }
 
     //Helper function, draws only the client area

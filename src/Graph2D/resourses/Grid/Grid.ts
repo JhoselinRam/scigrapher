@@ -4,62 +4,63 @@ import PrimaryGrid from "./Primary/Grid_Primary.js";
 import SecondaryGrid from "./Secondary/Grid_Secondary.js";
 
 function Grid(props : Method_Generator) : Grid {
-    const primaryGrid = PrimaryGrid({...props, getMinMaxCoords});
-    const secondaryGrid = SecondaryGrid({...props, getMinMaxCoords});
+    const primaryGrid = PrimaryGrid(props);
+    const secondaryGrid = SecondaryGrid(props);
 
 //----------------- Draw ----------------------
 
     function draw(){
-        const [xMin, xMax, yMin, yMax] = getMinMaxCoords();
-        primaryGrid.draw(xMin, xMax, yMin, yMax);
-        secondaryGrid.draw(xMin, xMax, yMin, yMax);
+        //const [xMin, xMax, yMin, yMax] = getMinMaxCoords();
+        const graphRect = props.state.context.graphRect();
+        primaryGrid.draw(graphRect);
+        secondaryGrid.draw(graphRect);
         
     }
 
 //---------------------------------------------
 //----------- Get Min Max Coords --------------
 
-function getMinMaxCoords() : [number, number, number, number]{
-    let xStart = 0;
-    let xEnd = props.state.context.clientRect.width;
-    let yStart = 0;
-    let yEnd = props.state.context.clientRect.height;
-    const secondaryXEnabled = props.state.axisObj.secondary.height>0? 1 : 0;
-    const secondaryYEnabled = props.state.axisObj.secondary.width>0? 1 : 0;
+// function getMinMaxCoords() : [number, number, number, number]{
+//     let xStart = 0;
+//     let xEnd = props.state.context.clientRect.width;
+//     let yStart = 0;
+//     let yEnd = props.state.context.clientRect.height;
+//     const secondaryXEnabled = props.state.axisObj.secondary.height>0? 1 : 0;
+//     const secondaryYEnabled = props.state.axisObj.secondary.width>0? 1 : 0;
 
-    switch(props.state.axis.position){
-        case "bottom-left":
-            xStart = props.state.margin.x.start + props.state.axisObj.primary.width;
-            xEnd = xEnd - secondaryYEnabled*(props.state.margin.x.end + props.state.axisObj.secondary.width);
-            yStart = secondaryXEnabled*(props.state.margin.y.end + props.state.axisObj.secondary.height);
-            yEnd = yEnd - props.state.margin.y.start - props.state.axisObj.primary.height;
-            break;
+//     switch(props.state.axis.position){
+//         case "bottom-left":
+//             xStart = props.state.margin.x.start + props.state.axisObj.primary.width;
+//             xEnd = xEnd - secondaryYEnabled*(props.state.margin.x.end + props.state.axisObj.secondary.width);
+//             yStart = secondaryXEnabled*(props.state.margin.y.end + props.state.axisObj.secondary.height);
+//             yEnd = yEnd - props.state.margin.y.start - props.state.axisObj.primary.height;
+//             break;
 
-        case "bottom-right":
-            xStart = secondaryYEnabled*(props.state.margin.x.start + props.state.axisObj.secondary.width);
-            xEnd = xEnd - props.state.margin.x.end - props.state.axisObj.primary.width;
-            yStart = secondaryXEnabled*(props.state.margin.y.end + props.state.axisObj.secondary.height);
-            yEnd = yEnd - props.state.margin.y.start - props.state.axisObj.primary.height;
-            break;
+//         case "bottom-right":
+//             xStart = secondaryYEnabled*(props.state.margin.x.start + props.state.axisObj.secondary.width);
+//             xEnd = xEnd - props.state.margin.x.end - props.state.axisObj.primary.width;
+//             yStart = secondaryXEnabled*(props.state.margin.y.end + props.state.axisObj.secondary.height);
+//             yEnd = yEnd - props.state.margin.y.start - props.state.axisObj.primary.height;
+//             break;
         
-        case "top-left":
-            xStart = props.state.margin.x.start + props.state.axisObj.primary.width;
-            xEnd = xEnd - secondaryYEnabled*(props.state.margin.x.end + props.state.axisObj.secondary.width);
-            yStart = props.state.margin.y.end + props.state.axisObj.primary.height;
-            yEnd = yEnd - secondaryXEnabled*(props.state.margin.y.start + props.state.axisObj.secondary.height);
+//         case "top-left":
+//             xStart = props.state.margin.x.start + props.state.axisObj.primary.width;
+//             xEnd = xEnd - secondaryYEnabled*(props.state.margin.x.end + props.state.axisObj.secondary.width);
+//             yStart = props.state.margin.y.end + props.state.axisObj.primary.height;
+//             yEnd = yEnd - secondaryXEnabled*(props.state.margin.y.start + props.state.axisObj.secondary.height);
 
-            break;
+//             break;
 
-        case "top-right":
-            xStart = secondaryYEnabled*(props.state.margin.x.start + props.state.axisObj.secondary.width);
-            xEnd = xEnd - props.state.margin.x.end - props.state.axisObj.primary.width;
-            yStart = props.state.margin.y.end + props.state.axisObj.primary.height;
-            yEnd = yEnd - secondaryXEnabled*(props.state.margin.y.start + props.state.axisObj.secondary.height);
-            break;
-    }
+//         case "top-right":
+//             xStart = secondaryYEnabled*(props.state.margin.x.start + props.state.axisObj.secondary.width);
+//             xEnd = xEnd - props.state.margin.x.end - props.state.axisObj.primary.width;
+//             yStart = props.state.margin.y.end + props.state.axisObj.primary.height;
+//             yEnd = yEnd - secondaryXEnabled*(props.state.margin.y.start + props.state.axisObj.secondary.height);
+//             break;
+//     }
 
-    return [xStart, xEnd, yStart, yEnd];
-}
+//     return [xStart, xEnd, yStart, yEnd];
+// }
 
 //---------------------------------------------
 

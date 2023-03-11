@@ -1,7 +1,7 @@
-import { Axis_Property, Graph2D, graphCallback, Primary_Grid, RecursivePartial } from "../../../Graph2D_Types"
+import { Axis_Property, Graph2D, graphCallback, Primary_Grid, Rect, RecursivePartial } from "../../../Graph2D_Types"
 
 export interface Primary_Grid_Generator {
-    draw : (xMin : number, xMax : number, yMin : number, yMax:number)=>void,
+    draw : (graphRect : Rect)=>void,
     primaryGrid : {
         (grid : Primary_Grid_Modifier, callback?:graphCallback) : Graph2D,
         (arg : void) : Axis_Property<Primary_Grid>
