@@ -1,4 +1,4 @@
-import { Axis_Property, Graph2D, graphCallback, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
+import { Axis_Property, Graph2D, graphCallback, RecursivePartial } from "../../Graph2D_Types";
 import { Primary_Grid_Generator } from "./Primary/Grid_Primary_Types";
 import { Secondary_Grid_Generator } from "./Secondary/Grid_Secondary_Types";
 

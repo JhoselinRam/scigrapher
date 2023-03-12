@@ -40,18 +40,18 @@ function DrawHeat({dataHandler, dataState, graphHandler} : Heat_Map_Method_Gener
 
 
 
-        const clipRect = graphHandler.graphRect(); 
+        const graphRect = graphHandler.graphRect(); 
 
         state.context.data.save();
+        state.context.data.translate(graphRect.x, graphRect.y);
         state.context.data.beginPath();
-        state.context.data.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
+        state.context.data.rect(0, 0, graphRect.width, graphRect.height);
         state.context.data.clip();
-        state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         if(dataState.smooth)
-            drawSmooth({state, data, meshX, meshY, xScale, yScale, dataState, dataset:dataHandler, graph:graphHandler, clip:clipRect});
+            drawSmooth({state, data, meshX, meshY, xScale, yScale, dataState, dataset:dataHandler, graph:graphHandler, clip:graphRect});
         else
-            drawDefault({state, data, meshX, meshY, xScale, yScale, dataState, dataset:dataHandler, graph:graphHandler, clip:clipRect});
+            drawDefault({state, data, meshX, meshY, xScale, yScale, dataState, dataset:dataHandler, graph:graphHandler, clip:graphRect});
 
         state.context.data.restore();
 
@@ -266,10 +266,10 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
 
         for(let i=0; i<meshX.length-1; i++){
             for(let j=0; j<meshX[i].length-1; j++){
-                let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
-                let xEnd = Math.round(xScale.map(meshX[i][j+1]) - clip.x + client.x )
-                let yStart = Math.round(yScale.map(meshY[i][j]) - clip.y + client.y);
-                let yEnd = Math.round(yScale.map(meshY[i+1][j]) - clip.y + client.y);
+                let xStart = Math.round(xScale.map(meshX[i][j])) 
+                let xEnd = Math.round(xScale.map(meshX[i][j+1]))
+                let yStart = Math.round(yScale.map(meshY[i][j]));
+                let yEnd = Math.round(yScale.map(meshY[i+1][j]));
                 [xStart, xEnd] = [Math.min(xStart, xEnd), Math.max(xStart, xEnd)];
                 [yStart, yEnd] = [Math.min(yStart, yEnd), Math.max(yStart, yEnd)];
 
@@ -309,10 +309,10 @@ function drawSmooth({state, data, dataState, meshX, meshY, xScale, yScale, datas
         console.log("here")
         for(let i=0; i<meshX.length-1; i++){
             for(let j=0; j<meshX[i].length-1; j++){
-                let xStart = Math.round(xScale.map(meshX[i][j]) - clip.x + client.x ) 
-                let xEnd = Math.round(xScale.map(meshX[i][j+1]) - clip.x + client.x )
-                let yStart = Math.round(yScale.map(meshY[i][j]) - clip.y + client.y);
-                let yEnd = Math.round(yScale.map(meshY[i+1][j]) - clip.y + client.y);
+                let xStart = Math.round(xScale.map(meshX[i][j])) 
+                let xEnd = Math.round(xScale.map(meshX[i][j+1]))
+                let yStart = Math.round(yScale.map(meshY[i][j]));
+                let yEnd = Math.round(yScale.map(meshY[i+1][j]));
                 [xStart, xEnd] = [Math.min(xStart, xEnd), Math.max(xStart, xEnd)];
                 [yStart, yEnd] = [Math.min(yStart, yEnd), Math.max(yStart, yEnd)];
 

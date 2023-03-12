@@ -84,14 +84,14 @@ function Margin({state, graphHandler}:Method_Generator) : Margin {
                 state.marginUsed.x.start = state.margin.x.start === "auto"? state.marginUsed.defaultMargin : state.margin.x.start;
                 state.marginUsed.x.end = getOpositeMargin(state.margin.x.end, axisWidth, secondaryAxisWidth, state.marginUsed.defaultMargin);
                 state.marginUsed.y.start = state.margin.y.start === "auto"? state.marginUsed.defaultMargin : state.margin.y.start;
-                state.marginUsed.y.end = getOpositeMargin(state.margin.y.end, axisHeight, secondaryAxisHeight, state.marginUsed.defaultMargin);
+                state.marginUsed.y.end = state.margin.y.end==="auto" && (state.labels.title?.enable || state.labels.subtitle?.enable)? state.marginUsed.defaultMargin : getOpositeMargin(state.margin.y.end, axisHeight, secondaryAxisHeight, state.marginUsed.defaultMargin);
                 break;
                 
             case "bottom-right":
                 state.marginUsed.x.start = getOpositeMargin(state.margin.x.start, axisWidth, secondaryAxisWidth, state.marginUsed.defaultMargin);
                 state.marginUsed.x.end = state.margin.x.end === "auto"? state.marginUsed.defaultMargin : state.margin.x.end;
                 state.marginUsed.y.start = state.margin.y.start === "auto"? state.marginUsed.defaultMargin : state.margin.y.start;
-                state.marginUsed.y.end = getOpositeMargin(state.margin.y.end, axisHeight, secondaryAxisHeight, state.marginUsed.defaultMargin);
+                state.marginUsed.y.end = state.margin.y.end==="auto" && (state.labels.title?.enable || state.labels.subtitle?.enable)? state.marginUsed.defaultMargin : getOpositeMargin(state.margin.y.end, axisHeight, secondaryAxisHeight, state.marginUsed.defaultMargin);
                 break;
 
             case "top-left":

@@ -35,13 +35,13 @@ function SecondaryGrid({state, graphHandler}:Method_Generator) : Secondary_Grid_
 
     function drawRectangular(axis:"x"|"y", graphRect:Rect){
         const scaleUsed = state.scale.primary[axis];
-        const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions;
+        const positions = (state.axisObj.primary.obj as Axis_Property<Axis_Obj>)[axis].positions.slice();
         positions.push(positions[positions.length-1] + positions[1]-positions[0]); //Adds one more position at the end
         const partition = getPartition(axis, Math.abs(scaleUsed.map(positions[1])-scaleUsed.map(positions[0])));
         const spacing = (scaleUsed.map(positions[1])-scaleUsed.map(positions[0]))/partition;
 
         state.context.canvas.save();
-        state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+        state.context.canvas.translate(graphRect.x, graphRect.y);
 
         state.context.canvas.strokeStyle = state.grid.secondary[axis].color;
         state.context.canvas.globalAlpha = state.grid.secondary[axis].opacity;

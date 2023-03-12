@@ -23,14 +23,14 @@ function DrawLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Gen
         const yScale = dataState.useAxis.y === "primary"? state.scale.primary.y : state.scale.secondary.y as Mapping;
         const xPositions = isCallable(dataState.data.x)? dataState.data.x(dataHandler, graphHandler) : dataState.data.x.slice();
         const yPositions = isCallable(dataState.data.y)? dataState.data.y(dataHandler, graphHandler) : dataState.data.y.slice();
-        const clipRect = graphHandler.graphRect(); 
+        const graphRect = graphHandler.graphRect(); 
 
         //Common canvas configurations
         state.context.data.save();
+        state.context.data.translate(graphRect.x, graphRect.y);
         state.context.data.beginPath();
-        state.context.data.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
+        state.context.data.rect(0, 0, graphRect.width, graphRect.height);
         state.context.data.clip();
-        state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         if(dataState.area.enable){
             const xAreaPositions = isCallable(dataState.area.base.x)? dataState.area.base.x(dataHandler, graphHandler) : dataState.area.base.x.slice();

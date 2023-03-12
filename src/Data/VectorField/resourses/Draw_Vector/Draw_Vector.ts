@@ -46,13 +46,13 @@ function DrawVector({dataHandler, dataState, graphHandler}:Vector_Field_Method_G
         
         
         const scale = dataState.normalize? getScale({xScale, yScale, meshX, meshY, dataX, dataY, maxLength:dataState.maxLength}) : 1;
-        const clipRect = graphHandler.graphRect();
+        const graphRect = graphHandler.graphRect();
 
         state.context.data.save();
+        state.context.data.translate(graphRect.x, graphRect.y);
         state.context.data.beginPath();
-        state.context.data.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
+        state.context.data.rect(0, 0, graphRect.width, graphRect.height);
         state.context.data.clip();
-        state.context.data.translate(state.context.clientRect.x, state.context.clientRect.y);
 
         if(typeof dataState.color === "string" &&
         typeof dataState.opacity === "number" &&

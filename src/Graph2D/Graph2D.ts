@@ -1,6 +1,7 @@
 import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, Rect, RecursivePartial, RequiredExept, Secondary_Axis } from "./Graph2D_Types";
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
+import Border from "./resourses/Border/Border.js";
 import Data from "./resourses/Data/Data.js";
 import Events from "./resourses/Events/Events.js";
 import Grid from "./resourses/Grid/Grid.js";
@@ -103,6 +104,40 @@ const defaultOptions : Graph2D_Options = {
                 density : "auto",
                 maxDensity : 5,
                 minSpacing : 20,
+            }
+        }
+    },
+    border : {
+        x : {
+            start : {
+                enable : false,
+                color : "#000000",
+                opacity : 1,
+                width : 1,
+                style : "solid"
+            },
+            end : {
+                enable : false,
+                color : "#000000",
+                opacity : 1,
+                width : 1,
+                style : "solid"
+            }
+        },
+        y : {
+            start : {
+                enable : false,
+                color : "#000000",
+                opacity : 1,
+                width : 1,
+                style : "solid"
+            },
+            end : {
+                enable : false,
+                color : "#000000",
+                opacity : 1,
+                width : 1,
+                style : "solid"
             }
         }
     }
@@ -238,6 +273,10 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
                 x : {...defaultOptions.grid.secondary.x, ...options.grid?.secondary?.x},
                 y : {...defaultOptions.grid.secondary.y, ...options.grid?.secondary?.y}
             }
+        },
+        border : {
+            x  : {start : {...defaultOptions.border.x.start, ...options.border?.x?.start}, end:{...defaultOptions.border.x.end, ...options.border?.x?.end}},
+            y  : {start : {...defaultOptions.border.y.start, ...options.border?.y?.start}, end:{...defaultOptions.border.y.end, ...options.border?.y?.end}}
         }
     };
 
@@ -255,6 +294,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const events  = Events({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const data = Data({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const properties = Properties({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const border = Border({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -268,6 +308,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     state.draw.axis = axis.draw;
     state.draw.secondary = secondary.draw;
     state.draw.grid = grid.draw;
+    state.draw.border = border.draw;
     state.context.graphRect = properties.graphRect;
 
 
@@ -318,6 +359,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.clientRect = properties.clientRect;
     graphHandler.graphRect = properties.graphRect;
     graphHandler.draw = properties.draw;
+    graphHandler.border = border.border;
 
     
     //Setup configurations
@@ -356,12 +398,6 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             fullState.draw.labels();
         }
         fullState.draw.client();
-
-        const graphRect = fullState.context.graphRect();
-        fullState.context.canvas.save();
-        fullState.context.canvas.strokeStyle = "red";
-        fullState.context.canvas.strokeRect(graphRect.x, graphRect.y, graphRect.width, graphRect.height);
-        fullState.context.canvas.restore();
     }
 
     //Helper function, draws only the client area
@@ -373,6 +409,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             fullState.draw.grid();
             fullState.draw.axis();
             fullState.draw.secondary();
+            fullState.draw.border();
         }
         fullState.draw.data();
     }
@@ -430,60 +467,6 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         state.context.data.scale(dpi, dpi);
         state.context.data.imageSmoothingEnabled = false;
     }
-
-    //Helper function that computes the graph rect, this includes the axis width and height and the margins
-    // function axisRect() : Readonly<Rect>{
-    //     const fullState = state as Graph2D_State;
-    //     const primaryWidth = fullState.axisObj.primary.width;
-    //     const primaryHeight = fullState.axisObj.primary.height;
-    //     const secondaryWidth = fullState.axisObj.secondary.width;
-    //     const secondaryHeight = fullState.axisObj.secondary.height;
-
-    //     switch(fullState.axis.position){
-    //         case "center":
-    //             return {
-    //                 x : state.margin.x.start,
-    //                 y : fullState.context.clientRect.y + state.margin.y.end,
-    //                 width : fullState.context.clientRect.width - state.margin.x.start - state.margin.x.end,
-    //                 height : fullState.context.clientRect.height - state.margin.y.start - state.margin.y.end
-    //             };
-            
-    //         case "bottom-left":
-    //             return {
-    //                 x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
-    //                 y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
-    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-    //             };
-            
-    //         case "bottom-right": 
-    //             return {
-    //                 x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
-    //                 y : fullState.context.clientRect.y + secondaryHeight + state.margin.y.end,
-    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-    //             };
-
-    //         case "top-left": 
-    //             return {
-    //                 x : fullState.context.clientRect.x + primaryWidth + state.margin.x.start,
-    //                 y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
-    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-    //             };
-
-    //         case "top-right": 
-    //             return {
-    //                 x : fullState.context.clientRect.x + secondaryWidth + state.margin.x.start,
-    //                 y : fullState.context.clientRect.y + primaryHeight + state.margin.y.end,
-    //                 width : fullState.context.clientRect.width - primaryWidth - secondaryWidth - state.margin.x.start - state.margin.x.end,
-    //                 height : fullState.context.clientRect.height - primaryHeight - secondaryHeight - state.margin.y.start - state.margin.y.end
-    //             };
-    //     }
-    // }
-
-    //---------------------------------------------
-
 
     return graphHandler as Graph2D
 }

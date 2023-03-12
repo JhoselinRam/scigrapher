@@ -3,6 +3,7 @@ import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
 import { Background } from "./resourses/Background/Background_Types";
+import { Border } from "./resourses/Border/Border_Types";
 import { Data } from "./resourses/Data/Data_Types";
 import { Events } from "./resourses/Events/Events_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
@@ -18,6 +19,7 @@ export interface Graph2D extends
     Omit<Grid, "compute" | "draw">,
     Omit<Secondary, "compute" | "draw">,
     Omit<Margin, "compute">,
+    Omit<Border, "draw">,
     Events,
     Data,
     Properties
@@ -60,7 +62,11 @@ export interface Graph2D_Options{
         primary : Axis_Property<Primary_Grid>,
         secondary : Axis_Property<Secondary_Grid>,
         polarGrid : number
-    }
+    },
+    border : Axis_Property<{
+        start : BorderProperties,
+        end : BorderProperties
+    }>
 }
 
 export interface Primary_Grid {
@@ -117,6 +123,14 @@ export interface Secondary_Axis extends Omit<Primary_Axis, "dynamic"|"contained"
     type : "rectangular" | "log"
 } 
 
+export interface BorderProperties {
+    enable : boolean,
+    color : string,
+    opacity : number,
+    width : number,
+    style : Line_Style
+}
+
 export interface Graph2D_State extends Graph2D_Options {
     container : HTMLDivElement,
     canvasElement : HTMLCanvasElement,
@@ -160,7 +174,8 @@ export interface Graph2D_State extends Graph2D_Options {
         labels : ()=>void
         axis : ()=>void,
         grid : ()=>void,
-        secondary : ()=>void
+        secondary : ()=>void,
+        border : ()=>void
     },
     axisObj : {
         primary : {

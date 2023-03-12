@@ -30,7 +30,7 @@ function Scale({state}:Method_Generator) : Scale{
         }
 
         const primaryScaleX = mapping({from:[state.axis.x.start, state.axis.x.end], to:[0, graphRect.width], type:xType});
-        const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[0, graphRect.height], type:yType});
+        const primaryScaleY = mapping({from:[state.axis.y.start, state.axis.y.end], to:[graphRect.height, 0], type:yType});
 
         state.scale.primary = {
             x : primaryScaleX,
@@ -58,7 +58,7 @@ function Scale({state}:Method_Generator) : Scale{
             
             secondaryScale.y = mapping({
                 from:[state.secondary.y.start, state.secondary.y.end], 
-                to:[0, graphRect.height],
+                to:[graphRect.height, 0],
                 type
             });
         }
