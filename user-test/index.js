@@ -9,10 +9,9 @@ const Graph = Graph2D(document.querySelector(".graph"))
                     .axisDomain({x:{start:-4, end:4}, y:{start:-4, end:4}})
                     .primaryGrid({grid:{enable:false}})
                     .secondaryGrid({grid:{enable:false}})
-                    .draw();
 
 Graph.addColorbar()
-Graph.draw();
+//Graph.draw();
 
 // const vector = Graph.addDataset("vectorfield");
 // const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});

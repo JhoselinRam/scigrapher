@@ -14,9 +14,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 
         }
         if(typeof barState.data === "object"){
-            console.dir(barState.data)
             barState.data.sort((a,b) => barState.reverse ? b.position - a.position : a.position - b.position);
-            console.dir(barState.data)
             const maxPosition = barState.reverse? barState.data[0].position : barState.data[barState.data.length-1].position;
             barState.gradient = barState.data.map(item=>{return {...item, position:item.position/maxPosition}});
         }
@@ -24,14 +22,13 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
         //Compute the absolute sizes and change the margin if needed
         const [textWidth, textHeight] = getTextSizes(barState, state);
         const graphRect = state.context.graphRect();
-        const textOffset = 4;
 
         switch(barState.position){
             case "x-start":{
-                barState.absoluteSize.width = barState.width + textOffset + textWidth;
+                barState.absoluteSize.width = barState.width + barState.textOffset + textWidth;
                 barState.absoluteSize.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
 
-                if(barState.label.title !== "") barState.absoluteSize.width += textOffset + textHeight; 
+                if(barState.label.title !== "") barState.absoluteSize.width += barState.textOffset + textHeight; 
                 
                 const minMargin = barState.absoluteSize.width + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.x.start < minMargin) 
@@ -40,10 +37,10 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
             break;
 
             case "x-end":{
-                barState.absoluteSize.width = barState.width + textOffset + textWidth;
+                barState.absoluteSize.width = barState.width + barState.textOffset + textWidth;
                 barState.absoluteSize.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
 
-                if(barState.label.title !== "") barState.absoluteSize.width += textOffset + textHeight;
+                if(barState.label.title !== "") barState.absoluteSize.width += barState.textOffset + textHeight;
 
                 const minMargin = barState.absoluteSize.width + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.x.end < minMargin) 
@@ -53,9 +50,9 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 
             case "y-start":{
                 barState.absoluteSize.width = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.absoluteSize.height = barState.width + textOffset + textHeight;
+                barState.absoluteSize.height = barState.width + barState.textOffset + textHeight;
 
-                if(barState.label.title !== "") barState.absoluteSize.height += textOffset + textHeight;
+                if(barState.label.title !== "") barState.absoluteSize.height += barState.textOffset + textHeight;
 
                 const minMargin = barState.absoluteSize.height + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.y.start < minMargin) 
@@ -65,9 +62,9 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 
             case "y-end":{
                 barState.absoluteSize.width = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.absoluteSize.height = barState.width + textOffset + textHeight;
+                barState.absoluteSize.height = barState.width + barState.textOffset + textHeight;
 
-                if(barState.label.title !== "") barState.absoluteSize.height += textOffset + textHeight;
+                if(barState.label.title !== "") barState.absoluteSize.height += barState.textOffset + textHeight;
             
                 const minMargin = barState.absoluteSize.height + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.y.end < minMargin) 
@@ -77,16 +74,16 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 
             case "floating":
                 if(barState.floating.orientation==="vertical"){
-                    barState.absoluteSize.width = barState.width + textOffset + textWidth;
+                    barState.absoluteSize.width = barState.width + barState.textOffset + textWidth;
                     barState.absoluteSize.height = graphRect.height * barState.size;
 
-                    if(barState.label.title !== "") barState.absoluteSize.width += textOffset + textHeight;
+                    if(barState.label.title !== "") barState.absoluteSize.width += barState.textOffset + textHeight;
                 }
                 if(barState.floating.orientation==="horizontal"){
                     barState.absoluteSize.width = graphRect.width * barState.size;
-                    barState.absoluteSize.height = barState.width + textOffset + textHeight;
+                    barState.absoluteSize.height = barState.width + barState.textOffset + textHeight;
 
-                    if(barState.label.title !== "") barState.absoluteSize.height += textOffset + textHeight;
+                    if(barState.label.title !== "") barState.absoluteSize.height += barState.textOffset + textHeight;
                 }
                 break;
         }

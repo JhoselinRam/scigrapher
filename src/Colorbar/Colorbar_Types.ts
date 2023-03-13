@@ -54,7 +54,8 @@ export interface Colorbar_State extends Colorbar_Options {
         width : number,
         height : number
     },
-    gradient : Colorbar_Gradient
+    gradient : Colorbar_Gradient,
+    textOffset : number
 }
 
 export type Colorbar_Gradient = Array<{color:string, position:number, label:string}>

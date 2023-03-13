@@ -47,6 +47,7 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
         id : crypto.randomUUID(),
         absoluteSize : {width: 0, height:0},
         gradient : [],
+        textOffset : 4,
         ...defaultOptions,
         ...options,
         ticks : options.ticks==null? defaultOptions.ticks : options.ticks as Colorbar_Ticks,
