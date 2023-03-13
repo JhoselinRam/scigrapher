@@ -22,6 +22,11 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
 
         state.context.canvas.save();
         state.context.canvas.translate(graphRect.x, graphRect.y);
+        if(state.axis.position==="center"){
+            state.context.canvas.beginPath();
+            state.context.canvas.rect(0, 0, graphRect.width, graphRect.height);
+            state.context.canvas.clip();
+        }
 
         //Base
         state.context.canvas.strokeStyle = axisUsed.baseColor;

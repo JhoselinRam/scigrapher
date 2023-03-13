@@ -1,9 +1,11 @@
+import { Colorbar } from "../Colorbar/Colorbar_Types";
 import { Dataset_Types, Draw_Data_Callback } from "../Data/Data_Types";
 import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
 import { Background } from "./resourses/Background/Background_Types";
 import { Border } from "./resourses/Border/Border_Types";
+import { Colorbars } from "./resourses/Colorbars/Colorbars_Types";
 import { Data } from "./resourses/Data/Data_Types";
 import { Events } from "./resourses/Events/Events_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
@@ -22,7 +24,8 @@ export interface Graph2D extends
     Omit<Border, "draw">,
     Events,
     Data,
-    Properties
+    Properties,
+    Colorbars
     {}
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
@@ -199,7 +202,12 @@ export interface Graph2D_State extends Graph2D_Options {
         data : boolean,
         shouldSort : boolean,
         dirtify : (sort ?: boolean)=>void
-    }
+    },
+    colorbars : Array<{
+        bar : Colorbar,
+        compute : ()=>void,
+        draw : ()=>void
+    }>
 }
 
 export interface Method_Generator{

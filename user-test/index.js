@@ -1,99 +1,90 @@
 import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
-                    .aspectRatio({anchor:0})
+                    //.aspectRatio({anchor:0})
                     .pointerZoom()
                     .pointerMove()
                     .containerResize()
-                    .margin({x:{start:40, end:40}, y:{start:40, end:40}})
-                    .border({border:{enable:true}})
+                    .border({x:{end:{enable:true}}, y:{end:{enable:true}}})
+                    .axisPosition("bottom-left")
+                    .axisDomain({x:{start:-4, end:4}, y:{start:-4, end:4}})
+                    .primaryGrid({grid:{enable:false}})
+                    .secondaryGrid({grid:{enable:false}})
                     .draw();
 
+Graph.addColorbar()
 
+// const vector = Graph.addDataset("vectorfield");
+// const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});
 
-const vector = Graph.addDataset("vectorfield");
-const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});
+// function dipole(x,y){
+//     const a = 1;
+//     const K = 1;
+//     const rPlus = Math.hypot(x+a, y);
+//     const rMinus = Math.hypot(x-a, y);
 
-function dipole(x,y){
-    const a = 1;
-    const K = 1;
-    const rPlus = Math.hypot(x+a, y);
-    const rMinus = Math.hypot(x-a, y);
-
-    const xValue = K * ( -(x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
-    const yValue = K * ( -y/Math.pow(rPlus,3) -  y/Math.pow(rMinus,3) );
-    const size = Math.hypot(xValue, yValue);
+//     const xValue = K * ( -(x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
+//     const yValue = K * ( -y/Math.pow(rPlus,3) -  y/Math.pow(rMinus,3) );
+//     const size = Math.hypot(xValue, yValue);
     
-    return [xValue/size, yValue/size];
-}
+//     return [xValue/size, yValue/size];
+// }
 
-function vColor(x, y){
-    const angle = Math.atan2(y,x);
-    return colorfun(angle);
-}
+// function vColor(x, y){
+//     const angle = Math.atan2(y,x);
+//     return colorfun(angle);
+// }
 
-function setMeshX(data, graph){
-    const domain = graph.axisDomain();
-    const n = 50;
-    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
-    const x = linspace(domain.x.start, domain.x.end, n); 
-    const y = linspace(domain.y.start, domain.y.end, m);
-    const [X, Y] = meshgrid(x,y);
+// function setMeshX(data, graph){
+//     const domain = graph.axisDomain();
+//     const n = 50;
+//     const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+//     const x = linspace(domain.x.start, domain.x.end, n); 
+//     const y = linspace(domain.y.start, domain.y.end, m);
+//     const [X, Y] = meshgrid(x,y);
 
-    return X;
-} 
-function setMeshY(data, graph){
-    const domain = graph.axisDomain();
-    const n = 50;
-    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
-    const x = linspace(domain.x.start, domain.x.end, n); 
-    const y = linspace(domain.y.start, domain.y.end, m);
-    const [X, Y] = meshgrid(x,y);
+//     return X;
+// } 
+// function setMeshY(data, graph){
+//     const domain = graph.axisDomain();
+//     const n = 50;
+//     const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+//     const x = linspace(domain.x.start, domain.x.end, n); 
+//     const y = linspace(domain.y.start, domain.y.end, m);
+//     const [X, Y] = meshgrid(x,y);
     
-    return Y;
-} 
-function setDataX(x, y){
-    const [X, Y] = dipole(x,y);
-    return X;
-}
-function setDataY(x, y){
-    const [X, Y] = dipole(x, y);
-    return Y;
-}
+//     return Y;
+// } 
+// function setDataX(x, y){
+//     const [X, Y] = dipole(x,y);
+//     return X;
+// }
+// function setDataY(x, y){
+//     const [X, Y] = dipole(x, y);
+//     return Y;
+// }
 
-vector.meshX(setMeshX).meshY(setMeshY).dataX(setDataX).dataY(setDataY).color(vColor);
-Graph.draw()
-
-
+// vector.meshX(setMeshX).meshY(setMeshY).dataX(setDataX).dataY(setDataY).color(vColor);
+// Graph.draw()
 
 
 
 
 
 
-//------------ Counterfit Data ----------------
+
+
+//------------ Heat Data ----------------
 //---------------------------------------------
 
-const x = linspace(-1, 1, 50);
-const y = linspace(-1, 1, 50);
+const x = linspace(-3, 3, 50);
+const y = linspace(-3, 3, 50);
 const [X,Y] = meshgrid(x,y);
 
-function counterData(){
-    const a = 1;
-    const w = 4*Math.PI;
-    const data = [];
-
-    for(let i=0; i<X.length; i++){
-        data.push([]);
-        for(let j=0; j<X[i].length; j++){
-            const r = Math.hypot(X[i][j], Y[i][j]);
-            data[i].push(a*Math.cos(w*r));
-        }
-    }
-    return data;
+function heatData(x, y){
+    return 3*(1-x)**2*Math.exp((x**2+(y+1)**2)*-1)+10*(x/5-x**3-y**5)*Math.exp((x**2+y**2)*-1)-1/3*Math.exp(((x+1)**2+y**2)*-1);
 }
 
-function counterOpacity(value, x, y){
-    //console.log(x,y)
+function heatOpacity(value, x, y){
     let r = Math.hypot(x,y);
     r =  r>1?1:0;
     const t = 3*Math.pow(r,2) - 2*Math.pow(r,3);
@@ -103,8 +94,8 @@ function counterOpacity(value, x, y){
 //---------------------------------------------
 //---------------------------------------------
 
-// const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(counterData()).smooth(false);
-// Graph.draw();
+const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false);
+Graph.draw();
 
 
 

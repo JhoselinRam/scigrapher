@@ -2,6 +2,7 @@ import { Graph2D, Graph2D_Options, Graph2D_State, LabelProperties, Rect, Recursi
 import Axis from "./resourses/Axis/Axis.js";
 import Background from "./resourses/Background/Background.js";
 import Border from "./resourses/Border/Border.js";
+import Colorbars from "./resourses/Colorbars/Colorbars.js";
 import Data from "./resourses/Data/Data.js";
 import Events from "./resourses/Events/Events.js";
 import Grid from "./resourses/Grid/Grid.js";
@@ -215,6 +216,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             shouldSort : false,
             dirtify
         },
+        colorbars : [],
         background : {...defaultOptions.background, ...options.background},
         margin : {
             x : {...defaultOptions.margin.x, ...options.margin?.x},
@@ -295,6 +297,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const data = Data({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const properties = Properties({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const border = Border({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const colorbars = Colorbars({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -360,6 +363,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.graphRect = properties.graphRect;
     graphHandler.draw = properties.draw;
     graphHandler.border = border.border;
+    graphHandler.addColorbar = colorbars.addColorbar;
 
     
     //Setup configurations
@@ -384,6 +388,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
         const fullState = state as Graph2D_State;
 
         fullState.compute.margin();
+        fullState.colorbars.forEach(colorbar=>colorbar.compute());
         fullState.compute.scale();
         fullState.compute.axis();   
         fullState.compute.secondary();   
@@ -423,6 +428,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             
             fullState.context.data.clearRect(0,0,fullState.context.data.canvas.width, fullState.context.data.canvas.height);
             fullState.data.forEach(item => item.draw(fullState));
+            fullState.colorbars.forEach(colorbar=>colorbar.draw());
         }
         
         fullState.dirty.full = false;

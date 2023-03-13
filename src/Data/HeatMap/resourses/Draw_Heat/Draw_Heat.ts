@@ -87,10 +87,10 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
         //Center positions
         for(let i=1; i<meshX.length-1; i++){
             for(let j=1; j<meshX[i].length-1; j++){
-                const x = Math.round(xScale.map(meshX[i][j] - (meshX[i][j] - meshX[i][j-1])/2));
-                const width = Math.round(Math.abs(x - xScale.map(meshX[i][j] + (meshX[i][j+1] - meshX[i][j])/2)));
-                const y = Math.round(yScale.map(meshY[i][j] - (meshY[i][j] - meshY[i-1][j])/2));
-                const height = Math.round(Math.abs(y - yScale.map(meshY[i][j] + (meshY[i+1][j] - meshY[i][j])/2)));
+                const x = Math.round(xScale.map(meshX[i][j] - (meshX[i][j] - meshX[i][j-1])/2))-1;
+                const width = Math.round(Math.abs(x - xScale.map(meshX[i][j] + (meshX[i][j+1] - meshX[i][j])/2)))+1;
+                const y = Math.round(yScale.map(meshY[i][j] - (meshY[i][j] - meshY[i-1][j])/2))-1;
+                const height = Math.round(Math.abs(y - yScale.map(meshY[i][j] + (meshY[i+1][j] - meshY[i][j])/2)))+1;
 
                 context.fillStyle = getColor(data[i][j], meshX[i][j], meshY[i][j], i, j, data, meshX, meshY, dataset, graph);
                 context.beginPath();
@@ -103,30 +103,30 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
         //Left and right strips 
         for(let i=0; i<meshX.length; i++){
             const final = meshX[i].length-1;
-            let xLeft = Math.round(xScale.map(meshX[i][0]));
-            let xRight = Math.round(xScale.map(meshX[i][final-1] + (meshX[i][final] - meshX[i][final-1])/2));
+            let xLeft = Math.round(xScale.map(meshX[i][0]))-1;
+            let xRight = Math.round(xScale.map(meshX[i][final-1] + (meshX[i][final] - meshX[i][final-1])/2))-1;
             let yLeft = 0;
             let yRight = 0;
-            let widthLeft = Math.round(Math.abs(xLeft - xScale.map(meshX[i][0] + (meshX[i][1] - meshX[i][0])/2)));
-            let widthRight = Math.round(Math.abs(xRight - xScale.map(meshX[i][final])));
+            let widthLeft = Math.round(Math.abs(xLeft - xScale.map(meshX[i][0] + (meshX[i][1] - meshX[i][0])/2)))+1;
+            let widthRight = Math.round(Math.abs(xRight - xScale.map(meshX[i][final])))+1;
             let heightLeft = 0;
             let heightRight = 0;
 
             if(i === 0){
-                yLeft = Math.round(yScale.map(meshY[0][0]));
-                yRight = Math.round(yScale.map(meshY[0][final]));
-                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[1][0] - (meshY[1][0] - meshY[0][0])/2)));
-                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[1][final] - (meshY[1][final] - meshY[0][final])/2)));
+                yLeft = Math.round(yScale.map(meshY[0][0]))-1;
+                yRight = Math.round(yScale.map(meshY[0][final]))-1;
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[1][0] - (meshY[1][0] - meshY[0][0])/2)))+1;
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[1][final] - (meshY[1][final] - meshY[0][final])/2)))+1;
             }else if(i === meshX.length -1){
-                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
-                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
-                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0])));
-                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[i][final])));
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2))-1;
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2))-1;
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0])))+1;
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[i][final])))+1;
             }else{
-                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
-                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
-                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0] + (meshY[i+1][0] - meshY[i][0])/2)));
-                heightRight = Math.round(Math.abs(yLeft - yScale.map(meshY[i][final] + (meshY[i+1][final] - meshY[i][final])/2)));
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2))-1;
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2))-1;
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0] + (meshY[i+1][0] - meshY[i][0])/2)))+1;
+                heightRight = Math.round(Math.abs(yLeft - yScale.map(meshY[i][final] + (meshY[i+1][final] - meshY[i][final])/2)))+1;
             }
 
             context.fillStyle = getColor(data[i][0], meshX[i][0], meshY[i][0], i, 0, data, meshX, meshY, dataset, graph);
@@ -143,14 +143,14 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
         //Top and bottom strips
         for(let j=1; j<meshX[0].length-1; j++){
             const final = meshX.length-1;
-            let xTop = Math.round(xScale.map(meshX[0][j] - (meshX[0][j] - meshX[0][j-1])/2));
-            let xBottom = Math.round(xScale.map(meshX[final][j] - (meshX[final][j] - meshX[final][j-1])/2));
-            let yTop = Math.round(yScale.map(meshY[0][j]));
-            let yBottom = Math.round(yScale.map(meshY[final][j] - (meshY[final][j] - meshY[final-1][j])/2));
-            let widthTop = Math.round(Math.abs(xTop - xScale.map(meshX[0][j+1] - (meshX[0][j+1] - meshX[0][j])/2)));
-            let widthBottom = Math.round(Math.abs(xBottom - xScale.map(meshX[final][j+1] - (meshX[final][j+1] - meshX[final][j])/2)));
-            let heightTop = Math.round(Math.abs(yTop - yScale.map(meshY[1][j] - (meshY[1][j] - meshY[0][j])/2)));
-            let heightBottom = Math.round(Math.abs(yBottom - yScale.map(meshY[final][j])));
+            let xTop = Math.round(xScale.map(meshX[0][j] - (meshX[0][j] - meshX[0][j-1])/2))-1;
+            let xBottom = Math.round(xScale.map(meshX[final][j] - (meshX[final][j] - meshX[final][j-1])/2))-1;
+            let yTop = Math.round(yScale.map(meshY[0][j]))-1;
+            let yBottom = Math.round(yScale.map(meshY[final][j] - (meshY[final][j] - meshY[final-1][j])/2))-1;
+            let widthTop = Math.round(Math.abs(xTop - xScale.map(meshX[0][j+1] - (meshX[0][j+1] - meshX[0][j])/2)))+1;
+            let widthBottom = Math.round(Math.abs(xBottom - xScale.map(meshX[final][j+1] - (meshX[final][j+1] - meshX[final][j])/2)))+1;
+            let heightTop = Math.round(Math.abs(yTop - yScale.map(meshY[1][j] - (meshY[1][j] - meshY[0][j])/2)))+1;
+            let heightBottom = Math.round(Math.abs(yBottom - yScale.map(meshY[final][j])))+1;
 
             context.fillStyle = getColor(data[0][j], meshX[0][j], meshY[0][j], 0, j, data, meshX, meshY, dataset, graph);
             context.beginPath();
@@ -169,10 +169,10 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
         //Center positions
         for(let i=1; i<meshX.length-1; i++){
             for(let j=1; j<meshX[i].length-1; j++){
-                const x = Math.round(xScale.map(meshX[i][j] - (meshX[i][j] - meshX[i][j-1])/2));
-                const width = Math.round(Math.abs(x - xScale.map(meshX[i][j] + (meshX[i][j+1] - meshX[i][j])/2)));
-                const y = Math.round(yScale.map(meshY[i][j] - (meshY[i][j] - meshY[i-1][j])/2));
-                const height = Math.round(Math.abs(y - yScale.map(meshY[i][j] + (meshY[i+1][j] - meshY[i][j])/2)));
+                const x = Math.round(xScale.map(meshX[i][j] - (meshX[i][j] - meshX[i][j-1])/2))-1;
+                const width = Math.round(Math.abs(x - xScale.map(meshX[i][j] + (meshX[i][j+1] - meshX[i][j])/2)))+1;
+                const y = Math.round(yScale.map(meshY[i][j] - (meshY[i][j] - meshY[i-1][j])/2))-1;
+                const height = Math.round(Math.abs(y - yScale.map(meshY[i][j] + (meshY[i+1][j] - meshY[i][j])/2)))+1;
                 
                 context.globalAlpha = isCallable(opacity) ? opacity(data[i][j], meshX[i][j], meshY[i][j], i, j, data, meshX, meshY, dataset, graph) : opacity[i][j]; //<-- Here
                 context.fillStyle = getColor(data[i][j], meshX[i][j], meshY[i][j], i, j, data, meshX, meshY, dataset, graph);
@@ -185,30 +185,30 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
         //Left and right strips 
         for(let i=0; i<meshX.length; i++){
             const final = meshX[i].length-1;
-            let xLeft = Math.round(xScale.map(meshX[i][0]));
-            let xRight = Math.round(xScale.map(meshX[i][final-1] + (meshX[i][final] - meshX[i][final-1])/2));
+            let xLeft = Math.round(xScale.map(meshX[i][0]))-1;
+            let xRight = Math.round(xScale.map(meshX[i][final-1] + (meshX[i][final] - meshX[i][final-1])/2))-1;
             let yLeft = 0;
             let yRight = 0;
-            let widthLeft = Math.round(Math.abs(xLeft - xScale.map(meshX[i][0] + (meshX[i][1] - meshX[i][0])/2)));
-            let widthRight = Math.round(Math.abs(xRight - xScale.map(meshX[i][final])));
+            let widthLeft = Math.round(Math.abs(xLeft - xScale.map(meshX[i][0] + (meshX[i][1] - meshX[i][0])/2)))+1;
+            let widthRight = Math.round(Math.abs(xRight - xScale.map(meshX[i][final])))+1;
             let heightLeft = 0;
             let heightRight = 0;
 
             if(i === 0){
-                yLeft = Math.round(yScale.map(meshY[0][0]));
-                yRight = Math.round(yScale.map(meshY[0][final]));
-                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[1][0] - (meshY[1][0] - meshY[0][0])/2)));
-                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[1][final] - (meshY[1][final] - meshY[0][final])/2)));
+                yLeft = Math.round(yScale.map(meshY[0][0]))-1;
+                yRight = Math.round(yScale.map(meshY[0][final]))-1;
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[1][0] - (meshY[1][0] - meshY[0][0])/2)))+1;
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[1][final] - (meshY[1][final] - meshY[0][final])/2)))+1;
             }else if(i === meshX.length -1){
-                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
-                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
-                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0])));
-                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[i][final])));
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2))-1;
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2))-1;
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0])))+1;
+                heightRight = Math.round(Math.abs(yRight - yScale.map(meshY[i][final])))+1;
             }else{
-                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2));
-                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2));
-                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0] + (meshY[i+1][0] - meshY[i][0])/2)));
-                heightRight = Math.round(Math.abs(yLeft - yScale.map(meshY[i][final] + (meshY[i+1][final] - meshY[i][final])/2)));
+                yLeft = Math.round(yScale.map(meshY[i][0] - (meshY[i][0] - meshY[i-1][0])/2))-1;
+                yRight = Math.round(yScale.map(meshY[i][final] - (meshY[i][final] - meshY[i-1][final])/2))-1;
+                heightLeft = Math.round(Math.abs(yLeft - yScale.map(meshY[i][0] + (meshY[i+1][0] - meshY[i][0])/2)))+1;
+                heightRight = Math.round(Math.abs(yLeft - yScale.map(meshY[i][final] + (meshY[i+1][final] - meshY[i][final])/2)))+1;
             }
 
             context.globalAlpha = isCallable(opacity) ? opacity(data[i][0], meshX[i][0], meshY[i][0], i, 0, data, meshX, meshY, dataset, graph) : opacity[i][0];
@@ -227,14 +227,14 @@ function drawDefault({state, data, dataState, meshX, meshY, xScale, yScale, data
         //Top and bottom strips
         for(let j=1; j<meshX[0].length-1; j++){
             const final = meshX.length-1;
-            let xTop = Math.round(xScale.map(meshX[0][j] - (meshX[0][j] - meshX[0][j-1])/2));
-            let xBottom = Math.round(xScale.map(meshX[final][j] - (meshX[final][j] - meshX[final][j-1])/2));
-            let yTop = Math.round(yScale.map(meshY[0][j]));
-            let yBottom = Math.round(yScale.map(meshY[final][j] - (meshY[final][j] - meshY[final-1][j])/2));
-            let widthTop = Math.round(Math.abs(xTop - xScale.map(meshX[0][j+1] - (meshX[0][j+1] - meshX[0][j])/2)));
-            let widthBottom = Math.round(Math.abs(xBottom - xScale.map(meshX[final][j+1] - (meshX[final][j+1] - meshX[final][j])/2)));
-            let heightTop = Math.round(Math.abs(yTop - yScale.map(meshY[1][j] - (meshY[1][j] - meshY[0][j])/2)));
-            let heightBottom = Math.round(Math.abs(yBottom - yScale.map(meshY[final][j])));
+            let xTop = Math.round(xScale.map(meshX[0][j] - (meshX[0][j] - meshX[0][j-1])/2))-1;
+            let xBottom = Math.round(xScale.map(meshX[final][j] - (meshX[final][j] - meshX[final][j-1])/2))-1;
+            let yTop = Math.round(yScale.map(meshY[0][j]))-1;
+            let yBottom = Math.round(yScale.map(meshY[final][j] - (meshY[final][j] - meshY[final-1][j])/2))-1;
+            let widthTop = Math.round(Math.abs(xTop - xScale.map(meshX[0][j+1] - (meshX[0][j+1] - meshX[0][j])/2)))+1;
+            let widthBottom = Math.round(Math.abs(xBottom - xScale.map(meshX[final][j+1] - (meshX[final][j+1] - meshX[final][j])/2)))+1;
+            let heightTop = Math.round(Math.abs(yTop - yScale.map(meshY[1][j] - (meshY[1][j] - meshY[0][j])/2)))+1;
+            let heightBottom = Math.round(Math.abs(yBottom - yScale.map(meshY[final][j])))+1;
 
             context.globalAlpha = isCallable(opacity) ? opacity(data[0][j], meshX[0][j], meshY[0][j], 0, j, data, meshX, meshY, dataset, graph) : opacity[0][j];
             context.fillStyle = getColor(data[0][j], meshX[0][j], meshY[0][j], 0, j, data, meshX, meshY, dataset, graph);
