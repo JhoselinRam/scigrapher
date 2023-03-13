@@ -12,6 +12,7 @@ function Colorbars({graphHandler, state} : Method_Generator) : Colorbars{
 
         state.colorbars.push({bar:newBar, compute, draw});
         state.compute.client();
+        state.dirty.client = true;
         if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
 
         return newBar;

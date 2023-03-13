@@ -12,6 +12,7 @@ const Graph = Graph2D(document.querySelector(".graph"))
                     .draw();
 
 Graph.addColorbar()
+Graph.draw();
 
 // const vector = Graph.addDataset("vectorfield");
 // const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});

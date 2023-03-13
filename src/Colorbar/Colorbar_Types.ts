@@ -15,7 +15,8 @@ export interface Colorbar_Options {
     label : Colorbar_Label,
     width : number,
     floating : Colorbar_Floating,
-    border : Colorbar_Border
+    border : Colorbar_Border,
+    data : Colorbar_Data
 }
 
 export type Colorbar_Ticks = number | Array<string> | Array<{position:number, label:string}>;
@@ -53,8 +54,7 @@ export interface Colorbar_State extends Colorbar_Options {
         width : number,
         height : number
     },
-    gradient : Colorbar_Gradient,
-    data : Colorbar_Data
+    gradient : Colorbar_Gradient
 }
 
 export type Colorbar_Gradient = Array<{color:string, position:number, label:string}>
