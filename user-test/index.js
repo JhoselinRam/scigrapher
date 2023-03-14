@@ -94,7 +94,7 @@ function heatOpacity(value, x, y){
 //---------------------------------------------
 //---------------------------------------------
 
-const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false);
+const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(true);
 Graph.draw();
 
 
