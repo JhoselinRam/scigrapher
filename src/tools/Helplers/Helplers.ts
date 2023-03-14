@@ -119,3 +119,21 @@ export function getColorFunction({data, dataState} : Get_Color_Function) : Heat_
 }
 
 //---------------------------------------------
+//-------------- Get Text Size ----------------
+
+interface Text_Size {width:number, height:number};
+
+export function getTextSize(text:string, size:string, font:string, context:CanvasRenderingContext2D) : Text_Size{
+    context.save();
+
+    context.font = `${size} ${font}`;
+    const metric = context.measureText(text);
+    const width = metric.width;
+    const height = metric.actualBoundingBoxAscent + metric.actualBoundingBoxDescent;
+
+    context.restore();
+
+    return {width, height};
+}
+
+//---------------------------------------------

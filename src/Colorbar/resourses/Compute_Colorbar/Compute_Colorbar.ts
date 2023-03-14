@@ -1,5 +1,5 @@
-import { Graph2D_State } from "../../../Graph2D/Graph2D_Types";
-import { Colorbar_Method_Generator, Colorbar_State } from "../../Colorbar_Types";
+import { getTextSize } from "../../../tools/Helplers/Helplers.js";
+import { Colorbar_Method_Generator } from "../../Colorbar_Types";
 import { Compute_Colorbar } from "./Compute_Colorbar_Types";
 
 function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Compute_Colorbar{
@@ -9,6 +9,8 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
     function compute(){
         if(!barState.enable) return;
 
+        
+
         //Compute the gradient components
         if(typeof barState.data === "string"){
 
@@ -16,74 +18,217 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
         if(typeof barState.data === "object"){
             barState.data.sort((a,b) => barState.reverse ? b.position - a.position : a.position - b.position);
             const maxPosition = barState.reverse? barState.data[0].position : barState.data[barState.data.length-1].position;
-            barState.gradient = barState.data.map(item=>{return {color:item.color, label:`${item.label}${barState.unit}`, position:item.position/maxPosition}});
+            barState.gradient.entries = barState.data.map(item=>{
+                return {
+                    color:item.color, 
+                    label:`${item.label}${barState.unit}`, 
+                    position:item.position/maxPosition}
+            });
         }
 
         //Compute the absolute sizes and change the margin if needed
-        const [textWidth, textHeight] = getTextSizes(barState, state);
         const graphRect = state.context.graphRect();
+        const titleSize = getTextSize(barState.title.text, barState.title.size, barState.title.font, state.context.data);
+        let labelWidth = 0;
+        let labelHeight = 0;
+
+        barState.gradient.entries.forEach(item=>{
+            const size = getTextSize(item.label, barState.label.size, barState.label.font, state.context.data);
+            
+            if(size.width > labelWidth)
+                labelWidth = size.width;
+            if(size.height > labelHeight)
+                labelHeight = size.height;
+        });
+
+        
         
         switch(barState.position){
             case "x-start":{
-                barState.absoluteSize.width = barState.width + barState.textOffset + textWidth;
-                barState.absoluteSize.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
+                //Size
+                barState.metrics.width = barState.width + barState.textOffset + labelWidth;
+                barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
 
-                if(barState.label.title !== "") barState.absoluteSize.width += barState.textOffset + textHeight; 
+                if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height; 
                 
-                const minMargin = barState.absoluteSize.width + 2*state.marginUsed.defaultMargin;
+                //Margin
+                const minMargin = barState.metrics.width + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.x.start < minMargin) 
-                    state.marginUsed.x.start = minMargin; 
+                    state.marginUsed.x.start = minMargin;
+                    
+                //Coordinates
+                let startPosition = 0;
+                if(barState.title.text !== ""){
+                    if(barState.title.position === "start"){
+                        barState.metrics.titleCoord = 0;
+                        startPosition = titleSize.height + barState.textOffset;
+                    }
+                    else
+                        barState.metrics.titleCoord = barState.metrics.width - titleSize.height;
+                }
+                if(barState.label.position === "start"){
+                    barState.metrics.labelCoord = startPosition + labelWidth;
+                    barState.metrics.barCoord = barState.metrics.labelCoord + barState.textOffset;
+                }
+                if(barState.label.position === "end"){
+                    barState.metrics.barCoord = startPosition;
+                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                }
             }
             break;
 
             case "x-end":{
-                barState.absoluteSize.width = barState.width + barState.textOffset + textWidth;
-                barState.absoluteSize.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
+                //Size
+                barState.metrics.width = barState.width + barState.textOffset + labelWidth;
+                barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
 
-                if(barState.label.title !== "") barState.absoluteSize.width += barState.textOffset + textHeight;
+                if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
 
-                const minMargin = barState.absoluteSize.width + 2*state.marginUsed.defaultMargin;
+                //Margin
+                const minMargin = barState.metrics.width + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.x.end < minMargin) 
                     state.marginUsed.x.end = minMargin;
+
+                //Coordinates
+                let startPosition = 0;
+                if(barState.title.text !== ""){
+                    if(barState.title.position === "start"){
+                        barState.metrics.titleCoord = 0;
+                        startPosition = titleSize.height + barState.textOffset;
+                    }
+                    else
+                        barState.metrics.titleCoord = barState.metrics.width - titleSize.height;
+                }
+                if(barState.label.position === "start"){
+                    barState.metrics.labelCoord = startPosition + labelWidth;
+                    barState.metrics.barCoord = barState.metrics.labelCoord + barState.textOffset;
+                }
+                if(barState.label.position === "end"){
+                    barState.metrics.barCoord = startPosition;
+                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                }
             }
            break;
 
             case "y-start":{
-                barState.absoluteSize.width = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.absoluteSize.height = barState.width + barState.textOffset + textHeight;
+                //Size
+                barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
+                barState.metrics.height = barState.width + barState.textOffset + labelHeight;
 
-                if(barState.label.title !== "") barState.absoluteSize.height += barState.textOffset + textHeight;
+                if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
 
-                const minMargin = barState.absoluteSize.height + 2*state.marginUsed.defaultMargin;
+                //Margin
+                const minMargin = barState.metrics.height + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.y.start < minMargin) 
                     state.marginUsed.y.start = minMargin;
+
+                //Coordinates
+                let startPosition = 0;
+                if(barState.title.text !== ""){
+                    if(barState.title.position === "start")
+                        barState.metrics.titleCoord = barState.metrics.height - titleSize.height;
+                    else{
+                        barState.metrics.titleCoord = 0;
+                        startPosition = titleSize.height + barState.textOffset
+                    }
+                }
+                if(barState.label.position === "start"){
+                    barState.metrics.barCoord = startPosition;
+                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                }
+                if(barState.label.position === "end"){
+                    barState.metrics.labelCoord = startPosition;
+                    barState.metrics.barCoord = startPosition + labelHeight + barState.textOffset;
+                }
             }
             break;
 
             case "y-end":{
-                barState.absoluteSize.width = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.absoluteSize.height = barState.width + barState.textOffset + textHeight;
+                //Size
+                barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
+                barState.metrics.height = barState.width + barState.textOffset + labelHeight;
 
-                if(barState.label.title !== "") barState.absoluteSize.height += barState.textOffset + textHeight;
+                if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
             
-                const minMargin = barState.absoluteSize.height + 2*state.marginUsed.defaultMargin;
+                //Margin
+                const minMargin = barState.metrics.height + 2*state.marginUsed.defaultMargin;
                 if(state.marginUsed.y.end < minMargin) 
                     state.marginUsed.y.end = minMargin;
+
+                //Coordinates
+                let startPosition = 0;
+                if(barState.title.text !== ""){
+                    if(barState.title.position === "start")
+                        barState.metrics.titleCoord = barState.metrics.height - titleSize.height;
+                    else{
+                        barState.metrics.titleCoord = 0;
+                        startPosition = titleSize.height + barState.textOffset
+                    }
+                }
+                if(barState.label.position === "start"){
+                    barState.metrics.barCoord = startPosition;
+                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                }
+                if(barState.label.position === "end"){
+                    barState.metrics.labelCoord = startPosition;
+                    barState.metrics.barCoord = startPosition + labelHeight + barState.textOffset;
+                }
             }
             break;
 
             case "floating":
                 if(barState.floating.orientation==="vertical"){
-                    barState.absoluteSize.width = barState.width + barState.textOffset + textWidth;
-                    barState.absoluteSize.height = graphRect.height * barState.size;
+                    //Size
+                    barState.metrics.width = barState.width + barState.textOffset + labelWidth;
+                    barState.metrics.height = graphRect.height * barState.size;
 
-                    if(barState.label.title !== "") barState.absoluteSize.width += barState.textOffset + textHeight;
+                    if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
+
+                    //Coordinates
+                    let startPosition = 0;
+                    if(barState.title.text !== ""){
+                        if(barState.title.position === "start"){
+                            barState.metrics.titleCoord = 0;
+                            startPosition = titleSize.height + barState.textOffset;
+                        }
+                        else
+                            barState.metrics.titleCoord = barState.metrics.width - titleSize.height;
+                    }
+                    if(barState.label.position === "start"){
+                        barState.metrics.labelCoord = startPosition + labelWidth;
+                        barState.metrics.barCoord = barState.metrics.labelCoord + barState.textOffset;
+                    }
+                    if(barState.label.position === "end"){
+                        barState.metrics.barCoord = startPosition;
+                        barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                    }
+
                 }
                 if(barState.floating.orientation==="horizontal"){
-                    barState.absoluteSize.width = graphRect.width * barState.size;
-                    barState.absoluteSize.height = barState.width + barState.textOffset + textHeight;
+                    //Size
+                    barState.metrics.width = graphRect.width * barState.size;
+                    barState.metrics.height = barState.width + barState.textOffset + labelHeight;
 
-                    if(barState.label.title !== "") barState.absoluteSize.height += barState.textOffset + textHeight;
+                    if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
+
+                    //Coordinates
+                    let startPosition = 0;
+                    if(barState.title.text !== ""){
+                        if(barState.title.position === "start")
+                            barState.metrics.titleCoord = barState.metrics.height - titleSize.height;
+                        else{
+                            barState.metrics.titleCoord = 0;
+                            startPosition = titleSize.height + barState.textOffset
+                        }
+                    }
+                    if(barState.label.position === "start"){
+                        barState.metrics.barCoord = startPosition;
+                        barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                    }
+                    if(barState.label.position === "end"){
+                        barState.metrics.labelCoord = startPosition;
+                        barState.metrics.barCoord = startPosition + labelHeight + barState.textOffset;
+                    }
                 }
                 break;
         }
@@ -97,35 +242,3 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 }
 
 export default ComputeColorbar;
-
-
-
-
-
-
-
-
-
-//---------------------------------------------
-
-function getTextSizes(barState:Colorbar_State, state:Graph2D_State) : [number, number]{
-    let maxWidth = 0;
-    let maxHeight = 0;
-
-    state.context.data.save();
-    state.context.data.font = `${barState.label.size} ${barState.label.font}`;
-    barState.gradient.forEach(item=>{
-        const metric = state.context.data.measureText(item.label);
-        const width = metric.width;
-        const height = metric.actualBoundingBoxLeft + metric.actualBoundingBoxRight;
-        
-        if(width > maxWidth) maxWidth = width;
-        if(height > maxHeight) maxHeight = height;
-    });
-
-    return [maxWidth, maxHeight];
-}
-
-//---------------------------------------------
-
-

@@ -28,9 +28,20 @@ const defaultOptions : Colorbar_Options = {
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "10px",
         opacity : 1,
-        position : "out",
+        position : "end",
         width : 1,
-        title : "Bar Title"
+        filled : true
+    },
+    title : {
+        text : "Bar Title",
+        color : "#000000",
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "12px",
+        opacity : 1,
+        position : "start",
+        width : 1,
+        filled : true,
+        reverse : false
     },
     data : [
         {color : "#440154", label:"0", position:0},
@@ -45,8 +56,11 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
     //state of the colorbar
     const barState : Colorbar_State = {
         id : crypto.randomUUID(),
-        absoluteSize : {width: 0, height:0},
-        gradient : [],
+        metrics : {width: 0, height:0, barCoord:0, labelCoord:0, titleCoord:0},
+        gradient : {
+            entries : [],
+            gradientObject : state.context.data.createLinearGradient(0,0,0,0)
+        },
         textOffset : 4,
         ...defaultOptions,
         ...options,
@@ -55,6 +69,7 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
         border : {...defaultOptions.border, ...options.border},
         floating : {...defaultOptions.floating, ...options.floating},
         label : {...defaultOptions.label, ...options.label},
+        title : {...defaultOptions.title, ...options.title},
     }
 
 

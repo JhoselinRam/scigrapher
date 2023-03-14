@@ -12,7 +12,11 @@ export interface Colorbar_Options {
     position : Colorbar_Position,
     size : number,
     opacity : number
-    label : Colorbar_Label,
+    label : Colorbar_Text,
+    title : Colorbar_Text&{
+        text:string,
+        reverse : boolean
+    },
     width : number,
     floating : Colorbar_Floating,
     border : Colorbar_Border,
@@ -23,16 +27,16 @@ export type Colorbar_Ticks = number | Array<string> | Array<{position:number, la
 
 export type Colorbar_Position = "x-start" | "x-end" | "y-start" | "y-end" | "floating";
 
-export type Colorbar_Data = string | Colorbar_Gradient;
+export type Colorbar_Data = string | Array<{color:string, position:number, label:string}>;
 
-export interface Colorbar_Label {
+export interface Colorbar_Text {
     font : string,
     size : string,
     color : string,
     opacity : number,
     width : number,
-    position : "in" | "out",
-    title : string
+    position : "start" | "end",
+    filled : boolean
 }
 
 export interface Colorbar_Floating {
@@ -50,15 +54,21 @@ export interface Colorbar_Border {
 
 export interface Colorbar_State extends Colorbar_Options {
     id : string,
-    absoluteSize : {
+    metrics : {
         width : number,
-        height : number
+        height : number,
+        barCoord : number,
+        titleCoord : number,
+        labelCoord : number
     },
     gradient : Colorbar_Gradient,
     textOffset : number
 }
 
-export type Colorbar_Gradient = Array<{color:string, position:number, label:string}>
+export interface Colorbar_Gradient {
+    entries : Array<{color:string, position:number, label:string}>,
+    gradientObject : CanvasGradient
+} 
 
 export interface Colorbar_Method_Generator {
     barState : Colorbar_State,

@@ -1,12 +1,14 @@
-import { getLineDash } from "../../../tools/Helplers/Helplers.js";
+import { getLineDash, getTextSize } from "../../../tools/Helplers/Helplers.js";
 import { Colorbar_Method_Generator } from "../../Colorbar_Types";
 import { Draw_Colorbar } from "./Draw_Colorbar_Types";
 
-function DrawColorbar({barHandler, barState, graphHandler, state} : Colorbar_Method_Generator) : Draw_Colorbar{
+function DrawColorbar({barState, state} : Colorbar_Method_Generator) : Draw_Colorbar{
     
     //---------------------------------------------
         
         function draw(){
+            if(!barState.enable) return;
+
             const graphRect = state.context.graphRect();
 
             state.context.data.save();
@@ -15,12 +17,13 @@ function DrawColorbar({barHandler, barState, graphHandler, state} : Colorbar_Met
             switch(barState.position){
                 case "x-end":{
                     const yCoord = Math.round(graphRect.height/2 - barState.absoluteSize.height/2) + barState.border.width%2 * 0.5;
-                    if(barState.label.position === "out"){
+                    if(barState.label.position === "end"){
                         const xCoord = Math.round(state.context.clientRect.width - barState.textOffset - barState.absoluteSize.width) + barState.border.width%2 * 0.5;
                         const gradient = state.context.data.createLinearGradient(xCoord+barState.absoluteSize.width, yCoord+barState.absoluteSize.height, xCoord, yCoord,);
                         
                         //Labels and ticks
                         state.context.data.fillStyle = barState.label.color;
+                        state.context.data.strokeStyle = barState.label.color;
                         state.context.data.globalAlpha = barState.label.opacity;
                         state.context.data.lineWidth = barState.label.width;
                         state.context.data.font = `${barState.label.size} ${barState.label.font}`;
@@ -30,21 +33,30 @@ function DrawColorbar({barHandler, barState, graphHandler, state} : Colorbar_Met
                         barState.gradient.forEach(item=>{
                             const yText = yCoord+barState.absoluteSize.height-barState.textOffset + (2*barState.textOffset-barState.absoluteSize.height)*item.position;
                             
-                            state.context.data.fillText(item.label, xText, yText);
+                            barState.label.filled? state.context.data.fillText(item.label, xText, yText):
+                                                   state.context.data.strokeText(item.label, xText, yText);
                             
                             gradient.addColorStop(item.position, item.color);                     
                         });
 
                         //Title
-                        const xTitle = xCoord + barState.absoluteSize.width - barState.textOffset - 20;
-                        const yTitle = yCoord + barState.absoluteSize.height/2;
-                        state.context.data.save();
-                        state.context.data.translate(xTitle, yTitle);
-                        state.context.data.rotate(-Math.PI/2);
-                        state.context.data.textAlign = "center";
-                        state.context.data.textBaseline = "top";
-                        state.context.data.fillText(barState.label.title, 0, 0);
-                        state.context.data.restore();
+                        if(barState.title.text !== ""){
+                            const titleSize = getTextSize(barState.title.text, barState.title.size, barState.title.font, state.context.data);
+                            const xTitle = xCoord + barState.absoluteSize.width - barState.textOffset - titleSize.height;
+                            const yTitle = yCoord + barState.absoluteSize.height/2;
+                            state.context.data.save();
+                            state.context.data.translate(xTitle, yTitle);
+                            state.context.data.rotate(-Math.PI/2);
+                            state.context.data.fillStyle = barState.title.color;
+                            state.context.data.strokeStyle = barState.title.color;
+                            state.context.data.globalAlpha = barState.title.opacity;
+                            state.context.data.lineWidth = barState.title.width;
+                            state.context.data.font = `${barState.title.size} ${barState.title.font}`;
+                            state.context.data.textAlign = "center";
+                            state.context.data.textBaseline = "top";
+                            state.context.data.fillText(barState.title.text, 0, 0);
+                            state.context.data.restore();
+                        }
 
 
                         //Bar
