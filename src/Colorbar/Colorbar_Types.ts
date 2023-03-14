@@ -7,7 +7,9 @@ export interface Colorbar{
 export interface Colorbar_Options {
     enable : boolean,
     reverse : boolean,
-    ticks : Colorbar_Ticks,
+    ticks : Colorbar_Line & {
+        density : Colorbar_Ticks
+    },
     unit : string,
     position : Colorbar_Position,
     size : number,
@@ -19,7 +21,7 @@ export interface Colorbar_Options {
     },
     width : number,
     floating : Colorbar_Floating,
-    border : Colorbar_Border,
+    border : Colorbar_Line,
     data : Colorbar_Data
 }
 
@@ -34,7 +36,6 @@ export interface Colorbar_Text {
     size : string,
     color : string,
     opacity : number,
-    width : number,
     position : "start" | "end",
     filled : boolean
 }
@@ -45,7 +46,7 @@ export interface Colorbar_Floating {
     orientation : "vertical" | "horizontal"
 }
 
-export interface Colorbar_Border {
+export interface Colorbar_Line {
     color : string,
     opacity : number,
     style : Line_Style,

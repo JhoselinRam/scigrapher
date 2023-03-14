@@ -11,7 +11,13 @@ const defaultOptions : Colorbar_Options = {
     unit : "",
     opacity : 1,
     position : "x-end",
-    ticks : 7,
+    ticks : {
+        density : 5,
+        color : "#000000",
+        opacity : 1,
+        style : "solid", 
+        width : 1
+    },
     border : {
         color : "#000000",
         opacity : 1,
@@ -29,7 +35,6 @@ const defaultOptions : Colorbar_Options = {
         size : "10px",
         opacity : 1,
         position : "end",
-        width : 1,
         filled : true
     },
     title : {
@@ -38,8 +43,7 @@ const defaultOptions : Colorbar_Options = {
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "12px",
         opacity : 1,
-        position : "start",
-        width : 1,
+        position : "end",
         filled : true,
         reverse : false
     },
@@ -64,7 +68,7 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
         textOffset : 4,
         ...defaultOptions,
         ...options,
-        ticks : options.ticks==null? defaultOptions.ticks : options.ticks as Colorbar_Ticks,
+        ticks : {...defaultOptions.ticks, ...options.ticks, density:options.ticks?.density==null? defaultOptions.ticks.density : options.ticks.density as Colorbar_Ticks},
         data : options.data==null? defaultOptions.data : options.data as Colorbar_Data,
         border : {...defaultOptions.border, ...options.border},
         floating : {...defaultOptions.floating, ...options.floating},

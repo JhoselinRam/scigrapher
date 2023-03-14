@@ -9,6 +9,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
     function compute(){
         if(!barState.enable) return;
 
+        const gradientSteps : Array<[number, string]> = [];
         
 
         //Compute the gradient components
@@ -16,9 +17,10 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 
         }
         if(typeof barState.data === "object"){
-            barState.data.sort((a,b) => barState.reverse ? b.position - a.position : a.position - b.position);
-            const maxPosition = barState.reverse? barState.data[0].position : barState.data[barState.data.length-1].position;
+            barState.data.sort((a,b) => a.position - b.position);
+            const maxPosition = barState.data[barState.data.length-1].position;
             barState.gradient.entries = barState.data.map(item=>{
+                gradientSteps.push([item.position/maxPosition, item.color]);
                 return {
                     color:item.color, 
                     label:`${item.label}${barState.unit}`, 
@@ -48,6 +50,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 //Size
                 barState.metrics.width = barState.width + barState.textOffset + labelWidth;
                 barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
+                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
 
                 if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height; 
                 
@@ -81,6 +84,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 //Size
                 barState.metrics.width = barState.width + barState.textOffset + labelWidth;
                 barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
+                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
 
                 if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
 
@@ -114,6 +118,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 //Size
                 barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
                 barState.metrics.height = barState.width + barState.textOffset + labelHeight;
+                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
 
                 if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
 
@@ -147,6 +152,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 //Size
                 barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
                 barState.metrics.height = barState.width + barState.textOffset + labelHeight;
+                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
 
                 if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
             
@@ -181,6 +187,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                     //Size
                     barState.metrics.width = barState.width + barState.textOffset + labelWidth;
                     barState.metrics.height = graphRect.height * barState.size;
+                    barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
 
                     if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
 
@@ -208,6 +215,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                     //Size
                     barState.metrics.width = graphRect.width * barState.size;
                     barState.metrics.height = barState.width + barState.textOffset + labelHeight;
+                    barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
 
                     if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
 
@@ -232,6 +240,17 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 }
                 break;
         }
+
+        if(barState.reverse)
+            gradientSteps.forEach(item=>{
+                barState.gradient.gradientObject.addColorStop(1-item[0], item[1])
+            });
+        else
+            gradientSteps.forEach(item=>{
+                barState.gradient.gradientObject.addColorStop(item[0], item[1])
+            });
+            
+        
     }
 
 //---------------------------------------------
