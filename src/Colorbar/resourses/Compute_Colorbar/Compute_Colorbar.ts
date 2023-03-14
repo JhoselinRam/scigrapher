@@ -16,13 +16,13 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
         if(typeof barState.data === "object"){
             barState.data.sort((a,b) => barState.reverse ? b.position - a.position : a.position - b.position);
             const maxPosition = barState.reverse? barState.data[0].position : barState.data[barState.data.length-1].position;
-            barState.gradient = barState.data.map(item=>{return {...item, position:item.position/maxPosition}});
+            barState.gradient = barState.data.map(item=>{return {color:item.color, label:`${item.label}${barState.unit}`, position:item.position/maxPosition}});
         }
 
         //Compute the absolute sizes and change the margin if needed
         const [textWidth, textHeight] = getTextSizes(barState, state);
         const graphRect = state.context.graphRect();
-
+        
         switch(barState.position){
             case "x-start":{
                 barState.absoluteSize.width = barState.width + barState.textOffset + textWidth;

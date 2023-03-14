@@ -76,8 +76,8 @@ Graph.addColorbar()
 //------------ Heat Data ----------------
 //---------------------------------------------
 
-const x = linspace(-3, 3, 50);
-const y = linspace(-3, 3, 50);
+const x = linspace(-3.7, 3.7, 50);
+const y = linspace(-3.7, 3.7, 50);
 const [X,Y] = meshgrid(x,y);
 
 function heatData(x, y){
@@ -94,7 +94,7 @@ function heatOpacity(value, x, y){
 //---------------------------------------------
 //---------------------------------------------
 
-const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(true);
+const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false);
 Graph.draw();
 
 

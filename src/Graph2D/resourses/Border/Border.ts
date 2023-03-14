@@ -31,10 +31,10 @@ function Border({graphHandler, state}:Method_Generator) : Border{
 //-------------- Draw Border ------------------
 
     function drawBorder({border, context, from, to} : Draw_Border){
-        const xStart = from[0] + border.width%2 * 0.5;
-        const xEnd = to[0] + border.width%2 * 0.5;
-        const yStart = from[1] + border.width%2 * 0.5;
-        const yEnd = to[1] + border.width%2 * 0.5;
+        const xStart = Math.round(from[0]) + border.width%2 * 0.5;
+        const xEnd = Math.round(to[0]) + border.width%2 * 0.5;
+        const yStart = Math.round(from[1]) + border.width%2 * 0.5;
+        const yEnd = Math.round(to[1]) + border.width%2 * 0.5;
 
         context.strokeStyle = border.color;
         context.globalAlpha = border.opacity;

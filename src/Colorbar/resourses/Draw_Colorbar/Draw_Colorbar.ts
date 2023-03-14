@@ -14,9 +14,9 @@ function DrawColorbar({barHandler, barState, graphHandler, state} : Colorbar_Met
 
             switch(barState.position){
                 case "x-end":{
-                    const yCoord = state.marginUsed.defaultMargin + barState.border.width%2 * 0.5;
+                    const yCoord = Math.round(graphRect.height/2 - barState.absoluteSize.height/2) + barState.border.width%2 * 0.5;
                     if(barState.label.position === "out"){
-                        const xCoord = state.context.clientRect.width - barState.textOffset - barState.absoluteSize.width + barState.border.width%2 * 0.5;
+                        const xCoord = Math.round(state.context.clientRect.width - barState.textOffset - barState.absoluteSize.width) + barState.border.width%2 * 0.5;
                         const gradient = state.context.data.createLinearGradient(xCoord+barState.absoluteSize.width, yCoord+barState.absoluteSize.height, xCoord, yCoord,);
                         
                         //Labels and ticks
@@ -28,12 +28,24 @@ function DrawColorbar({barHandler, barState, graphHandler, state} : Colorbar_Met
 
                         const xText = xCoord + barState.width + barState.textOffset;
                         barState.gradient.forEach(item=>{
-                            const yText = (yCoord + barState.absoluteSize.height) * (1 - item.position);
+                            const yText = yCoord+barState.absoluteSize.height-barState.textOffset + (2*barState.textOffset-barState.absoluteSize.height)*item.position;
                             
                             state.context.data.fillText(item.label, xText, yText);
                             
                             gradient.addColorStop(item.position, item.color);                     
                         });
+
+                        //Title
+                        const xTitle = xCoord + barState.absoluteSize.width - barState.textOffset - 20;
+                        const yTitle = yCoord + barState.absoluteSize.height/2;
+                        state.context.data.save();
+                        state.context.data.translate(xTitle, yTitle);
+                        state.context.data.rotate(-Math.PI/2);
+                        state.context.data.textAlign = "center";
+                        state.context.data.textBaseline = "top";
+                        state.context.data.fillText(barState.label.title, 0, 0);
+                        state.context.data.restore();
+
 
                         //Bar
                         state.context.data.fillStyle = gradient;
@@ -48,7 +60,7 @@ function DrawColorbar({barHandler, barState, graphHandler, state} : Colorbar_Met
                         state.context.data.strokeRect(xCoord, yCoord, barState.width, barState.absoluteSize.height);
                         state.context.data.beginPath();
                         barState.gradient.forEach(item=>{
-                            const yText = Math.round((yCoord + barState.absoluteSize.height) * (1 - item.position)) + barState.border.width%2 * 0.5;
+                            const yText = Math.round(yCoord+barState.absoluteSize.height-barState.textOffset + (2*barState.textOffset-barState.absoluteSize.height)*item.position) + barState.border.width%2 * 0.5;
                             
                             state.context.data.moveTo(xText-2*barState.textOffset, yText);            
                             state.context.data.lineTo(xText-barState.textOffset, yText);            

@@ -6,8 +6,8 @@ import DrawColorbar from "./resourses/Draw_Colorbar/Draw_Colorbar.js";
 const defaultOptions : Colorbar_Options = {
     enable : true,
     reverse : false,
-    width : 30,
-    size : 1,
+    width : 20,
+    size : 0.93,
     unit : "",
     opacity : 1,
     position : "x-end",
@@ -30,7 +30,7 @@ const defaultOptions : Colorbar_Options = {
         opacity : 1,
         position : "out",
         width : 1,
-        title : ""
+        title : "Bar Title"
     },
     data : [
         {color : "#440154", label:"0", position:0},
