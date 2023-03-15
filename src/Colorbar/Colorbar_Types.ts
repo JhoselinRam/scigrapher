@@ -1,25 +1,24 @@
+import { Dataset_Types } from "../Data/Data_Types";
 import { Graph2D, Graph2D_State, Line_Style } from "../Graph2D/Graph2D_Types";
+import { Colorbar_Properties_Methods } from "./resourses/Properties_Colorbar/Properties_Colorbar_Types";
+import { ColorBar_Text_Methods } from "./resourses/Text_Colorbar/Text_Colorbar_Types";
 
-export interface Colorbar{
-
-}
+export interface Colorbar extends
+ColorBar_Text_Methods,
+Colorbar_Properties_Methods
+{}
 
 export interface Colorbar_Options {
-    enable : boolean,
-    reverse : boolean,
-    ticks : Colorbar_Line & {
-        density : Colorbar_Ticks
-    },
-    unit : string,
-    position : Colorbar_Position,
-    size : number,
-    opacity : number
-    label : Colorbar_Text,
-    title : Colorbar_Text&{
-        text:string,
-        reverse : boolean
-    },
-    width : number,
+    enable : boolean,               //
+    reverse : boolean,              //
+    ticks : Colorbar_Marker,
+    unit : string,                  //
+    position : Colorbar_Position,   //
+    size : number,                  //
+    opacity : number,               //
+    label : Colorbar_Text,          //
+    title : Colorbar_Title,         //
+    width : number,                 //
     floating : Colorbar_Floating,
     border : Colorbar_Line,
     data : Colorbar_Data
@@ -40,6 +39,11 @@ export interface Colorbar_Text {
     filled : boolean
 }
 
+export interface Colorbar_Title extends Colorbar_Text{
+    text:string,
+    reverse : boolean
+}
+
 export interface Colorbar_Floating {
     x : number,
     y : number,
@@ -51,6 +55,10 @@ export interface Colorbar_Line {
     opacity : number,
     style : Line_Style,
     width : number
+}
+
+export interface Colorbar_Marker extends Colorbar_Line {
+    density : Colorbar_Ticks
 }
 
 export interface Colorbar_State extends Colorbar_Options {
@@ -77,3 +85,5 @@ export interface Colorbar_Method_Generator {
     state : Graph2D_State, 
     graphHandler : Graph2D
 }
+
+export type Colorbar_Callback = (bar?:Colorbar, graphHandler?:Graph2D, datasets?:Array<Dataset_Types>)=>void;

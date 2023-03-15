@@ -2,6 +2,8 @@ import { Graph2D, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Typ
 import { Colorbar, Colorbar_Data, Colorbar_Options, Colorbar_State, Colorbar_Ticks } from "./Colorbar_Types";
 import ComputeColorbar from "./resourses/Compute_Colorbar/Compute_Colorbar.js";
 import DrawColorbar from "./resourses/Draw_Colorbar/Draw_Colorbar.js";
+import ColorbarProperties from "./resourses/Properties_Colorbar/Properties_Colorbar.js";
+import ColorbarText from "./resourses/Text_Colorbar/Text_Colorbar.js";
 
 const defaultOptions : Colorbar_Options = {
     enable : true,
@@ -81,10 +83,22 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
     const barHandler : RecursivePartial<Colorbar> = {};
 
     //Method generators
-    const barCompute = ComputeColorbar({barHandler, barState, graphHandler, state});
-    const barDraw = DrawColorbar({barHandler, barState, graphHandler, state});
+    const barCompute = ComputeColorbar({barHandler:barHandler as Colorbar, barState, graphHandler, state});
+    const barDraw = DrawColorbar({barHandler:barHandler as Colorbar, barState, graphHandler, state});
+    const text = ColorbarText({barHandler:barHandler as Colorbar, barState, graphHandler, state});
+    const properties = ColorbarProperties({barHandler:barHandler as Colorbar, barState, graphHandler, state});
 
     //Main object population
+    barHandler.text = text.text;
+    barHandler.label = text.label;
+    barHandler.title = text.title;
+    barHandler.enable = properties.enable;
+    barHandler.reverse = properties.reverse;
+    barHandler.opacity = properties.opacity;
+    barHandler.size = properties.size;
+    barHandler.width = properties.width;
+    barHandler.position = properties.position;
+    barHandler.unit = properties.unit;
 
 
 //---------------------------------------------
