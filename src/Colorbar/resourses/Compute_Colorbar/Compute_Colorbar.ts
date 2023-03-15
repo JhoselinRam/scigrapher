@@ -55,7 +55,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height; 
                 
                 //Margin
-                const minMargin = barState.metrics.width + 2*state.marginUsed.defaultMargin;
+                const minMargin = barState.metrics.width + 6*state.marginUsed.defaultMargin;
                 if(state.marginUsed.x.start < minMargin) 
                     state.marginUsed.x.start = minMargin;
                     
@@ -89,7 +89,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
 
                 //Margin
-                const minMargin = barState.metrics.width + 2*state.marginUsed.defaultMargin;
+                const minMargin = barState.metrics.width + 6*state.marginUsed.defaultMargin;
                 if(state.marginUsed.x.end < minMargin) 
                     state.marginUsed.x.end = minMargin;
 
@@ -123,7 +123,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
 
                 //Margin
-                const minMargin = barState.metrics.height + 2*state.marginUsed.defaultMargin;
+                const minMargin = barState.metrics.height + 6*state.marginUsed.defaultMargin;
                 if(state.marginUsed.y.start < minMargin) 
                     state.marginUsed.y.start = minMargin;
 
@@ -157,7 +157,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                 if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
             
                 //Margin
-                const minMargin = barState.metrics.height + 2*state.marginUsed.defaultMargin;
+                const minMargin = barState.metrics.height + 6*state.marginUsed.defaultMargin;
                 if(state.marginUsed.y.end < minMargin) 
                     state.marginUsed.y.end = minMargin;
 
