@@ -1,6 +1,7 @@
 import { Graph2D, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Types";
 import { Colorbar, Colorbar_Data, Colorbar_Options, Colorbar_State, Colorbar_Ticks } from "./Colorbar_Types";
 import ComputeColorbar from "./resourses/Compute_Colorbar/Compute_Colorbar.js";
+import ColorbarData from "./resourses/Data_Colorbar/Data_Colorbar.js";
 import DrawColorbar from "./resourses/Draw_Colorbar/Draw_Colorbar.js";
 import ColorbarProperties from "./resourses/Properties_Colorbar/Properties_Colorbar.js";
 import ColorbarText from "./resourses/Text_Colorbar/Text_Colorbar.js";
@@ -40,7 +41,7 @@ const defaultOptions : Colorbar_Options = {
         filled : true
     },
     title : {
-        text : "Bar Title",
+        text : "",
         color : "#000000",
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "12px",
@@ -49,12 +50,7 @@ const defaultOptions : Colorbar_Options = {
         filled : true,
         reverse : false
     },
-    data : [
-        {color : "#440154", label:"0", position:0},
-        {color : "#37598c", label:"0.33", position:0.33},
-        {color : "#53c567", label:"0.66", position:0.66},
-        {color : "#fde724", label:"1", position:1}        
-    ]
+    data : ""
 }
 
 function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_State, graphHandler : Graph2D ) : [Colorbar, ()=>void/*draw*/ , ()=>void/*compute*/]{
@@ -87,6 +83,7 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
     const barDraw = DrawColorbar({barHandler:barHandler as Colorbar, barState, graphHandler, state});
     const text = ColorbarText({barHandler:barHandler as Colorbar, barState, graphHandler, state});
     const properties = ColorbarProperties({barHandler:barHandler as Colorbar, barState, graphHandler, state});
+    const data = ColorbarData({barHandler:barHandler as Colorbar, barState, graphHandler, state});
 
     //Main object population
     barHandler.text = text.text;
@@ -99,6 +96,10 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
     barHandler.width = properties.width;
     barHandler.position = properties.position;
     barHandler.unit = properties.unit;
+    barHandler.border = properties.border;
+    barHandler.floating = properties.floating;
+    barHandler.ticks = properties.ticks;
+    barHandler.data = data.data;
 
 
 //---------------------------------------------

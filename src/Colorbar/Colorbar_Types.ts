@@ -1,17 +1,19 @@
 import { Dataset_Types } from "../Data/Data_Types";
 import { Graph2D, Graph2D_State, Line_Style } from "../Graph2D/Graph2D_Types";
+import { Colorbar_Data_Methods } from "./resourses/Data_Colorbar/Data_Colorbar_Types";
 import { Colorbar_Properties_Methods } from "./resourses/Properties_Colorbar/Properties_Colorbar_Types";
 import { ColorBar_Text_Methods } from "./resourses/Text_Colorbar/Text_Colorbar_Types";
 
 export interface Colorbar extends
 ColorBar_Text_Methods,
-Colorbar_Properties_Methods
+Colorbar_Properties_Methods,
+Colorbar_Data_Methods
 {}
 
 export interface Colorbar_Options {
     enable : boolean,               //
     reverse : boolean,              //
-    ticks : Colorbar_Marker,
+    ticks : Colorbar_Marker,        //
     unit : string,                  //
     position : Colorbar_Position,   //
     size : number,                  //
@@ -19,16 +21,18 @@ export interface Colorbar_Options {
     label : Colorbar_Text,          //
     title : Colorbar_Title,         //
     width : number,                 //
-    floating : Colorbar_Floating,
-    border : Colorbar_Line,
+    floating : Colorbar_Floating,   //
+    border : Colorbar_Line,         //
     data : Colorbar_Data
 }
+
+export type Colorbar_Entries = Array<{color:string, position:number, label:string}>;
 
 export type Colorbar_Ticks = number | Array<string> | Array<{position:number, label:string}>;
 
 export type Colorbar_Position = "x-start" | "x-end" | "y-start" | "y-end" | "floating";
 
-export type Colorbar_Data = string | Array<{color:string, position:number, label:string}>;
+export type Colorbar_Data = string | Colorbar_Entries;
 
 export interface Colorbar_Text {
     font : string,
@@ -75,7 +79,7 @@ export interface Colorbar_State extends Colorbar_Options {
 }
 
 export interface Colorbar_Gradient {
-    entries : Array<{color:string, position:number, label:string}>,
+    entries : Colorbar_Entries,
     gradientObject : CanvasGradient
 } 
 

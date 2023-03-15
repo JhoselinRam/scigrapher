@@ -102,6 +102,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.strokeStyle = barState.border.color;
     state.context.data.globalAlpha = barState.border.opacity;
     state.context.data.lineWidth = barState.border.width;
+    console.log(barState.border.width)
     state.context.data.setLineDash(getLineDash(barState.border.style));
     state.context.data.strokeRect(Math.round(barState.metrics.barCoord)+barState.border.width%2*0.5, barState.border.width%2*0.5, barState.width, barState.metrics.height);
 

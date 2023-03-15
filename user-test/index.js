@@ -10,7 +10,19 @@ const Graph = Graph2D(document.querySelector(".graph"))
                     .primaryGrid({grid:{enable:false}})
                     .secondaryGrid({grid:{enable:false}})
 
-Graph.addColorbar()
+const bar = Graph.addColorbar()
+     .data([
+        {color:"#440154", label:"0", position:0},
+        {color:"#37598c", label:"0.33", position:0.3333333},
+        {color:"#53c567", label:"0.66", position:0.6666666},
+        {color:"#fde724", label:"1", position:1},
+     ])
+     .border({
+        width:2,
+        opacity : 0
+     });
+
+     console.dir(bar.border())
 //Graph.draw();
 
 // const vector = Graph.addDataset("vectorfield");
