@@ -13,3 +13,5 @@ export type Colorbar_Text_Generated<T> = {
     (text:Partial<T>, callback?:Colorbar_Callback) : Colorbar,
     (arg:void) : T
 }
+
+export type Colorbar_Text_Option = "title" | "label";

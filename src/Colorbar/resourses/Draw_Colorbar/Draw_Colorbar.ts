@@ -102,7 +102,6 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.strokeStyle = barState.border.color;
     state.context.data.globalAlpha = barState.border.opacity;
     state.context.data.lineWidth = barState.border.width;
-    console.log(barState.border.width)
     state.context.data.setLineDash(getLineDash(barState.border.style));
     state.context.data.strokeRect(Math.round(barState.metrics.barCoord)+barState.border.width%2*0.5, barState.border.width%2*0.5, barState.width, barState.metrics.height);
 
@@ -122,8 +121,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.stroke();
 
     //Labels
-    const yScale = barState.reverse?  mapping({from:[0,1], to:[barState.textOffset, barState.metrics.height-barState.textOffset]}) :
-                                      mapping({from:[0,1], to:[barState.metrics.height-barState.textOffset, barState.textOffset]});
+    const yScale = mapping({from:[0,1], to:[barState.metrics.height-barState.textOffset, barState.textOffset]});
     state.context.data.strokeStyle = barState.label.color;
     state.context.data.fillStyle = barState.label.color;
     state.context.data.globalAlpha = barState.label.opacity;
@@ -182,7 +180,7 @@ function drawHorizontal(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.stroke();
 
     //Labels
-    const xScale = barState.reverse? mapping({from:[0,1], to:[barState.metrics.width-barState.textOffset, barState.textOffset]}) : mapping({from:[0,1], to:[barState.textOffset, barState.metrics.width-barState.textOffset]});
+    const xScale = mapping({from:[0,1], to:[barState.textOffset, barState.metrics.width-barState.textOffset]});
     state.context.data.strokeStyle = barState.label.color;
     state.context.data.fillStyle = barState.label.color;
     state.context.data.globalAlpha = barState.label.opacity;

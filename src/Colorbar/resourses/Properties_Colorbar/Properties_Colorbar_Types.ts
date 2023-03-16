@@ -14,6 +14,7 @@ export interface Colorbar_Properties_Methods {
 }
 
 export type Colorbar_Property_Options = "enable" | "reverse" | "unit" | "position" | "size" | "opacity" | "width";
+export type Colorbar_Object_Options = "border" | "ticks" | "floating"
 
 export type Colorbar_Property_Generator<T> = {
     (property:T, callback?:Colorbar_Callback) : Colorbar,

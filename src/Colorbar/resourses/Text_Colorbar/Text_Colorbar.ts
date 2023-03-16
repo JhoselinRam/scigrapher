@@ -1,13 +1,13 @@
 import { Colorbar, Colorbar_Callback, Colorbar_Method_Generator, Colorbar_Text, Colorbar_Title } from "../../Colorbar_Types";
-import { Colorbar_Text_Generated, ColorBar_Text_Methods } from "./Text_Colorbar_Types";
+import { Colorbar_Text_Generated, ColorBar_Text_Methods, Colorbar_Text_Option } from "./Text_Colorbar_Types";
 
 function ColorbarText({barHandler, barState, graphHandler, state} : Colorbar_Method_Generator): ColorBar_Text_Methods{
 
 
 //------------- Title & Label -----------------
 
-const label = generateTextMethod<Colorbar_Text>(barState.label, {barHandler, barState, graphHandler, state});
-const title = generateTextMethod<Colorbar_Title>(barState.title, {barHandler, barState, graphHandler, state});
+const label = generateTextMethod<Colorbar_Text>(barState.label, "label", {barHandler, barState, graphHandler, state});
+const title = generateTextMethod<Colorbar_Title>(barState.title, "title", {barHandler, barState, graphHandler, state});
 
 //---------------------------------------------
 //----------------- Text ----------------------
@@ -69,7 +69,7 @@ export default ColorbarText;
 
 //---------------- Generator ------------------
 
-function generateTextMethod<T>(container:T, {barHandler, barState, graphHandler, state}:Colorbar_Method_Generator) : Colorbar_Text_Generated<T>{
+function generateTextMethod<T>(container:T, option:Colorbar_Text_Option, {barHandler, barState, graphHandler, state}:Colorbar_Method_Generator) : Colorbar_Text_Generated<T>{
 
     function method(text:Partial<T>, callback?:Colorbar_Callback) : Colorbar;
     function method(arg:void) : T;
@@ -78,7 +78,7 @@ function generateTextMethod<T>(container:T, {barHandler, barState, graphHandler,
             return {...container}
 
         if(typeof text === "object"){
-            container = {...container, ...text};
+            (barState[option] as T) = {...container, ...text};
 
             state.compute.client();
             if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));
