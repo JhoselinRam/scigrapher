@@ -11,13 +11,6 @@ const Graph = Graph2D(document.querySelector(".graph"))
                     .secondaryGrid({grid:{enable:false}})
 
 const bar = Graph.addColorbar()
-     .data([
-        {color:"#440154", label:"0", position:0},
-        {color:"#37598c", label:"0.33", position:0.3333333},
-        {color:"#53c567", label:"0.66", position:0.6666666},
-        {color:"#fde724", label:"1", position:1},
-     ]).reverse(true)
-
 //Graph.draw();
 
 // const vector = Graph.addDataset("vectorfield");
@@ -102,6 +95,7 @@ function heatOpacity(value, x, y){
 //---------------------------------------------
 
 const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false);
+bar.data(heat.id()).reverse(false)
 Graph.draw();
 
 
