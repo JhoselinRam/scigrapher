@@ -297,13 +297,14 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
             values.push({data:maxData, color:maxColor})
     }
 
+    
     const scale = barState.reverse? mapping({from:[maxData, minData], to:[0,1]}) : mapping({from:[minData, maxData], to:[0,1]});
     values.forEach(item=>{
         rawEntries.push({
             position : scale.map(item.data),
             color : item.color
         })
-    })
+    });
 
     
 
