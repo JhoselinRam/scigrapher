@@ -106,6 +106,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.strokeRect(Math.round(barState.metrics.barCoord)+barState.border.width%2*0.5, barState.border.width%2*0.5, barState.width, barState.metrics.height);
 
     //Ticks
+    const yScale = mapping({from:[0,1], to:[barState.metrics.height-barState.textOffset, barState.textOffset]});
     const xTick = barState.label.position==="start"? barState.metrics.barCoord : barState.metrics.barCoord + barState.width - barState.textOffset;
     state.context.data.strokeStyle = barState.ticks.color;
     state.context.data.globalAlpha = barState.ticks.opacity;
@@ -113,7 +114,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.setLineDash(getLineDash(barState.ticks.style));
     state.context.data.beginPath();
     barState.gradient.entries.forEach(item=>{
-        const y = Math.round(barState.textOffset + (barState.metrics.height - 2*barState.textOffset)*item.position) + barState.border.width%2*0.5;
+        const y = Math.round(yScale.map(item.position)) + barState.border.width%2*0.5;
 
         state.context.data.moveTo(xTick, y);
         state.context.data.lineTo(xTick + barState.textOffset, y);
@@ -121,7 +122,6 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.stroke();
 
     //Labels
-    const yScale = mapping({from:[0,1], to:[barState.metrics.height-barState.textOffset, barState.textOffset]});
     state.context.data.strokeStyle = barState.label.color;
     state.context.data.fillStyle = barState.label.color;
     state.context.data.globalAlpha = barState.label.opacity;

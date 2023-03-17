@@ -137,3 +137,49 @@ export function getTextSize(text:string, size:string, font:string, context:Canva
 }
 
 //---------------------------------------------
+//---------------------------------------------
+
+export function formatNumber(value : number, maxDecimals:number) : string{
+    let label : string = "";
+        const magnitudeOrder = value===0? 0 : Math.floor(Math.log10(Math.abs(value)));
+     
+        if(magnitudeOrder<-2 || magnitudeOrder>3){
+            const fixed = Number.isInteger(value/Math.pow(10,magnitudeOrder)) ? 0 : maxDecimals;
+            let temp = value.toExponential(fixed).split("e");
+            if(fixed === maxDecimals){
+                for(let i=0; i<maxDecimals; i++){
+                    if(!temp[0].endsWith("0"))
+                        break;
+                    temp[0] = temp[0].slice(0,-1);
+                }
+            }
+            label = temp.join("e");
+            label = label.replace("e","x10").replace("-", "– ");
+
+        }
+        else{
+            const fixed = Number.isInteger(value) ? 0 : maxDecimals;
+            let temp = value.toFixed(fixed);
+            //Remove tailing ceros.
+            if(fixed === maxDecimals){
+                for(let i=0; i<maxDecimals; i++){
+                    if(!temp.endsWith("0"))
+                        break;     
+                    temp = temp.slice(0, -1);
+                    }
+            }
+            label = temp
+            label = label.replace("-", "– ");
+            
+            if(Math.abs(value)>999){
+                const caracteres = label.split("");
+                const commaIndex = label.includes("– ") ? 3 : 1; 
+                caracteres.splice(commaIndex,0,",");
+                label = caracteres.join("");
+            }
+        }
+
+        return label;
+}
+
+//---------------------------------------------

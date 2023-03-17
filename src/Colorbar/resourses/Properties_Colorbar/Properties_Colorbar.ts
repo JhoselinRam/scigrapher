@@ -83,6 +83,7 @@ function generateDynamicMethod<T>(container:T, option:Colorbar_Object_Options ,{
             if(Object.keys(property).length === 0) return barHandler;
 
             (barState[option] as T) = {...container, ...property};
+            state.compute.client();
             if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));
             state.dirty.data = true;
 

@@ -1,4 +1,5 @@
 import { Axis_Property, Graph2D_State, Secondary_Axis } from "../../Graph2D/Graph2D_Types.js";
+import { formatNumber } from "../Helplers/Helplers.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } from "./Axis_Obj_Types";
@@ -253,44 +254,7 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
     state.context.canvas.font = `${textSizeUsed} ${textFontUsed}`;
 
     const labels = positions.map(position=>{
-        let label : string = "";
-        const magnitudeOrder = position===0? 0 : Math.floor(Math.log10(Math.abs(position)));
-     
-        if(magnitudeOrder<-2 || magnitudeOrder>3){
-            const fixed = Number.isInteger(position/Math.pow(10,magnitudeOrder)) ? 0 : maxDecimals;
-            let temp = position.toExponential(fixed).split("e");
-            if(fixed === maxDecimals){
-                for(let i=0; i<maxDecimals; i++){
-                    if(!temp[0].endsWith("0"))
-                        break;
-                    temp[0] = temp[0].slice(0,-1);
-                }
-            }
-            label = temp.join("e");
-            label = label.replace("e","x10").replace("-", "– ");
-
-        }
-        else{
-            const fixed = Number.isInteger(position) ? 0 : maxDecimals;
-            let temp = position.toFixed(fixed);
-            //Remove tailing ceros.
-            if(fixed === maxDecimals){
-                for(let i=0; i<maxDecimals; i++){
-                    if(!temp.endsWith("0"))
-                        break;     
-                    temp = temp.slice(0, -1);
-                    }
-            }
-            label = temp
-            label = label.replace("-", "– ");
-            
-            if(Math.abs(position)>999){
-                const caracteres = label.split("");
-                const commaIndex = label.includes("– ") ? 3 : 1; 
-                caracteres.splice(commaIndex,0,",");
-                label = caracteres.join("");
-            }
-        }
+        let label = formatNumber(position, maxDecimals);
 
         if(scale === "primary")
             label = `${label}${state.axis[axis].unit}`;

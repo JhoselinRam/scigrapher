@@ -1,6 +1,8 @@
 import { Heat_Map } from "../../../Data/HeatMap/Heat_Map_Types.js";
-import { getTextSize } from "../../../tools/Helplers/Helplers.js";
+import colorInterpolator from "../../../tools/Color_Map/Color_Interpolator.js";
+import { formatNumber, getTextSize } from "../../../tools/Helplers/Helplers.js";
 import mapping from "../../../tools/Mapping/Mapping.js";
+import { Mapping } from "../../../tools/Mapping/Mapping_Types.js";
 import { Colorbar_Entries, Colorbar_Method_Generator } from "../../Colorbar_Types";
 import { Compute_Colorbar } from "./Compute_Colorbar_Types";
 
@@ -266,7 +268,7 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 
 function idCompute(id:string) : [Array<{position:number, color:string}>, Colorbar_Entries]{
     const rawEntries : Array<{position:number, color:string}> = [];
-    const visualEntries : Colorbar_Entries = [];
+    let visualEntries : Colorbar_Entries = [];
     const tolerance = 0.0001;
     const maxStops = 30;
     
@@ -276,10 +278,12 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
     
     
     const dataset = candidate[0].dataset as Heat_Map;
+
     //Unfolds the color and data objects, structure is not important here
     const colorArray : Array<string> = ([] as Array<string>).concat(...dataset.color());
     const dataArray : Array<number> = ([] as Array<number>).concat(...dataset.data());
 
+    //Combines the data objects, selects unique entries and sorts it
     let values : Array<{data:number, color:string}> = [];
     dataArray.forEach((dataValue, i)=>values.push({ data : dataValue, color : colorArray[i] }));
     values = values.sort((a,b)=>a.data-b.data).filter((item, i)=>{ return i===0? true : Math.abs(item.data - values[i-1].data) > tolerance });
@@ -287,6 +291,9 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
     const minData = values[0].data;
     const maxData = values[values.length-1].data;
     const maxColor = values[values.length-1].color;
+    const scale = barState.reverse? mapping({from:[maxData, minData], to:[0,1]}) : mapping({from:[minData, maxData], to:[0,1]});
+    
+    visualEntries = getVisualEntries(values, scale);
     
     if(values.length>maxStops){
         const delta = Math.floor(values.length/maxStops);
@@ -297,8 +304,6 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
             values.push({data:maxData, color:maxColor})
     }
 
-    
-    const scale = barState.reverse? mapping({from:[maxData, minData], to:[0,1]}) : mapping({from:[minData, maxData], to:[0,1]});
     values.forEach(item=>{
         rawEntries.push({
             position : scale.map(item.data),
@@ -309,14 +314,142 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
     
 
     
-    
-
-    
-    
-    
-    
     return [rawEntries, visualEntries];
 }
+
+//---------------------------------------------
+//------------ Get Visual Entries -------------
+
+    function getVisualEntries(values : Array<{data:number, color:string}>, scale:Mapping) : Colorbar_Entries{
+        const entries : Colorbar_Entries = [];
+        const maxIndex = values.length - 1;
+        let [minValue, maxValue] = scale.domain;
+        if(barState.reverse) [minValue, maxValue] = [maxValue, minValue]
+        const range = maxValue - minValue;
+
+        //Density as a number
+        if(typeof barState.ticks.density === "number"){
+            const delta = range / (barState.ticks.density - 1);
+            const maxDecimals = 2;
+
+            //First and last tick
+            entries.push({
+                position : scale.map(values[0].data),
+                color : values[0].color,
+                label : formatNumber(values[0].data, maxDecimals)
+            })
+            entries.push({
+                position : scale.map(values[maxIndex].data),
+                color : values[maxIndex].color,
+                label : formatNumber(values[maxIndex].data, maxDecimals)
+            })
+
+            //Internal ticks
+            for(let i=1; i<barState.ticks.density - 1; i++){
+                const value = minValue + i*delta;
+                let indexFound = 0;
+
+                values.find((item, i)=>{
+                    if(item.data>value){
+                        indexFound = i;
+                        return true;
+                    }
+                    return false;
+                });
+
+                const colorFound = colorInterpolator({
+                    from:[values[indexFound-1].data, values[indexFound].data],
+                    to : [values[indexFound-1].color, values[indexFound].color],
+                    space : "rgb"
+                }).map(value);
+
+                entries.push({
+                    position : scale.map(value),
+                    color : colorFound,
+                    label : formatNumber(value, maxDecimals)
+                });
+            }
+        }
+
+        if(typeof barState.ticks.density === "object"){
+            if(typeof barState.ticks.density[0] === "string"){
+                const labels = barState.ticks.density as Array<string>;
+                const delta = range / (labels.length - 1);
+
+                //First and last tick
+                entries.push({
+                    position : scale.map(values[0].data),
+                    color : values[0].color,
+                    label : labels[0]
+                })
+                entries.push({
+                    position : scale.map(values[maxIndex].data),
+                    color : values[maxIndex].color,
+                    label : labels[labels.length - 1]
+                })
+
+            //Internal ticks
+                for(let i=1; i<labels.length-1; i++){
+                    const value = minValue + i*delta;
+                    let indexFound = 0;
+
+                    values.find((item, i)=>{
+                        if(item.data>value){
+                            indexFound = i;
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    const colorFound = colorInterpolator({
+                        from:[values[indexFound-1].data, values[indexFound].data],
+                        to : [values[indexFound-1].color, values[indexFound].color],
+                        space : "rgb"
+                    }).map(value);
+
+                    entries.push({
+                        position : scale.map(value),
+                        color : colorFound,
+                        label : labels[i]
+                    });
+                }
+            }
+            
+            if(typeof barState.ticks.density[0] === "object"){
+                const labels = barState.ticks.density as Array<{position:number, label:string}>;
+
+                labels.forEach(entry =>{
+                    const value = entry.position;
+                    if(value < minValue || value > maxValue) return;
+
+                    let indexFound = 0;
+
+                    values.find((item, i)=>{
+                        if(item.data>value){
+                            indexFound = i;
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    const colorFound = colorInterpolator({
+                        from:[values[indexFound-1].data, values[indexFound].data],
+                        to : [values[indexFound-1].color, values[indexFound].color],
+                        space : "rgb"
+                    }).map(value);
+
+                    entries.push({
+                        position : scale.map(value),
+                        color : colorFound,
+                        label : entry.label
+                    });
+                })
+
+            }
+        }
+
+        return entries;
+    }
 
 //---------------------------------------------
 
