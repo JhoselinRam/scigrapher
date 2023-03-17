@@ -217,6 +217,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             dirtify
         },
         colorbars : [],
+        legends : [],
         background : {...defaultOptions.background, ...options.background},
         margin : {
             x : {...defaultOptions.margin.x, ...options.margin?.x},
@@ -364,6 +365,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.draw = properties.draw;
     graphHandler.border = border.border;
     graphHandler.addColorbar = colorbars.addColorbar;
+    graphHandler.removeColorbar = colorbars.removeColorbar;
 
     
     //Setup configurations

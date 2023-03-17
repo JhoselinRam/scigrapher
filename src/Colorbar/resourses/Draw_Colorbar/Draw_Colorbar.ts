@@ -1,5 +1,5 @@
 import {  Graph2D_State } from "../../../Graph2D/Graph2D_Types.js";
-import { getLineDash } from "../../../tools/Helplers/Helplers.js";
+import { drawLabel, getLineDash } from "../../../tools/Helplers/Helplers.js";
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Colorbar_Method_Generator, Colorbar_State } from "../../Colorbar_Types";
 import { Draw_Colorbar } from "./Draw_Colorbar_Types";
@@ -132,7 +132,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     barState.gradient.entries.forEach(item =>{
         const y = Math.round(yScale.map(item.position))
 
-        barState.label.filled ? state.context.data.fillText(item.label, barState.metrics.labelCoord, y) : state.context.data.strokeText(item.label, barState.metrics.labelCoord, y)
+        drawLabel(state.context.data, item.label, barState.metrics.labelCoord, y, "");
     });
 
     //Title
@@ -145,7 +145,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.textAlign = "center";
     state.context.data.translate(barState.metrics.titleCoord, barState.metrics.height/2);
     state.context.data.rotate(angle);
-    barState.title.filled? state.context.data.fillText(barState.title.text, 0, 0) : state.context.data.strokeText(barState.title.text, 0, 0);
+    state.context.data.fillText(barState.title.text, 0, 0);
 }
 
 //---------------------------------------------
@@ -191,7 +191,7 @@ function drawHorizontal(state:Graph2D_State, barState:Colorbar_State){
     barState.gradient.entries.forEach(item =>{
         const x = Math.round(xScale.map(item.position))
 
-        barState.label.filled ? state.context.data.fillText(item.label, x, barState.metrics.labelCoord) : state.context.data.strokeText(item.label, x, barState.metrics.labelCoord)
+        drawLabel(state.context.data, item.label, x, barState.metrics.labelCoord, "");
     });
 
     //Title
@@ -202,7 +202,7 @@ function drawHorizontal(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.textBaseline = "top";
     state.context.data.textAlign = "center";
     state.context.data.translate(barState.metrics.width/2, barState.metrics.titleCoord);
-    barState.title.filled? state.context.data.fillText(barState.title.text, 0, 0) : state.context.data.strokeText(barState.title.text, 0, 0);
+    state.context.data.fillText(barState.title.text, 0, 0);
 }
 
 //---------------------------------------------

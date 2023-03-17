@@ -1,5 +1,6 @@
 import { Colorbar } from "../Colorbar/Colorbar_Types";
 import { Dataset_Types, Draw_Data_Callback } from "../Data/Data_Types";
+import { Legend } from "../Legend/Legend_Types";
 import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
@@ -205,6 +206,11 @@ export interface Graph2D_State extends Graph2D_Options {
     },
     colorbars : Array<{
         bar : Colorbar,
+        compute : ()=>void,
+        draw : ()=>void
+    }>,
+    legends : Array<{
+        legend : Legend,
         compute : ()=>void,
         draw : ()=>void
     }>

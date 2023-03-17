@@ -11,6 +11,7 @@ export interface Colorbar_Properties_Methods {
     border : Colorbar_Object_Generator<Colorbar_Line>, 
     floating : Colorbar_Object_Generator<Colorbar_Floating>, 
     ticks : Colorbar_Object_Generator<Colorbar_Marker>, 
+    id : ()=>string
 }
 
 export type Colorbar_Property_Options = "enable" | "reverse" | "unit" | "position" | "size" | "opacity" | "width";

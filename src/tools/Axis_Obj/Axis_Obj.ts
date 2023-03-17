@@ -1,5 +1,5 @@
 import { Axis_Property, Graph2D_State, Secondary_Axis } from "../../Graph2D/Graph2D_Types.js";
-import { formatNumber } from "../Helplers/Helplers.js";
+import { drawLabel, formatNumber } from "../Helplers/Helplers.js";
 import mapping from "../Mapping/Mapping.js";
 import { Mapping } from "../Mapping/Mapping_Types.js";
 import { Axis_Obj, Compute_Sizes, CreateAxis_Props, Create_Labels, Label_Rect } from "./Axis_Obj_Types";
@@ -458,31 +458,6 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
             width,
             height
         }
-    }
-
-//---------------------------------------------
-//--------------- Draw Label ------------------
-
-    function drawLabel(context:CanvasRenderingContext2D, text:string, x:number, y:number, unit:string){
-        if(!text.includes("x10")){
-            context.fillText(text, x, y);
-            return;
-        }
-
-        const scaleFactor = 0.85;
-        const parts = text.split("x10");
-        const number = `${parts[0]}x10`
-        const exponent = parts[1].replace("+", "").replace(unit, "");
-        const exponentStart = context.measureText(number).width;
-        const unitStart = exponentStart + context.measureText(exponent).width*scaleFactor + 1;
-
-        context.fillText(number, x, y);
-        context.save();
-        context.translate(x+exponentStart, y);
-        context.scale(scaleFactor, scaleFactor);
-        context.fillText(exponent, 0, -2);
-        context.restore();
-        context.fillText(unit, x+unitStart, y);
     }
 
 //---------------------------------------------

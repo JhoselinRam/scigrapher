@@ -18,6 +18,13 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
     const ticks = generateDynamicMethod<Colorbar_Marker>(props.barState.ticks, "ticks", props);
 
 //---------------------------------------------
+//---------------------------------------------
+
+    function id() : string{
+        return props.barState.id;
+    }
+
+//---------------------------------------------
 
     return {
         enable,
@@ -29,7 +36,8 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
         width,
         border,
         floating,
-        ticks
+        ticks,
+        id
     }
 }
 

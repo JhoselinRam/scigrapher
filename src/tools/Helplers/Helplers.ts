@@ -183,3 +183,28 @@ export function formatNumber(value : number, maxDecimals:number) : string{
 }
 
 //---------------------------------------------
+//--------------- Draw Label ------------------
+
+export function drawLabel(context:CanvasRenderingContext2D, text:string, x:number, y:number, unit:string){
+    if(!text.includes("x10")){
+        context.fillText(text, x, y);
+        return;
+    }
+
+    const scaleFactor = 0.85;
+    const parts = text.split("x10");
+    const number = `${parts[0]}x10`
+    const exponent = parts[1].replace("+", "").replace(unit, "");
+    const exponentStart = context.measureText(number).width;
+    const unitStart = exponentStart + context.measureText(exponent).width*scaleFactor + 1;
+
+    context.fillText(number, x, y);
+    context.save();
+    context.translate(x+exponentStart, y);
+    context.scale(scaleFactor, scaleFactor);
+    context.fillText(exponent, 0, -2);
+    context.restore();
+    context.fillText(unit, x+unitStart, y);
+}
+
+//---------------------------------------------

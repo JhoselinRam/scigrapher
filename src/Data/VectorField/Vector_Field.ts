@@ -24,6 +24,7 @@ export function VectorField(options : Partialize<Vector_Field_Options>, graphHan
     const dataState : Vector_Field_State = {
         id : crypto.randomUUID(),
         dirtify,
+        datasetType : "vectorfield",
         index : 0,
         ...defaultOptions, ...options,
         useAxis : {...defaultOptions.useAxis, ...options.useAxis},
@@ -54,6 +55,7 @@ export function VectorField(options : Partialize<Vector_Field_Options>, graphHan
     dataHandler.opacity = properties.opacity;
     dataHandler.style = properties.style;
     dataHandler.width = properties.width;
+    dataHandler.datasetType = ()=>dataState.datasetType;
 
 
 

@@ -1,5 +1,5 @@
 import { Axis_Property, Graph2D, Line_Style } from "../../Graph2D/Graph2D_Types";
-import { Dataset_Callback, Data_General, Data_Object_State } from "../Data_Types";
+import { Datasets, Dataset_Callback, Data_General, Data_Object_State } from "../Data_Types";
 import { Area } from "./resourses/Area/Area_Types";
 import { Data_Line } from "./resourses/Data_Line/Data_Line_Types";
 import { Error_Line } from "./resourses/Error_Line/Error_Line_Types";
@@ -16,8 +16,9 @@ Data_Line,
 Marker_Line,
 Error_Line,
 Line,
-Area
-{}
+Area{
+    datasetType : ()=>Datasets
+}
 
 export interface Line_Chart_Options {
     useAxis : Axis_Property<"primary" | "secondary">,
@@ -63,7 +64,9 @@ interface Line_Area_Atributes {
     polar : boolean
 }
 
-export interface Line_Chart_State extends Data_Object_State, Line_Chart_Options{}
+export interface Line_Chart_State extends Data_Object_State, Line_Chart_Options{
+    datasetType : Datasets
+}
 
 export interface Line_Chart_Method_Generator {
     dataState : Line_Chart_State,

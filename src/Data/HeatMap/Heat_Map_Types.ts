@@ -1,14 +1,15 @@
 import { Axis_Property, Graph2D } from "../../Graph2D/Graph2D_Types";
 import { Color_Map_types } from "../../tools/Color_Map/Predefined/Color_Map_Types";
-import { Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Position, Field_Property } from "../Data_Types";
+import { Datasets, Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Position, Field_Property } from "../Data_Types";
 import { Data_Heat } from "./resourses/Data_Heat/Data_Heat_Types";
 import { Properties_Heat } from "./resourses/Properties_Heat/Properties_Heat_Types";
 
 export interface Heat_Map extends 
 Data_General<Heat_Map>,
 Data_Heat,
-Properties_Heat
-{}
+Properties_Heat{
+    datasetType : ()=>Datasets
+}
 
 export interface Heat_Map_Options{
     mesh : Axis_Property<Field_Position<Heat_Map>>,
@@ -20,8 +21,9 @@ export interface Heat_Map_Options{
     opacity : Heat_Map_Opacity,
 }
 
-export interface Heat_Map_State extends Data_Object_State, Heat_Map_Options
-{}
+export interface Heat_Map_State extends Data_Object_State, Heat_Map_Options{
+    datasetType  : Datasets
+}
 
 export interface Heat_Map_Method_Generator {
     dataState : Heat_Map_State,

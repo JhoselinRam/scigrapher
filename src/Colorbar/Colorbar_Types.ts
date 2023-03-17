@@ -39,8 +39,7 @@ export interface Colorbar_Text {
     size : string,
     color : string,
     opacity : number,
-    position : "start" | "end",
-    filled : boolean
+    position : "start" | "end"
 }
 
 export interface Colorbar_Title extends Colorbar_Text{

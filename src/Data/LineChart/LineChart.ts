@@ -70,6 +70,7 @@ export function LineChart(options : Partialize<Line_Chart_Options>, graphHandler
         ...defaultOptions, ...options,
         id : crypto.randomUUID(),
         index : 0,
+        datasetType : "linechart",
         dirtify,
         useAxis : {...defaultOptions.useAxis, ...options.useAxis},
         marker : {...defaultOptions.marker, ...options.marker},
@@ -138,6 +139,7 @@ export function LineChart(options : Partialize<Line_Chart_Options>, graphHandler
     dataHandler.areaEnable = area.areaEnable;
     dataHandler.areaOpacity = area.areaOpacity;
     dataHandler.areaPolar = area.areaPolar;
+    dataHandler.datasetType = ()=>dataState.datasetType;
     
 //---------------------------------------------
 

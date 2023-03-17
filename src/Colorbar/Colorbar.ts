@@ -37,9 +37,8 @@ const defaultOptions : Colorbar_Options = {
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "10px",
         opacity : 1,
-        position : "end",
-        filled : true
-    },
+        position : "end"
+        },
     title : {
         text : "",
         color : "#000000",
@@ -47,7 +46,6 @@ const defaultOptions : Colorbar_Options = {
         size : "12px",
         opacity : 1,
         position : "end",
-        filled : true,
         reverse : false
     },
     data : ""
@@ -99,6 +97,7 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
     barHandler.border = properties.border;
     barHandler.floating = properties.floating;
     barHandler.ticks = properties.ticks;
+    barHandler.id = properties.id;
     barHandler.data = data.data;
 
 

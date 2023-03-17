@@ -21,6 +21,7 @@ export function HeatMap(options:Partialize<Heat_Map_Options>, graphHandler : Gra
     const dataState : Heat_Map_State = {
         id : crypto.randomUUID(),
         index : 0,
+        datasetType : "heatmap",
         dirtify,
         ...defaultOptions, ...options,
         useAxis : {...defaultOptions.useAxis, ...options.useAxis},
@@ -47,7 +48,7 @@ export function HeatMap(options:Partialize<Heat_Map_Options>, graphHandler : Gra
     dataHandler.smooth = properties.smooth;
     dataHandler.color = properties.color;
     dataHandler.opacity = properties.opacity;
-
+    dataHandler.datasetType = ()=>dataState.datasetType;
 
 //---------------------------------------------
     return [dataHandler as Heat_Map, draw.drawData];
