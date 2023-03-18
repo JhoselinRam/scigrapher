@@ -1,3 +1,5 @@
+import { Area } from "../../../Data/Area/Area.js";
+import { Area_Options } from "../../../Data/Area/Area_Types";
 import { Datasets, Dataset_Options, Dataset_Types, Draw_Data_Callback, Partialize } from "../../../Data/Data_Types";
 import { HeatMap } from "../../../Data/HeatMap/Heat_Map.js";
 import { Heat_Map_Options } from "../../../Data/HeatMap/Heat_Map_Types";
@@ -37,6 +39,16 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 
             case "heatmap":{
                 const [newDataset, drawDataset] = HeatMap(options as Partialize<Heat_Map_Options>, graphHandler , state.dirty.dirtify);
+
+                state.data.push({dataset : newDataset, draw:drawDataset});
+                newDataset.index(state.data.length);
+                if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+
+                return newDataset
+            }
+
+            case "area":{
+                const [newDataset, drawDataset] = Area(options as Partialize<Area_Options>, graphHandler , state.dirty.dirtify);
 
                 state.data.push({dataset : newDataset, draw:drawDataset});
                 newDataset.index(state.data.length);

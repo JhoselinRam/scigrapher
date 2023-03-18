@@ -18,10 +18,6 @@ export interface Draw_Line_Helper_Props {
     yScale : Mapping
 }
 
-export interface Draw_Area_Props extends Draw_Line_Helper_Props{
-    xAreaPositions : Array<number>,
-    yAreaPositions : Array<number>
-}
 
 export interface Interpret_Line_Coords_Props {
     polar : boolean,

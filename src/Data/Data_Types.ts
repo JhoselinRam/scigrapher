@@ -1,9 +1,10 @@
 import { Axis_Property, Graph2D, Graph2D_State } from "../Graph2D/Graph2D_Types";
+import { Area, Area_Options, Area_State } from "./Area/Area_Types";
 import { Heat_Map, Heat_Map_Options, Heat_Map_State } from "./HeatMap/Heat_Map_Types";
 import { Line_Chart, Line_Chart_Options, Line_Chart_State, Line_Char_Data } from "./LineChart/LineChart_Types";
 import { Vector_Field, Vector_Field_Options, Vector_Field_State } from "./VectorField/Vector_Field_Types";
 
-export type Datasets = "linechart" | "vectorfield" | "heatmap";
+export type Datasets = "linechart" | "vectorfield" | "heatmap" | "area";
 
 export interface Data_Object_State {
     useAxis : Axis_Property<"primary" | "secondary">,
@@ -12,9 +13,9 @@ export interface Data_Object_State {
     dirtify : (sort?:boolean)=>void
 }
 
-export type Dataset_Types = Line_Chart | Vector_Field | Heat_Map;
-export type Dataset_States = Line_Chart_State | Vector_Field_State | Heat_Map_State;
-export type Dataset_Options = Line_Chart_Options | Vector_Field_Options | Heat_Map_Options;
+export type Dataset_Types = Line_Chart | Vector_Field | Heat_Map | Area;
+export type Dataset_States = Line_Chart_State | Vector_Field_State | Heat_Map_State | Area_State;
+export type Dataset_Options = Line_Chart_Options | Vector_Field_Options | Heat_Map_Options | Area_Options;
 
 export interface Data_General_Generator<T extends Dataset_Types, P extends Dataset_States> {
     dataHandler : T,

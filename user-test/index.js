@@ -1,16 +1,17 @@
 import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
-                    //.aspectRatio({anchor:0})
+                    .aspectRatio({anchor:0})
                     .pointerZoom()
                     .pointerMove()
                     .containerResize()
-                    .border({x:{end:{enable:true}}, y:{end:{enable:true}}})
-                    .axisPosition("bottom-left")
-                    .axisDomain({x:{start:-4, end:4}, y:{start:-4, end:4}})
-                    .primaryGrid({grid:{enable:false}})
-                    .secondaryGrid({grid:{enable:false}})
+                    //.border({x:{end:{enable:true}}, y:{end:{enable:true}}})
+                    //.axisPosition("bottom-left")
+                    //.axisDomain({x:{start:-4, end:4}, y:{start:-4, end:4}})
+                    //.primaryGrid({grid:{enable:false}})
+                    //.secondaryGrid({grid:{enable:false}})
 
-const bar = Graph.addColorbar()
+
+//const bar = Graph.addColorbar()
 //Graph.draw();
 
 // const vector = Graph.addDataset("vectorfield");
@@ -94,10 +95,10 @@ function heatOpacity(value, x, y){
 //---------------------------------------------
 //---------------------------------------------
 
-const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false).color("viridis");
-bar.data(heat.id()).reverse(false)
+// const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false).color("viridis");
+// bar.data(heat.id()).reverse(false)
 
-const legend = Graph.addLegend();
+// const legend = Graph.addLegend();
 
 Graph.draw();
 

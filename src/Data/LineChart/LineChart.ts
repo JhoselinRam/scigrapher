@@ -7,7 +7,6 @@ import DataLine from "./resourses/Data_Line/Data_Line.js";
 import MarkerLine from "./resourses/Marker_Line/Marker_Line.js";
 import ErrorLine from "./resourses/Error_Line/Error_Line.js";
 import Line from "./resourses/Line/Line.js";
-import Area from "./resourses/Area/Area.js";
 
 const defaultOptions : Line_Chart_Options = {
     useAxis : {x:"primary", y:"primary"},
@@ -51,16 +50,6 @@ const defaultOptions : Line_Chart_Options = {
             width : 1,
             data : 0
         }
-    },
-    area : {
-        enable : false,
-        color : "#0043e0",
-        opacity : 0.3,
-        polar : false,
-        base : {
-            x : [],
-            y : []
-        }
     }
 };
 
@@ -80,13 +69,6 @@ export function LineChart(options : Partialize<Line_Chart_Options>, graphHandler
             ...defaultOptions.errorBar , ...options.errorBar,
             x : { ...defaultOptions.errorBar.x, ...options.errorBar?.x },
             y : { ...defaultOptions.errorBar.y, ...options.errorBar?.y },
-        },
-        area : {
-            ...defaultOptions.area, ...options.area,
-            base : {
-                x : options.area?.base?.x != null ? options.area.base.x : defaultOptions.area.base.x, 
-                y : options.area?.base?.y != null ? options.area.base.y : defaultOptions.area.base.y, 
-            }
         }
     };  
     //Main handler
@@ -99,7 +81,6 @@ export function LineChart(options : Partialize<Line_Chart_Options>, graphHandler
     const marker = MarkerLine({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
     const error = ErrorLine({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
     const line = Line({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
-    const area = Area({dataHandler : dataHandler as Line_Chart, dataState, graphHandler});
 
 
     //Main handler population
@@ -133,12 +114,6 @@ export function LineChart(options : Partialize<Line_Chart_Options>, graphHandler
     dataHandler.lineOpacity = line.lineOpacity;
     dataHandler.lineStyle = line.lineStyle;
     dataHandler.lineWidth = line.lineWidth;
-    dataHandler.areaColor = area.areaColor;
-    dataHandler.areaDataX = area.areaDataX;
-    dataHandler.areaDataY = area.areaDataY;
-    dataHandler.areaEnable = area.areaEnable;
-    dataHandler.areaOpacity = area.areaOpacity;
-    dataHandler.areaPolar = area.areaPolar;
     dataHandler.datasetType = ()=>dataState.datasetType;
     
 //---------------------------------------------

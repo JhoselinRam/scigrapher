@@ -2,7 +2,7 @@ import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_Method_Generator } from "../../LineChart_Types";
-import { Create_Error_Props, Create_Marker_Props, Draw_Area_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props } from "./Draw_Line_Types";
+import { Create_Error_Props, Create_Marker_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props } from "./Draw_Line_Types";
 
 function DrawLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generator) : Draw_Line{
 
@@ -32,13 +32,6 @@ function DrawLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Gen
         state.context.data.rect(0, 0, graphRect.width, graphRect.height);
         state.context.data.clip();
 
-        if(dataState.area.enable){
-            const xAreaPositions = isCallable(dataState.area.base.x)? dataState.area.base.x(dataHandler, graphHandler) : dataState.area.base.x.slice();
-            const yAreaPositions = isCallable(dataState.area.base.y)? dataState.area.base.y(dataHandler, graphHandler) : dataState.area.base.y.slice();
-            xAreaPositions.reverse();
-            yAreaPositions.reverse();
-            drawArea({context:state.context.data, dataHandler, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale, graphHandler});
-        }
         if(dataState.line.enable)
             drawLines({context:state.context.data, dataState, xPositions, yPositions, dataHandler, xScale, yScale, graphHandler});
         if(dataState.marker.enable)
@@ -305,42 +298,6 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
                 }
             }
         });
-    }
-
-//---------------------------------------------
-//--------------- Draw Area -------------------
-
-    function drawArea({context, dataState, xAreaPositions, xPositions, xScale, yAreaPositions, yPositions, yScale} : Draw_Area_Props){
-        context.fillStyle = dataState.area.color;
-        context.globalAlpha = dataState.area.opacity;
-        context.beginPath();
-        context.moveTo(Math.round(xScale.map(xPositions[0])), Math.round(yScale.map(yPositions[0])));
-        xPositions.forEach((positionX, i) =>{
-            if(i === 0) return;
-            let x = Math.round(xScale.map(positionX));
-            let y = Math.round(yScale.map(yPositions[i]));
-
-            if(dataState.polar){
-                x = Math.round(xScale.map(positionX * Math.cos(yPositions[i])));
-                y = Math.round(yScale.map(positionX * Math.sin(yPositions[i])));
-            }
-            
-            context.lineTo(x ,y);
-        });
-        xAreaPositions.forEach((positionX, i)=>{
-            let x = Math.round(xScale.map(positionX));
-            let y = Math.round(yScale.map(yAreaPositions[i]));
-
-            if(dataState.polar){
-                x = Math.round(xScale.map(positionX * Math.cos(yAreaPositions[i])));
-                y = Math.round(yScale.map(positionX * Math.sin(yAreaPositions[i])));
-            }
-
-
-            context.lineTo(x, y);
-        })
-        context.closePath();
-        context.fill();
     }
 
 //---------------------------------------------
