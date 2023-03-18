@@ -23,7 +23,7 @@ function Colorbars({graphHandler, state} : Method_Generator) : Colorbars{
 
     function removeColorbar(id:string, callback?:graphCallback) : Graph2D{
         
-        state.colorbars.filter(item=>item.bar.id()!==id);
+        state.colorbars = state.colorbars.filter(item=>item.bar.id()!==id);
 
         state.compute.client();
         if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));

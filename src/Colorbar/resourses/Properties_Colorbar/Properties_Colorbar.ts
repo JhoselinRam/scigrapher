@@ -1,4 +1,5 @@
-import { Colorbar, Colorbar_Callback, Colorbar_Floating, Colorbar_Line, Colorbar_Marker, Colorbar_Method_Generator, Colorbar_Position} from "../../Colorbar_Types";
+import { Rect } from "../../../Graph2D/Graph2D_Types";
+import { Colorbar, Colorbar_Callback, Colorbar_Line, Colorbar_Marker, Colorbar_Method_Generator, Colorbar_Position} from "../../Colorbar_Types";
 import { Colorbar_Object_Generator, Colorbar_Object_Options, Colorbar_Properties_Methods, Colorbar_Property_Generator, Colorbar_Property_Options } from "./Properties_Colorbar_Types";
 
 function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properties_Methods{
@@ -8,16 +9,56 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
     const enable = generateStaticMethod<boolean>("enable", props);
     const reverse = generateStaticMethod<boolean>("reverse", props);
     const unit = generateStaticMethod<string>("unit", props);
-    const position = generateStaticMethod<Colorbar_Position>("position", props);
     const size = generateStaticMethod<number>("size", props);
     const opacity = generateStaticMethod<number>("opacity", props);
     const width = generateStaticMethod<number>("width", props);
 
     const border = generateDynamicMethod<Colorbar_Line>(props.barState.border, "border", props);
-    const floating = generateDynamicMethod<Colorbar_Floating>(props.barState.floating, "floating", props);
     const ticks = generateDynamicMethod<Colorbar_Marker>(props.barState.ticks, "ticks", props);
 
 //---------------------------------------------
+//-------------- Position ---------------------
+
+    function position(position:Colorbar_Position, callback?:Colorbar_Callback) : Colorbar;
+    function position(arg:void) : string;
+    function position(position:Colorbar_Position | void, callback?:Colorbar_Callback) : Colorbar | string | undefined{
+        if(typeof position === "undefined" && callback == null){
+            if(typeof props.barState.position === "string")
+                return props.barState.position;
+            if(typeof props.barState.position === "object")
+                return "floating";
+        }
+        else{
+            if(typeof position === "string")
+                props.barState.position = position;
+            if(typeof position === "object"){
+                if(typeof props.barState.position === "string")
+                    props.barState.position = {x:0, y:0, orientation:"vertical"};
+                
+                props.barState.position = {...props.barState.position, ...position};
+            }
+
+            props.state.compute.client();
+            if(callback != null) callback(props.barHandler, props.graphHandler, props.state.data.map(item=>item.dataset));
+            props.state.dirty.client = true;
+
+            return props.barHandler;
+        }
+    }
+
+
+//---------------------------------------------
+//--------------- Metrics ---------------------
+
+    function metrics() : Rect{
+        return {
+            x : props.barState.metrics.position.x - props.state.context.clientRect.x,
+            y : props.barState.metrics.position.y - props.state.context.clientRect.y,
+            width : props.barState.metrics.width,
+            height : props.barState.metrics.height,
+        }
+    }
+
 //---------------------------------------------
 
     function id() : string{
@@ -35,9 +76,9 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
         unit,
         width,
         border,
-        floating,
         ticks,
-        id
+        id,
+        metrics
     }
 }
 

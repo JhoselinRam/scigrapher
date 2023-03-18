@@ -23,14 +23,13 @@ const title = generateTextMethod<Colorbar_Title>(barState.title, "title", {barHa
                     opacity : barState.title.opacity,
                     size : barState.title.size,
                     font : barState.title.font,
-                    filled : barState.title.filled,
                     position : barState.title.position
                 }
             }
         }
 
         if(typeof text === "object"){
-            if(text.color==null && text.filled==null && text.font==null && text.opacity==null && text.position==null && text.size==null) return barHandler;
+            if(Object.keys(text).length === 0) return barHandler;
 
             barState.label = {...barState.label, ...text};
             barState.title = {...barState.title, ...text};

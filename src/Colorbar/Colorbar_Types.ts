@@ -1,5 +1,5 @@
 import { Dataset_Types } from "../Data/Data_Types";
-import { Graph2D, Graph2D_State, Line_Style } from "../Graph2D/Graph2D_Types";
+import { Axis_Property, Graph2D, Graph2D_State, Line_Style } from "../Graph2D/Graph2D_Types";
 import { Colorbar_Data_Methods } from "./resourses/Data_Colorbar/Data_Colorbar_Types";
 import { Colorbar_Properties_Methods } from "./resourses/Properties_Colorbar/Properties_Colorbar_Types";
 import { ColorBar_Text_Methods } from "./resourses/Text_Colorbar/Text_Colorbar_Types";
@@ -11,26 +11,25 @@ Colorbar_Data_Methods
 {}
 
 export interface Colorbar_Options {
-    enable : boolean,               //
-    reverse : boolean,              //
-    ticks : Colorbar_Marker,        //
-    unit : string,                  //
-    position : Colorbar_Position,   //
-    size : number,                  //
-    opacity : number,               //
-    label : Colorbar_Text,          //
-    title : Colorbar_Title,         //
-    width : number,                 //
-    floating : Colorbar_Floating,   //
-    border : Colorbar_Line,         //
+    enable : boolean,               
+    reverse : boolean,              
+    ticks : Colorbar_Marker,        
+    unit : string,                  
+    size : number,                  
+    opacity : number,               
+    label : Colorbar_Text,          
+    title : Colorbar_Title,         
+    width : number,                 
+    border : Colorbar_Line,         
     data : Colorbar_Data
+    position : Colorbar_Position,   
 }
 
 export type Colorbar_Entries = Array<{color:string, position:number, label:string}>;
 
 export type Colorbar_Ticks = number | Array<string> | Array<{position:number, label:string}>;
 
-export type Colorbar_Position = "x-start" | "x-end" | "y-start" | "y-end" | "floating";
+export type Colorbar_Position = "x-start" | "x-end" | "y-start" | "y-end" | Colorbar_Floating;
 
 export type Colorbar_Data = string | Colorbar_Entries;
 
@@ -67,6 +66,7 @@ export interface Colorbar_Marker extends Colorbar_Line {
 export interface Colorbar_State extends Colorbar_Options {
     id : string,
     metrics : {
+        position : Axis_Property<number>,
         width : number,
         height : number,
         barCoord : number,

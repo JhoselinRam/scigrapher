@@ -11,6 +11,7 @@ import { Data } from "./resourses/Data/Data_Types";
 import { Events } from "./resourses/Events/Events_Types";
 import { Grid } from "./resourses/Grid/Grid_Types";
 import { Labels } from "./resourses/Labels/Labels_Types";
+import { Legends } from "./resourses/Legends/Legends_Types";
 import { Margin } from "./resourses/Margin/Margin_Types";
 import { Properties } from "./resourses/Properties/Properties_Types";
 import { Secondary } from "./resourses/Secondary/Secondary_Types";
@@ -26,7 +27,8 @@ export interface Graph2D extends
     Events,
     Data,
     Properties,
-    Colorbars
+    Colorbars,
+    Legends
     {}
 
 export type Axis_Position = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
@@ -211,7 +213,6 @@ export interface Graph2D_State extends Graph2D_Options {
     }>,
     legends : Array<{
         legend : Legend,
-        compute : ()=>void,
         draw : ()=>void
     }>
 }

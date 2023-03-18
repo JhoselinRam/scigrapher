@@ -1,5 +1,5 @@
 import { Graph2D, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Types";
-import { Colorbar, Colorbar_Data, Colorbar_Options, Colorbar_State, Colorbar_Ticks } from "./Colorbar_Types";
+import { Colorbar, Colorbar_Data, Colorbar_Options, Colorbar_Position, Colorbar_State, Colorbar_Ticks } from "./Colorbar_Types";
 import ComputeColorbar from "./resourses/Compute_Colorbar/Compute_Colorbar.js";
 import ColorbarData from "./resourses/Data_Colorbar/Data_Colorbar.js";
 import DrawColorbar from "./resourses/Draw_Colorbar/Draw_Colorbar.js";
@@ -27,11 +27,6 @@ const defaultOptions : Colorbar_Options = {
         style : "solid", 
         width : 1
     },
-    floating : {
-        x : 0,
-        y : 0,
-        orientation : "vertical"
-    },
     label : {
         color : "#000000",
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
@@ -56,7 +51,7 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
     //state of the colorbar
     const barState : Colorbar_State = {
         id : crypto.randomUUID(),
-        metrics : {width: 0, height:0, barCoord:0, labelCoord:0, titleCoord:0},
+        metrics : {width: 0, height:0, barCoord:0, labelCoord:0, titleCoord:0, position :{x:0, y:0}},
         gradient : {
             entries : [],
             gradientObject : state.context.data.createLinearGradient(0,0,0,0)
@@ -64,10 +59,10 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
         textOffset : 4,
         ...defaultOptions,
         ...options,
+        position : options.position==null? defaultOptions.position : options.position as Colorbar_Position,
         ticks : {...defaultOptions.ticks, ...options.ticks, density:options.ticks?.density==null? defaultOptions.ticks.density : options.ticks.density as Colorbar_Ticks},
         data : options.data==null? defaultOptions.data : options.data as Colorbar_Data,
         border : {...defaultOptions.border, ...options.border},
-        floating : {...defaultOptions.floating, ...options.floating},
         label : {...defaultOptions.label, ...options.label},
         title : {...defaultOptions.title, ...options.title},
     }
@@ -95,9 +90,9 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
     barHandler.position = properties.position;
     barHandler.unit = properties.unit;
     barHandler.border = properties.border;
-    barHandler.floating = properties.floating;
     barHandler.ticks = properties.ticks;
     barHandler.id = properties.id;
+    barHandler.metrics = properties.metrics;
     barHandler.data = data.data;
 
 

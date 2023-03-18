@@ -96,6 +96,9 @@ function heatOpacity(value, x, y){
 
 const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false).color("viridis");
 bar.data(heat.id()).reverse(false)
+
+const legend = Graph.addLegend();
+
 Graph.draw();
 
 

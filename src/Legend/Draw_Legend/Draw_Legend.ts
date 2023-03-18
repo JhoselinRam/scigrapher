@@ -6,7 +6,7 @@ function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_M
 //------------------ Draw ---------------------
 
     function draw(){
-
+        
     }
 
 //---------------------------------------------

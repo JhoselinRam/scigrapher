@@ -11,15 +11,16 @@ function DrawColorbar({barState, state} : Colorbar_Method_Generator) : Draw_Colo
     function draw(){
         if(!barState.enable) return;
 
-        const [xPosition, yPosition] = getBarPosition(state, barState);
-
         state.context.data.save();
-        state.context.data.translate(xPosition, yPosition);
+        state.context.data.translate(barState.metrics.position.x, barState.metrics.position.y);
 
-        if(barState.position==="x-start" || barState.position==="x-end" || (barState.position==="floating" && barState.floating.orientation==="vertical")){
+        if((typeof barState.position === "string" && (barState.position==="x-start" || barState.position==="x-end")) || 
+        (typeof barState.position === "object" && barState.position.orientation === "vertical")){
             drawVertical(state, barState);
         }
-        if(barState.position==="y-start" || barState.position==="y-end" || (barState.position==="floating" && barState.floating.orientation==="horizontal")){
+        
+        if((typeof barState.position === "string" && (barState.position==="y-start" || barState.position==="y-end")) || 
+        (typeof barState.position === "object" && barState.position.orientation === "horizontal")){
             drawHorizontal(state, barState);
         }
 
@@ -50,46 +51,6 @@ function DrawColorbar({barState, state} : Colorbar_Method_Generator) : Draw_Colo
 
 
 
-//------------ Get Bar Position ---------------
-
-function getBarPosition(state : Graph2D_State, barState:Colorbar_State) : [number, number]{
-    const graphRect = state.context.graphRect();
-    let xPosition;
-    let yPosition;
-
-    switch(barState.position){
-        case "x-start":
-            xPosition = Math.round(state.context.clientRect.x + 3*state.marginUsed.defaultMargin);
-            yPosition = Math.round(graphRect.y + graphRect.height/2 - barState.metrics.height/2);
-            break;
-
-        case "x-end":
-            xPosition = Math.round(state.context.clientRect.x + state.context.clientRect.width - 3*state.marginUsed.defaultMargin - barState.metrics.width);
-            yPosition = Math.round(graphRect.y + graphRect.height/2 - barState.metrics.height/2);
-            break;
-
-        case "y-start":
-            xPosition = Math.round(graphRect.x + graphRect.width/2 - barState.metrics.width/2);
-            yPosition = Math.round(state.context.clientRect.y + state.context.clientRect.height - 3*state.marginUsed.defaultMargin - barState.metrics.height);
-            break;
-
-        case "y-end":
-            xPosition = Math.round(graphRect.x + graphRect.width/2 - barState.metrics.width/2);
-            yPosition = Math.round(state.context.clientRect.y + 3*state.marginUsed.defaultMargin);
-            break;
-
-        case "floating":
-            xPosition = barState.floating.x;
-            yPosition = barState.floating.y;
-            break;
-    }
-
-
-
-    return [xPosition, yPosition];
-}
-
-//---------------------------------------------
 //---------------------------------------------
 
 function drawVertical(state:Graph2D_State, barState:Colorbar_State){

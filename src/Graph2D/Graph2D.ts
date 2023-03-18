@@ -7,6 +7,7 @@ import Data from "./resourses/Data/Data.js";
 import Events from "./resourses/Events/Events.js";
 import Grid from "./resourses/Grid/Grid.js";
 import Labels from "./resourses/Labels/Labels.js";
+import Legends from "./resourses/Legends/Legends.js";
 import Margin from "./resourses/Margin/Margin.js";
 import Properties from "./resourses/Properties/Properties.js";
 import Scale from "./resourses/Scale/Scale.js";
@@ -299,6 +300,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     const properties = Properties({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const border = Border({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
     const colorbars = Colorbars({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
+    const legends = Legends({state: state as Graph2D_State, graphHandler:graphHandler as Graph2D});
 
     //State optional properties population
     state.compute.scale = scale.compute;
@@ -366,6 +368,8 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.border = border.border;
     graphHandler.addColorbar = colorbars.addColorbar;
     graphHandler.removeColorbar = colorbars.removeColorbar;
+    graphHandler.addLegend = legends.addLegend;
+    graphHandler.removeLegend = legends.removeLegend;
 
     
     //Setup configurations
@@ -431,6 +435,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
             fullState.context.data.clearRect(0,0,fullState.context.data.canvas.width, fullState.context.data.canvas.height);
             fullState.data.forEach(item => item.draw(fullState));
             fullState.colorbars.forEach(colorbar=>colorbar.draw());
+            fullState.legends.forEach(legend=>legend.draw());
         }
         
         fullState.dirty.full = false;

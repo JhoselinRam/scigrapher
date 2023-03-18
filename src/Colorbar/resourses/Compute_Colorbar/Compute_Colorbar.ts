@@ -1,9 +1,10 @@
 import { Heat_Map } from "../../../Data/HeatMap/Heat_Map_Types.js";
+import { Graph2D_State } from "../../../Graph2D/Graph2D_Types.js";
 import colorInterpolator from "../../../tools/Color_Map/Color_Interpolator.js";
 import { formatNumber, getTextSize } from "../../../tools/Helplers/Helplers.js";
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Mapping } from "../../../tools/Mapping/Mapping_Types.js";
-import { Colorbar_Entries, Colorbar_Method_Generator } from "../../Colorbar_Types";
+import { Colorbar_Entries, Colorbar_Method_Generator, Colorbar_State } from "../../Colorbar_Types";
 import { Compute_Colorbar } from "./Compute_Colorbar_Types";
 
 function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Compute_Colorbar{
@@ -60,153 +61,21 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
         });
 
         
-        
-        switch(barState.position){
-            case "x-start":{
-                //Size
-                barState.metrics.width = barState.width + barState.textOffset + labelWidth;
-                barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
-
-                if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height; 
-                
-                //Margin
-                const minMargin = barState.metrics.width + 6*state.marginUsed.defaultMargin;
-                if(state.marginUsed.x.start < minMargin) 
-                    state.marginUsed.x.start = minMargin;
-                    
-                //Coordinates
-                let startPosition = 0;
-                if(barState.title.text !== ""){
-                    if(barState.title.position === "start"){
-                        barState.metrics.titleCoord = 0;
-                        startPosition = titleSize.height + barState.textOffset;
-                    }
-                    else
-                        barState.metrics.titleCoord = barState.metrics.width - titleSize.height;
-                }
-                if(barState.label.position === "start"){
-                    barState.metrics.labelCoord = startPosition + labelWidth;
-                    barState.metrics.barCoord = barState.metrics.labelCoord + barState.textOffset;
-                }
-                if(barState.label.position === "end"){
-                    barState.metrics.barCoord = startPosition;
-                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
-                }
-            }
-            break;
-
-            case "x-end":{
-                //Size
-                barState.metrics.width = barState.width + barState.textOffset + labelWidth;
-                barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
-
-                if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
-
-                //Margin
-                const minMargin = barState.metrics.width + 6*state.marginUsed.defaultMargin;
-                if(state.marginUsed.x.end < minMargin) 
-                    state.marginUsed.x.end = minMargin;
-
-                //Coordinates
-                let startPosition = 0;
-                if(barState.title.text !== ""){
-                    if(barState.title.position === "start"){
-                        barState.metrics.titleCoord = 0;
-                        startPosition = titleSize.height + barState.textOffset;
-                    }
-                    else
-                        barState.metrics.titleCoord = barState.metrics.width - titleSize.height;
-                }
-                if(barState.label.position === "start"){
-                    barState.metrics.labelCoord = startPosition + labelWidth;
-                    barState.metrics.barCoord = barState.metrics.labelCoord + barState.textOffset;
-                }
-                if(barState.label.position === "end"){
-                    barState.metrics.barCoord = startPosition;
-                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
-                }
-            }
-           break;
-
-            case "y-start":{
-                //Size
-                barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.metrics.height = barState.width + barState.textOffset + labelHeight;
-                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
-
-                if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
-
-                //Margin
-                const minMargin = barState.metrics.height + 6*state.marginUsed.defaultMargin;
-                if(state.marginUsed.y.start < minMargin) 
-                    state.marginUsed.y.start = minMargin;
-
-                //Coordinates
-                let startPosition = 0;
-                if(barState.title.text !== ""){
-                    if(barState.title.position === "start")
-                        barState.metrics.titleCoord = barState.metrics.height - titleSize.height;
-                    else{
-                        barState.metrics.titleCoord = 0;
-                        startPosition = titleSize.height + barState.textOffset
-                    }
-                }
-                if(barState.label.position === "start"){
-                    barState.metrics.barCoord = startPosition;
-                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
-                }
-                if(barState.label.position === "end"){
-                    barState.metrics.labelCoord = startPosition;
-                    barState.metrics.barCoord = startPosition + labelHeight + barState.textOffset;
-                }
-            }
-            break;
-
-            case "y-end":{
-                //Size
-                barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
-                barState.metrics.height = barState.width + barState.textOffset + labelHeight;
-                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
-
-                if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
-            
-                //Margin
-                const minMargin = barState.metrics.height + 6*state.marginUsed.defaultMargin;
-                if(state.marginUsed.y.end < minMargin) 
-                    state.marginUsed.y.end = minMargin;
-
-                //Coordinates
-                let startPosition = 0;
-                if(barState.title.text !== ""){
-                    if(barState.title.position === "start")
-                        barState.metrics.titleCoord = barState.metrics.height - titleSize.height;
-                    else{
-                        barState.metrics.titleCoord = 0;
-                        startPosition = titleSize.height + barState.textOffset
-                    }
-                }
-                if(barState.label.position === "start"){
-                    barState.metrics.barCoord = startPosition;
-                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
-                }
-                if(barState.label.position === "end"){
-                    barState.metrics.labelCoord = startPosition;
-                    barState.metrics.barCoord = startPosition + labelHeight + barState.textOffset;
-                }
-            }
-            break;
-
-            case "floating":
-                if(barState.floating.orientation==="vertical"){
+        if(typeof barState.position === "string"){
+            switch(barState.position){
+                case "x-start":{
                     //Size
                     barState.metrics.width = barState.width + barState.textOffset + labelWidth;
-                    barState.metrics.height = graphRect.height * barState.size;
+                    barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
                     barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
-
-                    if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
-
+    
+                    if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height; 
+                    
+                    //Margin
+                    const minMargin = barState.metrics.width + 6*state.marginUsed.defaultMargin;
+                    if(state.marginUsed.x.start < minMargin) 
+                        state.marginUsed.x.start = minMargin;
+                        
                     //Coordinates
                     let startPosition = 0;
                     if(barState.title.text !== ""){
@@ -225,16 +94,56 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                         barState.metrics.barCoord = startPosition;
                         barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
                     }
-
                 }
-                if(barState.floating.orientation==="horizontal"){
+                break;
+    
+                case "x-end":{
                     //Size
-                    barState.metrics.width = graphRect.width * barState.size;
+                    barState.metrics.width = barState.width + barState.textOffset + labelWidth;
+                    barState.metrics.height = (graphRect.height - 2*state.marginUsed.defaultMargin) * barState.size;
+                    barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
+    
+                    if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
+    
+                    //Margin
+                    const minMargin = barState.metrics.width + 6*state.marginUsed.defaultMargin;
+                    if(state.marginUsed.x.end < minMargin) 
+                        state.marginUsed.x.end = minMargin;
+    
+                    //Coordinates
+                    let startPosition = 0;
+                    if(barState.title.text !== ""){
+                        if(barState.title.position === "start"){
+                            barState.metrics.titleCoord = 0;
+                            startPosition = titleSize.height + barState.textOffset;
+                        }
+                        else
+                            barState.metrics.titleCoord = barState.metrics.width - titleSize.height;
+                    }
+                    if(barState.label.position === "start"){
+                        barState.metrics.labelCoord = startPosition + labelWidth;
+                        barState.metrics.barCoord = barState.metrics.labelCoord + barState.textOffset;
+                    }
+                    if(barState.label.position === "end"){
+                        barState.metrics.barCoord = startPosition;
+                        barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                    }
+                }
+               break;
+    
+                case "y-start":{
+                    //Size
+                    barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
                     barState.metrics.height = barState.width + barState.textOffset + labelHeight;
                     barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
-
+    
                     if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
-
+    
+                    //Margin
+                    const minMargin = barState.metrics.height + 6*state.marginUsed.defaultMargin;
+                    if(state.marginUsed.y.start < minMargin) 
+                        state.marginUsed.y.start = minMargin;
+    
                     //Coordinates
                     let startPosition = 0;
                     if(barState.title.text !== ""){
@@ -255,11 +164,107 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
                     }
                 }
                 break;
+    
+                case "y-end":{
+                    //Size
+                    barState.metrics.width = (graphRect.width - 2*state.marginUsed.defaultMargin) * barState.size;
+                    barState.metrics.height = barState.width + barState.textOffset + labelHeight;
+                    barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
+    
+                    if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
+                
+                    //Margin
+                    const minMargin = barState.metrics.height + 6*state.marginUsed.defaultMargin;
+                    if(state.marginUsed.y.end < minMargin) 
+                        state.marginUsed.y.end = minMargin;
+    
+                    //Coordinates
+                    let startPosition = 0;
+                    if(barState.title.text !== ""){
+                        if(barState.title.position === "start")
+                            barState.metrics.titleCoord = barState.metrics.height - titleSize.height;
+                        else{
+                            barState.metrics.titleCoord = 0;
+                            startPosition = titleSize.height + barState.textOffset
+                        }
+                    }
+                    if(barState.label.position === "start"){
+                        barState.metrics.barCoord = startPosition;
+                        barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                    }
+                    if(barState.label.position === "end"){
+                        barState.metrics.labelCoord = startPosition;
+                        barState.metrics.barCoord = startPosition + labelHeight + barState.textOffset;
+                    }
+                }
+                break;
+            }
+        }
+        if(typeof barState.position === "object"){
+            if(barState.position.orientation === "vertical"){
+                //Size
+                barState.metrics.width = barState.width + barState.textOffset + labelWidth;
+                barState.metrics.height = graphRect.height * barState.size;
+                barState.gradient.gradientObject = state.context.data.createLinearGradient(0, barState.metrics.height, 0, 0);
+
+                if(barState.title.text !== "") barState.metrics.width += barState.textOffset + titleSize.height;
+
+                //Coordinates
+                let startPosition = 0;
+                if(barState.title.text !== ""){
+                    if(barState.title.position === "start"){
+                        barState.metrics.titleCoord = 0;
+                        startPosition = titleSize.height + barState.textOffset;
+                    }
+                    else
+                        barState.metrics.titleCoord = barState.metrics.width - titleSize.height;
+                }
+                if(barState.label.position === "start"){
+                    barState.metrics.labelCoord = startPosition + labelWidth;
+                    barState.metrics.barCoord = barState.metrics.labelCoord + barState.textOffset;
+                }
+                if(barState.label.position === "end"){
+                    barState.metrics.barCoord = startPosition;
+                    barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                }
+            }
+            if(barState.position.orientation === "horizontal"){
+                 //Size
+                 barState.metrics.width = graphRect.width * barState.size;
+                 barState.metrics.height = barState.width + barState.textOffset + labelHeight;
+                 barState.gradient.gradientObject = state.context.data.createLinearGradient(0, 0, barState.metrics.width, 0);
+
+                 if(barState.title.text !== "") barState.metrics.height += barState.textOffset + titleSize.height;
+
+                 //Coordinates
+                 let startPosition = 0;
+                 if(barState.title.text !== ""){
+                     if(barState.title.position === "start")
+                         barState.metrics.titleCoord = barState.metrics.height - titleSize.height;
+                     else{
+                         barState.metrics.titleCoord = 0;
+                         startPosition = titleSize.height + barState.textOffset
+                     }
+                 }
+                 if(barState.label.position === "start"){
+                     barState.metrics.barCoord = startPosition;
+                     barState.metrics.labelCoord = barState.metrics.barCoord + barState.width + barState.textOffset;
+                 }
+                 if(barState.label.position === "end"){
+                     barState.metrics.labelCoord = startPosition;
+                     barState.metrics.barCoord = startPosition + labelHeight + barState.textOffset;
+                 }
+            }
         }
 
 
 
         gradientSteps.forEach(item=>{ barState.gradient.gradientObject.addColorStop(item.position, item.color) }); 
+
+        const [xPosition, yPosition] = getBarPosition(state, barState);
+        barState.metrics.position.x = xPosition;
+        barState.metrics.position.y = yPosition;
+
         
     }
 
@@ -460,3 +465,58 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
 }
 
 export default ComputeColorbar;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------------ Get Bar Position ---------------
+
+function getBarPosition(state : Graph2D_State, barState:Colorbar_State) : [number, number]{
+    const graphRect = state.context.graphRect();
+    let xPosition = 0;
+    let yPosition = 0;
+
+    if(typeof barState.position === "string"){
+        switch(barState.position){
+            case "x-start":
+                xPosition = Math.round(state.context.clientRect.x + 3*state.marginUsed.defaultMargin);
+                yPosition = Math.round(graphRect.y + graphRect.height/2 - barState.metrics.height/2);
+                break;
+    
+            case "x-end":
+                xPosition = Math.round(state.context.clientRect.x + state.context.clientRect.width - 3*state.marginUsed.defaultMargin - barState.metrics.width);
+                yPosition = Math.round(graphRect.y + graphRect.height/2 - barState.metrics.height/2);
+                break;
+    
+            case "y-start":
+                xPosition = Math.round(graphRect.x + graphRect.width/2 - barState.metrics.width/2);
+                yPosition = Math.round(state.context.clientRect.y + state.context.clientRect.height - 3*state.marginUsed.defaultMargin - barState.metrics.height);
+                break;
+    
+            case "y-end":
+                xPosition = Math.round(graphRect.x + graphRect.width/2 - barState.metrics.width/2);
+                yPosition = Math.round(state.context.clientRect.y + 3*state.marginUsed.defaultMargin);
+                break;
+        }
+    }
+    if(typeof barState.position === "object"){
+        xPosition = state.context.clientRect.x + barState.position.x;
+        yPosition = state.context.clientRect.y + barState.position.y;
+    }
+
+
+
+    return [xPosition, yPosition];
+}
+
+//---------------------------------------------
