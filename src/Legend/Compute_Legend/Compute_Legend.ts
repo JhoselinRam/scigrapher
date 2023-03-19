@@ -6,7 +6,7 @@ function ComputeLegend({graphHandler, legendHandler, legendState, state} : Legen
 //---------------------------------------------
 
     function compute(){
-
+        console.dir(legendState.data)
     }
 
 //---------------------------------------------

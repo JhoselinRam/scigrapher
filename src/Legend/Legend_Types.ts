@@ -1,7 +1,9 @@
 import { Dataset_Types } from "../Data/Data_Types";
-import { Axis_Property, Graph2D, Graph2D_State, Line_Style } from "../Graph2D/Graph2D_Types";
+import { Axis_Property, Graph2D, Graph2D_State, Line_Style, Rect } from "../Graph2D/Graph2D_Types";
+import { Legend_Properties } from "./Properties_Legend/Properties_Legned_Types";
 
-export interface Legend {
+export interface Legend extends
+Legend_Properties {
     id : ()=>string
 }
 
@@ -51,15 +53,12 @@ export interface Legend_State extends Legend_Options {
     id : string,
     compute : ()=>void,
     metrics : {
+        x : number,
+        y : number,
         width : number,
         height : number,
         textOffset : number,
-        items : Array<{
-            x : number,
-            y : number,
-            width : number,
-            height : number
-        }>
+        items : Array<Legend_Item>
     }
 }
 
@@ -70,4 +69,8 @@ export interface Legend_Method_Generator {
     legendHandler : Legend,
     state : Graph2D_State,
     graphHandler : Graph2D
+}
+
+interface Legend_Item extends Rect {
+    drawIcon : <T extends Dataset_Types>(dataset:T)=>void
 }

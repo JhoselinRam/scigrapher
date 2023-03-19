@@ -1,71 +1,70 @@
 import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
-                    .aspectRatio({anchor:0})
-                    .pointerZoom()
+                    //.aspectRatio({anchor:0})
+                    //.pointerZoom()
                     .pointerMove()
                     .containerResize()
-                    //.border({x:{end:{enable:true}}, y:{end:{enable:true}}})
-                    //.axisPosition("bottom-left")
-                    //.axisDomain({x:{start:-4, end:4}, y:{start:-4, end:4}})
+                    .border({x:{end:{enable:true}}, y:{end:{enable:true}}})
+                    .axisPosition("bottom-left")
+                    .axisDomain({x:{start:-7, end:7}, y:{start:-2, end:2}})
                     //.primaryGrid({grid:{enable:false}})
                     //.secondaryGrid({grid:{enable:false}})
 
 
-//const bar = Graph.addColorbar()
 //Graph.draw();
 
-// const vector = Graph.addDataset("vectorfield");
-// const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});
+/* const vector = Graph.addDataset("vectorfield");
+const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});
 
-// function dipole(x,y){
-//     const a = 1;
-//     const K = 1;
-//     const rPlus = Math.hypot(x+a, y);
-//     const rMinus = Math.hypot(x-a, y);
+function dipole(x,y){
+    const a = 1;
+    const K = 1;
+    const rPlus = Math.hypot(x+a, y);
+    const rMinus = Math.hypot(x-a, y);
 
-//     const xValue = K * ( -(x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
-//     const yValue = K * ( -y/Math.pow(rPlus,3) -  y/Math.pow(rMinus,3) );
-//     const size = Math.hypot(xValue, yValue);
+    const xValue = K * ( -(x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
+    const yValue = K * ( -y/Math.pow(rPlus,3) -  y/Math.pow(rMinus,3) );
+    const size = Math.hypot(xValue, yValue);
     
-//     return [xValue/size, yValue/size];
-// }
+    return [xValue/size, yValue/size];
+}
 
-// function vColor(x, y){
-//     const angle = Math.atan2(y,x);
-//     return colorfun(angle);
-// }
+function vColor(x, y){
+    const angle = Math.atan2(y,x);
+    return colorfun(angle);
+}
 
-// function setMeshX(data, graph){
-//     const domain = graph.axisDomain();
-//     const n = 50;
-//     const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
-//     const x = linspace(domain.x.start, domain.x.end, n); 
-//     const y = linspace(domain.y.start, domain.y.end, m);
-//     const [X, Y] = meshgrid(x,y);
+function setMeshX(data, graph){
+    const domain = graph.axisDomain();
+    const n = 50;
+    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+    const x = linspace(domain.x.start, domain.x.end, n); 
+    const y = linspace(domain.y.start, domain.y.end, m);
+    const [X, Y] = meshgrid(x,y);
 
-//     return X;
-// } 
-// function setMeshY(data, graph){
-//     const domain = graph.axisDomain();
-//     const n = 50;
-//     const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
-//     const x = linspace(domain.x.start, domain.x.end, n); 
-//     const y = linspace(domain.y.start, domain.y.end, m);
-//     const [X, Y] = meshgrid(x,y);
+    return X;
+} 
+function setMeshY(data, graph){
+    const domain = graph.axisDomain();
+    const n = 50;
+    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+    const x = linspace(domain.x.start, domain.x.end, n); 
+    const y = linspace(domain.y.start, domain.y.end, m);
+    const [X, Y] = meshgrid(x,y);
     
-//     return Y;
-// } 
-// function setDataX(x, y){
-//     const [X, Y] = dipole(x,y);
-//     return X;
-// }
-// function setDataY(x, y){
-//     const [X, Y] = dipole(x, y);
-//     return Y;
-// }
+    return Y;
+} 
+function setDataX(x, y){
+    const [X, Y] = dipole(x,y);
+    return X;
+}
+function setDataY(x, y){
+    const [X, Y] = dipole(x, y);
+    return Y;
+}
 
-// vector.meshX(setMeshX).meshY(setMeshY).dataX(setDataX).dataY(setDataY).color(vColor);
-// Graph.draw()
+vector.meshX(setMeshX).meshY(setMeshY).dataX(setDataX).dataY(setDataY).color(vColor);
+Graph.draw() */
 
 
 
@@ -77,28 +76,50 @@ const Graph = Graph2D(document.querySelector(".graph"))
 //------------ Heat Data ----------------
 //---------------------------------------------
 
-const x = linspace(-3.7, 3.7, 50);
-const y = linspace(-3.7, 3.7, 50);
-const [X,Y] = meshgrid(x,y);
+// const x = linspace(-3.7, 3.7, 40);
+// const y = linspace(-3.7, 3.7, 40);
+// const [X,Y] = meshgrid(x,y);
 
-function heatData(x, y){
-    return 3*(1-x)**2*Math.exp((x**2+(y+1)**2)*-1)+10*(x/5-x**3-y**5)*Math.exp((x**2+y**2)*-1)-1/3*Math.exp(((x+1)**2+y**2)*-1);
-}
+// function heatData(x, y){
+//     return 3*(1-x)**2*Math.exp((x**2+(y+1)**2)*-1)+10*(x/5-x**3-y**5)*Math.exp((x**2+y**2)*-1)-1/3*Math.exp(((x+1)**2+y**2)*-1);
+// }
 
-function heatOpacity(value, x, y){
-    let r = Math.hypot(x,y);
-    r =  r>1?1:0;
-    const t = 3*Math.pow(r,2) - 2*Math.pow(r,3);
-    return 1 - t;
-}
+// function heatOpacity(value, x, y){
+//     let r = Math.hypot(x,y);
+//     r =  r>1?1:0;
+//     const t = 3*Math.pow(r,2) - 2*Math.pow(r,3);
+//     return 1 - t;
+// }
 
 //---------------------------------------------
 //---------------------------------------------
 
 // const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false).color("viridis");
-// bar.data(heat.id()).reverse(false)
 
-// const legend = Graph.addLegend();
+// const bar = Graph.addColorbar().data(heat.id()).reverse(false)
+
+function f(x){
+    return Math.cos(x);
+}
+
+const cos = Graph.addDataset("linechart")
+    .dataX((set, graph)=>{
+        const domain = graph.axisDomain().x;
+        return linspace(domain.start, domain.end, 100);
+    })
+    .dataY(dataset=>{
+        const y = [];
+        dataset.dataX().forEach(x=>{
+            y.push(f(x));
+        })
+
+        return y;
+    })
+    .markerEnable(true)
+
+
+
+const legend = Graph.addLegend().data([{dataset:cos.id(), label:"Cos(x)"}]);
 
 Graph.draw();
 
@@ -1162,14 +1183,14 @@ function generateError(n){
     return value
 }
 
-const staticFunctions= {
-    functionLinear : Graph.addDataset("linechart", {data:{x:generateLinear().x, y:generateLinear().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(15)}}}),
-    functionCuadratic : Graph.addDataset("linechart", {data:{x:generateCuadratic().x, y:generateCuadratic().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(21)}}}),
-    functionCosine : Graph.addDataset("linechart", {data:{x:generateCosine().x, y:generateCosine().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(50)}}}),
-    functionLog : Graph.addDataset("linechart", {data:{x:generateLog().x, y:generateLog().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(25)}}}),
-    functionCircle : Graph.addDataset("linechart", {data:{x:generateCircle().x, y:generateCircle().y},line:{enable:false},polar:true, errorBar:{x:{data:0.12}, y:{data:generateError(30)}}}),
-    functionLissajous : Graph.addDataset("linechart", {data:{x:generateLissajous().x, y:generateLissajous().y},line:{enable:false}, polar:true, errorBar:{x:{data:0.12}, y:{data:generateError(100)}}})
-}
+// const staticFunctions= {
+//     functionLinear : Graph.addDataset("linechart", {data:{x:generateLinear().x, y:generateLinear().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(15)}}}),
+//     functionCuadratic : Graph.addDataset("linechart", {data:{x:generateCuadratic().x, y:generateCuadratic().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(21)}}}),
+//     functionCosine : Graph.addDataset("linechart", {data:{x:generateCosine().x, y:generateCosine().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(50)}}}),
+//     functionLog : Graph.addDataset("linechart", {data:{x:generateLog().x, y:generateLog().y},line:{enable:false}, errorBar:{x:{data:0.12}, y:{data:generateError(25)}}}),
+//     functionCircle : Graph.addDataset("linechart", {data:{x:generateCircle().x, y:generateCircle().y},line:{enable:false},polar:true, errorBar:{x:{data:0.12}, y:{data:generateError(30)}}}),
+//     functionLissajous : Graph.addDataset("linechart", {data:{x:generateLissajous().x, y:generateLissajous().y},line:{enable:false}, polar:true, errorBar:{x:{data:0.12}, y:{data:generateError(100)}}})
+// }
 
 
 function changeFunctionEnable(e){

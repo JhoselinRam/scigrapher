@@ -78,8 +78,8 @@ function PrimaryGrid({state, graphHandler} : Method_Generator) : Primary_Grid_Ge
             state.context.canvas.lineWidth = state.grid.primary.x.width;
             state.context.canvas.setLineDash(getLineDash(state.grid.primary.x.style));
             radii.forEach(radius=>{
-                let xRadiusUsed = Math.round(state.scale.primary.x.map(radius) - xCenter) + state.grid.primary.x.width%2 * 0.5;
-                let yRadiusUsed = Math.round(state.scale.primary.y.map(radius) - yCenter) + state.grid.primary.x.width%2 * 0.5;
+                let xRadiusUsed = Math.round(Math.abs(state.scale.primary.x.map(radius) - xCenter)) + state.grid.primary.x.width%2 * 0.5;
+                let yRadiusUsed = Math.round(Math.abs(yCenter - state.scale.primary.y.map(radius))) + state.grid.primary.x.width%2 * 0.5;
 
                 state.context.canvas.beginPath();
                 state.context.canvas.ellipse(xCenter, yCenter, xRadiusUsed, yRadiusUsed, 0,  thetha0, thetha1);

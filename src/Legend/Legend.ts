@@ -2,6 +2,7 @@ import { Graph2D, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Typ
 import ComputeLegend from "./Compute_Legend/Compute_Legend.js";
 import LegendDraw from "./Draw_Legend/Draw_Legend.js";
 import { Legend, Legend_Data_Entrie, Legend_Options, Legend_Position, Legend_State } from "./Legend_Types";
+import LegendProperties from "./Properties_Legend/Properties_Legend.js";
 
 
 const defaultOptions : Legend_Options = {
@@ -38,6 +39,8 @@ function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_S
     const legendState : Legend_State = {
         id : crypto.randomUUID(),
         metrics : {
+            x : 0,
+            y : 0,
             height : 0,
             width : 0,
             textOffset : 5,
@@ -59,12 +62,23 @@ function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_S
     //Method generators
     const draw = LegendDraw({legendHandler:legendHandler as Legend, legendState: legendState as Legend_State, state, graphHandler});
     const compute = ComputeLegend({legendHandler:legendHandler as Legend, legendState: legendState as Legend_State, state, graphHandler});
+    const properties = LegendProperties({legendHandler:legendHandler as Legend, legendState: legendState as Legend_State, state, graphHandler});
 
 
     legendState.compute = compute.compute;
 
     //Main object population
-    legendHandler.id = ()=>legendState.id!;
+    legendHandler.id = ()=>legendState.id;
+    legendHandler.background = properties.background;
+    legendHandler.border = properties.border;
+    legendHandler.columns = properties.columns;
+    legendHandler.enable = properties.enable;
+    legendHandler.margin = properties.margin;
+    legendHandler.title = properties.title;
+    legendHandler.width = properties.width;
+    legendHandler.data = properties.data;
+    legendHandler.position = properties.position;
+    legendHandler.metrics = properties.metrics;
 
 
 //---------------------------------------------

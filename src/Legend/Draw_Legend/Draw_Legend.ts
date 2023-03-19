@@ -6,7 +6,9 @@ function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_M
 //------------------ Draw ---------------------
 
     function draw(){
-        
+        if(!legendState.enable) return;
+
+        legendState.compute();
     }
 
 //---------------------------------------------
