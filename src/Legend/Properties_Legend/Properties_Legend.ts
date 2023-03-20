@@ -1,6 +1,6 @@
 import { Rect } from "../../Graph2D/Graph2D_Types";
 import { Legend, Legend_Border, Legend_Callback, Legend_Data_Entrie, Legend_Method_Generator, Legend_Position, Legend_Text, Legend_Title } from "../Legend_Types";
-import { Legend_Dynamic_Method, Legend_Dynamic_Properties_Options, Legend_Properties, Legend_Static_Method, Legend_Static_Properties_Options } from "./Properties_Legned_Types";
+import { Legend_Dynamic_Method, Legend_Dynamic_Properties_Options, Legend_Properties, Legend_Static_Method, Legend_Static_Properties_Options } from "./Properties_Legend_Types";
 
 function LegendProperties({graphHandler, legendHandler, legendState, state} : Legend_Method_Generator) : Legend_Properties{
 
@@ -9,7 +9,6 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
     const enable = generateStaticMethod<boolean>("enable", {graphHandler, legendHandler, legendState, state});
     const columns = generateStaticMethod<number>("columns", {graphHandler, legendHandler, legendState, state});
     const width = generateStaticMethod<number>("width", {graphHandler, legendHandler, legendState, state});
-    const margin = generateStaticMethod<number>("margin", {graphHandler, legendHandler, legendState, state});
     
     const border = generateDynamicMethod<Legend_Border>("border", {graphHandler, legendHandler, legendState, state});
     const background = generateDynamicMethod<{color:string, opacity:number}>("background", {graphHandler, legendHandler, legendState, state});
@@ -34,7 +33,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
         if(typeof data === "object"){
             const newData = data.slice();
 
-            newData.forEach((item, i)=>{ newData[i] = {...item, text:{...item.text, ...defaultLabelText}} });
+            newData.forEach((item, i)=>{ newData[i] = {...item, label:{...item.label, ...defaultLabelText}} });
             
             legendState.data = newData as Array<Legend_Data_Entrie>;
             if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
@@ -90,7 +89,6 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
         border,
         columns,
         enable,
-        margin,
         title,
         width,
         data,
@@ -148,7 +146,8 @@ function generateDynamicMethod<T>(option:Legend_Dynamic_Properties_Options, {gra
     function dynamicMethod(property:Partial<T>, callback?:Legend_Callback) : Legend;
     function dynamicMethod(arg : void) : T;
     function dynamicMethod(property:Partial<T> | void, callback?:Legend_Callback) : Legend | T | undefined{
-        if(typeof property === "undefined" || callback == null)
+        
+        if(typeof property === "undefined" && callback == null)
             return {...(legendState[option] as T)};
 
         if(typeof property === "object"){

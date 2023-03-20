@@ -1,5 +1,5 @@
 import { Graph2D, Method_Generator, Rect } from "../../Graph2D_Types";
-import { Properties } from "./Properties_Types";
+import { Graph2D_Mappings, Properties } from "./Properties_Types";
 
 function Properties({graphHandler, state} : Method_Generator) : Properties {
 
@@ -72,13 +72,24 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
     }
 
 //--------------------------------------------- 
+//------------ Mapping ------------------------ 
+
+    function mapping() : Graph2D_Mappings{
+        return {
+            primary : {...state.scale.primary},
+            secondary : {...state.scale.secondary}
+        }
+    }
+
+//--------------------------------------------- 
 
 
     return {
         canvasElements,
         clientRect,
         draw,
-        graphRect
+        graphRect,
+        mapping
     }
 }
 

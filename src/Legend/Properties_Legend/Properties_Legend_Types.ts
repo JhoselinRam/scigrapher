@@ -5,7 +5,6 @@ export interface Legend_Properties {
     enable : Legend_Static_Method<boolean>, 
     columns : Legend_Static_Method<number>, 
     width : Legend_Static_Method<number>, 
-    margin : Legend_Static_Method<number>, 
     border : Legend_Dynamic_Method<Legend_Border>, 
     background : Legend_Dynamic_Method<{color:string, opacity:number}>, 
     title : Legend_Dynamic_Method<Legend_Title>, 
@@ -20,7 +19,7 @@ export interface Legend_Properties {
     metrics : ()=>Rect
 }
 
-export type Legend_Static_Properties_Options = "enable" | "columns" | "width" | "margin";
+export type Legend_Static_Properties_Options = "enable" | "columns" | "width";
 
 export type Legend_Dynamic_Properties_Options = "border" | "background" | "title";
 

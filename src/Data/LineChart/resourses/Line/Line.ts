@@ -6,10 +6,10 @@ function Line({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generat
 
 //------------ Generated Methods --------------
 
-    const lineColor = generateLineModifier<string>(dataState.line.color, "color");
-    const lineOpacity = generateLineModifier<number>(dataState.line.opacity, "opacity");
-    const lineWidth = generateLineModifier<number>(dataState.line.width, "width");
-    const lineStyle = generateLineModifier<string>(dataState.line.style, "style");
+    const lineColor = generateLineModifier<string>("color");
+    const lineOpacity = generateLineModifier<number>("opacity");
+    const lineWidth = generateLineModifier<number>("width");
+    const lineStyle = generateLineModifier<string>("style");
 
 //---------------------------------------------
 //----------------- Enable --------------------
@@ -35,22 +35,23 @@ function Line({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generat
 //---------------------------------------------
 //--------------- Generator -------------------
 
-    function generateLineModifier<T>(container:Property_Generator<T>, property:Line_Properties) : Property_Modifier<T>{
+    function generateLineModifier<T>(property:Line_Properties) : Property_Modifier<T>{
                 
         function lineProperty(value : Property_Generator<T>, callback?:Line_Chart_Callback) : Line_Chart;
         function lineProperty(arg : void) : T | Array<T>;
         function lineProperty(value : Property_Generator<T> | void, callback?:Line_Chart_Callback) : Line_Chart | T | Array<T> | undefined{
             if(typeof value === "undefined" && callback == null){
-                if(isCallable(container)){
+                const candidate = dataState.line[property] as Property_Generator<T>
+                if(isCallable(candidate)){
                     const xPositions = dataHandler.dataX();
                     const y = dataHandler.dataY();
-                    const generator = container;
+                    const generator = candidate;
 
                     return xPositions.map((x,i)=>generator(x, y[i], i, xPositions, y, dataHandler, graphHandler));
-                }else if(typeof container !== "object"){
-                    return container;
+                }else if(typeof candidate !== "object"){
+                    return candidate;
                 }else{
-                    return (container as Array<T>).slice();
+                    return (candidate as Array<T>).slice();
                 }
             }
             if(typeof value !== "undefined"){

@@ -1,83 +1,223 @@
-import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap } from "../dist/lib/index.js";
+import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping } from "../dist/lib/index.js";
 const Graph = Graph2D(document.querySelector(".graph"))
-                    //.aspectRatio({anchor:0})
+                    .axisDomain({x:{start:-1, end:1}})
+                    .aspectRatio({anchor:0})
                     //.pointerZoom()
                     .pointerMove()
                     .containerResize()
                     .border({x:{end:{enable:true}}, y:{end:{enable:true}}})
                     .axisPosition("bottom-left")
-                    .axisDomain({x:{start:-7, end:7}, y:{start:-2, end:2}})
-                    //.primaryGrid({grid:{enable:false}})
-                    //.secondaryGrid({grid:{enable:false}})
+                    .primaryGrid({grid:{enable:false}})
+                    .secondaryGrid({grid:{enable:false}})
+                    .xLabel({text:"Position x (mm)"})
+                    .yLabel({text:"Position y (mm)"})
+                    .title({text:"Dipole Electric Field"})
+                    .subtitle({text:"Positive Charges"})
 
 
 //Graph.draw();
 
-/* const vector = Graph.addDataset("vectorfield");
-const colorfun = colorMap({from:-Math.PI, to:Math.PI, type:"royal"});
-
 function dipole(x,y){
-    const a = 1;
+    const a = 0.5;
     const K = 1;
+    const q1 = -1; 
+    const q2 = -1;
     const rPlus = Math.hypot(x+a, y);
     const rMinus = Math.hypot(x-a, y);
 
-    const xValue = K * ( -(x+a)/Math.pow(rPlus,3) - (x-a)/Math.pow(rMinus,3) );
-    const yValue = K * ( -y/Math.pow(rPlus,3) -  y/Math.pow(rMinus,3) );
-    const size = Math.hypot(xValue, yValue);
+    const xValue = K * ( q1*(x+a)/Math.pow(rPlus,3) + q2*(x-a)/Math.pow(rMinus,3) );
+    const yValue = K * ( q1*y/Math.pow(rPlus,3) + q2*y/Math.pow(rMinus,3) );
     
-    return [xValue/size, yValue/size];
+    return [xValue, yValue];
 }
 
-function vColor(x, y){
-    const angle = Math.atan2(y,x);
-    return colorfun(angle);
+function potental(x,y){
+    const a = 0.5;
+    const K = 1;
+    const q1 = -1; 
+    const q2 = -1;
+    const rPlus = Math.hypot(x+a, y);
+    const rMinus = Math.hypot(x-a, y);
+
+    const value = K*(q1/rPlus + q2/rMinus);
+
+    return value;
 }
 
-function setMeshX(data, graph){
-    const domain = graph.axisDomain();
-    const n = 50;
-    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
-    const x = linspace(domain.x.start, domain.x.end, n); 
-    const y = linspace(domain.y.start, domain.y.end, m);
-    const [X, Y] = meshgrid(x,y);
 
-    return X;
-} 
-function setMeshY(data, graph){
-    const domain = graph.axisDomain();
-    const n = 50;
-    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
-    const x = linspace(domain.x.start, domain.x.end, n); 
-    const y = linspace(domain.y.start, domain.y.end, m);
-    const [X, Y] = meshgrid(x,y);
-    
-    return Y;
-} 
-function setDataX(x, y){
-    const [X, Y] = dipole(x,y);
-    return X;
-}
-function setDataY(x, y){
-    const [X, Y] = dipole(x, y);
-    return Y;
-}
-
-vector.meshX(setMeshX).meshY(setMeshY).dataX(setDataX).dataY(setDataY).color(vColor);
-Graph.draw() */
-
-
-
-
-
-
-
-
-//------------ Heat Data ----------------
+//---------------------------------------------
 //---------------------------------------------
 
-// const x = linspace(-3.7, 3.7, 40);
-// const y = linspace(-3.7, 3.7, 40);
+
+
+function vectorMeshX(data, graph){
+    const domain = graph.axisDomain();
+    const n = 40;
+    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+    const x = linspace(domain.x.start, domain.x.end, n); 
+    const y = linspace(domain.y.start, domain.y.end, m);
+    const [X, Y] = meshgrid(x,y);
+
+    return X;
+} 
+function vectorMeshY(data, graph){
+    const domain = graph.axisDomain();
+    const n = 40;
+    const m = Math.round(Math.abs((domain.y.end-domain.y.start) / (domain.x.end-domain.x.start))*n);
+    const x = linspace(domain.x.start, domain.x.end, n); 
+    const y = linspace(domain.y.start, domain.y.end, m);
+    const [X, Y] = meshgrid(x,y);
+    
+    return Y;
+} 
+
+function vectoX(x, y){
+    const [X, Y] = dipole(x,y);
+    return X/Math.hypot(X,Y);
+}
+function vectorY(x, y){
+    const [X, Y] = dipole(x, y);
+    return Y/Math.hypot(X,Y);
+}
+
+
+//---------------------------------------------
+//---------------------------------------------
+
+const graphDomain = Graph.axisDomain();
+const heatx = linspace(graphDomain.x.start, graphDomain.x.end, 100);
+const heaty = linspace(graphDomain.y.start, graphDomain.y.end, 100);
+const [heatMeshX, heatMeshY] = meshgrid(heatx, heaty);
+const heatData = [];
+let minField = 100000000;
+let maxField = -10000000
+
+for(let i=0; i<heatMeshX.length; i++){
+    for(let j=0; j<heatMeshX[i].length; j++){
+        const [x,y] = dipole(heatMeshX[i][j], heatMeshY[i][j]);
+        const value = Math.hypot(x,y);
+        minField = value<minField?value:minField;
+        maxField = value>maxField?value:maxField;
+    }
+}
+
+const heatScale = mapping({from:[minField, maxField], to:[maxField, minField], type:"log"});
+
+for(let i=0; i<heatMeshX.length; i++){
+    heatData.push([]);
+    for(let j=0; j<heatMeshX[i].length; j++){
+        const [x,y] = dipole(heatMeshX[i][j], heatMeshY[i][j]);
+        const value = Math.hypot(x,y);
+        heatData[i].push(heatScale.map(value))
+    }
+}
+
+const xPot0 = [0,0];
+const yPot0 = [graphDomain.y.start, graphDomain.y.end];
+
+const r1 = 0.1
+let xPot1 = linspace(-r1, r1, 100);
+const yPot1 = xPot1.map(x=>Math.sqrt(r1**2 - x**2));
+const yPot_1 = xPot1.map(x=>-Math.sqrt(r1**2 - x**2));
+xPot1 = xPot1.map(x=>x-0.5);
+
+const rx2 = 0.15
+const ry2 = 0.16
+let xPot2 = linspace(-rx2, rx2, 100);
+const yPot2 = xPot2.map(x=>ry2*Math.sqrt(1 - (x/rx2)**2));
+const yPot_2 = xPot2.map(x=>-ry2*Math.sqrt(1 - (x/rx2)**2));
+xPot2 = xPot2.map(x=>x-0.505);
+
+const rx3 = 0.2
+const ry3 = 0.22
+let xPot3 = linspace(-rx3, rx3, 100);
+const yPot3 = xPot3.map(x=>ry3*Math.sqrt(1 - (x/rx3)**2));
+const yPot_3 = xPot3.map(x=>-ry3*Math.sqrt(1 - (x/rx3)**2));
+xPot3 = xPot3.map(x=>x-0.52);
+
+const rx4 = 0.3
+const ry4 = 0.35
+let xPot4 = linspace(-rx4, rx4, 100);
+const yPot4 = xPot4.map(x=>ry4*Math.sqrt(1 - (x/rx4)**2));
+const yPot_4 = xPot4.map(x=>-ry4*Math.sqrt(1 - (x/rx4)**2));
+xPot4 = xPot4.map(x=>x-0.55);
+
+
+
+const r5 = 0.1
+let xPot5 = linspace(-r5, r5, 100);
+const yPot5 = xPot5.map(x=>Math.sqrt(r5**2 - x**2));
+const yPot_5 = xPot5.map(x=>-Math.sqrt(r5**2 - x**2));
+xPot5 = xPot5.map(x=>x+0.5);
+
+const rx6 = 0.15
+const ry6 = 0.16
+let xPot6 = linspace(-rx6, rx6, 100);
+const yPot6 = xPot6.map(x=>ry6*Math.sqrt(1 - (x/rx6)**2));
+const yPot_6 = xPot6.map(x=>-ry6*Math.sqrt(1 - (x/rx6)**2));
+xPot6 = xPot6.map(x=>x+0.505);
+
+const rx7 = 0.2
+const ry7 = 0.22
+let xPot7 = linspace(-rx7, rx7, 100);
+const yPot7 = xPot7.map(x=>ry7*Math.sqrt(1 - (x/rx7)**2));
+const yPot_7 = xPot7.map(x=>-ry7*Math.sqrt(1 - (x/rx7)**2));
+xPot7 = xPot7.map(x=>x+0.52);
+
+const rx8 = 0.3
+const ry8 = 0.35
+let xPot8 = linspace(-rx8, rx8, 100);
+const yPot8 = xPot8.map(x=>ry8*Math.sqrt(1 - (x/rx8)**2));
+const yPot_8 = xPot8.map(x=>-ry8*Math.sqrt(1 - (x/rx8)**2));
+xPot8 = xPot8.map(x=>x+0.55);
+
+
+
+
+
+
+
+
+const heatExample = Graph.addDataset("heatmap").meshX(heatMeshX).meshY(heatMeshY).data(heatData)//.smooth(true);
+const colorbar = Graph.addColorbar().data(heatExample.id()).title({
+    text : "Magnitude (log(N))",
+    position : "start"
+});
+
+const vectorExample = Graph.addDataset("vectorfield").meshX(vectorMeshX).meshY(vectorMeshY).dataX(vectoX).dataY(vectorY).opacity(0.5).color("#000000").maxLength(15)
+const lineExample = Graph.addDataset("linechart").dataX(xPot0).dataY(yPot0).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot1).dataY(yPot1).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot1).dataY(yPot_1).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot2).dataY(yPot2).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot2).dataY(yPot_2).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot3).dataY(yPot3).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot3).dataY(yPot_3).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot4).dataY(yPot4).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot4).dataY(yPot_4).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot5).dataY(yPot5).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot5).dataY(yPot_5).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot6).dataY(yPot6).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot6).dataY(yPot_6).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot7).dataY(yPot7).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot7).dataY(yPot_7).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot8).dataY(yPot8).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+Graph.addDataset("linechart").dataX(xPot8).dataY(yPot_8).lineColor("#000000").lineStyle("dash").lineOpacity(0.7)
+
+const legend = Graph.addLegend().data([
+    {dataset : vectorExample.id(), text:"Field (E)"},
+    {dataset : heatExample.id(), text:"Magnitude (|E|)"},
+    {dataset : lineExample.id(), text:"Potential (Φ)"},
+]) 
+
+
+
+
+
+// //------------ Heat Data ----------------
+// //---------------------------------------------
+
+// const x = linspace(-1, 1, 20);
+// const y = linspace(-1, 1, 20);
 // const [X,Y] = meshgrid(x,y);
 
 // function heatData(x, y){
@@ -91,35 +231,96 @@ Graph.draw() */
 //     return 1 - t;
 // }
 
-//---------------------------------------------
-//---------------------------------------------
+// //---------------------------------------------
+// //---------------------------------------------
 
 // const heat = Graph.addDataset("heatmap").meshX(X).meshY(Y).data(heatData).smooth(false).color("viridis");
 
-// const bar = Graph.addColorbar().data(heat.id()).reverse(false)
-
-function f(x){
-    return Math.cos(x);
-}
-
-const cos = Graph.addDataset("linechart")
-    .dataX((set, graph)=>{
-        const domain = graph.axisDomain().x;
-        return linspace(domain.start, domain.end, 100);
-    })
-    .dataY(dataset=>{
-        const y = [];
-        dataset.dataX().forEach(x=>{
-            y.push(f(x));
-        })
-
-        return y;
-    })
-    .markerEnable(true)
+//  const bar = Graph.addColorbar().data(heat.id()).reverse(false)
 
 
+// //--------------- Line --------------------
+// function f(x){
+//     return Math.cos(x);
+// }
 
-const legend = Graph.addLegend().data([{dataset:cos.id(), label:"Cos(x)"}]);
+// function f2(x){
+//     return Math.sin(x);
+// }
+
+// const cos = Graph.addDataset("linechart")
+//     .dataX((set, graph)=>{
+//         const domain = graph.axisDomain().x;
+//         return linspace(domain.start, domain.end, 100);
+//     })
+//     .dataY(dataset=>{
+//         const y = [];
+//         dataset.dataX().forEach(x=>{
+//             y.push(f(x));
+//         })
+
+//         return y;
+//     })
+//     .markerEnable(true).markerFilled(false);
+
+// const sin = Graph.addDataset("linechart")
+//     .dataX((set, graph)=>{
+//         const domain = graph.axisDomain().x;
+//         return linspace(domain.start, domain.end, 100);
+//     })
+//     .dataY(dataset=>{
+//         const y = [];
+//         dataset.dataX().forEach(x=>{
+//             y.push(f2(x));
+//         })
+
+//         return y;
+//     })
+//     .lineColor("#ff55ff")
+//     .markerEnable(true)
+//     .markerFilled(false)
+//     .markerType("triangle")
+//     .markerColor("ff55ff");
+// //---------------------------------------------
+
+
+
+// //---------------- Area -----------------------
+
+// const area = Graph.addDataset("area")
+//     .dataX(linspace(-2, 2, 50))
+//     .dataY((set)=>{
+//         const y = [];
+//         set.dataX().forEach(x=>y.push(Math.atan(x)));
+//         return y
+//     })
+//     .baseX([-2, 2])
+//     .baseY([0, 0])
+//     .color("#83cd5d")
+
+
+// //---------------------------------------------
+
+
+
+
+
+
+
+
+
+
+// const legend = Graph.addLegend()
+//     .data([
+//         {dataset:cos.id(), text:"Cos(x)"},
+//         {dataset:sin.id(), text:"Sin(x)"},
+//         {dataset:area.id(), text:"∫ tan(x)"},
+//         {dataset:vector.id(), text:"Dipole"},
+//         {dataset:heat.id(), text:"Pick"},
+//     ])
+//     .columns(3)
+//     .position("top-left")
+//     .title({text:"Functions"});
 
 Graph.draw();
 

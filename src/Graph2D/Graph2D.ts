@@ -365,6 +365,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.clientRect = properties.clientRect;
     graphHandler.graphRect = properties.graphRect;
     graphHandler.draw = properties.draw;
+    graphHandler.mapping = properties.mapping;
     graphHandler.border = border.border;
     graphHandler.addColorbar = colorbars.addColorbar;
     graphHandler.removeColorbar = colorbars.removeColorbar;

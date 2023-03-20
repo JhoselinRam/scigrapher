@@ -310,8 +310,10 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
     }
 
     values.forEach(item=>{
+        let position = scale.map(item.data);
+        position = position<0?0:(position>1?1:position)
         rawEntries.push({
-            position : scale.map(item.data),
+            position,
             color : item.color
         })
     });

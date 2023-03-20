@@ -19,7 +19,6 @@ const defaultOptions : Legend_Options = {
     },
     columns : 1,
     data : [],
-    margin : 5,
     position : "top-right",
     title : {
         text : "",
@@ -44,7 +43,9 @@ function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_S
             height : 0,
             width : 0,
             textOffset : 5,
-            items : []
+            titleCoord : 0,
+            items : [],
+            data : []
         },
         compute : ()=>{},
         ...defaultOptions, ...options,
@@ -73,7 +74,6 @@ function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_S
     legendHandler.border = properties.border;
     legendHandler.columns = properties.columns;
     legendHandler.enable = properties.enable;
-    legendHandler.margin = properties.margin;
     legendHandler.title = properties.title;
     legendHandler.width = properties.width;
     legendHandler.data = properties.data;

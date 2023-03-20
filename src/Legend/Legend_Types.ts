@@ -1,6 +1,6 @@
 import { Dataset_Types } from "../Data/Data_Types";
 import { Axis_Property, Graph2D, Graph2D_State, Line_Style, Rect } from "../Graph2D/Graph2D_Types";
-import { Legend_Properties } from "./Properties_Legend/Properties_Legned_Types";
+import { Legend_Properties } from "./Properties_Legend/Properties_Legend_Types";
 
 export interface Legend extends
 Legend_Properties {
@@ -18,7 +18,6 @@ export interface Legend_Options {
     columns : number,
     data : Array<Legend_Data_Entrie>,
     width : number,
-    margin : number,
     position : Legend_Position
 }
 
@@ -38,8 +37,8 @@ export interface Legend_Text {
 
 export interface Legend_Data_Entrie {
     dataset : string,
-    label : string,
-    text : Legend_Text,
+    text : string,
+    label : Legend_Text,
 }
 
 export interface Legend_Title extends Legend_Text {
@@ -58,7 +57,9 @@ export interface Legend_State extends Legend_Options {
         width : number,
         height : number,
         textOffset : number,
-        items : Array<Legend_Item>
+        titleCoord : number,
+        items : Array<Legend_Item>,
+        data : Array<Legend_Data_Entrie>
     }
 }
 
@@ -72,5 +73,15 @@ export interface Legend_Method_Generator {
 }
 
 interface Legend_Item extends Rect {
-    drawIcon : <T extends Dataset_Types>(dataset:T)=>void
+    drawIcon : DrawIcon
+}
+
+export type DrawIcon = <T extends Dataset_Types>(options : Draw_Icon_Props<T>)=>void;
+
+export interface Draw_Icon_Props<T extends Dataset_Types> {
+    dataset : T,
+    state : Graph2D_State,
+    legendState : Legend_State,
+    x : number,
+    y : number
 }

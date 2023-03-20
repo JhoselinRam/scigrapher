@@ -27,11 +27,6 @@ export interface Interpret_Line_Coords_Props {
     graphHandler : Graph2D
 }
 
-export interface Create_Marker_Props {
-    type : Marker_Type,
-    size : number
-}
-
 export interface Create_Error_Props {
     position : Axis_Property<number>,
     error : Axis_Property<number>,

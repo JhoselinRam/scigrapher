@@ -6,13 +6,13 @@ function MarkerLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_G
 
 //------------ Generated Methods --------------
 
-const markerSize = generateMarkerModifier<number>(dataState.marker.size, "size");
-const markerColor = generateMarkerModifier<string>(dataState.marker.color, "color");
-const markerOpacity = generateMarkerModifier<number>(dataState.marker.opacity, "opacity");
-const markerWidth = generateMarkerModifier<number>(dataState.marker.width, "width");
-const markerStyle = generateMarkerModifier<string>(dataState.marker.style, "style");
-const markerType = generateMarkerModifier<string>(dataState.marker.type, "type");
-const markerFilled = generateMarkerModifier<boolean>(dataState.marker.filled, "filled");
+const markerSize = generateMarkerModifier<number>("size");
+const markerColor = generateMarkerModifier<string>("color");
+const markerOpacity = generateMarkerModifier<number>("opacity");
+const markerWidth = generateMarkerModifier<number>("width");
+const markerStyle = generateMarkerModifier<string>("style");
+const markerType = generateMarkerModifier<string>("type");
+const markerFilled = generateMarkerModifier<boolean>("filled");
 
 //---------------------------------------------
 //---------------- Enable ---------------------
@@ -37,22 +37,23 @@ const markerFilled = generateMarkerModifier<boolean>(dataState.marker.filled, "f
 //---------------------------------------------
 //--------------- Generator -------------------
 
-    function generateMarkerModifier<T>(container:Property_Generator<T>, property:Marker_Properties) : Property_Modifier<T>{
+    function generateMarkerModifier<T>(property:Marker_Properties) : Property_Modifier<T>{
         
         function markerProperty(value : Property_Generator<T>, callback?:Line_Chart_Callback) : Line_Chart;
         function markerProperty(arg : void) : T | Array<T>;
         function markerProperty(value : Property_Generator<T> | void, callback?:Line_Chart_Callback) : Line_Chart | T | Array<T> | undefined{
             if(typeof value === "undefined" && callback == null){
-                if(isCallable(container)){
+                const candidate = dataState.marker[property] as Property_Generator<T>;
+                if(isCallable(candidate)){
                     const xPositions = dataHandler.dataX();
                     const y = dataHandler.dataY();
-                    const generator = container;
+                    const generator = candidate;
 
                     return xPositions.map((x,i)=>generator(x, y[i], i, xPositions, y, dataHandler, graphHandler));
-                }else if(typeof container !== "object"){
-                    return container;
+                }else if(typeof candidate !== "object"){
+                    return candidate;
                 }else{
-                    return (container as Array<T>).slice();
+                    return (candidate as Array<T>).slice();
                 }
             }
             if(typeof value !== "undefined"){

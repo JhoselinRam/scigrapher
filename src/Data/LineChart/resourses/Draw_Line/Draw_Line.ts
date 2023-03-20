@@ -1,8 +1,8 @@
 import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
-import { getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
+import { createMarker, getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Line_Chart_Method_Generator } from "../../LineChart_Types";
-import { Create_Error_Props, Create_Marker_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props } from "./Draw_Line_Types";
+import { Create_Error_Props, Draw_Line, Draw_Line_Helper_Props, Extract_Property_Props } from "./Draw_Line_Types";
 
 function DrawLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generator) : Draw_Line{
 
@@ -299,112 +299,6 @@ function drawMarkers({xPositions, yPositions, context, dataState, dataHandler, x
             }
         });
     }
-
-//---------------------------------------------
-//------------- Create Marker ------------------
-
-function createMarker({type, size} : Create_Marker_Props) : Path2D {
-    const path = new Path2D();
-    
-    
-    switch(type){
-        case "circle":{
-            let absoluteSize = Math.round(8 * size);
-            absoluteSize += absoluteSize%2; 
-            path.ellipse(0, 0, absoluteSize/2, absoluteSize/2, 0, 0, 2*Math.PI)
-        }
-        break;
-
-        case "square":{
-            let absoluteSize = 8 * size;
-            absoluteSize += absoluteSize%2;
-            path.moveTo(-absoluteSize/2, absoluteSize/2);
-            path.lineTo(absoluteSize/2, absoluteSize/2);
-            path.lineTo(absoluteSize/2, -absoluteSize/2);
-            path.lineTo(-absoluteSize/2, -absoluteSize/2);
-            path.closePath();
-        }
-        break;
-            
-        case "h-rect":{
-            const absoluteSize = 11 * size;
-            const minor = Math.round(absoluteSize/4);
-            const mayor = Math.round(absoluteSize/2);
-            path.moveTo(-mayor, minor);
-            path.lineTo(mayor, minor);
-            path.lineTo(mayor, -minor);
-            path.lineTo(-mayor, -minor);
-            path.closePath();
-        }
-        break;
-            
-        case "v-rect":{
-            const absoluteSize = 11 * size;
-            const minor = Math.round(absoluteSize/4);
-            const mayor = Math.round(absoluteSize/2);
-            path.moveTo(-minor, mayor);
-            path.lineTo(minor, mayor);
-            path.lineTo(minor, -mayor);
-            path.lineTo(-minor, -mayor);
-            path.closePath();
-        }
-        break;
-
-        case "triangle":{
-            const absoluteSize = 11 * size;
-            path.moveTo(0, Math.round(-absoluteSize/2));
-            path.lineTo(Math.round(absoluteSize/2*Math.cos(7/6*Math.PI)), -Math.round(absoluteSize/2*Math.sin(7/6*Math.PI)));
-            path.lineTo(Math.round(absoluteSize/2*Math.cos(11/6*Math.PI)), -Math.round(absoluteSize/2*Math.sin(11/6*Math.PI)));
-            path.closePath();
-        }
-        break;
-            
-        case "inv-triangle":{
-            const absoluteSize = 11 * size;
-            path.moveTo(0, Math.round(absoluteSize/2));
-            path.lineTo(Math.round(absoluteSize/2*Math.cos(7/6*Math.PI)), Math.round(absoluteSize/2*Math.sin(7/6*Math.PI)));
-            path.lineTo(Math.round(absoluteSize/2*Math.cos(11/6*Math.PI)), Math.round(absoluteSize/2*Math.sin(11/6*Math.PI)));
-            path.closePath();
-        }
-        break;
-
-        case "cross":{
-            const absoluteSize = 10 * size;
-            const minor = Math.round(absoluteSize/6);
-            const mayor = Math.round(absoluteSize/2);
-            path.moveTo(-minor, -mayor);
-            path.lineTo(minor, -mayor);
-            path.lineTo(minor, -minor);
-            path.lineTo(mayor, -minor);
-            path.lineTo(mayor, minor);
-            path.lineTo(minor, minor);
-            path.lineTo(minor, mayor);
-            path.lineTo(-minor, mayor);
-            path.lineTo(-minor, minor);
-            path.lineTo(-mayor, minor);
-            path.lineTo(-mayor, -minor);
-            path.lineTo(-minor, -minor);
-            path.closePath();
-        }
-        break;
-
-        case "star":{
-            const absoluteSize = 14 * size;
-            const angle = Math.PI/2;
-            const angle0 = angle + 2*Math.PI/10;
-            const r = Math.round(absoluteSize/2);
-            const r0 = Math.hypot(r*0.22451398828979263, r*0.3090169943749474); //Some algebra
-            path.moveTo(0, -r);
-            for(let i=1; i<=5; i++){
-                path.lineTo(Math.round(r0*Math.cos(angle0+(i-1)*2*Math.PI/5)), Math.round(-r0*Math.sin(angle0+(i-1)*2*Math.PI/5)));
-                path.lineTo(Math.round(r*Math.cos(angle+i*2*Math.PI/5)), Math.round(-r*Math.sin(angle+i*2*Math.PI/5)));
-            }
-        }
-        break;
-    }
-
-    return path;
-}
 
 //---------------------------------------------
 //---------------------------------------------

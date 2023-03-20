@@ -7,17 +7,17 @@ function ErrorLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Ge
 
 //------------ Generated Methods --------------
 
-    const errorbarType = generateErrorModifier<string>(dataState.errorBar.type, "type", "x");
-    const errorbarColorX = generateErrorModifier<string>(dataState.errorBar.x.color, "color", "x");
-    const errorbarOpacityX = generateErrorModifier<number>(dataState.errorBar.x.opacity, "opacity", "x");
-    const errorbarWidthX = generateErrorModifier<number>(dataState.errorBar.x.width, "width", "x");
-    const errorbarStyleX = generateErrorModifier<string>(dataState.errorBar.x.style, "style", "x");
-    const errorbarDataX = generateErrorModifier<number>(dataState.errorBar.x.data, "data", "x");
-    const errorbarColorY = generateErrorModifier<string>(dataState.errorBar.y.color, "color", "y");
-    const errorbarOpacityY = generateErrorModifier<number>(dataState.errorBar.y.opacity, "opacity", "y");
-    const errorbarWidthY = generateErrorModifier<number>(dataState.errorBar.y.width, "width", "y");
-    const errorbarStyleY = generateErrorModifier<string>(dataState.errorBar.y.style, "style", "y");
-    const errorbarDataY = generateErrorModifier<number>(dataState.errorBar.y.data, "data", "y");
+    const errorbarType = generateErrorModifier<string>("type", "x");
+    const errorbarColorX = generateErrorModifier<string>("color", "x");
+    const errorbarOpacityX = generateErrorModifier<number>("opacity", "x");
+    const errorbarWidthX = generateErrorModifier<number>("width", "x");
+    const errorbarStyleX = generateErrorModifier<string>("style", "x");
+    const errorbarDataX = generateErrorModifier<number>("data", "x");
+    const errorbarColorY = generateErrorModifier<string>("color", "y");
+    const errorbarOpacityY = generateErrorModifier<number>("opacity", "y");
+    const errorbarWidthY = generateErrorModifier<number>("width", "y");
+    const errorbarStyleY = generateErrorModifier<string>("style", "y");
+    const errorbarDataY = generateErrorModifier<number>("data", "y");
 
 //---------------------------------------------
 //---------------- Enable ---------------------
@@ -48,22 +48,24 @@ function ErrorLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Ge
 //---------------------------------------------
 //--------------- Generator -------------------
 
-function generateErrorModifier<T>(container:Property_Generator<T>, property:Error_Properties, axis:"x"|"y") : Property_Modifier<T>{ 
+function generateErrorModifier<T>(property:Error_Properties, axis:"x"|"y") : Property_Modifier<T>{ 
         
     function errorbarProperty(value : Property_Generator<T>, callback?:Line_Chart_Callback) : Line_Chart;
     function errorbarProperty(arg : void) : T | Array<T>;
     function errorbarProperty(value : Property_Generator<T> | void, callback?:Line_Chart_Callback) : Line_Chart | T | Array<T> | undefined{
         if(typeof value === "undefined" && callback == null){
-            if(isCallable(container)){
+            const candidate = property==="type"? dataState.errorBar.type as Property_Generator<T> : dataState.errorBar[axis][property] as Property_Generator<T>;
+            
+            if(isCallable(candidate)){
                 const xPositions = dataHandler.dataX();
                 const y = dataHandler.dataY();
-                const generator = container;
+                const generator = candidate;
 
                 return xPositions.map((x,i)=>generator(x, y[i], i, xPositions, y, dataHandler, graphHandler));
-            }else if(typeof container !== "object"){
-                return container;
+            }else if(typeof candidate !== "object"){
+                return candidate;
             }else{
-                return (container as Array<T>).slice();
+                return (candidate as Array<T>).slice();
             }
         }
         if(typeof value !== "undefined"){
