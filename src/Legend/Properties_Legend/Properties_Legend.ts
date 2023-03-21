@@ -36,6 +36,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
             newData.forEach((item, i)=>{ newData[i] = {...item, label:{...item.label, ...defaultLabelText}} });
             
             legendState.data = newData as Array<Legend_Data_Entrie>;
+            legendState.compute();
             if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
             state.dirty.data = true;
 
@@ -62,6 +63,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
             if(typeof position === "object" && typeof legendState.position === "object" && position.x===legendState.position.x && position.y===legendState.position.y)return legendHandler;
         
             legendState.position = position;
+            legendState.compute();
             if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
             state.dirty.data = true;
 
@@ -127,6 +129,7 @@ function generateStaticMethod<T>(option:Legend_Static_Properties_Options, {graph
             if(property === legendState[option]) return legendHandler;
 
             (legendState[option] as T) = property;
+            legendState.compute();
             if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
             state.dirty.data = true;
 
@@ -152,6 +155,7 @@ function generateDynamicMethod<T>(option:Legend_Dynamic_Properties_Options, {gra
 
         if(typeof property === "object"){
             (legendState[option] as T) = {...legendState[option], ...property} as T;
+            legendState.compute();
             if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
             state.dirty.data = true;
 

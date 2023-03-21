@@ -169,6 +169,7 @@ export function formatNumber(value : number, maxDecimals:number) : string{
                     temp = temp.slice(0, -1);
                     }
             }
+            temp = temp.endsWith(".")? temp.slice(0,-1): temp;
             label = temp
             label = label.replace("-", "– ");
             

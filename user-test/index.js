@@ -6,8 +6,8 @@ import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping } fro
 const Graph = Graph2D(document.querySelector(".graph"))
                 .aspectRatio({anchor:0})
 
-const x = linspace(-2, 2, 200);
-const y = linspace(-2, 2, 200);
+const x = linspace(-2, 2, 40);
+const y = linspace(-2, 2, 40);
 const [X,Y] = meshgrid(x,y);
 
 const heat =  Graph.addDataset("heatmap")
@@ -17,7 +17,9 @@ const heat =  Graph.addDataset("heatmap")
         return Math.cos(5*Math.hypot(x,y));
     })//.smooth(true)
 
-    Graph.addColorbar().data(heat.id())
+    Graph.addColorbar().data(heat.id()).label({position:"start"}).ticks({density:[
+        "bajo", "medio", "alto",
+    ]}).reverse(true)
     
     const legend = Graph.addLegend().data([
         {dataset : heat.id(), text:"Circulos"}
@@ -25,15 +27,13 @@ const heat =  Graph.addDataset("heatmap")
     .title({text: "Titulo"})
 
 
+
     
     
     
     
     
-    
-    
-    Graph.draw();
-    console.dir(legend.metrics())
+Graph.draw();
 
 
 

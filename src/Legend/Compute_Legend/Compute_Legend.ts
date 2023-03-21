@@ -56,6 +56,7 @@ function ComputeLegend({graphHandler, legendHandler, legendState, state} : Legen
     function computePositions() : [number, number]{
         let width = 0;
         let height = 0;
+        legendState.metrics.items = [];
         
         //Initial text coordinates
         let yStart = legendState.metrics.textOffset;
