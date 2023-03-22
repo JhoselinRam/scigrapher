@@ -1,4 +1,4 @@
-import { Graph2D, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Types";
+import { Graph2D, Graph2D_Save_Callback, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Types";
 import ComputeLegend from "./Compute_Legend/Compute_Legend.js";
 import LegendDraw from "./Draw_Legend/Draw_Legend.js";
 import { Legend, Legend_Data_Entrie, Legend_Options, Legend_Position, Legend_State } from "./Legend_Types";
@@ -28,15 +28,17 @@ const defaultOptions : Legend_Options = {
         opacity : 1,
         position : "start"
     },
-    width : 30
+    width : 30,
+    id : "auto"
 }
 
 
-function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_State, graphHandler : Graph2D ) : [Legend, ()=>void/*draw*/]{
+function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_State, graphHandler : Graph2D ) : [Legend, ()=>void/*draw*/, Graph2D_Save_Callback]{
 //---------------------------------------------
     //State of the legend
     const legendState : Legend_State = {
-        id : crypto.randomUUID(),
+        ...defaultOptions, ...options,
+        id : (options.id != null && options.id!=="auto")? options.id : crypto.randomUUID(),
         metrics : {
             x : 0,
             y : 0,
@@ -48,7 +50,6 @@ function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_S
             data : []
         },
         compute : ()=>{},
-        ...defaultOptions, ...options,
         background : {...defaultOptions.background, ...options.background},
         border : {...defaultOptions.border, ...options.border},
         title : {...defaultOptions.title, ...options.title},
@@ -69,7 +70,6 @@ function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_S
     legendState.compute = compute.compute;
 
     //Main object population
-    legendHandler.id = ()=>legendState.id;
     legendHandler.background = properties.background;
     legendHandler.border = properties.border;
     legendHandler.columns = properties.columns;
@@ -79,11 +79,12 @@ function newLegend(options : RecursivePartial<Legend_Options>, state : Graph2D_S
     legendHandler.data = properties.data;
     legendHandler.position = properties.position;
     legendHandler.metrics = properties.metrics;
+    legendHandler.id = properties.id;
 
 
 //---------------------------------------------
 
-    return [legendHandler as Legend, draw.draw];
+    return [legendHandler as Legend, draw.draw, properties.save];
 }
 
 export default newLegend;

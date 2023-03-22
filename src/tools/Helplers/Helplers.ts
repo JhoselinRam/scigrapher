@@ -1,6 +1,12 @@
+import { Colorbar, Colorbar_Options } from "../../Colorbar/Colorbar_Types";
+import { Area, Area_Options } from "../../Data/Area/Area_Types";
 import { Field_Property } from "../../Data/Data_Types";
-import { Heat_Map_State, Heat_Property_Generator } from "../../Data/HeatMap/Heat_Map_Types";
-import { Marker_Type } from "../../Data/LineChart/LineChart_Types";
+import { Heat_Map, Heat_Map_Options, Heat_Map_State, Heat_Property_Generator } from "../../Data/HeatMap/Heat_Map_Types";
+import { Line_Chart, Line_Chart_Options, Marker_Type } from "../../Data/LineChart/LineChart_Types";
+import { Vector_Field, Vector_Field_Options } from "../../Data/VectorField/Vector_Field_Types";
+import { graph2D } from "../../Graph2D/Graph2D.js";
+import { Graph2D_Restore, Graph2D_Restore_Props } from "../../Graph2D/Graph2D_Types";
+import { Legend, Legend_Options } from "../../Legend/Legend_Types";
 import colorMap from "../Color_Map/Predefined/Color_Map.js";
 
 //------------- Get Line Dash -----------------
@@ -317,6 +323,38 @@ export function createMarker({type, size} : Create_Marker_Props) : Path2D {
     }
 
     return path;
+}
+
+//---------------------------------------------
+//------------ Restore Graph ------------------
+
+export function restoreGraph({container, data} : Graph2D_Restore_Props) : Graph2D_Restore{
+    
+    const newGraph = graph2D(container, data.graph);
+    const linechartOptions = data.assets.filter(asset=>asset.assetType === "linechart");
+    const heatmapOptions = data.assets.filter(asset=>asset.assetType === "heatmap");
+    const areaOptions = data.assets.filter(asset=>asset.assetType === "area");
+    const vectorfieldOptions = data.assets.filter(asset=>asset.assetType === "vectorfield");
+    const colorbarOptions = data.assets.filter(asset=>asset.assetType === "colorbar");
+    const legendOptions = data.assets.filter(asset=>asset.assetType === "legend");
+
+    const linechart = linechartOptions.map(set=>newGraph.addDataset("linechart", set.options as Line_Chart_Options)) as Array<Line_Chart>;
+    const heatmap = heatmapOptions.map(set=>newGraph.addDataset("heatmap", set.options as Heat_Map_Options)) as Array<Heat_Map>;
+    const area = areaOptions.map(set=>newGraph.addDataset("area", set.options as Area_Options)) as Array<Area>;
+    const vectorfield = vectorfieldOptions.map(set=>newGraph.addDataset("vectorfield", set.options as Vector_Field_Options)) as Array<Vector_Field>;
+    const colorbar = colorbarOptions.map(set=>newGraph.addColorbar(set.options as Colorbar_Options)) as Array<Colorbar>;
+    const legend = legendOptions.map(set=>newGraph.addLegend(set.options as Legend_Options)) as Array<Legend>;
+
+    return {
+        graph : newGraph,
+        linechart,
+        heatmap,
+        area,
+        vectorfield,
+        colorbar,
+        legend
+    }
+
 }
 
 //---------------------------------------------

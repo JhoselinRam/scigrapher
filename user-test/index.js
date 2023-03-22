@@ -1,53 +1,47 @@
-import { Graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping } from "../dist/lib/index.js";
+import { graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping, restoreGraph } from "../dist/lib/index.js";
 
 
-
-
-const Graph = Graph2D(document.querySelector(".graph"))
+//Grafica original
+const graph1 = graph2D(document.querySelector(".graph1"))
                 .aspectRatio({anchor:0})
+                .axisType("polar")
 
-const x = linspace(-2, 2, 40);
-const y = linspace(-2, 2, 40);
-const [X,Y] = meshgrid(x,y);
+//Datos
+const rose = graph1.addDataset("linechart")
+      .dataY(linspace(0,2*Math.PI, 200))
+      .dataX(set=>set.dataY().map(theta=>2*Math.sin(4*theta)))
+      .polar(true)
 
-const heat =  Graph.addDataset("heatmap")
-    .meshX(X)
-    .meshY(Y)
-    .data((x,y)=>{
-        return Math.cos(5*Math.hypot(x,y));
-    })//.smooth(true)
-
-    Graph.addColorbar().data(heat.id()).label({position:"start"}).ticks({density:[
-        "bajo", "medio", "alto",
-    ]}).reverse(true)
+//Legenda
+graph1.addLegend()
+      .data([{dataset:rose.id(), text:"Rose"}])
+      .title({text:"Polar Graph"});
     
-    const legend = Graph.addLegend().data([
-        {dataset : heat.id(), text:"Circulos"}
-    ]).position({x:100, y:80})
-    .title({text: "Titulo"})
+graph1.draw();
 
 
+//Guarda el estado completo de la grafica en cuestion
+ const graphSave = graph1.save();
 
-    
-    
-    
-    
-    
-Graph.draw();
+//Se convierten a JSON para simular transferencia de datos
+ const stringGraph = JSON.stringify(graphSave);
 
 
+//---------------------------------------------
+//---------------------------------------------
 
 
+//Fulano recibe la informacion y la interpreta
+ const receivedData = JSON.parse(stringGraph);
 
+//Restaura la grafica
+ const {graph, linechart, legend} = restoreGraph({
+     container : document.querySelector(".graph2"),
+     data : receivedData
+ }); 
 
-
-
-
-
-
-
-
-
+// A ver!!
+ graph.draw()
 
 
 

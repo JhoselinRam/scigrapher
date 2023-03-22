@@ -31,7 +31,6 @@ function Line({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generat
         }
     }
 
-
 //---------------------------------------------
 //--------------- Generator -------------------
 

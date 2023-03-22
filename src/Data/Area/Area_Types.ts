@@ -6,7 +6,7 @@ import { Area_Properties_Methods } from "./resourses/Area_Properties/Area_Proper
 export interface Area extends
 Data_General<Area>,
 Area_Data_Methods,
-Area_Properties_Methods{
+Omit<Area_Properties_Methods, "save">{
     datasetType : ()=>Datasets
 }
 
@@ -16,7 +16,8 @@ export interface Area_Options{
     opacity : number,
     data : Axis_Property<Area_Data>,
     base : Axis_Property<Area_Data>,
-    polar : boolean
+    polar : boolean,
+    id : string
 }
 
 export interface Area_State extends

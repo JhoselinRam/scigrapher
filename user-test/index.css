@@ -12,15 +12,17 @@ body{
 
 .graph-backplate{
     background-color:  rgb(75 85 99);
-    width: 80%;
+    width: 100%;
     height: 650px;
     padding: 30px;
+    display : flex;
+    flex-direction: row;
+    gap: 20px;
 }
 
-.graph{
-    width: 98%;
-    height: 95%;
-    resize: both;
+.graph1, .graph2{
+    width: 100%;
+    height: 100%;
     overflow: hidden;
 }
 

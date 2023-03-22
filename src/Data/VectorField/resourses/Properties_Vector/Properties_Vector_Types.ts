@@ -1,4 +1,4 @@
-import { Graph2D } from "../../../../Graph2D/Graph2D_Types";
+import { Graph2D, Graph2D_Save_Asset } from "../../../../Graph2D/Graph2D_Types";
 import { Field_Property } from "../../../Data_Types";
 import { Vector_Field, Vector_Field_Callback, Vector_Field_State, Vector_Property_Generator } from "../../Vector_Field_Types";
 
@@ -9,7 +9,8 @@ export interface Properties_Vector{
     style : Dynamic_Property_Method<string>,
     enable : Static_Property_Method<boolean>,
     normalize : Static_Property_Method<boolean>,
-    maxLength : Static_Property_Method<number>
+    maxLength : Static_Property_Method<number>,
+    save : ()=>Graph2D_Save_Asset
 }
 
 export type Static_Properties = "normalize" | "maxLength" | "enable";

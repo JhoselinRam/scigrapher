@@ -1,4 +1,4 @@
-import { Graph2D, RecursivePartial } from "../../Graph2D/Graph2D_Types";
+import { Graph2D, Graph2D_Save_Callback, RecursivePartial } from "../../Graph2D/Graph2D_Types";
 import DataGeneral from "../Data_General.js";
 import { Draw_Data_Callback, Partialize } from "../Data_Types";
 import { Heat_Map, Heat_Map_Options, Heat_Map_State } from "./Heat_Map_Types";
@@ -13,17 +13,18 @@ const defaultOptions : Heat_Map_Options = {
     data : [[0]],
     color : "viridis",
     smooth : false,
-    opacity : 1
+    opacity : 1,
+    id : "auto"
 }
 
-export function HeatMap(options:Partialize<Heat_Map_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Heat_Map, Draw_Data_Callback]{
+export function HeatMap(options:Partialize<Heat_Map_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Heat_Map, Draw_Data_Callback, Graph2D_Save_Callback]{
     //State of the data set
     const dataState : Heat_Map_State = {
-        id : crypto.randomUUID(),
+        ...defaultOptions, ...options,
+        id : (options.id != null && options.id!=="auto")? options.id : crypto.randomUUID(),
         index : 0,
         datasetType : "heatmap",
         dirtify,
-        ...defaultOptions, ...options,
         useAxis : {...defaultOptions.useAxis, ...options.useAxis},
         mesh : {...defaultOptions.mesh, ...options.mesh},
     }
@@ -51,5 +52,5 @@ export function HeatMap(options:Partialize<Heat_Map_Options>, graphHandler : Gra
     dataHandler.datasetType = ()=>dataState.datasetType;
 
 //---------------------------------------------
-    return [dataHandler as Heat_Map, draw.drawData];
+    return [dataHandler as Heat_Map, draw.drawData, properties.save];
 }

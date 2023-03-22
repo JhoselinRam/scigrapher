@@ -24,7 +24,10 @@ export interface Data_General_Generator<T extends Dataset_Types, P extends Datas
 }
 
 export interface Data_General<T extends Dataset_Types> {
-    id : ()=>string,
+    id : {
+        (id:string):T,
+        (arg:void):string
+    },
     index : {
         (index : number, callback?:(handler?:T)=>void) : T,
         (arg:void) : number

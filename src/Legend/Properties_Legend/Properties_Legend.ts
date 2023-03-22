@@ -1,5 +1,5 @@
-import { Rect } from "../../Graph2D/Graph2D_Types";
-import { Legend, Legend_Border, Legend_Callback, Legend_Data_Entrie, Legend_Method_Generator, Legend_Position, Legend_Text, Legend_Title } from "../Legend_Types";
+import { Graph2D_Save_Asset, Rect } from "../../Graph2D/Graph2D_Types";
+import { Legend, Legend_Border, Legend_Callback, Legend_Data_Entrie, Legend_Method_Generator, Legend_Options, Legend_Position, Legend_Text, Legend_Title } from "../Legend_Types";
 import { Legend_Dynamic_Method, Legend_Dynamic_Properties_Options, Legend_Properties, Legend_Static_Method, Legend_Static_Properties_Options } from "./Properties_Legend_Types";
 
 function LegendProperties({graphHandler, legendHandler, legendState, state} : Legend_Method_Generator) : Legend_Properties{
@@ -9,6 +9,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
     const enable = generateStaticMethod<boolean>("enable", {graphHandler, legendHandler, legendState, state});
     const columns = generateStaticMethod<number>("columns", {graphHandler, legendHandler, legendState, state});
     const width = generateStaticMethod<number>("width", {graphHandler, legendHandler, legendState, state});
+    const id = generateStaticMethod<string>("id", {graphHandler, legendHandler, legendState, state});
     
     const border = generateDynamicMethod<Legend_Border>("border", {graphHandler, legendHandler, legendState, state});
     const background = generateDynamicMethod<{color:string, opacity:number}>("background", {graphHandler, legendHandler, legendState, state});
@@ -85,6 +86,28 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
     }
 
 //---------------------------------------------
+//----------------- Save ----------------------
+
+    function save() : Graph2D_Save_Asset {
+        const options :Legend_Options = {
+            enable : legendState.enable,
+            columns : legendState.columns,
+            width : legendState.width,
+            id : legendState.id,
+            position : legendState.position,
+            data : legendState.data,
+            border : {...legendState.border},
+            background : {...legendState.background},
+            title : {...legendState.title},
+        }
+
+        return {
+            options,
+            assetType : "legend"
+        }
+    }
+
+//---------------------------------------------
 
     return {
         background,
@@ -95,7 +118,9 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
         width,
         data,
         position,
-        metrics
+        metrics,
+        id,
+        save
     }
 }
 

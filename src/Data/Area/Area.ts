@@ -1,4 +1,4 @@
-import { Graph2D } from "../../Graph2D/Graph2D_Types";
+import { Graph2D, Graph2D_Save_Callback } from "../../Graph2D/Graph2D_Types";
 import DataGeneral from "../Data_General.js";
 import { Draw_Data_Callback, Partialize } from "../Data_Types";
 import { Area, Area_Data, Area_Options, Area_State } from "./Area_Types";
@@ -18,19 +18,20 @@ const defaultOptions : Area_Options = {
     base : {
         x : [],
         y : []
-    } 
+    } ,
+    id : "auto"
 }
 
-export function Area(options : Partialize<Area_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Area, Draw_Data_Callback]{
+export function Area(options : Partialize<Area_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Area, Draw_Data_Callback, Graph2D_Save_Callback]{
 
     //State of the area
     const dataState : Area_State = {
-        id : crypto.randomUUID(),
+        ...defaultOptions, ...options,
+        id : (options.id != null && options.id!=="auto")? options.id : crypto.randomUUID(),
         index : 0,
         dirtify,
         useAxis : {x:"primary", y:"primary"},
         datasetType : "area",
-        ...defaultOptions, ...options,
         base : {
             x : options.base?.x != null ? options.base.x as Area_Data : defaultOptions.base.x,  
             y : options.base?.y != null ? options.base.y as Area_Data : defaultOptions.base.y,  
@@ -65,5 +66,5 @@ export function Area(options : Partialize<Area_Options>, graphHandler : Graph2D,
 
 
 
-    return [dataHandler as Area, draw.draw];
+    return [dataHandler as Area, draw.draw, properties.save];
 }

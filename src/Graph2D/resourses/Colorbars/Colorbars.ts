@@ -8,9 +8,9 @@ function Colorbars({graphHandler, state} : Method_Generator) : Colorbars{
 //--------------- Add Colorbar ----------------
 
     function addColorbar(options : RecursivePartial<Colorbar_Options> = {}, callback?:graphCallback) : Colorbar{
-        const [newBar, draw, compute] = ColorBar(options, state, graphHandler);
+        const [newBar, draw, compute, save] = ColorBar(options, state, graphHandler);
 
-        state.colorbars.push({bar:newBar, compute, draw});
+        state.colorbars.push({bar:newBar, compute, draw, save});
         state.compute.client();
         if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
         state.dirty.client = true;

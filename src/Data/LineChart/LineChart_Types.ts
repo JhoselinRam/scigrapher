@@ -4,6 +4,7 @@ import { Data_Line } from "./resourses/Data_Line/Data_Line_Types";
 import { Error_Line } from "./resourses/Error_Line/Error_Line_Types";
 import { Line } from "./resourses/Line/Line_Types";
 import { Marker_Line } from "./resourses/Marker_Line/Marker_Line_Types";
+import { Properties_Line } from "./resourses/Properties_Line/Properties_Line_Types";
 
 export type Marker_Type = "circle" | "square" | "v-rect" | "h-rect" | "cross" | "star" | "triangle" | "inv-triangle";
 export type Error_Bar_Types = "rectangle" | "cross" | "corner" | "tail-cross"
@@ -14,7 +15,8 @@ Data_General<Line_Chart>,
 Data_Line,
 Marker_Line,
 Error_Line,
-Line{
+Line,
+Omit<Properties_Line, "save">{
     datasetType : ()=>Datasets
 }
 
@@ -25,6 +27,7 @@ export interface Line_Chart_Options {
     polar : boolean,
     data : Axis_Property<Line_Char_Data>,
     errorBar : Line_Error_Atributes,
+    id : string
 }
 
 interface Marker_Attributes extends Make_Generator<{

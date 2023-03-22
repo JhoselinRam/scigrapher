@@ -1,6 +1,7 @@
+import { Graph2D_Save_Asset } from "../../../../Graph2D/Graph2D_Types.js";
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Field_Property } from "../../../Data_Types";
-import { Vector_Field, Vector_Field_Callback, Vector_Field_Method_Generator, Vector_Property_Generator } from "../../Vector_Field_Types";
+import { Vector_Field, Vector_Field_Callback, Vector_Field_Method_Generator, Vector_Field_Options, Vector_Property_Generator } from "../../Vector_Field_Types";
 import { Dynamic_Properties, Dynamic_Property_Method, Generator_Props, Properties_Vector, Static_Properties, Static_Property_Method } from "./Properties_Vector_Types";
 
 function PropertiesVector({dataHandler, dataState, graphHandler} : Vector_Field_Method_Generator) : Properties_Vector{
@@ -18,6 +19,36 @@ function PropertiesVector({dataHandler, dataState, graphHandler} : Vector_Field_
     const enable = generateStaticPropertyMethod<boolean>({property:"enable", ...props});
 
 //---------------------------------------------
+//-------------- Save -------------------------
+
+    function save() : Graph2D_Save_Asset{
+        const options: Vector_Field_Options = {
+            id : dataState.id,
+            enable : dataState.enable,
+            maxLength : dataState.maxLength,
+            normalize : dataState.normalize,
+            useAxis : {...dataState.useAxis},
+            data : {
+                x : dataHandler.dataX(),
+                y : dataHandler.dataY(),
+            },
+            mesh : {
+                x : dataHandler.meshX(),
+                y : dataHandler.meshY(),
+            },
+            color : dataHandler.color(),
+            opacity : dataHandler.opacity(),
+            width : dataHandler.width(),
+            style : dataHandler.style(),
+        }
+
+        return {
+            options,
+            assetType : "vectorfield"
+        }
+    }
+
+//---------------------------------------------
 
     return {
         color,
@@ -26,7 +57,8 @@ function PropertiesVector({dataHandler, dataState, graphHandler} : Vector_Field_
         normalize,
         opacity,
         style,
-        width
+        width,
+        save
     }
 }
 

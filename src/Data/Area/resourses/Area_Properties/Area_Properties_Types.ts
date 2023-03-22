@@ -1,3 +1,4 @@
+import { Graph2D_Save_Asset } from "../../../../Graph2D/Graph2D_Types";
 import { Area, Area_Callback } from "../../Area_Types";
 
 export interface Area_Properties_Methods{
@@ -5,6 +6,7 @@ export interface Area_Properties_Methods{
     polar : Area_Properties_Generated<boolean>,
     color : Area_Properties_Generated<string>,
     opacity : Area_Properties_Generated<number>,
+    save : ()=>Graph2D_Save_Asset
 }
 
 export type Area_Properties_Options = "enable" | "polar" | "color" | "opacity";

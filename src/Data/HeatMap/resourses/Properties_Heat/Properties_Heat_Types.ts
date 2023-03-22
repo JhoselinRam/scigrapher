@@ -1,4 +1,4 @@
-import { Axis_Property } from "../../../../Graph2D/Graph2D_Types"
+import { Axis_Property, Graph2D_Save_Asset } from "../../../../Graph2D/Graph2D_Types"
 import { Field_Property } from "../../../Data_Types"
 import { Heat_Map, Heat_Map_Callback, Heat_Map_Color, Heat_Map_Opacity } from "../../Heat_Map_Types"
 
@@ -22,5 +22,6 @@ export interface Properties_Heat{
     color : {
         (color:Heat_Map_Color, callback?:Heat_Map_Callback) : Heat_Map,
         (arg : void) : Field_Property<string>
-    }
+    },
+    save : ()=>Graph2D_Save_Asset
 }

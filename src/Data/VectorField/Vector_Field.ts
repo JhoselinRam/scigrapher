@@ -1,4 +1,4 @@
-import { Graph2D, RecursivePartial } from "../../Graph2D/Graph2D_Types";
+import { Graph2D, Graph2D_Save_Callback, RecursivePartial } from "../../Graph2D/Graph2D_Types";
 import DataGeneral from "../Data_General.js";
 import { Draw_Data_Callback, Partialize } from "../Data_Types";
 import DataVector from "./resourses/Data_Vector/Data_Vector.js";
@@ -16,17 +16,18 @@ const defaultOptions : Vector_Field_Options = {
     style  : "solid",
     normalize :true,
     maxLength :20,
-    enable : true
+    enable : true,
+    id : "auto"
 }
 
-export function VectorField(options : Partialize<Vector_Field_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Vector_Field, Draw_Data_Callback] {
+export function VectorField(options : Partialize<Vector_Field_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Vector_Field, Draw_Data_Callback, Graph2D_Save_Callback] {
     //State of the data set
     const dataState : Vector_Field_State = {
-        id : crypto.randomUUID(),
+        ...defaultOptions, ...options,
+        id : (options.id != null && options.id!=="auto")? options.id : crypto.randomUUID(),
         dirtify,
         datasetType : "vectorfield",
         index : 0,
-        ...defaultOptions, ...options,
         useAxis : {...defaultOptions.useAxis, ...options.useAxis},
         mesh : {...defaultOptions.mesh, ...options.mesh},
         data : {...defaultOptions.data, ...options.data}
@@ -60,5 +61,5 @@ export function VectorField(options : Partialize<Vector_Field_Options>, graphHan
 
 
 //---------------------------------------------
-    return [dataHandler as Vector_Field, draw.drawData];
+    return [dataHandler as Vector_Field, draw.drawData, properties.save];
 }

@@ -3,8 +3,8 @@ import { Axis_Property, Graph2D, Graph2D_State, Line_Style, Rect } from "../Grap
 import { Legend_Properties } from "./Properties_Legend/Properties_Legend_Types";
 
 export interface Legend extends
-Legend_Properties {
-    id : ()=>string
+Omit<Legend_Properties, "save"> {
+    
 }
 
 export interface Legend_Options {
@@ -18,7 +18,8 @@ export interface Legend_Options {
     columns : number,
     data : Array<Legend_Data_Entrie>,
     width : number,
-    position : Legend_Position
+    position : Legend_Position,
+    id : string,
 }
 
 export interface Legend_Border {
@@ -49,7 +50,6 @@ export interface Legend_Title extends Legend_Text {
 export type Legend_Position = "top-right" | "top-left" | "bottom-right" | "bottom-left" | "center" | Axis_Property<number>
 
 export interface Legend_State extends Legend_Options {
-    id : string,
     compute : ()=>void,
     metrics : {
         x : number,

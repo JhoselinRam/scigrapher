@@ -177,7 +177,7 @@ const defaultLabel : LabelProperties = {
     enable : true
 }
 
-export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
+export function graph2D(container:HTMLDivElement, options:RecursivePartial<Graph2D_Options> = {}) : Graph2D{
     //Combines the options object with the default options
     const state : RequiredExept<Graph2D_State, "compute" | "scale"  | "labels" | "context" | "draw" | "axisObj"> = { 
         container,
@@ -366,6 +366,7 @@ export function Graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.graphRect = properties.graphRect;
     graphHandler.draw = properties.draw;
     graphHandler.mapping = properties.mapping;
+    graphHandler.save = properties.save;
     graphHandler.border = border.border;
     graphHandler.addColorbar = colorbars.addColorbar;
     graphHandler.removeColorbar = colorbars.removeColorbar;

@@ -8,9 +8,9 @@ function Legends({graphHandler, state} : Method_Generator) : Legends {
 //--------------- Add Legend ------------------
 
     function addLegend(options : Partial<Legend_Options> = {}, callback?:graphCallback) : Legend{
-        const [legend, draw] = newLegend(options, state, graphHandler);
+        const [legend, draw, save] = newLegend(options, state, graphHandler);
 
-        state.legends.push({ legend, draw });
+        state.legends.push({ legend, draw, save });
         
         if(callback != null) callback(graphHandler, state.data.map(item=>item.dataset));
         state.dirty.data = true;

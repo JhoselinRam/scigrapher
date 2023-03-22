@@ -18,9 +18,9 @@ function Data({state, graphHandler}:Method_Generator) : Data{
     
         switch(type){
             case "linechart":{
-                const [newDataset, drawDataset] = LineChart(options as Partialize<Line_Chart_Options>, graphHandler , state.dirty.dirtify);
+                const [newDataset, drawDataset, saveDataset] = LineChart(options as Partialize<Line_Chart_Options>, graphHandler , state.dirty.dirtify);
                 
-                state.data.push({dataset : newDataset, draw:drawDataset});
+                state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
                 if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
 
@@ -28,9 +28,9 @@ function Data({state, graphHandler}:Method_Generator) : Data{
             }
             
             case "vectorfield":{
-                const [newDataset, drawDataset] = VectorField(options as Partialize<Vector_Field_Options>, graphHandler , state.dirty.dirtify);
+                const [newDataset, drawDataset, saveDataset] = VectorField(options as Partialize<Vector_Field_Options>, graphHandler , state.dirty.dirtify);
 
-                state.data.push({dataset : newDataset, draw:drawDataset});
+                state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
                 if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
 
@@ -38,9 +38,9 @@ function Data({state, graphHandler}:Method_Generator) : Data{
             }
 
             case "heatmap":{
-                const [newDataset, drawDataset] = HeatMap(options as Partialize<Heat_Map_Options>, graphHandler , state.dirty.dirtify);
+                const [newDataset, drawDataset, saveDataset] = HeatMap(options as Partialize<Heat_Map_Options>, graphHandler , state.dirty.dirtify);
 
-                state.data.push({dataset : newDataset, draw:drawDataset});
+                state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
                 if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
 
@@ -48,9 +48,9 @@ function Data({state, graphHandler}:Method_Generator) : Data{
             }
 
             case "area":{
-                const [newDataset, drawDataset] = Area(options as Partialize<Area_Options>, graphHandler , state.dirty.dirtify);
+                const [newDataset, drawDataset, saveDataset] = Area(options as Partialize<Area_Options>, graphHandler , state.dirty.dirtify);
 
-                state.data.push({dataset : newDataset, draw:drawDataset});
+                state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
                 if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
 

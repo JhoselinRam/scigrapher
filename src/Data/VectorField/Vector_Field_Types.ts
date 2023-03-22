@@ -6,7 +6,7 @@ import { Properties_Vector } from "./resourses/Properties_Vector/Properties_Vect
 export interface Vector_Field extends 
 Data_General<Vector_Field>,
 Data_Vector,
-Properties_Vector{
+Omit<Properties_Vector, "save">{
     datasetType : ()=>Datasets
 }
 
@@ -21,7 +21,8 @@ export interface Vector_Field_Options extends Make_Generator<{
     normalize : boolean,
     maxLength : number,
     useAxis : Axis_Property<"primary" | "secondary">,
-    enable : boolean
+    enable : boolean,
+    id : string
 }
 
 export interface Vector_Field_State extends Data_Object_State, Vector_Field_Options {

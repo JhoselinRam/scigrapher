@@ -6,7 +6,7 @@ import { ColorBar_Text_Methods } from "./resourses/Text_Colorbar/Text_Colorbar_T
 
 export interface Colorbar extends
 ColorBar_Text_Methods,
-Colorbar_Properties_Methods,
+Omit<Colorbar_Properties_Methods, "save">,
 Colorbar_Data_Methods
 {}
 
@@ -23,6 +23,7 @@ export interface Colorbar_Options {
     border : Colorbar_Line,         
     data : Colorbar_Data
     position : Colorbar_Position,   
+    id : string,
 }
 
 export type Colorbar_Entries = Array<{color:string, position:number, label:string}>;
@@ -64,7 +65,6 @@ export interface Colorbar_Marker extends Colorbar_Line {
 }
 
 export interface Colorbar_State extends Colorbar_Options {
-    id : string,
     metrics : {
         position : Axis_Property<number>,
         width : number,

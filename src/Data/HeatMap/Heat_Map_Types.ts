@@ -7,7 +7,7 @@ import { Properties_Heat } from "./resourses/Properties_Heat/Properties_Heat_Typ
 export interface Heat_Map extends 
 Data_General<Heat_Map>,
 Data_Heat,
-Properties_Heat{
+Omit<Properties_Heat, "save">{
     datasetType : ()=>Datasets
 }
 
@@ -19,6 +19,7 @@ export interface Heat_Map_Options{
     smooth : boolean,
     color : Heat_Map_Color,
     opacity : Heat_Map_Opacity,
+    id : string
 }
 
 export interface Heat_Map_State extends Data_Object_State, Heat_Map_Options{

@@ -1,4 +1,4 @@
-import { Graph2D, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Types";
+import { Graph2D, Graph2D_Save_Callback, Graph2D_State, RecursivePartial } from "../Graph2D/Graph2D_Types";
 import { Colorbar, Colorbar_Data, Colorbar_Options, Colorbar_Position, Colorbar_State, Colorbar_Ticks } from "./Colorbar_Types";
 import ComputeColorbar from "./resourses/Compute_Colorbar/Compute_Colorbar.js";
 import ColorbarData from "./resourses/Data_Colorbar/Data_Colorbar.js";
@@ -43,22 +43,22 @@ const defaultOptions : Colorbar_Options = {
         position : "end",
         reverse : false
     },
-    data : ""
+    data : "",
+    id : "auto"
 }
 
-function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_State, graphHandler : Graph2D ) : [Colorbar, ()=>void/*draw*/ , ()=>void/*compute*/]{
+function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_State, graphHandler : Graph2D ) : [Colorbar, ()=>void/*draw*/ , ()=>void/*compute*/, Graph2D_Save_Callback]{
 //---------------------------------------------
     //state of the colorbar
     const barState : Colorbar_State = {
-        id : crypto.randomUUID(),
+        ...defaultOptions, ...options,
+        id : (options.id!=null && options.id!=="auto")? options.id : crypto.randomUUID(),
         metrics : {width: 0, height:0, barCoord:0, labelCoord:0, titleCoord:0, position :{x:0, y:0}},
         gradient : {
             entries : [],
             gradientObject : state.context.data.createLinearGradient(0,0,0,0)
         },
         textOffset : 4,
-        ...defaultOptions,
-        ...options,
         position : options.position==null? defaultOptions.position : options.position as Colorbar_Position,
         ticks : {...defaultOptions.ticks, ...options.ticks, density:options.ticks?.density==null? defaultOptions.ticks.density : options.ticks.density as Colorbar_Ticks},
         data : options.data==null? defaultOptions.data : options.data as Colorbar_Data,
@@ -98,7 +98,7 @@ function ColorBar(options : RecursivePartial<Colorbar_Options>, state : Graph2D_
 
 //---------------------------------------------
 
-    return [barHandler as Colorbar, barDraw.draw, barCompute.compute]
+    return [barHandler as Colorbar, barDraw.draw, barCompute.compute, properties.save]
 }
 
 export default ColorBar;

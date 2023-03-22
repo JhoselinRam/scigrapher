@@ -1,6 +1,10 @@
-import { Colorbar } from "../Colorbar/Colorbar_Types";
-import { Dataset_Types, Draw_Data_Callback } from "../Data/Data_Types";
-import { Legend } from "../Legend/Legend_Types";
+import { Colorbar, Colorbar_Options } from "../Colorbar/Colorbar_Types";
+import { Area } from "../Data/Area/Area_Types";
+import { Datasets, Dataset_Options, Dataset_Types, Draw_Data_Callback } from "../Data/Data_Types";
+import { Heat_Map } from "../Data/HeatMap/Heat_Map_Types";
+import { Line_Chart } from "../Data/LineChart/LineChart_Types";
+import { Vector_Field } from "../Data/VectorField/Vector_Field_Types";
+import { Legend, Legend_Options } from "../Legend/Legend_Types";
 import { Axis_Obj } from "../tools/Axis_Obj/Axis_Obj_Types";
 import { Mapping } from "../tools/Mapping/Mapping_Types";
 import { Axis } from "./resourses/Axis/Axis_Types";
@@ -197,7 +201,8 @@ export interface Graph2D_State extends Graph2D_Options {
     },
     data : Array<{
         dataset : Dataset_Types,
-        draw : Draw_Data_Callback
+        draw : Draw_Data_Callback,
+        save : Graph2D_Save_Callback,
     }>,
     dirty : {
         full : boolean,
@@ -209,11 +214,13 @@ export interface Graph2D_State extends Graph2D_Options {
     colorbars : Array<{
         bar : Colorbar,
         compute : ()=>void,
-        draw : ()=>void
+        draw : ()=>void,
+        save : Graph2D_Save_Callback,
     }>,
     legends : Array<{
         legend : Legend,
-        draw : ()=>void
+        draw : ()=>void,
+        save : Graph2D_Save_Callback,
     }>
 }
 
@@ -238,3 +245,31 @@ export type Axis_Property<T> = {
 }
 
 export type graphCallback = (handler?:Graph2D, datasets?:Array<Dataset_Types>)=>void
+
+export type Graph2D_Save_Callback = ()=>Graph2D_Save_Asset;
+
+
+export interface Graph2D_Save_Asset {
+    options : Dataset_Options | Colorbar_Options | Legend_Options,
+    assetType : Datasets | "colorbar" | "legend"
+}
+
+export interface Graph2D_Save_Graph {
+    graph : Graph2D_Options,
+    assets : Array<Graph2D_Save_Asset>
+}
+
+export interface Graph2D_Restore_Props {
+    container : HTMLDivElement,
+    data : Graph2D_Save_Graph
+}
+
+export interface Graph2D_Restore {
+    graph : Graph2D,
+    linechart : Array<Line_Chart>,
+    heatmap : Array<Heat_Map>,
+    vectorfield : Array<Vector_Field>,
+    area : Array<Area>,
+    colorbar : Array<Colorbar>,
+    legend : Array<Legend>
+}

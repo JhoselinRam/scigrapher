@@ -1,4 +1,5 @@
-import { Area, Area_Callback, Area_Method_Generator } from "../../Area_Types";
+import { Graph2D_Save_Asset } from "../../../../Graph2D/Graph2D_Types";
+import { Area, Area_Callback, Area_Method_Generator, Area_Options } from "../../Area_Types";
 import { Area_Properties_Generated, Area_Properties_Methods, Area_Properties_Options } from "./Area_Properties_Types";
 
 function AreaProperties(props : Area_Method_Generator) : Area_Properties_Methods{
@@ -11,12 +12,39 @@ function AreaProperties(props : Area_Method_Generator) : Area_Properties_Methods
     const polar = generatePropertyMethod<boolean>("polar", props);
 
 //---------------------------------------------
+//---------------- Save -----------------------
+
+    function save() : Graph2D_Save_Asset{
+        const options : Area_Options = {
+            enable : props.dataState.enable,
+            color : props.dataState.color,
+            opacity : props.dataState.opacity,
+            polar : props.dataState.polar,
+            id : props.dataState.id,
+            data : {
+                x : props.dataHandler.dataX(),
+                y : props.dataHandler.dataY(),
+            },
+            base : {
+                x : props.dataHandler.baseX(),
+                y : props.dataHandler.baseY(),
+            }
+        }
+
+        return {
+            options,
+            assetType : "area"
+        }
+    }
+
+//---------------------------------------------
 
     return {
         color,
         enable,
         opacity,
-        polar
+        polar,
+        save
     }
 
 }

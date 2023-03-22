@@ -1,5 +1,5 @@
-import { Rect } from "../../../Graph2D/Graph2D_Types";
-import { Colorbar, Colorbar_Callback, Colorbar_Line, Colorbar_Marker, Colorbar_Method_Generator, Colorbar_Position} from "../../Colorbar_Types";
+import { Graph2D_Save_Asset, Rect } from "../../../Graph2D/Graph2D_Types";
+import { Colorbar, Colorbar_Callback, Colorbar_Line, Colorbar_Marker, Colorbar_Method_Generator, Colorbar_Options, Colorbar_Position} from "../../Colorbar_Types";
 import { Colorbar_Object_Generator, Colorbar_Object_Options, Colorbar_Properties_Methods, Colorbar_Property_Generator, Colorbar_Property_Options } from "./Properties_Colorbar_Types";
 
 function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properties_Methods{
@@ -12,6 +12,7 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
     const size = generateStaticMethod<number>("size", props);
     const opacity = generateStaticMethod<number>("opacity", props);
     const width = generateStaticMethod<number>("width", props);
+    const id = generateStaticMethod<string>("id", props);
 
     const border = generateDynamicMethod<Colorbar_Line>(props.barState.border, "border", props);
     const ticks = generateDynamicMethod<Colorbar_Marker>(props.barState.ticks, "ticks", props);
@@ -60,9 +61,30 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
     }
 
 //---------------------------------------------
+//----------------- Save ----------------------
 
-    function id() : string{
-        return props.barState.id;
+    function save() : Graph2D_Save_Asset{
+        const options : Colorbar_Options = {
+            enable : props.barState.enable,
+            reverse : props.barState.reverse,
+            unit : props.barState.unit,
+            size : props.barState.size,
+            opacity : props.barState.opacity,
+            width : props.barState.width,
+            id : props.barState.id,
+            position : props.barState.position,
+            data : props.barState.data,
+            ticks : {...props.barState.ticks},
+            label : {...props.barState.label},
+            title : {...props.barState.title},
+            border : {...props.barState.border},
+
+        }
+
+        return {
+            options,
+            assetType : "colorbar"
+        }
     }
 
 //---------------------------------------------
@@ -78,7 +100,8 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
         border,
         ticks,
         id,
-        metrics
+        metrics,
+        save
     }
 }
 

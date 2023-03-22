@@ -1,7 +1,7 @@
-import { Axis_Property } from "../../../../Graph2D/Graph2D_Types";
+import { Axis_Property, Graph2D_Save_Asset } from "../../../../Graph2D/Graph2D_Types";
 import { getColorFunction, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Field_Property } from "../../../Data_Types";
-import { Heat_Map, Heat_Map_Callback, Heat_Map_Color, Heat_Map_Method_Generator, Heat_Map_Opacity } from "../../Heat_Map_Types";
+import { Heat_Map, Heat_Map_Callback, Heat_Map_Color, Heat_Map_Method_Generator, Heat_Map_Opacity, Heat_Map_Options } from "../../Heat_Map_Types";
 import { Properties_Heat } from "./Properties_Heat_Types";
 
 function PropertiesHeat({dataHandler, dataState, graphHandler} : Heat_Map_Method_Generator) : Properties_Heat{
@@ -138,13 +138,38 @@ function PropertiesHeat({dataHandler, dataState, graphHandler} : Heat_Map_Method
     }
 
 //---------------------------------------------
+//----------------- Save ----------------------
+
+    function save() : Graph2D_Save_Asset{
+        const options : Heat_Map_Options = {
+            id : dataState.id,
+            enable : dataState.enable,
+            smooth : dataState.smooth,
+            mesh : {
+                x : dataHandler.meshX(),
+                y : dataHandler.meshY()
+            },
+            data : dataHandler.data(),
+            useAxis : {...dataState.useAxis},
+            color : dataHandler.color(),
+            opacity : dataHandler.opacity(),
+        }
+
+        return {
+            options,
+            assetType : "heatmap"
+        }
+    }
+
+//---------------------------------------------
 
     return {
         color,
         enable,
         opacity,
         smooth,
-        useAxis
+        useAxis,
+        save
     }
 }
 
