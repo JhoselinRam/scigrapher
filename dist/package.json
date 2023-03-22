@@ -1,18 +1,20 @@
 {
     "name":"scigrapher",
     "version": "0.0.1",
-    "description": "Grapher element for data visualization",
-    "main": "dist/lib/index.js",
-    "types": "dist/lib/index.d.ts",
+    "description": "Scientific oriented data visualization grapher",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "type": "module",
     "files": [
-        "/dist/lib"
+        "lib"
     ],
     "keywords": [
         "graph",
         "plot",
         "data",
-        "visualization"
+        "visualization",
+        "science",
+        "scientific"
     ],
     "author": {
         "name": "Jhoselin Ramirez",
