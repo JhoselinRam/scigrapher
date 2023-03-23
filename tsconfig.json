@@ -3,18 +3,16 @@
       "module": "ES6",
       "target": "ES5",
       "declaration": true,
-      "outDir": "./dist/lib",
+      "outDir": "lib",
       "moduleResolution": "node",
       "esModuleInterop": true,
       "forceConsistentCasingInFileNames": true,
       "strict": true,
-      "skipLibCheck": true,
       "removeComments": true,
       "lib": ["ES2020", "DOM"],
-      "watch": true
+      "sourceMap": true
     },
     "include": [
-      "src/**/*",
-      "dist/package.json"
+      "src/**/*"
     ]
   }

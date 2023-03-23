@@ -1,22 +1,39 @@
 {
   "name": "scigrapher",
-  "version": "0.0.1",
-  "description": "",
+  "version": "1.0.1",
+  "description": "Scientific oriented data visualization grapher",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "type": "module",
+  "files": [
+    "/lib"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build" : "rm -rf dist/lib && tsc",
-    "build-wn" : "rd /s dist\\lib && tsc"
+    "build": "rm -rf lib && tsc",
+    "build-wn": "rd /s lib && tsc"
   },
   "keywords": [
     "graph",
     "plot",
     "data",
-    "visualization"
+    "visualization",
+    "science",
+    "scientific"
   ],
-  "author": "Jhoselin Ramirez",
   "license": "MIT",
   "devDependencies": {
     "typescript": "^4.9.4"
+  },
+  "bugs": {
+    "url": "https://github.com/JhoselinRam/scigrapher/issues"
+  },
+  "author": {
+    "name": "Jhoselin Ramirez",
+    "email": "jhoselin.ramirez92@gmail.com"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/JhoselinRam/scigrapher.git"
   }
 }
