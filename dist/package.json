@@ -1,0 +1,33 @@
+{
+    "name": "scigrapher",
+    "version": "1.0.0",
+    "main": "lib/es5/index.js",
+    "module": "lib/es6/index.js",
+    "description": "Scientific oriented data visualization grapher",
+    "keywords": [
+      "graph",
+      "plot",
+      "data",
+      "visualization",
+      "science",
+      "scientific"
+    ],
+    "license": "MIT",
+    "files": [
+        "lib",
+        "package.json",
+        "LICENCE"
+    ],
+    "bugs": {
+      "url": "https://github.com/JhoselinRam/scigrapher/issues"
+    },
+    "author": {
+      "name": "Jhoselin Ramirez",
+      "email": "jhoselin.ramirez92@gmail.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/JhoselinRam/scigrapher.git"
+    }
+  }
+  
