@@ -4,10 +4,10 @@ import { Axis_Property, Graph2D, graphCallback, RecursivePartial } from "../../G
 export type Aspect_Ratio_Axis = "x" | "y" | "xSecondary" | "ySecondary"
 
 export interface Events {
-    aspectRatio : (options : Partial<Aspect_Ratio>, callback?:graphCallback)=>Graph2D,
-    pointerMove : (options : Partial<Pointer_Move_Props>)=>Graph2D,
-    pointerZoom : (options : RecursivePartial<Pointer_Zoom_Props>)=>Graph2D,
-    containerResize : (options : RecursivePartial<Resize_Event_Props>)=>Graph2D
+    aspectRatio : (options ?: Partial<Aspect_Ratio>, callback?:graphCallback)=>Graph2D,
+    pointerMove : (options ?: Partial<Pointer_Move_Props>)=>Graph2D,
+    pointerZoom : (options ?: RecursivePartial<Pointer_Zoom_Props>)=>Graph2D,
+    containerResize : (options ?: RecursivePartial<Resize_Event_Props>)=>Graph2D
 }
 
 export interface Aspect_Ratio {

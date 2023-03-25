@@ -982,7 +982,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 //---------------------------------------------
 //---------------------------------------------
 
-    function containerResize(options : RecursivePartial<Resize_Event_Props>) : Graph2D{
+    function containerResize(options ?: RecursivePartial<Resize_Event_Props>) : Graph2D{
         resizeState.enable = options != null && options.enable != null ? options.enable : true;
         resizeState.reset = true;
         if(options != null){

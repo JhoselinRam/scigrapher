@@ -320,14 +320,14 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function title(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function title(arg : void) : LabelProperties | undefined;
     function title(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null && callback == null)
-            return Object.assign({}, state.labels.title);
+        if(typeof label === "undefined" && callback == null)
+            return state.labels.title == null? undefined : {...state.labels.title};
             
         if(typeof label === "object"){
+            const baseLabel : LabelProperties = state.labels.title != null? state.labels.title : {...defaultLabel, size:"25px", position:"start"}; 
+            
             const labelArg : LabelProperties = {
-                ...defaultLabel,
-                size:"25px",
-                position:"start",
+                ...baseLabel,
                 ...label
             };
 
@@ -347,13 +347,14 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function subtitle(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function subtitle(arg : void) : LabelProperties | undefined;
     function subtitle(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null && callback == null)
-            return Object.assign({}, state.labels.subtitle);
+        if(typeof label === "undefined" && callback == null)
+            return state.labels.subtitle == null? undefined : {...state.labels.subtitle};
             
         if(typeof label === "object"){
+            const baseLabel : LabelProperties = state.labels.subtitle != null? state.labels.subtitle : {...defaultLabel, position:"start"}; 
+            
             const labelArg : LabelProperties = {
-                ...defaultLabel,
-                position : "start",
+                ...baseLabel,
                 ...label
             };
             
@@ -373,13 +374,18 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function xLabel(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function xLabel(arg : void) : LabelProperties | undefined;
     function xLabel(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null && callback == null)
-            return Object.assign({}, state.labels.xPrimary);
+        if(typeof label === "undefined" && callback == null)
+            return state.labels.xPrimary == null? undefined : {...state.labels.xPrimary};
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
             
-            const labelArg : LabelProperties = {...defaultLabel, ...label};
+            const baseLabel : LabelProperties = state.labels.xPrimary != null? state.labels.xPrimary : defaultLabel; 
+            
+            const labelArg : LabelProperties = {
+                ...baseLabel,
+                ...label
+            };
         
             state.labels.xPrimary = labelArg;
             state.compute.full();
@@ -397,13 +403,18 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function yLabel(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function yLabel(arg : void) : LabelProperties | undefined;
     function yLabel(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null && callback == null)
-            return Object.assign({}, state.labels.yPrimary);
+        if(typeof label === "undefined" && callback == null)
+            return state.labels.yPrimary == null? undefined : {...state.labels.yPrimary};
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler; //Center positioned axis can´t have labels
             
-            const labelArg : LabelProperties = {...defaultLabel, ...label};
+            const baseLabel : LabelProperties = state.labels.yPrimary != null? state.labels.yPrimary : defaultLabel; 
+            
+            const labelArg : LabelProperties = {
+                ...baseLabel,
+                ...label
+            };
 
             state.labels.yPrimary = labelArg;
             state.compute.full();
@@ -421,14 +432,19 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function xLabelSecondary(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function xLabelSecondary(arg : void) : LabelProperties | undefined;
     function xLabelSecondary(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null && callback == null)
-            return Object.assign({}, state.labels.xSecondary);
+        if(typeof label === "undefined" && callback == null)
+            return state.labels.xSecondary == null? undefined : {...state.labels.xSecondary};
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels
             if(state.secondary.x == null || !state.secondary.x.enable) return graphHandler; //If secondary axis dont exist or is disabled
 
-            const labelArg : LabelProperties = {...defaultLabel, ...label};
+            const baseLabel : LabelProperties = state.labels.xSecondary != null? state.labels.xSecondary : defaultLabel; 
+            
+            const labelArg : LabelProperties = {
+                ...baseLabel,
+                ...label
+            };
 
             state.labels.xSecondary = labelArg;
             state.compute.full();
@@ -446,14 +462,19 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     function yLabelSecondary(label : Partial<LabelProperties>, callback?:graphCallback) : Graph2D;
     function yLabelSecondary(arg : void) : LabelProperties | undefined;
     function yLabelSecondary(label : Partial<LabelProperties> | void, callback?:graphCallback) : Graph2D | LabelProperties | undefined{
-        if(typeof label === null && callback == null)
-            return Object.assign({}, state.labels.ySecondary);
+        if(typeof label === "undefined" && callback == null)
+            return state.labels.ySecondary == null? undefined : {...state.labels.ySecondary};
             
         if(typeof label === "object"){
             if(state.axis.position === "center") return graphHandler;   //Center positioned axis can´t have labels
             if(state.secondary.y == null || !state.secondary.y.enable) return graphHandler; //If secondary axis dont exist or is disabled
 
-            const labelArg : LabelProperties = {...defaultLabel, ...label};
+            const baseLabel : LabelProperties = state.labels.ySecondary != null? state.labels.ySecondary : defaultLabel; 
+            
+            const labelArg : LabelProperties = {
+                ...baseLabel,
+                ...label
+            };
 
             state.labels.ySecondary = labelArg;
             state.compute.full();
