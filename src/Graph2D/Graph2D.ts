@@ -453,8 +453,12 @@ export function graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
 
     //Helper function, set the container properties and adds the canvas element
     function setup(){
-        const width = state.container.clientWidth;
-        const height = state.container.clientHeight;
+        const width = 500;
+        const height = 500;
+
+
+        state.container.style.width = `${width}px`;
+        state.container.style.height = `${height}px`;
         const dpi = window.devicePixelRatio;
 
         state.container.style.position = "relative";

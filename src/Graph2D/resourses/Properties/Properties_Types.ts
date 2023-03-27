@@ -14,3 +14,8 @@ export interface Graph2D_Mappings {
     primary : Axis_Property<Mapping>,
     secondary : Partial<Axis_Property<Mapping>>
 }
+
+export interface Container_Size {
+    width : number,
+    height : number
+}

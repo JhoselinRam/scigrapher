@@ -1,5 +1,5 @@
-import { Graph2D, Graph2D_Options, Graph2D_Save_Asset, Graph2D_Save_Graph, Method_Generator, Rect, Secondary_Axis } from "../../Graph2D_Types";
-import { Graph2D_Mappings, Properties } from "./Properties_Types";
+import { Graph2D, Graph2D_Options, Graph2D_Save_Asset, Graph2D_Save_Graph, graphCallback, Method_Generator, Rect } from "../../Graph2D_Types";
+import { Container_Size, Graph2D_Mappings, Properties } from "./Properties_Types";
 
 function Properties({graphHandler, state} : Method_Generator) : Properties {
 
@@ -138,6 +138,51 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
         return {
             graph,
             assets : ([] as Array<Graph2D_Save_Asset>).concat(...datasets, ...colorbars, ...legends)
+        }
+    }
+
+//--------------------------------------------- 
+//------------ Container Size ----------------- 
+
+    function containerSize(size:Partial<Container_Size>, callback ?: graphCallback) : Graph2D;
+    function containerSize(arg : void) : Container_Size;
+    function containerSize(size:Partial<Container_Size> | void, callback ?: graphCallback) : Graph2D | Container_Size | undefined{
+        if(typeof size === "undefined" && callback == null)
+            return {
+                width : state.container.clientWidth,
+                height : state.container.clientHeight,
+            }
+    
+        if(typeof size === "object"){
+            const width = size.width != null ? size.width : state.container.clientWidth;
+            const height = size.height != null ? size.height : state.container.clientHeight;
+            const dpi = window.devicePixelRatio;
+
+            if(width === state.container.clientWidth && height === state.container.clientHeight)
+                return graphHandler;
+
+            //Div element
+            state.container.style.width = `${width}px`;
+            state.container.style.height = `${height}px`;
+
+            //Graph canvas
+            state.canvasElement.style.width = `${width}px`;
+            state.canvasElement.style.height = `${height}px`;
+            state.canvasElement.width = width*dpi;
+            state.canvasElement.height = height*dpi;
+            
+            //Data canvas
+            state.canvasDataElement.style.width = `${width}px`;
+            state.canvasDataElement.style.height = `${height}px`;
+            state.canvasDataElement.width = width*dpi;
+            state.canvasDataElement.height = height*dpi;
+
+            state.compute.full();
+            if(callback != null) callback(graphHandler, state.data.map(item=>item.dataset));
+            state.dirty.full = true;
+            state.draw.full();
+
+            return graphHandler;
         }
     }
 
