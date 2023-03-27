@@ -178,7 +178,7 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
             state.canvasDataElement.height = height*dpi;
 
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
             state.draw.full();
 
@@ -194,7 +194,8 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
         draw,
         graphRect,
         mapping,
-        save
+        save,
+        containerSize
     }
 }
 

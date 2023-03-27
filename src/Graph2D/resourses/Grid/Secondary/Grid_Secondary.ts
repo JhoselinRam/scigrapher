@@ -276,7 +276,7 @@ function secondaryGrid(grid : Secondary_Grid_Modifier|void, callback?:graphCallb
         state.grid.secondary.y.opacity = clamp(state.grid.secondary.y.opacity, 0, 1);
 
     
-        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+        if(callback != null) callback(graphHandler);
         state.dirty.client = true;
         
         return graphHandler;

@@ -75,7 +75,7 @@ function Grid(props : Method_Generator) : Grid {
 
 
 
-            if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
+            if(callback != null) callback(props.graphHandler);
             props.state.dirty.client = true;
 
             return props.graphHandler;
@@ -127,7 +127,7 @@ function Grid(props : Method_Generator) : Grid {
             
 
 
-            if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
+            if(callback != null) callback(props.graphHandler);
             props.state.dirty.client = true;
 
             return props.graphHandler;
@@ -176,7 +176,7 @@ function gridStyle(style : Grid_Modifier<string> | void, callback?:graphCallback
 
 
 
-        if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
+        if(callback != null) callback(props.graphHandler);
         props.state.dirty.client = true;
 
         return props.graphHandler;
@@ -224,7 +224,7 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:graphCallback
         if(width.y?.secondary != null) props.state.grid.secondary.y.width = width.y.secondary;
 
 
-        if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
+        if(callback != null) callback(props.graphHandler);
         props.state.dirty.client = true;
 
         return props.graphHandler;
@@ -246,7 +246,7 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:graphCallback
             props.state.grid.polarGrid = density;
 
 
-            if(callback != null) callback(props.graphHandler, props.state.data.map(set=>set.dataset));
+            if(callback != null) callback(props.graphHandler);
             props.state.dirty.client = true;
             
             return props.graphHandler;

@@ -139,7 +139,7 @@ function Margin({state, graphHandler}:Method_Generator) : Margin {
             if(margins.y?.end != null) state.margin.y.end = margins.y.end; 
             
             state.compute.client();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
 
             return graphHandler;

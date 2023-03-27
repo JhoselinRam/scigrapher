@@ -153,7 +153,7 @@ function PrimaryGrid({state, graphHandler} : Method_Generator) : Primary_Grid_Ge
             state.grid.primary.x.opacity = clamp(state.grid.primary.x.opacity, 0, 1);
             state.grid.primary.y.opacity = clamp(state.grid.primary.y.opacity, 0, 1);
             
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
             
             return graphHandler;

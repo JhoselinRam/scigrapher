@@ -12,7 +12,7 @@ function Legends({graphHandler, state} : Method_Generator) : Legends {
 
         state.legends.push({ legend, draw, save });
         
-        if(callback != null) callback(graphHandler, state.data.map(item=>item.dataset));
+        if(callback != null) callback(graphHandler);
         state.dirty.data = true;
 
         return legend;
@@ -24,17 +24,25 @@ function Legends({graphHandler, state} : Method_Generator) : Legends {
     function removeLegend(id : string, callback?:graphCallback) : Graph2D{
         state.legends = state.legends.filter(item=>item.legend.id() !== id);
 
-        if(callback != null) callback(graphHandler, state.data.map(item=>item.dataset));
+        if(callback != null) callback(graphHandler);
         state.dirty.data = true;
 
         return graphHandler;
     }
 
 //---------------------------------------------
+//-------------- Get Legends ------------------
+
+    function getLegends() : Array<Legend>{
+        return state.legends.map(item=>item.legend);
+    }
+
+//---------------------------------------------
 
     return {
         addLegend, 
-        removeLegend
+        removeLegend,
+        getLegends
     }
 }
 

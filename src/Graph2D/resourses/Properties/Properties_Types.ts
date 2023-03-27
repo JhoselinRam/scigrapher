@@ -1,5 +1,5 @@
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
-import { Axis_Property, Graph2D, Graph2D_Options, Graph2D_Save_Graph, Rect } from "../../Graph2D_Types";
+import { Axis_Property, Graph2D, Graph2D_Options, Graph2D_Save_Graph, graphCallback, Rect } from "../../Graph2D_Types";
 
 export interface Properties{
     canvasElements : ()=>Array<HTMLCanvasElement>,
@@ -7,7 +7,11 @@ export interface Properties{
     graphRect : ()=>Rect,
     draw : ()=>Graph2D,
     mapping : ()=>Graph2D_Mappings,
-    save : ()=> Graph2D_Save_Graph
+    save : ()=> Graph2D_Save_Graph,
+    containerSize : {
+        (size:Partial<Container_Size>, callback ?: graphCallback) : Graph2D,
+        (arg : void) : Container_Size
+    }
 }
 
 export interface Graph2D_Mappings {

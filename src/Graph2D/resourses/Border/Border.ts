@@ -82,7 +82,7 @@ function Border({graphHandler, state}:Method_Generator) : Border{
             if(border.y?.start != null) state.border.y.start = {...state.border.y.start, ...border.y.start};
             if(border.y?.end != null) state.border.y.end = {...state.border.y.end, ...border.y.end};
 
-            if(callback != null) callback(graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
 
             return graphHandler;

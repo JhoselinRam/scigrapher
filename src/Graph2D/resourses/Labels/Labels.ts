@@ -333,7 +333,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.title = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
 
             return graphHandler;
@@ -360,7 +360,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             
             state.labels.subtitle = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
 
             return graphHandler;
@@ -389,7 +389,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         
             state.labels.xPrimary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
 
             return graphHandler;
@@ -418,7 +418,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.yPrimary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
 
             return graphHandler;
@@ -448,7 +448,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.xSecondary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
 
             return graphHandler;
@@ -478,7 +478,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
 
             state.labels.ySecondary = labelArg;
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
 
             return graphHandler;

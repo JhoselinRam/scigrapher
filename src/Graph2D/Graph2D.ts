@@ -361,17 +361,21 @@ export function graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.containerResize = events.containerResize;
     graphHandler.addDataset = data.addDataset;
     graphHandler.getDatasets = data.getDatasets;
+    graphHandler.removeDataset = data.removeDataset;
     graphHandler.canvasElements = properties.canvasElements;
     graphHandler.clientRect = properties.clientRect;
     graphHandler.graphRect = properties.graphRect;
     graphHandler.draw = properties.draw;
     graphHandler.mapping = properties.mapping;
     graphHandler.save = properties.save;
+    graphHandler.containerSize = properties.containerSize;
     graphHandler.border = border.border;
     graphHandler.addColorbar = colorbars.addColorbar;
     graphHandler.removeColorbar = colorbars.removeColorbar;
+    graphHandler.getColorbars = colorbars.getColorbars;
     graphHandler.addLegend = legends.addLegend;
     graphHandler.removeLegend = legends.removeLegend;
+    graphHandler.getLegends = legends.getLegends;
 
     
     //Setup configurations

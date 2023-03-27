@@ -22,7 +22,7 @@ function Data({state, graphHandler}:Method_Generator) : Data{
                 
                 state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
-                if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+                if(callback != null) callback(graphHandler);
 
                 return newDataset
             }
@@ -32,7 +32,7 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 
                 state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
-                if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+                if(callback != null) callback(graphHandler);
 
                 return newDataset
             }
@@ -42,7 +42,7 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 
                 state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
-                if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+                if(callback != null) callback(graphHandler);
 
                 return newDataset
             }
@@ -52,7 +52,7 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 
                 state.data.push({dataset : newDataset, draw:drawDataset, save:saveDataset});
                 newDataset.index(state.data.length);
-                if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+                if(callback != null) callback(graphHandler);
 
                 return newDataset
             }
@@ -60,12 +60,12 @@ function Data({state, graphHandler}:Method_Generator) : Data{
     }
 
 //---------------------------------------------
-//---------------------------------------------
+//------------- Remove Dataset ----------------
 
     function removeDataset(id:string, callback?:graphCallback) : Graph2D{
         state.data = state.data.filter(item => item.dataset.id()!==id);
         state.dirty.data = true;
-        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+        if(callback != null) callback(graphHandler);
 
         return graphHandler;
     }
@@ -73,8 +73,8 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 //---------------------------------------------
 //-------------- Get Datasets -----------------
 
-    function getDatasets() : Array<{ dataset : Dataset_Types, draw : Draw_Data_Callback }>{
-        return state.data.slice();
+    function getDatasets() : Array<Dataset_Types>{
+        return state.data.map(item=>item.dataset);
     }
 
 //---------------------------------------------

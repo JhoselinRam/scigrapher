@@ -12,7 +12,7 @@ function Colorbars({graphHandler, state} : Method_Generator) : Colorbars{
 
         state.colorbars.push({bar:newBar, compute, draw, save});
         state.compute.client();
-        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+        if(callback != null) callback(graphHandler);
         state.dirty.client = true;
 
         return newBar;
@@ -26,17 +26,25 @@ function Colorbars({graphHandler, state} : Method_Generator) : Colorbars{
         state.colorbars = state.colorbars.filter(item=>item.bar.id()!==id);
 
         state.compute.client();
-        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+        if(callback != null) callback(graphHandler);
         state.dirty.client = true;
 
         return graphHandler;
     }
 
 //---------------------------------------------
+//------------- Get Colorbars -----------------
+
+    function getColorbars() : Array<Colorbar>{
+        return state.colorbars.map(item=>item.bar);
+    }
+
+//---------------------------------------------
 
     return {
         addColorbar,
-        removeColorbar
+        removeColorbar,
+        getColorbars
     }
 }
 

@@ -62,7 +62,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
             state.axis.position = position;
 
             state.compute.full();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.full = true;
             
 
@@ -84,7 +84,7 @@ function Axis({state, graphHandler}:Method_Generator) : Axis{
 
             state.axis.type = type;
             state.compute.client();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
 
             return graphHandler;
@@ -126,7 +126,7 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:grap
         }
 
         state.compute.client();
-        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+        if(callback != null) callback(graphHandler);
         state.dirty.client = true;
 
         return graphHandler;
@@ -187,7 +187,7 @@ function axisDomain(domain:RecursivePartial<Domain_Props> | void, callback?:grap
             if(colors.text?.y != null) state.axis.y.textColor = colors.text.y;
 
 
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
             
             return graphHandler;
@@ -252,7 +252,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
 
 
 
-        if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+        if(callback != null) callback(graphHandler);
         state.dirty.client = true;
         
         return graphHandler;
@@ -281,7 +281,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
 
             
             state.compute.client();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
             
             return graphHandler;
@@ -328,7 +328,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
         
 
 
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
             
             return graphHandler;
@@ -395,7 +395,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
 
             
             state.compute.client();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
             
 
@@ -449,7 +449,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
 
 
             state.compute.client();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
 
             return graphHandler;
@@ -487,7 +487,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
 
             
             state.compute.client();
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
             
 
@@ -518,7 +518,7 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
 
         
             
-            if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
+            if(callback != null) callback(graphHandler);
             state.dirty.client = true;
 
             return graphHandler;
