@@ -1,5 +1,5 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
-import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
+import { clamp, getLineDash } from "../../../../tools/Helplers/Helplers.js";
 import { Axis_Property, Graph2D, graphCallback, Method_Generator, Rect, Secondary_Grid } from "../../../Graph2D_Types";
 import { Secondary_Grid_Generator, Secondary_Grid_Modifier } from "./Grid_Secondary_Types";
 
@@ -264,56 +264,16 @@ function secondaryGrid(grid : Secondary_Grid_Modifier|void, callback?:graphCallb
         if(grid.grid==null && grid.x == null && grid.y==null) return graphHandler;
         
 
-        if(grid.grid?.color!=null){
-            state.grid.secondary.x.color = grid.grid.color;
-            state.grid.secondary.y.color = grid.grid.color;
+        if(grid.grid != null){
+            state.grid.secondary.x = {...state.grid.secondary.x, ...grid.grid};
+            state.grid.secondary.y = {...state.grid.secondary.y, ...grid.grid};
         }
-        if(grid.grid?.opacity!=null){
-            const newOpacity = grid.grid.opacity<0?0:(grid.grid.opacity>1?1:grid.grid.opacity);
-            state.grid.secondary.x.opacity = newOpacity;
-            state.grid.secondary.y.opacity = newOpacity;
-        }
-        if(grid.grid?.enable!=null){
-            state.grid.secondary.x.enable = grid.grid.enable;
-            state.grid.secondary.y.enable = grid.grid.enable;
-        }
-        if(grid.grid?.style!=null){
-            state.grid.secondary.x.style = grid.grid.style;
-            state.grid.secondary.y.style = grid.grid.style;
-        }
-        if(grid.grid?.width!=null){
-            state.grid.secondary.x.width = grid.grid.width;
-            state.grid.secondary.y.width = grid.grid.width;
-        }
-        if(grid.grid?.density!=null){
-            state.grid.secondary.x.density = grid.grid.density;
-            state.grid.secondary.y.density = grid.grid.density;
-        }
-        if(grid.grid?.minSpacing!=null){
-            state.grid.secondary.x.minSpacing = grid.grid.minSpacing;
-            state.grid.secondary.y.minSpacing = grid.grid.minSpacing;
-        }
-        if(grid.grid?.maxDensity!=null){
-            state.grid.secondary.x.maxDensity = grid.grid.maxDensity;
-            state.grid.secondary.y.maxDensity = grid.grid.maxDensity;
-        }
-
-        if(grid.x?.enable !=null) state.grid.secondary.x.enable = grid.x.enable;
-        if(grid.x?.color !=null) state.grid.secondary.x.color = grid.x.color;
-        if(grid.x?.opacity !=null) state.grid.secondary.x.opacity = grid.x.opacity<0?0:(grid.x.opacity>1?1:grid.x.opacity);
-        if(grid.x?.style !=null) state.grid.secondary.x.style = grid.x.style;
-        if(grid.x?.width !=null) state.grid.secondary.x.width = grid.x.width;
-        if(grid.x?.density !=null) state.grid.secondary.x.density = grid.x.density;
-        if(grid.x?.minSpacing !=null) state.grid.secondary.x.minSpacing = grid.x.minSpacing;
-        if(grid.x?.maxDensity !=null) state.grid.secondary.x.maxDensity = grid.x.maxDensity;
-        if(grid.y?.enable !=null) state.grid.secondary.y.enable = grid.y.enable;
-        if(grid.y?.color !=null) state.grid.secondary.y.color = grid.y.color;
-        if(grid.y?.opacity !=null) state.grid.secondary.y.opacity = grid.y.opacity<0?0:(grid.y.opacity>1?1:grid.y.opacity);
-        if(grid.y?.style !=null) state.grid.secondary.y.style = grid.y.style;
-        if(grid.y?.width !=null) state.grid.secondary.y.width = grid.y.width;
-        if(grid.y?.density !=null) state.grid.secondary.y.density = grid.y.density;
-        if(grid.y?.minSpacing !=null) state.grid.secondary.y.minSpacing = grid.y.minSpacing;
-        if(grid.y?.maxDensity !=null) state.grid.secondary.y.maxDensity = grid.y.maxDensity;
+        
+        if(grid.x != null) state.grid.secondary.x = {...state.grid.secondary.x, ...grid.x}; 
+        if(grid.y != null) state.grid.secondary.y = {...state.grid.secondary.y, ...grid.y};
+        
+        state.grid.secondary.x.opacity = clamp(state.grid.secondary.x.opacity, 0, 1);
+        state.grid.secondary.y.opacity = clamp(state.grid.secondary.y.opacity, 0, 1);
 
     
         if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));

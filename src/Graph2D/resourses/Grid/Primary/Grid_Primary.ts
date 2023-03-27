@@ -1,5 +1,5 @@
 import { Axis_Obj } from "../../../../tools/Axis_Obj/Axis_Obj_Types";
-import { getLineDash } from "../../../../tools/Helplers/Helplers.js";
+import { clamp, getLineDash } from "../../../../tools/Helplers/Helplers.js";
 import { Axis_Property, Graph2D, graphCallback, Method_Generator, Primary_Grid, Rect } from "../../../Graph2D_Types";
 import { Primary_Grid_Generator, Primary_Grid_Modifier } from "./Grid_Primary_Types";
 
@@ -142,39 +142,16 @@ function PrimaryGrid({state, graphHandler} : Method_Generator) : Primary_Grid_Ge
             if(grid.grid==null && grid.x == null && grid.y==null) return graphHandler;
             
             
-            if(grid.grid?.color!=null){
-                state.grid.primary.x.color = grid.grid.color;
-                state.grid.primary.y.color = grid.grid.color;
-            }
-            if(grid.grid?.opacity!=null){
-                const newOpacity = grid.grid.opacity<0?0:(grid.grid.opacity>1?1:grid.grid.opacity);
-                state.grid.primary.x.opacity = newOpacity;
-                state.grid.primary.y.opacity = newOpacity;
-            }
-            if(grid.grid?.enable!=null){
-                state.grid.primary.x.enable = grid.grid.enable;
-                state.grid.primary.y.enable = grid.grid.enable;
-            }
-            if(grid.grid?.style!=null){
-                state.grid.primary.x.style = grid.grid.style;
-                state.grid.primary.y.style = grid.grid.style;
-            }
-            if(grid.grid?.width!=null){
-                state.grid.primary.x.width = grid.grid.width;
-                state.grid.primary.y.width = grid.grid.width;
+            if(grid.grid != null){
+                state.grid.primary.x = {...state.grid.primary.x, ...grid.grid}
+                state.grid.primary.y = {...state.grid.primary.y, ...grid.grid}
             }
 
-            if(grid.x?.enable !=null) state.grid.primary.x.enable = grid.x.enable;
-            if(grid.x?.color !=null) state.grid.primary.x.color = grid.x.color;
-            if(grid.x?.opacity !=null) state.grid.primary.x.opacity = grid.x.opacity<0?0:(grid.x.opacity>1?1:grid.x.opacity);
-            if(grid.x?.style !=null) state.grid.primary.x.style = grid.x.style;
-            if(grid.x?.width !=null) state.grid.primary.x.width = grid.x.width;
-            if(grid.y?.enable !=null) state.grid.primary.y.enable = grid.y.enable;
-            if(grid.y?.color !=null) state.grid.primary.y.color = grid.y.color;
-            if(grid.y?.opacity !=null) state.grid.primary.y.opacity = grid.y.opacity<0?0:(grid.y.opacity>1?1:grid.y.opacity);
-            if(grid.y?.style !=null) state.grid.primary.y.style = grid.y.style;
-            if(grid.y?.width !=null) state.grid.primary.y.width = grid.y.width;
+            if(grid.x !=null) state.grid.primary.x = {...state.grid.primary.x, ...grid.x};
+            if(grid.y !=null) state.grid.primary.y = {...state.grid.primary.y, ...grid.y};
 
+            state.grid.primary.x.opacity = clamp(state.grid.primary.x.opacity, 0, 1);
+            state.grid.primary.y.opacity = clamp(state.grid.primary.y.opacity, 0, 1);
             
             if(callback != null) callback(graphHandler, state.data.map(set=>set.dataset));
             state.dirty.client = true;

@@ -326,6 +326,13 @@ export function createMarker({type, size} : Create_Marker_Props) : Path2D {
 }
 
 //---------------------------------------------
+//---------------- Clamp ----------------------
+
+export function clamp(value:number, min:number, max:number) : number {
+    return value<min? min : (value>max? max : value);
+}
+
+//---------------------------------------------
 //------------ Restore Graph ------------------
 
 export function restoreGraph({container, data} : Graph2D_Restore_Props) : Graph2D_Restore{

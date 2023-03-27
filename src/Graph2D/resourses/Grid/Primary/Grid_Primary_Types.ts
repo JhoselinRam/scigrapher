@@ -9,5 +9,5 @@ export interface Primary_Grid_Generator {
 }
 
 export interface Primary_Grid_Modifier extends RecursivePartial<Axis_Property<Primary_Grid>> {
-    grid ?: Primary_Grid
+    grid ?: Partial<Primary_Grid>
 }

@@ -10,7 +10,7 @@
       "strict": true,
       "removeComments": true,
       "lib": ["ES2020", "DOM"],
-      "sourceMap": true,
+      "sourceMap": true
     },
     "include": [
       "src/**/*"

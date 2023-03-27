@@ -324,7 +324,7 @@ function inClientRect(x:number, y:number) : boolean{
         moveState.positionA = {x, y};
 
         state.compute.client();
-        if(moveState.callback != null) moveState.callback(graphHandler);
+        if(moveState.callback != null) moveState.callback(graphHandler, state.data.map(item=>item.dataset));
         state.dirty.client = true;
         state.draw.client();
     }
@@ -485,7 +485,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             }
 
             state.compute.client();
-            if(zoomState.callback != null) zoomState.callback(graphHandler);
+            if(zoomState.callback != null) zoomState.callback(graphHandler, state.data.map(item=>item.dataset));
             state.dirty.client = true;
             state.draw.client();
     }
@@ -556,7 +556,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
         
         state.compute.client();
-        if(zoomState.callback != null) zoomState.callback(graphHandler);
+        if(zoomState.callback != null) zoomState.callback(graphHandler, state.data.map(item=>item.dataset));
         state.dirty.client = true;
         state.draw.client();
     }
@@ -689,7 +689,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         
         
         state.compute.client();
-        if(zoomState.callback != null) zoomState.callback(graphHandler);
+        if(zoomState.callback != null) zoomState.callback(graphHandler, state.data.map(item=>item.dataset));
         state.dirty.client = true;
         state.draw.client();
     }
@@ -778,7 +778,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
 
         state.compute.full();
-        if(resizeState.callback != null) resizeState.callback(graphHandler);
+        if(resizeState.callback != null) resizeState.callback(graphHandler, state.data.map(item=>item.dataset));
         state.dirty.full = true;
         state.draw.full();
 
@@ -821,11 +821,6 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             anchor : "start",
             ...args
         }
-        //Calculation whith this condition lead to no change at all
-        if(options.sourse === options.target){
-            console.warn("Sourse and Target are equal, this lead to no change being made")
-            return graphHandler;
-        } 
 
         if(state.secondary.x == null && (options.sourse==="xSecondary" || options.target==="xSecondary")){
             console.error("Secondary X axis not defined yet");
@@ -932,11 +927,12 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
     function pointerMove( options ?: Partial<Pointer_Move_Props>) : Graph2D{
 
-        moveState.enable = options != null && options.enable != null ? options.enable : true;
+        moveState.enable = true;
         cursor.move = "grabbing";
         cursor.hover = "grab";
         cursor.default = "default";
         if(options != null){
+            if(options.enable != null) moveState.enable = options.enable;
             if(options.delay != null) moveState.delay = options.delay;
             if(options.primaryAxis != null) moveState.primaryAxis = options.primaryAxis;
             if(options.secondaryAxis != null) moveState.secondaryAxis = options.secondaryAxis;
@@ -956,11 +952,12 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 //--------------- Pointer Zoom ----------------
 
     function pointerZoom(options ?: RecursivePartial<Pointer_Zoom_Props>) : Graph2D{
-        zoomState.enable = options != null && options.enable != null ? options.enable : true;
+        zoomState.enable = true;
         cursor.default = "default";
         cursor.hover = "zoom-in";
         cursor.move = "zoom-in";
         if(options != null){
+            if(options.enable != null) zoomState.enable = options.enable;
             if(options.delay != null) zoomState.delay = options.delay;
             if(options.primaryAxis != null) zoomState.primaryAxis = options.primaryAxis;
             if(options.secondaryAxis != null) zoomState.secondaryAxis = options.secondaryAxis;
@@ -971,7 +968,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             if(options.strength != null) zoomState.strength = options.strength;
             if(options.anchor != null) zoomState.anchor = options.anchor as "center" | "pointer" | [number, number];
             if(options.type != null) zoomState.type = options.type;
-            zoomState.callback = options.callback as (handler?:Graph2D)=>void | undefined;
+            zoomState.callback = options.callback as graphCallback;
             if(options.rect != null) zoomState.rect = {...zoomState.rect, ...options.rect};
         }
         
@@ -983,16 +980,17 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 //---------------------------------------------
 
     function containerResize(options ?: RecursivePartial<Resize_Event_Props>) : Graph2D{
-        resizeState.enable = options != null && options.enable != null ? options.enable : true;
+        resizeState.enable = true;
         resizeState.reset = true;
         if(options != null){
+            if(options.enable != null) resizeState.enable = options.enable;
             if(options.preserveAspectRatio != null) resizeState.preserveAspectRatio = options.preserveAspectRatio;
             if(options.delay != null) resizeState.delay = options.delay;
             if(options.primaryAxis != null) resizeState.primaryAxis = options.primaryAxis;
             if(options.secondaryAxis != null) resizeState.secondaryAxis = options.secondaryAxis;
             if(options.anchor != null) resizeState.anchor = options.anchor as "center" | [number, number];
             if(options.secondaryAnchor != null) resizeState.secondaryAnchor = options.secondaryAnchor as "center" | [number, number];
-            resizeState.callback = options.callback as (handler?:Graph2D)=>void;
+            resizeState.callback = options.callback as graphCallback;
         }
         
         //Remove old listener

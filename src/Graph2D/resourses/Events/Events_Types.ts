@@ -19,7 +19,7 @@ export interface Aspect_Ratio {
 
 export interface Pointer_Move_Props {
     enable : boolean,
-    callback ?: (handler?:Graph2D)=>void;
+    callback ?: graphCallback;
     delay : number,
     pointerCapture : boolean,
     hoverCursor : string,
@@ -58,7 +58,7 @@ export interface Event_Cursor {
 
 export interface Move_State {
     enable : boolean,
-    callback ?: (handler?:Graph2D)=>void,
+    callback ?: graphCallback,
     delay : number,
     onMove : (position : Move_Event)=>void, 
     positionA : Axis_Property<number>,
@@ -106,7 +106,7 @@ export interface Resize_Event_Props {
     preserveAspectRatio : boolean,
     anchor : "center" | [number, number],
     secondaryAnchor : "center" | [number, number],
-    callback ?: (handler?:Graph2D)=>void,
+    callback ?: graphCallback,
     delay : number,
     primaryAxis : boolean,
     secondaryAxis : boolean

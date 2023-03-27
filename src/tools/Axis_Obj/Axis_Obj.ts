@@ -107,13 +107,19 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
             if(positions[index] === 0 && state.axis.position === "center") return;
 
             if(state.axis[axis].overlap && state.axis.position === "center"){
+                const margin = 2;
+                const x = Math.round(item.x) - margin;
+                const y = Math.round(item.y) - margin;
+                const width = Math.round(item.width) + 2*margin;
+                const height = Math.round(item.height) + 2*margin;
+                
                 //Clear the area for the label
-                state.context.canvas.clearRect(item.x, item.y, item.width, item.height);
+                state.context.canvas.clearRect(x, y, width, height);
                 
                 //Redraws the backgroun in this area
                 state.context.canvas.fillStyle = state.background.color;
                 state.context.canvas.globalAlpha = state.background.opacity;
-                state.context.canvas.fillRect(item.x, item.y, item.width, item.height);
+                state.context.canvas.fillRect(x, y, width, height);
             }
 
             state.context.canvas.fillStyle = axisUsed.textColor;

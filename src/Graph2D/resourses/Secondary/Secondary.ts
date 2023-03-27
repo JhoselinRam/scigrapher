@@ -92,10 +92,8 @@ function secondaryAxisEnable(enable : Partial<Axis_Property<boolean>> | void, ca
     if(typeof enable === "undefined" && callback == null){
         const axisEnabled : Partial<Axis_Property<boolean>> = {};
 
-        if(state.secondary.x != null)
-            axisEnabled.x = state.secondary.x.enable;
-        if(state.secondary.y != null)
-            axisEnabled.y = state.secondary.y.enable;
+        axisEnabled.x =state.secondary.x==null? undefined : state.secondary.x.enable;
+        axisEnabled.y =state.secondary.y==null? undefined : state.secondary.y.enable;
 
         return axisEnabled;
     }
@@ -226,10 +224,9 @@ function secondaryAxisDomain(domain:RecursivePartial<Domain_Props> | void, callb
     function secondaryAxisType(types : Partial<Axis_Property<"rectangular"|"log">> | void, callback?:graphCallback) : Graph2D | Partial<Axis_Property<"rectangular"|"log">> | undefined{
         if(typeof types === "undefined" && callback == null){
             const axisTypes : Partial<Axis_Property<"rectangular"|"log">> = {};
-            if(state.secondary.x != null)
-                axisTypes.x = state.secondary.x.type;
-            if(state.secondary.y != null)
-                axisTypes.y = state.secondary.y.type;
+
+            axisTypes.x =state.secondary.x == null? undefined : state.secondary.x.type;
+            axisTypes.y =state.secondary.y == null? undefined : state.secondary.y.type;
 
             return axisTypes;
         }
@@ -270,7 +267,7 @@ function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string>, call
 function secondaryAxisColor(arg : void) : Secondary_Axis_Modifier<string>;
 function secondaryAxisColor(colors : Secondary_Axis_Modifier_Props<string> | void, callback?:graphCallback) : Graph2D | Secondary_Axis_Modifier<string> | undefined{
     if(typeof colors === "undefined" && callback == null){
-        const axisColors : Secondary_Axis_Modifier<string> = {base:{}, tick:{}, text:{}};
+        const axisColors : Secondary_Axis_Modifier<string> = {base:{x:undefined, y:undefined}, tick:{x:undefined, y:undefined}, text:{x:undefined, y:undefined}};
         
         if(state.secondary.x != null){
             axisColors.base.x = state.secondary.x.baseColor;
@@ -338,7 +335,7 @@ function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number>, c
 function secondaryAxisOpacity(arg : void) : Secondary_Axis_Modifier<number>;
 function secondaryAxisOpacity(opacity : Secondary_Axis_Modifier_Props<number> | void, callback?:graphCallback) : Graph2D | Secondary_Axis_Modifier<number> | undefined{
     if(typeof opacity === "undefined" && callback == null){
-        const axisOpacity : Secondary_Axis_Modifier<number> = {base:{}, tick:{}, text:{}};
+        const axisOpacity : Secondary_Axis_Modifier<number> = {base:{x:undefined, y:undefined}, tick:{x:undefined, y:undefined}, text:{x:undefined, y:undefined}};
         
         if(state.secondary.x != null){
             axisOpacity.base.x = state.secondary.x.baseOpacity;
@@ -412,10 +409,8 @@ function secondaryAxisUnits(units : RecursivePartial<Axis_Property<string>> | vo
     if(typeof units === "undefined" && callback == null){
         const axisUnits : Partial<Axis_Property<string>> = {};
 
-        if(state.secondary.x != null)
-            axisUnits.x = state.secondary.x.unit;
-        if(state.secondary.y != null)
-            axisUnits.y = state.secondary.y.unit;
+        axisUnits.x = state.secondary.x == null? undefined : state.secondary.x.unit;
+        axisUnits.y = state.secondary.y == null? undefined : state.secondary.y.unit;
 
         return axisUnits;
     }
@@ -457,7 +452,7 @@ function secondaryAxisBase(base : RecursivePartial<Base_Props>, callback?:graphC
 function secondaryAxisBase(arg : void) : Partial<Base_Props>;
 function secondaryAxisBase(base : RecursivePartial<Base_Props> | void, callback?:graphCallback) : Graph2D | Partial<Base_Props> | undefined{
     if(typeof base === "undefined" && callback == null){
-        const axisBase : Partial<Base_Props> = {};
+        const axisBase : Partial<Base_Props> = {x:undefined, y:undefined};
 
         if(state.secondary.x != null){
             axisBase.x = {
@@ -531,7 +526,7 @@ function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props>, callback?:gra
 function secondaryAxisTicks(arg : void) : Partial<Ticks_Props>;
 function secondaryAxisTicks(ticks : RecursivePartial<Ticks_Props> | void, callback?:graphCallback) : Graph2D | Partial<Ticks_Props> | undefined{
     if(typeof ticks === "undefined" && callback == null){
-        const axisTicks : Partial<Ticks_Props> = {};
+        const axisTicks : Partial<Ticks_Props> = {x:undefined, y:undefined};
 
         if(state.secondary.x != null){
             axisTicks.x = {
@@ -636,7 +631,7 @@ function secondaryAxisText(text : RecursivePartial<Text_Props>, callback?:graphC
 function secondaryAxisText(arg : void) : Partial<Text_Props>;
 function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?:graphCallback) : Graph2D | Partial<Text_Props> | undefined{
     if(typeof text === "undefined" && callback == null){
-        const axisText : Partial<Text_Props> = {};
+        const axisText : Partial<Text_Props> = {x:undefined, y:undefined};
 
         if(state.secondary.x != null){
             axisText.x = {

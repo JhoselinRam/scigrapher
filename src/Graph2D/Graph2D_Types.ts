@@ -244,7 +244,8 @@ export type Axis_Property<T> = {
     y : T
 }
 
-export type graphCallback = (handler?:Graph2D, datasets?:Array<Dataset_Types>)=>void
+export type graphCallback = (handler:Graph2D, datasets:Array<Dataset_Types>)=>void | ((handler:Graph2D)=>void) | (()=>void)
+
 
 export type Graph2D_Save_Callback = ()=>Graph2D_Save_Asset;
 
