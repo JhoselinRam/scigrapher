@@ -107,17 +107,17 @@ Example:
 
     const element = document.querrySelector("#my-graph");
     const graph = graph2D(element)
-				    .axisDomain({
-				       x : {start : -8, end : 8},
-				       y : {start : -1.2, end : 1.2}
-				    })
-				    .containerSize({width : 800, height : 300});
+		      .axisDomain({
+		          x : {start : -8, end : 8},
+			  y : {start : -1.2, end : 1.2}
+		       })
+		      .containerSize({width : 800, height : 300});
     
     const data = graph.addDataset("linechart")
-					  .dataX(linspace(-8, 8, 100))
-					  .dataY((dataset)=>{
-							return dataset.dataX().map(x=>Math.cos(x));
-					   });
+		      .dataX(linspace(-8, 8, 100))
+		      .dataY((dataset)=>{
+		          return dataset.dataX().map(x=>Math.cos(x));
+		       });
 
     graph.draw();
 
