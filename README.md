@@ -77,4 +77,52 @@ JS:
 
 Result:
 
-![default_graph](/assets/images/default_graph.png)
+![default_graph](/assets/images/default_graph.jpeg)
+
+Almost every method is overcharged, so you can set or get the properties, for example calling `graph.axisType()` will return the current axis type used in the graph, and calling `graph.axisType("polar")` will set the graph axis type to polar and return a reference to the same graph object, so more methods can be chained.
+
+Additionally, almost every method accepts a callback function as a second parameter. This callback will be executed right after the graph properties are updated, but before is render to the screen.
+
+The callback function can accept one optional parameter that represents the graph object from which the method is call upon.
+
+> Note: The execution of the optional callback function is unique to that method call, so in order to execute that function more than ones it needs to be passed to the method on each call.
+
+___
+
+To add data to the graph, you need to call the `addDataset` method specifying the type of the data you intend to create, the return value can be stored in a variable to later use.
+
+    addDataset(datatype)
+    addDataset(datatype, options) 
+
+Where:
+
+* `datatype` is one of the data types available : "linechart", "area", "heatmap" or "vectorfield".
+* `options` is an object containing the [options](#linechart-options)  to change the default behavior and appearance of the dataset.
+
+> Note. The options object has a lot of properties and complex structure, its use is intended for copying or generate datasets from another datasets. All its properties are breake down in the corresponding dataset methods, is best to use those instead.
+
+The resulting dataset is bound to the graph, so in order to show render the result, you must call the `draw` method of the graph after the dataset creation or any modification made to it.
+
+Example:
+
+    const element = document.querrySelector("#my-graph");
+    const graph = graph2D(element)
+				    .axisDomain({
+				       x : {start : -8, end : 8},
+				       y : {start : -1.2, end : 1.2}
+				    })
+				    .containerSize({width : 800, height : 300});
+    
+    const data = graph.addDataset("linechart")
+					  .dataX(linspace(-8, 8, 100))
+					  .dataY((dataset)=>{
+							return dataset.dataX().map(x=>Math.cos(x));
+					   });
+
+    graph.draw();
+
+Result:
+
+![cosine_example](/assets/images/cosine_example.jpeg)
+
+The details on how to manipulate the datasets will be discussed in its [corresponding](#datasets) section.

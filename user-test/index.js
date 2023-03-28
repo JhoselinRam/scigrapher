@@ -1,30 +1,19 @@
-import { graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping, restoreGraph } from "../dist/lib/index.js";
+import { graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping, restoreGraph } from "../dist/lib/es6/index.js";
 
 
 //Grafica original
-const graph1 = graph2D(document.querySelector(".graph1"))
-                .aspectRatio({anchor:0})
-                .axisType("polar")
+const graph = graph2D(document.querySelector(".graph1"))
+                    
 
-//Datos
-const rose = graph1.addDataset("linechart")
-      .dataY(linspace(0,2*Math.PI, 200))
-      .dataX(set=>set.dataY().map(theta=>2*Math.sin(4*theta)))
-      .polar(true)
 
-//Legenda
-graph1.addLegend()
-      .data([{dataset:rose.id(), text:"Rose"}])
-      .title({text:"Polar Graph"});
-    
-graph1.draw();
+
 
 
 //Guarda el estado completo de la grafica en cuestion
- const graphSave = graph1.save();
+ //const graphSave = graph1.save();
 
 //Se convierten a JSON para simular transferencia de datos
- const stringGraph = JSON.stringify(graphSave);
+ //const stringGraph = JSON.stringify(graphSave);
 
 
 //---------------------------------------------
@@ -32,16 +21,16 @@ graph1.draw();
 
 
 //Fulano recibe la informacion y la interpreta
- const receivedData = JSON.parse(stringGraph);
+ //const receivedData = JSON.parse(stringGraph);
 
 //Restaura la grafica
- const {graph, linechart, legend} = restoreGraph({
-     container : document.querySelector(".graph2"),
-     data : receivedData
- }); 
+//  const {graph, linechart, legend} = restoreGraph({
+//      container : document.querySelector(".graph2"),
+//      data : receivedData
+//  }); 
 
 // A ver!!
- graph.draw()
+ //graph.draw()
 
 
 
