@@ -236,7 +236,7 @@ This method returns or changes the current axis type.
   * "log-log" Base 10 logarithmic scale on both axis.
 * `callback` is a callback function that is run after the axis type is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
-> Note: An axis cannot have a logarithmic scale set unless its domain is strictly positive or negative, in other words the axis domain must contain only positive values or only negative values not include zero.
+> Warning: An axis cannot have a logarithmic scale set unless its domain is strictly positive or negative, in other words the axis domain must contain only positive values or only negative values not include zero.
 
 *Returns:*
 
@@ -246,3 +246,114 @@ This method returns or changes the current axis type.
 *Default value:*
 
 *The default value for the axis type is `"rectangular"`.
+
+___
+
+#### Domain:
+
+This method returns or sets the current domain of each axis.
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisDomain()
+    axisDomain(domain)
+    axisDomain(domain, callback)
+
+*Where:*
+
+* `domain` is an object representing the axis domain, this object has the properties:
+  * `x` : An object containing the properties `start` and `end`.
+    * The property `start` is the value at the left most side of the `x` axis.
+    * The property `end` is the value at the right most side of the `x` axis.
+  * `y` : An object containing the properties `start` and `end`.
+    * The property `start` is the value at the bottom of the `y` axis.
+    * The property `end` is the value at the top of the `y` axis.
+*  `callback` is a callback function that is run after the axis domain is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Why the `end` value of the `y` axis is at the top and not the bottom? :
+> Because of the convention of having the vertical axis values increase from bottom to top, this is a convention to follow for other similar properties.
+
+> On that note, it is not necessary to have the `start` value be smaller than the `end` value. In that case, the axis "direction" will be reverted.
+
+*Returns:*
+
+* An object representing the current axis domain if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the axis domain are as follows:
+
+    {
+       x : {
+          start : -5,
+          end : 5
+       },
+       y : {
+          start : -5,
+          end : 5
+       }
+    }
+
+___
+
+#### Color:
+
+This method lets you get or set the current colors of each axis base, ticks and text independently.
+
+The `color` object has some properties that change the colors in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisColor()
+    axisColor(color)
+    axisColor(color, callback)
+
+*Where:*
+
+* `color` is an object that represent the color of each axis base, ticks and text. This object has the following properties:
+  * `axis` : a string representing the color of both whole axis.
+  * `xAxis` : a string representing the color of the whole `x` axis.
+  * `yAxis` : a string representing the color of the whole `y` axis.
+  * `base` : and object containing the following properties:
+    * `x`: a string representing the color of the `x` axis `base`.
+    * `y`: a string representing the color of the `y` axis `base`.
+  * `tick` : and object containing the following properties:
+    * `x`: a string representing the color of the `x` axis `ticks`.
+    * `y`: a string representing the color of the `y` axis `ticks`.
+  * `text` : and object containing the following properties:
+    * `x`: a string representing the color of the `x` axis `text`.
+    * `y`: a string representing the color of the `y` axis `text`.
+* `callback` is a callback function that is run after the axis color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+*Return:*
+
+* An object representing the current axis colors if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the axis color are as follows:
+(`"#000000"` represents the color `black`)
+
+    {
+       base : {
+          x : "#000000",
+          y : "#000000",
+       },
+       tick : {
+          x : "#000000",
+          y : "#000000",
+       },
+       text : {
+          x : "#000000",
+          y : "#000000",
+       }
+    }
+
+___
