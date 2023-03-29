@@ -20,7 +20,7 @@ At the moment, the library offers four chart types, including:
 * [Installation](#installation)
 * [Usage](#usage)
 * [Graph Methods](#graph-methods)
-* [Background](#background)
+  * [Background](#background)
   * [Axis](#axis)
   * [Grid](#grid)
   * [Labels](#labels)
@@ -56,7 +56,7 @@ Each graph is controlled by a single object created by calling the `graph2D` fun
     graph2D(element, options)
 
 Where
-* `element` is a div element
+* `element` is a div element.
 * `options` is an object containing the [options](#graph-options) to change the default behavior and appearance of the graph.
 
 > Note: The options object has a lot of properties and complex structure, its use is intended for copying or generate graphs from another graphs. All its properties are breake down in the `graph2D` methods, is best to use those instead.
@@ -77,7 +77,7 @@ JS:
 
 Result:
 
-![default_graph](/assets/images/default_graph.jpeg)
+![default_graph](/assets/images/default_graph.jpg)
 
 Almost every method is overcharged, so you can set or get the properties, for example calling `graph.axisType()` will return the current axis type used in the graph, and calling `graph.axisType("polar")` will set the graph axis type to polar and return a reference to the same graph object, so more methods can be chained.
 
@@ -126,3 +126,123 @@ Result:
 ![cosine_example](/assets/images/cosine_example.jpeg)
 
 The details on how to manipulate the datasets will be discussed in its [corresponding](#datasets) section.
+
+## Graph Methods
+
+### Background
+
+#### Color:
+
+This method returns or changes the graph background color.
+
+*Method:*
+
+    backgroundColor()
+    backgroundColor(color)
+    backgroundColor(color, callback)
+
+*Where:*
+
+* `color` is a string representing the background color in the format #rrggbb
+ or any of the standard color names.
+ * `callback` is a callback function that is run after the color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* A string representing the graph background color if no arguments are passed.
+* A reference to the graph object from which the method is called upon.
+
+*Default value:*
+
+* The default value for the background color is `"#ffffff"` (white)
+___
+
+#### Opacity:
+
+This method returns or changes the graph background opacity.
+
+*Method:*
+
+    backgroundOpacity()
+    backgroundOpacity(opacity)
+    backgroundOpacity(opacity, callback)
+
+*Where:*
+
+* `opacity` is a number between 0 and 1 representing the graph background opacity.
+* `callback` is a callback function that is run after the opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* A number between 0 and 1 representing the graph background opacity if no arguments are passed.
+* A reference to the graph object from which the method is called upon.
+
+*Default value:*
+
+* The default value of the background opacity is `1`
+
+___
+
+### Axis
+
+#### Position:
+
+This method returns or change the current axis position.
+
+*Method:*
+
+    axisPosition()
+    axisPosition(position)
+    axisPosition(position, callback)
+
+*Where:*
+
+* `position` is a string representing the axis position, the available options are:
+  * "center" 
+  * "bottom-left"
+  * "bottom-right"
+  * "top-left"
+  * "top-right"
+* `callback` is a callback function that is run after the axis position is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* A string representing the current axis position if no arguments are passed.
+* A reference to the graph object from which the method is called upon.
+
+*Default value:*
+
+*The default value for the axis position is `"center"`.
+
+___
+
+#### Type:
+
+This method returns or changes the current axis type.
+
+*Method:*
+
+    axisType()
+    axisType(type)
+    axisType(type, callback)
+
+*Where:*
+
+* `type` is a string representing the axis type, the available options are:
+  * "rectangular": Linear scales on both axis.
+  * "polar": Effectively the same as `"rectangular"` but  with the grid in polar representation.
+  * "x-log": Base 10 logarithmic scale on the `x` axis and linear scale on the `y` axis.
+  * "y-log": Base 10 logarithmic scale on the `y` axis and linear scale on the `x` axis.
+  * "log-log" Base 10 logarithmic scale on both axis.
+* `callback` is a callback function that is run after the axis type is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: An axis cannot have a logarithmic scale set unless its domain is strictly positive or negative, in other words the axis domain must contain only positive values or only negative values not include zero.
+
+*Returns:*
+
+* A string representing the current axis type if no arguments are passed.
+* A reference to the graph object from which the method is called upon.
+
+*Default value:*
+
+*The default value for the axis type is `"rectangular"`.
