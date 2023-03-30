@@ -129,9 +129,9 @@ The details on how to manipulate the datasets will be discussed in its [correspo
 
 ## Graph Methods
 
-### Background
+## Background
 
-#### Color:
+### Color:
 
 This method returns or changes the graph background color.
 
@@ -157,7 +157,7 @@ This method returns or changes the graph background color.
 * The default value for the background color is `"#ffffff"` (white)
 ___
 
-#### Opacity:
+### Opacity:
 
 This method returns or changes the graph background opacity.
 
@@ -183,9 +183,9 @@ This method returns or changes the graph background opacity.
 
 ___
 
-### Axis
+## Axis
 
-#### Position:
+### Position:
 
 This method returns or change the current axis position.
 
@@ -216,7 +216,7 @@ This method returns or change the current axis position.
 
 ___
 
-#### Type:
+### Type:
 
 This method returns or changes the current axis type.
 
@@ -249,7 +249,7 @@ This method returns or changes the current axis type.
 
 ___
 
-#### Domain:
+### Domain:
 
 This method returns or sets the current domain of each axis.
 It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
@@ -298,7 +298,7 @@ The default values for the axis domain are as follows:
 
 ___
 
-#### Color:
+### Color:
 
 This method lets you get or set the current colors of each axis base, ticks and text independently.
 
@@ -318,13 +318,13 @@ It is only necessary to define the values that you want to change and only that 
   * `axis` : a string representing the color of both whole axis.
   * `xAxis` : a string representing the color of the whole `x` axis.
   * `yAxis` : a string representing the color of the whole `y` axis.
-  * `base` : and object containing the following properties:
+  * `base` : an object containing the following properties:
     * `x`: a string representing the color of the `x` axis `base`.
     * `y`: a string representing the color of the `y` axis `base`.
-  * `tick` : and object containing the following properties:
+  * `tick` : an object containing the following properties:
     * `x`: a string representing the color of the `x` axis `ticks`.
     * `y`: a string representing the color of the `y` axis `ticks`.
-  * `text` : and object containing the following properties:
+  * `text` : an object containing the following properties:
     * `x`: a string representing the color of the `x` axis `text`.
     * `y`: a string representing the color of the `y` axis `text`.
 * `callback` is a callback function that is run after the axis color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
@@ -344,16 +344,291 @@ The default values for the axis color are as follows:
     {
        base : {
           x : "#000000",
-          y : "#000000",
+          y : "#000000"
        },
        tick : {
           x : "#000000",
-          y : "#000000",
+          y : "#000000"
        },
        text : {
           x : "#000000",
-          y : "#000000",
+          y : "#000000"
        }
+    }
+
+___
+
+### Opacity:
+
+This method lets you get or set the current opacities of each axis base, ticks and text independently.
+
+The `opacity` object has some properties that change the opacities in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisOpacity()
+    axisOpacity(opacity)
+    axisOpacity(opacity, callback)
+
+*Where:*
+
+* `opacity` is an object that represent the opacity of each axis base, ticks and text. This object has the following properties:
+  * `axis` : a number between 0 and 1 representing the opacity of both whole axis.
+  * `xAxis` : a number between 0 and 1 representing the opacity of the whole `x` axis.
+  * `yAxis` : a number between 0 and 1 representing the opacity of the whole `y` axis.
+  * `base` : an object containing the following properties:
+    * `x`: a number between 0 and 1 representing the opacity of the `x` axis `base`.
+    * `y`: a number between 0 and 1 representing the opacity of the `y` axis `base`.
+  * `tick` : an object containing the following properties:
+    * `x`: a number between 0 and 1 representing the opacity of the `x` axis `ticks`.
+    * `y`: a number between 0 and 1 representing the opacity of the `y` axis `ticks`.
+  * `text` : an object containing the following properties:
+    * `x`: a number between 0 and 1 representing the opacity of the `x` axis `text`.
+    * `y`: a number between 0 and 1 representing the opacity of the `y` axis `text`.
+* `callback` is a callback function that is run after the axis opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Return:*
+
+* An object representing the current axis opacities if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the axis opacity are as follows:
+
+    {
+       base : {
+          x : 1,
+          y : 1
+       },
+       tick : {
+          x : 1,
+          y : 1
+       },
+       text : {
+          x : 1,
+          y : 1
+       }
+    }
+
+___
+
+ ### Units:
+
+ This property lets you get or set the units of each axis. The units appear on each tick at the right of the number.
+
+ It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+ *Method:*
+
+     axisUnits()
+     axisUnits(units)
+     axisUnits(units, callback)
+
+*Where:*
+
+* `units` is an object containing the following properties:
+  * `x` : a string representig the `x` axis units:
+  * `y` : a string representig the `y` axis units:
+* `callback` is a callback function that is run after the axis units are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* An object representing the current axis units if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Dafault Values:*
+
+The default values for the axis units are as follow:
+
+    {
+      x : "",
+      y : ""
+    }
+
+___
+
+### Base:
+
+This metod lets you get or set the properties of each axis base.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisBase()
+    axisBase(base)
+    axisBase(base, callback)
+
+*Where:*
+
+* `base` is an object containing the following properties:
+  * `x` : an object containing the following properties:
+    * `color` : a string representing the `x` axis base color.
+    * `opacity` : a number between 0 and 1 representing the `x` axis base opacity.
+    * `width` : an integer positive number representing the line width of the `x` axis base.
+  * `y` : an object containing the following properties:
+    * `color` : a string representing the `y` axis base color.
+    * `opacity` : a number between 0 and 1 representing the `y` axis base opacity.
+    * `width` : an integer positive number representing the line width of the `y` axis base.
+* `callback` is a callback function that is run after the properties of the axis base are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+*Returns:*
+
+* An object representing the current properties of the axis base if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The default values of the properties of the axis base are as follow:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        color : "#000000",
+        opacity : 1,
+        width : 1
+      },
+      y : {
+        color : "#000000",
+        opacity : 1,
+        width : 1
+      },
+    }
+
+___
+
+### Ticks:
+
+This method lets you get or set the properties of each axis ticks.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisTicks()
+    axisTicks(tick)
+    axisTicks(tick, callback)
+
+*Where:*
+
+* `tick` : is an object with the followin properties:
+  * `x` : an object with the following properties:
+    * `color` : a string representing the color of the `x` axis ticks.
+    * `opacity` : a number between 0 and 1 representing the opacity of the `x` axis ticks.
+    * `width` : a positive integer representing the line width of the `x` axis ticks.
+    * `size` : a number representing the size in pixels of the `x` axis ticks.
+    * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
+      * The string `"auto"` to let the `graph` object decide where to put the ticks.
+      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * An array of numbers representing the location of the ticks to be displayed.
+    * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
+  * `y` : an object with the following properties:
+    * `color` : a string representing the color of the `y` axis ticks.
+    * `opacity` : a number between 0 and 1 representing the opacity of the `y` axis ticks.
+    * `width` : a positive integer representing the line width of the `y` axis ticks.
+    * `size` : a number representing the size in pixels of the `y` axis ticks.
+    * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
+      * The string `"auto"` to let the `graph` object decide where to put the ticks.
+      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * An array of numbers representing the location of the ticks to be displayed.
+    * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
+* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: If the axis position is set to `center` the tick size will be double of the `size` property. This is because in that position, the tick runs on both sides of the axis base. 
+
+*Returns:*
+
+* An object representing the current properties of the axis ticks if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the axis ticks are:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        color : "#000000",
+        opacity : 1,
+        width : 1,
+        size : 5,
+        ticks : "auto",
+        minSpacing : 45
+      },
+      y : {
+        color : "#000000",
+        opacity : 1,
+        width : 1,
+        size : 5,
+        ticks : "auto",
+        minSpacing : 45
+      },
+    }
+
+___
+
+### Text
+
+This method lets you set or get the text properties of each axis.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisText()
+    axisText(text)
+    axisText(text, callback)
+
+*Where:*
+
+* `text`: is an object containing the following properties
+  * `x`: and object with the following properties:
+    * `color`: a string representing the color of the text in the `x` axis.
+    * `opacity`: a number between 0 and 1 representing the opacity of the text in the `x` axis.
+    * `font`: a string representing the font of the text in the `x` axis.
+    * `size`: a string representing the size of the text in the `x` axis.
+  * `y`: and object with the following properties:
+    * `color`: a string representing the color of the text in the `y` axis.
+    * `opacity`: a number between 0 and 1 representing the opacity of the text in the `y` axis.
+    * `font`: a string representing the font of the text in the `y` axis.
+    * `size`: a string representing the size of the text in the `y` axis.
+* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+>Note: The `size` value can be any valid css size including em, rem, etc.
+
+*Returns:*
+
+* An object representing the current properties of the axis text if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Defaul values:*
+The defaul values for the properties of the axis text are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        color : "#000000",
+        opacity : 1,
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "10px"
+      },
+      y : {
+        color : "#000000",
+        opacity : 1,
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "10px"
+      }
     }
 
 ___
