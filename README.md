@@ -212,7 +212,7 @@ This method returns or change the current axis position.
 
 *Default value:*
 
-*The default value for the axis position is `"center"`.
+* The default value for the axis position is `"center"`.
 
 ___
 
@@ -245,7 +245,7 @@ This method returns or changes the current axis type.
 
 *Default value:*
 
-*The default value for the axis type is `"rectangular"`.
+* The default value for the axis type is `"rectangular"`.
 
 ___
 
@@ -599,7 +599,7 @@ It is only necessary to define the values that you want to change and only that 
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `y` axis.
     * `font`: a string representing the font of the text in the `y` axis.
     * `size`: a string representing the size of the text in the `y` axis.
-* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a callback function that is run after the properties of the axis text are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -629,6 +629,108 @@ The defaul values for the properties of the axis text are as follows:
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "10px"
       }
+    }
+
+___
+
+### Dynamic
+
+This method lets you set or get the dynamic properties of each axis.
+
+This method only is relevant if the axis `position` is set to `center`.
+In this position, the axis text is located below the `x` axis and at the left of the `y` axis, and the two axis intersects at the coordinate `(0,0)`.
+
+When that coordinate is no longer inside the graph area, the axis shift to remain visible and the text change positions relative to the axis base.
+
+Those two are the behaviors that this method can change.
+
+For example, in the next illustration, the axis shift when the `start` value of the `y` axis domain is bigger than zero.
+
+![axis_dynamic](/assets/gifts/axis_dynamic.gif)
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisDynamic()
+    axisDynamic(dynamic)
+    axisDynamic(dynamic, callback)
+
+*Where:*
+
+* `dynamic` is an object containing the following properties:
+  * `x`: and object with the following properties:
+    * `dynamic`: a boolean that determines whether the `x` axis text changes position relative to the base.
+    * `contained`: a boolean that determines whether the `x` axis shifts to remain visible.
+  * `y`: and object with the following properties:
+    * `dynamic`: a boolean that determines whether the `y` axis text changes position relative to the base.
+    * `contained`: a boolean that determines whether the `y` axis shifts to remain visible.
+* `callback` is a callback function that is run after the properties of the axis dynamics are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* An object representing the current properties of the axis dynamics if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Dafault values:*
+
+The default values for the properties of the axis dynamics are:
+
+    {
+      x : {
+        dynamic : true,
+        contained : true
+      },
+      y : {
+        dynamic : true,
+        contained : true
+      }
+    }
+
+___
+
+### Overlap
+
+This method lets you set or get the overlap properties of each axis.
+
+This method only is relevant if the axis `position` is set to `center`.
+In this position, the axis text may overlap with each other or with the axis itself.
+
+To enhance visibility, a little area around each text is clear, so neither the base nor ticks will render on top of the text.
+
+This method lets you modify that behavior.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    axisOverlap()
+    axisOverlap(overlap)
+    axisOverlap(overlap, callback)
+
+*Where:*
+
+* `overlap` is an object cotaining the following properties:
+  * `priority`: a string with the values `"x"` or `"y"`.  
+  * `x`: a boolean representing whether a small area arround the text of the `x` axis should be cleared.
+  * `y`: a boolean representing whether a small area arround the text of the `y` axis should be cleared.
+* `callback` is a callback function that is run after the properties of the axis overlap are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: In the case that the text of one axis overlaps with the text of the other, the one render on top will be determined by the value of the `priority` property.
+
+*Returns:*
+
+* An object representing the current properties of the axis overlap if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Dafault values:*
+
+The default values for the properties of the axis overlap are:
+
+    {
+      priority : "x",
+      x : true,
+      y : true
     }
 
 ___
