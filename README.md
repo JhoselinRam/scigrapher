@@ -138,12 +138,12 @@ This method returns or changes the graph background color.
 *Method:*
 
     backgroundColor()
-    backgroundColor(color)
-    backgroundColor(color, callback)
+    backgroundColor(option)
+    backgroundColor(option, callback)
 
 *Where:*
 
-* `color` is a string representing the background color in the format #rrggbb
+* `option` is a string representing the background color in the format #rrggbb
  or any of the standard color names.
  * `callback` is a callback function that is run after the color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
@@ -164,12 +164,12 @@ This method returns or changes the graph background opacity.
 *Method:*
 
     backgroundOpacity()
-    backgroundOpacity(opacity)
-    backgroundOpacity(opacity, callback)
+    backgroundOpacity(option)
+    backgroundOpacity(option, callback)
 
 *Where:*
 
-* `opacity` is a number between 0 and 1 representing the graph background opacity.
+* `option` is a number between 0 and 1 representing the graph background opacity.
 * `callback` is a callback function that is run after the opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 *Returns:*
@@ -192,12 +192,12 @@ This method returns or change the current axis position.
 *Method:*
 
     axisPosition()
-    axisPosition(position)
-    axisPosition(position, callback)
+    axisPosition(option)
+    axisPosition(option, callback)
 
 *Where:*
 
-* `position` is a string representing the axis position, the available options are:
+* `option` is a string representing the axis position, the available options are:
   * "center" 
   * "bottom-left"
   * "bottom-right"
@@ -223,12 +223,12 @@ This method returns or changes the current axis type.
 *Method:*
 
     axisType()
-    axisType(type)
-    axisType(type, callback)
+    axisType(option)
+    axisType(option, callback)
 
 *Where:*
 
-* `type` is a string representing the axis type, the available options are:
+* `option` is a string representing the axis type, the available options are:
   * "rectangular": Linear scales on both axis.
   * "polar": Effectively the same as `"rectangular"` but  with the grid in polar representation.
   * "x-log": Base 10 logarithmic scale on the `x` axis and linear scale on the `y` axis.
@@ -257,12 +257,12 @@ It is only necessary to define the values that you want to change and only that 
 *Method:*
 
     axisDomain()
-    axisDomain(domain)
-    axisDomain(domain, callback)
+    axisDomain(options)
+    axisDomain(options, callback)
 
 *Where:*
 
-* `domain` is an object representing the axis domain, this object has the properties:
+* `options` is an object representing the axis domain, this object has the properties:
   * `x` : An object containing the properties `start` and `end`.
     * The property `start` is the value at the left most side of the `x` axis.
     * The property `end` is the value at the right most side of the `x` axis.
@@ -300,21 +300,21 @@ ___
 
 ### Color:
 
-This method lets you get or set the current colors of each axis base, ticks and text independently.
+This method lets you set or get the current colors of each axis base, ticks and text independently.
 
-The `color` object has some properties that change the colors in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+The `options` object has some properties that change the colors in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
 
 It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
 
 *Method:*
 
     axisColor()
-    axisColor(color)
-    axisColor(color, callback)
+    axisColor(options)
+    axisColor(options, callback)
 
 *Where:*
 
-* `color` is an object that represent the color of each axis base, ticks and text. This object has the following properties:
+* `options` is an object that represent the color of each axis base, ticks and text. This object has the following properties:
   * `axis` : a string representing the color of both whole axis.
   * `xAxis` : a string representing the color of the whole `x` axis.
   * `yAxis` : a string representing the color of the whole `y` axis.
@@ -360,21 +360,21 @@ ___
 
 ### Opacity:
 
-This method lets you get or set the current opacities of each axis base, ticks and text independently.
+This method lets you set or get the current opacities of each axis base, ticks and text independently.
 
-The `opacity` object has some properties that change the opacities in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+The `options` object has some properties that change the opacities in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
 
 It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
 
 *Method:*
 
     axisOpacity()
-    axisOpacity(opacity)
-    axisOpacity(opacity, callback)
+    axisOpacity(options)
+    axisOpacity(options, callback)
 
 *Where:*
 
-* `opacity` is an object that represent the opacity of each axis base, ticks and text. This object has the following properties:
+* `options` is an object that represent the opacity of each axis base, ticks and text. This object has the following properties:
   * `axis` : a number between 0 and 1 representing the opacity of both whole axis.
   * `xAxis` : a number between 0 and 1 representing the opacity of the whole `x` axis.
   * `yAxis` : a number between 0 and 1 representing the opacity of the whole `y` axis.
@@ -417,19 +417,19 @@ ___
 
  ### Units:
 
- This property lets you get or set the units of each axis. The units appear on each tick at the right of the number.
+ This property lets you set or get the units of each axis. The units appear on each tick at the right of the number.
 
  It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
 
  *Method:*
 
      axisUnits()
-     axisUnits(units)
-     axisUnits(units, callback)
+     axisUnits(options)
+     axisUnits(options, callback)
 
 *Where:*
 
-* `units` is an object containing the following properties:
+* `options` is an object containing the following properties:
   * `x` : a string representig the `x` axis units:
   * `y` : a string representig the `y` axis units:
 * `callback` is a callback function that is run after the axis units are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
@@ -452,19 +452,19 @@ ___
 
 ### Base:
 
-This metod lets you get or set the properties of each axis base.
+This metod lets you set or get the properties of each axis base.
 
 It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
 
 *Method:*
 
     axisBase()
-    axisBase(base)
-    axisBase(base, callback)
+    axisBase(options)
+    axisBase(options, callback)
 
 *Where:*
 
-* `base` is an object containing the following properties:
+* `options` is an object containing the following properties:
   * `x` : an object containing the following properties:
     * `color` : a string representing the `x` axis base color.
     * `opacity` : a number between 0 and 1 representing the `x` axis base opacity.
@@ -504,19 +504,19 @@ ___
 
 ### Ticks:
 
-This method lets you get or set the properties of each axis ticks.
+This method lets you set or get the properties of each axis ticks.
 
 It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
 
 *Method:*
 
     axisTicks()
-    axisTicks(tick)
-    axisTicks(tick, callback)
+    axisTicks(options)
+    axisTicks(options, callback)
 
 *Where:*
 
-* `tick` : is an object with the followin properties:
+* `options` : is an object with the followin properties:
   * `x` : an object with the following properties:
     * `color` : a string representing the color of the `x` axis ticks.
     * `opacity` : a number between 0 and 1 representing the opacity of the `x` axis ticks.
@@ -574,7 +574,7 @@ The default values for the properties of the axis ticks are:
 
 ___
 
-### Text
+### Text:
 
 This method lets you set or get the text properties of each axis.
 
@@ -583,12 +583,12 @@ It is only necessary to define the values that you want to change and only that 
 *Method:*
 
     axisText()
-    axisText(text)
-    axisText(text, callback)
+    axisText(options)
+    axisText(options, callback)
 
 *Where:*
 
-* `text`: is an object containing the following properties
+* `options`: is an object containing the following properties
   * `x`: and object with the following properties:
     * `color`: a string representing the color of the text in the `x` axis.
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `x` axis.
@@ -629,6 +629,503 @@ The defaul values for the properties of the axis text are as follows:
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "10px"
       }
+    }
+
+___
+
+### Secondary Enable:
+
+This method lets you enable the secondary set of axis.
+
+Each graph have the capability of defining two sets of axis, the primary `x` and `y` axis are always defined while the secondary `x` and `y` can be defined independently.
+
+The properties of the secondary axis can be manipulated in the same way the primaries can, but the axis must be defined first and the axis `position` must *NOT* be `center`.
+
+Each dataset can decide what pair of axis use.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+> Note: `center` positioned axis cannot have secondary axis defined.
+
+*Method:*
+
+    secondaryAxisEnable()
+    secondaryAxisEnable(options)
+    secondaryAxisEnable(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `x`: a boolean that determines whether the secondary `x` axis must be enable.
+  * `y`: a boolean that determines whether the secondary `y` axis must be enable.
+* `callback` is a callback function that is run after the properties of the secondary axis enable are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The secondary axis will *not* be enabled if the axis `position` is set to `center`.
+
+*Returns:*
+
+* An object representing the current properties of the secondary axis enable if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The default values of the secondary axis enable are as follows:
+
+    {
+      x : false,
+      y : false
+    }
+
+___
+
+### Seocndary Domain:
+
+This method lets you set or get the properties of the secondary axis domain.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryAxisDomain()
+    secondaryAxisDomain(options)
+    secondaryAxisDomain(options, callback)
+
+*Where:*
+
+* `options` is an object representing the axis domain, this object has the properties:
+  * `x` : An object containing the properties `start` and `end`.
+    * The property `start` is the value at the left most side of the `x` axis.
+    * The property `end` is the value at the right most side of the `x` axis.
+  * `y` : An object containing the properties `start` and `end`.
+    * The property `start` is the value at the bottom of the `y` axis.
+    * The property `end` is the value at the top of the `y` axis.
+*  `callback` is a callback function that is run after the axis domain is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Why the `end` value of the `y` axis is at the top and not the bottom? :
+> Because of the convention of having the vertical axis values increase from bottom to top, this is a convention to follow for other similar properties.
+
+> On that note, it is not necessary to have the `start` value be smaller than the `end` value. In that case, the axis "direction" will be reverted.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Returns:*
+
+* An object representing the current secondary axis domain if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the secondary axis domain are as follows:
+
+    {
+       x : {
+          start : -5,
+          end : 5
+       },
+       y : {
+          start : -5,
+          end : 5
+       }
+    }
+
+___
+
+### Secondary Color:
+
+This method lets you set or get the current colors of each secondary axis base, ticks and text independently.
+
+The `options` object has some properties that change the colors in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryAxisColor()
+    secondaryAxisColor(options)
+    secondaryAxisColor(options, callback)
+
+*Where:*
+
+* `options` is an object that represent the color of each axis base, ticks and text. This object has the following properties:
+  * `axis` : a string representing the color of both whole axis.
+  * `xAxis` : a string representing the color of the whole `x` axis.
+  * `yAxis` : a string representing the color of the whole `y` axis.
+  * `base` : an object containing the following properties:
+    * `x`: a string representing the color of the `x` axis `base`.
+    * `y`: a string representing the color of the `y` axis `base`.
+  * `tick` : an object containing the following properties:
+    * `x`: a string representing the color of the `x` axis `ticks`.
+    * `y`: a string representing the color of the `y` axis `ticks`.
+  * `text` : an object containing the following properties:
+    * `x`: a string representing the color of the `x` axis `text`.
+    * `y`: a string representing the color of the `y` axis `text`.
+* `callback` is a callback function that is run after the axis color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Return:*
+
+* An object representing the current secondary axis colors if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the secondary axis color are as follows:
+(`"#000000"` represents the color `black`)
+
+    {
+       base : {
+          x : "#000000",
+          y : "#000000"
+       },
+       tick : {
+          x : "#000000",
+          y : "#000000"
+       },
+       text : {
+          x : "#000000",
+          y : "#000000"
+       }
+    }
+
+___
+
+### Secondary Opacity:
+
+This method lets you set or get the current opacities of each secondary axis base, ticks and text independently.
+
+The `options` object has some properties that change the opacities in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryAxisOpacity()
+    secondaryAxisOpacity(options)
+    secondaryAxisOpacity(options, callback)
+
+*Where:*
+
+* `options` is an object that represent the opacity of each axis base, ticks and text. This object has the following properties:
+  * `axis` : a number between 0 and 1 representing the opacity of both whole axis.
+  * `xAxis` : a number between 0 and 1 representing the opacity of the whole `x` axis.
+  * `yAxis` : a number between 0 and 1 representing the opacity of the whole `y` axis.
+  * `base` : an object containing the following properties:
+    * `x`: a number between 0 and 1 representing the opacity of the `x` axis `base`.
+    * `y`: a number between 0 and 1 representing the opacity of the `y` axis `base`.
+  * `tick` : an object containing the following properties:
+    * `x`: a number between 0 and 1 representing the opacity of the `x` axis `ticks`.
+    * `y`: a number between 0 and 1 representing the opacity of the `y` axis `ticks`.
+  * `text` : an object containing the following properties:
+    * `x`: a number between 0 and 1 representing the opacity of the `x` axis `text`.
+    * `y`: a number between 0 and 1 representing the opacity of the `y` axis `text`.
+* `callback` is a callback function that is run after the axis opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Return:*
+
+* An object representing the current secondary axis opacities if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the secondary axis opacity are as follows:
+
+    {
+       base : {
+          x : 1,
+          y : 1
+       },
+       tick : {
+          x : 1,
+          y : 1
+       },
+       text : {
+          x : 1,
+          y : 1
+       }
+    }
+
+___
+
+### Secondary Units:
+
+ This property lets you set or get the units of each secondary axis. The units appear on each tick at the right of the number.
+
+ It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+ *Method:*
+
+     secondaryAxisUnits()
+     secondaryAxisUnits(options)
+     secondaryAxisUnits(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `x` : a string representig the `x` axis units:
+  * `y` : a string representig the `y` axis units:
+* `callback` is a callback function that is run after the axis units are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Returns:*
+
+* An object representing the current secondary axis units if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Dafault Values:*
+
+The default values for the secondary axis units are as follow:
+
+    {
+      x : "",
+      y : ""
+    }
+
+___
+
+### Secondary Base:
+
+This metod lets you set or get the properties of each secondary axis base.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryAxisBase()
+    secondaryAxisBase(options)
+    secondaryAxisBase(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `x` : an object containing the following properties:
+    * `color` : a string representing the `x` axis base color.
+    * `opacity` : a number between 0 and 1 representing the `x` axis base opacity.
+    * `width` : an integer positive number representing the line width of the `x` axis base.
+  * `y` : an object containing the following properties:
+    * `color` : a string representing the `y` axis base color.
+    * `opacity` : a number between 0 and 1 representing the `y` axis base opacity.
+    * `width` : an integer positive number representing the line width of the `y` axis base.
+* `callback` is a callback function that is run after the properties of the axis base are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Returns:*
+
+* An object representing the current properties of the secondary axis base if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The default values of the properties of the secondary axis base are as follow:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        color : "#000000",
+        opacity : 1,
+        width : 1
+      },
+      y : {
+        color : "#000000",
+        opacity : 1,
+        width : 1
+      },
+    }
+
+___
+
+### Secondary Ticks:
+
+This method lets you set or get the properties of each secondary axis ticks.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryAxisTicks()
+    secondaryAxisTicks(options)
+    secondaryAxisTicks(options, callback)
+
+*Where:*
+
+* `options` : is an object with the followin properties:
+  * `x` : an object with the following properties:
+    * `color` : a string representing the color of the `x` axis ticks.
+    * `opacity` : a number between 0 and 1 representing the opacity of the `x` axis ticks.
+    * `width` : a positive integer representing the line width of the `x` axis ticks.
+    * `size` : a number representing the size in pixels of the `x` axis ticks.
+    * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
+      * The string `"auto"` to let the `graph` object decide where to put the ticks.
+      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * An array of numbers representing the location of the ticks to be displayed.
+    * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
+  * `y` : an object with the following properties:
+    * `color` : a string representing the color of the `y` axis ticks.
+    * `opacity` : a number between 0 and 1 representing the opacity of the `y` axis ticks.
+    * `width` : a positive integer representing the line width of the `y` axis ticks.
+    * `size` : a number representing the size in pixels of the `y` axis ticks.
+    * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
+      * The string `"auto"` to let the `graph` object decide where to put the ticks.
+      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * An array of numbers representing the location of the ticks to be displayed.
+    * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
+* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Returns:*
+
+* An object representing the current properties of the secondary axis ticks if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the secondary axis ticks are:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        color : "#000000",
+        opacity : 1,
+        width : 1,
+        size : 5,
+        ticks : "auto",
+        minSpacing : 45
+      },
+      y : {
+        color : "#000000",
+        opacity : 1,
+        width : 1,
+        size : 5,
+        ticks : "auto",
+        minSpacing : 45
+      },
+    }
+
+___
+
+### Secondary Text:
+
+This method lets you set or get the text properties of each secondary axis.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryAxisText()
+    secondaryAxisText(options)
+    secondaryAxisText(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties
+  * `x`: and object with the following properties:
+    * `color`: a string representing the color of the text in the `x` axis.
+    * `opacity`: a number between 0 and 1 representing the opacity of the text in the `x` axis.
+    * `font`: a string representing the font of the text in the `x` axis.
+    * `size`: a string representing the size of the text in the `x` axis.
+  * `y`: and object with the following properties:
+    * `color`: a string representing the color of the text in the `y` axis.
+    * `opacity`: a number between 0 and 1 representing the opacity of the text in the `y` axis.
+    * `font`: a string representing the font of the text in the `y` axis.
+    * `size`: a string representing the size of the text in the `y` axis.
+* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+>Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Returns:*
+
+* An object representing the current properties of the secondary axis text if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Defaul values:*
+The defaul values for the properties of the secondary axis text are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        color : "#000000",
+        opacity : 1,
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "10px"
+      },
+      y : {
+        color : "#000000",
+        opacity : 1,
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "10px"
+      }
+    }
+
+___
+
+### Secondary Type:
+
+This method let you set or get the properties of each secondary axis type.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryAxisType()
+    secondaryAxisType(opions)
+    secondaryAxisType(opions, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `x` : a string with the value "rectangular" or "log" representing the type of the secondary axis `x`.
+  * `y` : a string with the value "rectangular" or "log" representing the type of the secondary axis `y`.
+* `callback` is a callback function that is run after the properties of the axis type are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Warning: An axis cannot have a logarithmic scale set unless its domain is strictly positive or negative, in other words the axis domain must contain only positive values or only negative values not include zero.
+
+> Note: To change any secondary axis property, the corresponding axis must be enabled first.
+
+> Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+*Returns:*
+
+* An object representing the current properties of the secondary axis type if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The defaul values for the properties of the secondary axis type are as follows:
+
+    {
+      x : "rectangular",
+      y : "rectangular"
     }
 
 ___
