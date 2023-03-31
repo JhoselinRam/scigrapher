@@ -524,7 +524,7 @@ It is only necessary to define the values that you want to change and only that 
     * `size` : a number representing the size in pixels of the `x` axis ticks.
     * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
       * The string `"auto"` to let the `graph` object decide where to put the ticks.
-      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * A number representing the amount of ticks in the axis. The ticks will be equally spaced and will contain the start and end of the axis.
       * An array of numbers representing the location of the ticks to be displayed.
     * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
   * `y` : an object with the following properties:
@@ -534,7 +534,7 @@ It is only necessary to define the values that you want to change and only that 
     * `size` : a number representing the size in pixels of the `y` axis ticks.
     * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
       * The string `"auto"` to let the `graph` object decide where to put the ticks.
-      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * A number representing the amount of ticks in the axis. The ticks will be equally spaced and will contain the start and end of the axis.
       * An array of numbers representing the location of the ticks to be displayed.
     * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
 * `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
@@ -1076,7 +1076,7 @@ It is only necessary to define the values that you want to change and only that 
     * `size` : a number representing the size in pixels of the `x` axis ticks.
     * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
       * The string `"auto"` to let the `graph` object decide where to put the ticks.
-      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * A number representing the amount of ticks in the axis. The ticks will be equally spaced and will contain the start and end of the axis.
       * An array of numbers representing the location of the ticks to be displayed.
     * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
   * `y` : an object with the following properties:
@@ -1086,7 +1086,7 @@ It is only necessary to define the values that you want to change and only that 
     * `size` : a number representing the size in pixels of the `y` axis ticks.
     * `ticks`: this property controls how many ticks will be displayed, the value can be one of the following options:
       * The string `"auto"` to let the `graph` object decide where to put the ticks.
-      * A number representing the amount of ticks in the axis. The ticks will be equidistant and will contain the start and end of the axis.
+      * A number representing the amount of ticks in the axis. The ticks will be equally spaced and will contain the start and end of the axis.
       * An array of numbers representing the location of the ticks to be displayed.
     * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
 * `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
@@ -1228,6 +1228,257 @@ The defaul values for the properties of the secondary axis type are as follows:
     {
       x : "rectangular",
       y : "rectangular"
+    }
+
+___
+
+## Grid
+
+The graph can define the use of grids to improve the data reading. There are two types of grids:
+
+* `Primary`: The primary grid runs along the axis ticks.
+* `Secondary`: The secondary grid runs in between the axis ticks.
+
+Each grid have an `x` and `y` component, and runs perpendicular to its corresponding axis.
+
+For example, the `x` component of the `primary` grid is composed of parallel vertical lines extending the `x` axis ticks.
+
+> Note: If the axis type is set to `polar` the grid behavior changes.
+
+In the case that the axis position is set to `polar`, then the behavior of the grids are as follows:
+
+* `Primary`: 
+  * The `x` component of the primary grid is composed of concentric circles around the origin with radii equal to each tick in the `x` direction.
+  * The `y` component of the primary grid is composed of rays coming out of the origin with equal angle variation.
+
+* `Secondary`: 
+  * The `x` component of the secondary grid is composed of concentric circles arround the origin with raii equal to values in between the ticks in the `x` direction.
+  * The `y` component of the secondary grid is composed of rays coming out of the origin, with equal angle variation in between each ray of the `y` component of the primary grid.
+
+The `x` component of the grids is meant to improve the reading of the radial component of the data, while the `y` component improves the reading of the angle data.
+
+___
+
+### Color:
+
+This method let you set or get the color properties of each grid.
+
+The `options` object has some properties that change the colors in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    gridColor()
+    gridColor(options)
+    gridColor(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `grid`: a string representing the color of both whole grids.
+  * `primary:` a string representing the color of the whole `primary` grid.
+  * `secondary:` a string representing the color of the whole `secondary` grid.
+  * `x`: an object with the following properties:
+    * `primary`: a string representing the color of the `x` component of the `primary` grid.
+    * `secondary`: a string representing the color of the `x` component of the `secondary` grid.
+  * `y`: an object with the following properties:
+    * `primary`: a string representing the color of the `y` component of the `primary` grid.
+    * `secondary`: a string representing the color of the `y` component of the `secondary` grid.
+* `callback` is a callback function that is run after the color properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+*Returns:*
+
+* An object representing the current color properties of the grids if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The defaul values for the color properties of the grids are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        primary : "#000000",
+        secondary : "#000000",
+      },
+      y : {
+        primary : "#000000",
+        secondary : "#000000",
+      }
+    }
+
+___
+
+### Opacity:
+
+This method let you set or get the opacity properties of each grid.
+
+The `options` object has some properties that change the opacities in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    gridOpacity()
+    gridOpacity(options)
+    gridOpacity(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `grid`: a number representing the opacity of both whole grids.
+  * `primary:` a number representing the opacity of the whole `primary` grid.
+  * `secondary:` a number representing the opacity of the whole `secondary` grid.
+  * `x`: an object with the following properties:
+    * `primary`: a number representing the opacity of the `x` component of the `primary` grid.
+    * `secondary`: a number representing the opacity of the `x` component of the `secondary` grid.
+  * `y`: an object with the following properties:
+    * `primary`: a number representing the opacity of the `y` component of the `primary` grid.
+    * `secondary`: a number representing the opacity of the `y` component of the `secondary` grid.
+* `callback` is a callback function that is run after the opacity properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The value of the opacity must be a number between 0 and 1.
+
+*Returns:*
+
+* An object representing the current opacity properties of the grids if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The defaul values for the color properties of the grids are as follows:
+
+    {
+      x : {
+        primary : 0.2,
+        secondary : 0.1,
+      },
+      y : {
+        primary : 0.2,
+        secondary : 0.1,
+      }
+    }
+
+___
+
+### Style:
+
+This method let you set or get the style properties of each grid.
+
+The `options` object has some properties that change the styles in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    gridStyle()
+    gridStyle(options)
+    gridStyle(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `grid`: a string representing the style of both whole grids.
+  * `primary:` a string representing the style of the whole `primary` grid.
+  * `secondary:` a string representing the style of the whole `secondary` grid.
+  * `x`: an object with the following properties:
+    * `primary`: a string representing the style of the `x` component of the `primary` grid.
+    * `secondary`: a string representing the style of the `x` component of the `secondary` grid.
+  * `y`: an object with the following properties:
+    * `primary`: a string representing the style of the `y` component of the `primary` grid.
+    * `secondary`: a string representing the style of the `y` component of the `secondary` grid.
+* `callback` is a callback function that is run after the style properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* An object representing the current style properties of the grids if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The defaul values for the style properties of the grids are as follows:
+
+    {
+      x : {
+        primary : "solid",
+        secondary : "dot",
+      },
+      y : {
+        primary : "solid",
+        secondary : "dot",
+      }
+    }
+
+___
+
+### Width:
+
+This method let you set or get the width properties of each grid.
+
+The `options` object has some properties that change the widths in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    gridWidth()
+    gridWidth(options)
+    gridWidth(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `grid`: a number representing the width of both whole grids.
+  * `primary:` a number representing the width of the whole `primary` grid.
+  * `secondary:` a number representing the width of the whole `secondary` grid.
+  * `x`: an object with the following properties:
+    * `primary`: a number representing the width of the `x` component of the `primary` grid.
+    * `secondary`: a number representing the width of the `x` component of the `secondary` grid.
+  * `y`: an object with the following properties:
+    * `primary`: a number representing the width of the `y` component of the `primary` grid.
+    * `secondary`: a number representing the width of the `y` component of the `secondary` grid.
+* `callback` is a callback function that is run after the width properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The value of the width must be a positive integer.
+
+*Returns:*
+
+* An object representing the current width properties of the grids if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default Values:*
+
+The defaul values for the width properties of the grids are as follows:
+
+    {
+      x : {
+        primary : 1,
+        secondary : 1,
+      },
+      y : {
+        primary : 1,
+        secondary : 1,
+      }
     }
 
 ___
