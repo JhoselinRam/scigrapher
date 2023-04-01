@@ -1591,8 +1591,8 @@ It is only necessary to define the values that you want to change and only that 
      * `opacity`: a number representing the opacity of the whole grid.
      * `width`: a number representing the line width of the whole grid.
      * `style`: a string representing the line style of the whole grid.
-     * `density`: this property controls in how many parts each tick is subdivided into, it can have one of these values:
-       * The string `auto` to compute the optimal number of divisions automatically.
+     * `density`: this property controls how many parts each tick is subdivided into, it can have one of these values:
+       * The string `"auto"` to compute the optimal number of divisions automatically.
        * A number representing how many divisions to make on each tick.
      * `minSpacing`: a number that represent the minimum length in pixels that a subdivision can have. This property is only relevant when the `density` value is set to `"auto"`.
      * `maxDensity`: a number that represents the maximum number of subdivision that a tick can have. This property is only relevant when the `density` value is set to `"auto"`.
@@ -1602,8 +1602,8 @@ It is only necessary to define the values that you want to change and only that 
      * `opacity`: a number representing the opacity of the grid `x` component.
      * `width`: a number representing the line width of the grid `x` component.
      * `style`: a string representing the line style of the grid `x` component.
-     * `density`: this property controls in how many parts each tick is subdivided into, it can have one of these values:
-       * The string `auto` to compute the optimal number of divisions automatically.
+     * `density`: this property controls how many parts each tick is subdivided into, it can have one of these values:
+       * The string `"auto"` to compute the optimal number of divisions automatically.
        * A number representing how many divisions to make on each tick.
      * `minSpacing`: a number that represent the minimum length in pixels that a subdivision can have. This property is only relevant when the `density` value is set to `"auto"`.
      * `maxDensity`: a number that represents the maximum number of subdivision that a tick can have. This property is only relevant when the `density` value is set to `"auto"`.
@@ -1613,8 +1613,8 @@ It is only necessary to define the values that you want to change and only that 
      * `opacity`: a number representing the opacity of the grid `y` component.
      * `width`: a number representing the line width of the grid `y` component.
      * `style`: a string representing the line style of the grid `y` component.
-     * `density`: this property controls in how many parts each tick is subdivided into, it can have one of these values:
-       * The string `auto` to compute the optimal number of divisions automatically.
+     * `density`: this property controls how many parts each tick is subdivided into, it can have one of these values:
+       * The string `"auto"` to compute the optimal number of divisions automatically.
        * A number representing how many divisions to make on each tick.
      * `minSpacing`: a number that represent the minimum length in pixels that a subdivision can have. This property is only relevant when the `density` value is set to `"auto"`.
      * `maxDensity`: a number that represents the maximum number of subdivision that a tick can have. This property is only relevant when the `density` value is set to `"auto"`.
@@ -1628,9 +1628,9 @@ It is only necessary to define the values that you want to change and only that 
 
 > Note: The properties `minSpacing` and `maxDensity` are only relevant when the `density` property is set to `"auto"`, and its values must be a positive integer.
 
-> Note: The values of the property `density`, in not set to `"auto"`, must be a positive integer.
+> Note: The values of the property `density`, if not set to `"auto"`, must be a positive integer.
 
-If the graph is using `polar` as the axis `type`, the value of `density` represents the amount of subdivision of the angle grid, in this case if is set to `auto` there will be always four subdivisions.
+If the graph is using `polar` as the axis `type`, the value of `density` represents the amount of subdivision of the angle grid, in this case if is set to `"auto"` there will be always four subdivisions.
 
 The style can be represented with one of the following options:
 
@@ -1681,5 +1681,35 @@ The defaul values for the properties of the secondary grid are as follows:
         maxDensity : 5
       }
     }
+
+___
+
+### Polar
+
+This method lets you set or get the amount of divisions in the main grid if the axis `type` is set to `center`.
+
+This only affects the `y` component of the `primary` grid. The angle divisions always start from the `x` axis.
+
+*Method:*
+
+    polarGrid()
+    polarGrid(option)
+    polarGrid(option, callback)
+
+*Where:*
+
+* `option` is a number representing the number of main divisions in the angle grid.
+* `callback` is a callback function that is run after the grid polar property is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: `option` must be a positive integer, this property is only relevant when the axis `type` is set to `polar`.
+
+*Returns:*
+
+* A number representing the number of main divisions in the angle grid.
+* A reference to the graph object from which the method is called upon.
+
+*Default Value:*
+
+* The defaul values for this property is: `16`.
 
 ___

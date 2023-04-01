@@ -232,7 +232,7 @@ function gridWidth(width : Grid_Modifier<number> | void, callback?:graphCallback
 }
 
 //---------------------------------------------
-//---------------------------------------------
+//-------------- Polar Grid -------------------
 
     function polarGrid(density : number, callback?:graphCallback) : Graph2D;
     function polarGrid(arg : void) : number;
