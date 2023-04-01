@@ -1395,7 +1395,7 @@ It is only necessary to define the values that you want to change and only that 
 The style can be represented with one of the following options:
 
 |Style   |Result   |
-|:-------|:-------:|
+|:-------:|:-------:|
 |`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
 |`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
 |`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
@@ -1478,6 +1478,207 @@ The defaul values for the width properties of the grids are as follows:
       y : {
         primary : 1,
         secondary : 1,
+      }
+    }
+
+___
+
+### Primary
+
+This method lets you set or get all properties of the primary grid.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    primaryGrid()
+    primaryGrid(options)
+    primaryGrid(options, callback)
+
+*Where:*
+
+* `options` is an object with the following properties:
+  * `grid`: an object with the properties:
+     * `enable`: a boolean that determines whether the whole gid should be enabled.
+     * `color`: a string representing the color of the whole grid.
+     * `opacity`: a number representing the opacity of the whole grid.
+     * `width`: a number representing the line width of the whole grid.
+     * `style`: a string representing the line style of the whole grid.
+  * `x`: an object with the properties:
+    * `enable`: a boolean that determines whether the grid `x` component should be enabled.
+     * `color`: a string representing the color of the grid `x` component.
+     * `opacity`: a number representing the opacity of the grid `x` component.
+     * `width`: a number representing the line width of the grid `x` component.
+     * `style`: a string representing the line style of the grid `x` component.
+  * `y`: an object with the properties:
+    * `enable`: a boolean that determines whether the grid `y` component should be enabled.
+     * `color`: a string representing the color of the grid `y` component.
+     * `opacity`: a number representing the opacity of the grid `y` component.
+     * `width`: a number representing the line width of the grid `y` component.
+     * `style`: a string representing the line style of the grid `y` component.
+* `callback` is a callback function that is run after the grid properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The value of the opacity must be a number between 0 and 1.
+
+> Note: The value of the width must be a positive integer.
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* An object representing the current properties of the primary grid if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Defaul Values:*
+
+The defaul values for the properties of the primary grid are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        enable : true,
+        color : "#000000",
+        opacity : 0.2,
+        width : 1,
+        style : "solid"
+      },
+      y : {
+        enable : true,
+        color : "#000000",
+        opacity : 0.2,
+        width : 1,
+        style : "solid"
+      }
+    }
+
+___
+
+### Secondary
+
+This method lets you set or get all properties of the secondary grid.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    secondaryGrid()
+    secondaryGrid(options)
+    secondaryGrid(options, callback)
+
+*Where:*
+
+* `options` is an object with the following properties:
+  * `grid`: an object with the properties:
+     * `enable`: a boolean that determines whether the whole gid should be enabled.
+     * `color`: a string representing the color of the whole grid.
+     * `opacity`: a number representing the opacity of the whole grid.
+     * `width`: a number representing the line width of the whole grid.
+     * `style`: a string representing the line style of the whole grid.
+     * `density`: this property controls in how many parts each tick is subdivided into, it can have one of these values:
+       * The string `auto` to compute the optimal number of divisions automatically.
+       * A number representing how many divisions to make on each tick.
+     * `minSpacing`: a number that represent the minimum length in pixels that a subdivision can have. This property is only relevant when the `density` value is set to `"auto"`.
+     * `maxDensity`: a number that represents the maximum number of subdivision that a tick can have. This property is only relevant when the `density` value is set to `"auto"`.
+  * `x`: an object with the properties:
+    * `enable`: a boolean that determines whether the grid `x` component should be enabled.
+     * `color`: a string representing the color of the grid `x` component.
+     * `opacity`: a number representing the opacity of the grid `x` component.
+     * `width`: a number representing the line width of the grid `x` component.
+     * `style`: a string representing the line style of the grid `x` component.
+     * `density`: this property controls in how many parts each tick is subdivided into, it can have one of these values:
+       * The string `auto` to compute the optimal number of divisions automatically.
+       * A number representing how many divisions to make on each tick.
+     * `minSpacing`: a number that represent the minimum length in pixels that a subdivision can have. This property is only relevant when the `density` value is set to `"auto"`.
+     * `maxDensity`: a number that represents the maximum number of subdivision that a tick can have. This property is only relevant when the `density` value is set to `"auto"`.
+  * `y`: an object with the properties:
+    * `enable`: a boolean that determines whether the grid `y` component should be enabled.
+     * `color`: a string representing the color of the grid `y` component.
+     * `opacity`: a number representing the opacity of the grid `y` component.
+     * `width`: a number representing the line width of the grid `y` component.
+     * `style`: a string representing the line style of the grid `y` component.
+     * `density`: this property controls in how many parts each tick is subdivided into, it can have one of these values:
+       * The string `auto` to compute the optimal number of divisions automatically.
+       * A number representing how many divisions to make on each tick.
+     * `minSpacing`: a number that represent the minimum length in pixels that a subdivision can have. This property is only relevant when the `density` value is set to `"auto"`.
+     * `maxDensity`: a number that represents the maximum number of subdivision that a tick can have. This property is only relevant when the `density` value is set to `"auto"`.
+* `callback` is a callback function that is run after the grid properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The value of the opacity must be a number between 0 and 1.
+
+> Note: The value of the width must be a positive integer.
+
+> Note: The properties `minSpacing` and `maxDensity` are only relevant when the `density` property is set to `"auto"`, and its values must be a positive integer.
+
+> Note: The values of the property `density`, in not set to `"auto"`, must be a positive integer.
+
+If the graph is using `polar` as the axis `type`, the value of `density` represents the amount of subdivision of the angle grid, in this case if is set to `auto` there will be always four subdivisions.
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* An object representing the current properties of the secondary grid if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Defaul Values:*
+
+The defaul values for the properties of the secondary grid are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      x : {
+        enable : true,
+        color : "#000000",
+        opacity : 0.1,
+        width : 1,
+        style : "dot",
+        density : "auto",
+        minSpacing : 20,
+        maxDensity : 5
+      },
+      y : {
+        enable : true,
+        color : "#000000",
+        opacity : 0.1,
+        width : 1,
+        style : "dot",
+        density : "auto",
+        minSpacing : 20,
+        maxDensity : 5
       }
     }
 
