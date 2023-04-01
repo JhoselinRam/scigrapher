@@ -48,6 +48,8 @@ At the moment, the library offers four chart types, including:
 
 ## Installation
 
+Not available yet. Some minor bugs are being patch.
+
 ## Usage
 
 Each graph is controlled by a single object created by calling the `graph2D` function.
@@ -145,7 +147,7 @@ This method returns or changes the graph background color.
 
 * `option` is a string representing the background color in the format #rrggbb
  or any of the standard color names.
- * `callback` is a callback function that is run after the color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+ * `callback` is a function that is run after the color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 *Returns:*
 
@@ -170,7 +172,7 @@ This method returns or changes the graph background opacity.
 *Where:*
 
 * `option` is a number between 0 and 1 representing the graph background opacity.
-* `callback` is a callback function that is run after the opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 *Returns:*
 
@@ -203,7 +205,7 @@ This method returns or change the current axis position.
   * "bottom-right"
   * "top-left"
   * "top-right"
-* `callback` is a callback function that is run after the axis position is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis position is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 *Returns:*
 
@@ -234,7 +236,7 @@ This method returns or changes the current axis type.
   * "x-log": Base 10 logarithmic scale on the `x` axis and linear scale on the `y` axis.
   * "y-log": Base 10 logarithmic scale on the `y` axis and linear scale on the `x` axis.
   * "log-log" Base 10 logarithmic scale on both axis.
-* `callback` is a callback function that is run after the axis type is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis type is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Warning: An axis cannot have a logarithmic scale set unless its domain is strictly positive or negative, in other words the axis domain must contain only positive values or only negative values not include zero.
 
@@ -269,7 +271,7 @@ It is only necessary to define the values that you want to change and only that 
   * `y` : An object containing the properties `start` and `end`.
     * The property `start` is the value at the bottom of the `y` axis.
     * The property `end` is the value at the top of the `y` axis.
-*  `callback` is a callback function that is run after the axis domain is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+*  `callback` is a function that is run after the axis domain is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Why the `end` value of the `y` axis is at the top and not the bottom? :
 > Because of the convention of having the vertical axis values increase from bottom to top, this is a convention to follow for other similar properties.
@@ -327,7 +329,7 @@ It is only necessary to define the values that you want to change and only that 
   * `text` : an object containing the following properties:
     * `x`: a string representing the color of the `x` axis `text`.
     * `y`: a string representing the color of the `y` axis `text`.
-* `callback` is a callback function that is run after the axis color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -387,7 +389,7 @@ It is only necessary to define the values that you want to change and only that 
   * `text` : an object containing the following properties:
     * `x`: a number between 0 and 1 representing the opacity of the `x` axis `text`.
     * `y`: a number between 0 and 1 representing the opacity of the `y` axis `text`.
-* `callback` is a callback function that is run after the axis opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 *Return:*
 
@@ -432,7 +434,7 @@ ___
 * `options` is an object containing the following properties:
   * `x` : a string representig the `x` axis units:
   * `y` : a string representig the `y` axis units:
-* `callback` is a callback function that is run after the axis units are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis units are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 *Returns:*
 
@@ -473,7 +475,7 @@ It is only necessary to define the values that you want to change and only that 
     * `color` : a string representing the `y` axis base color.
     * `opacity` : a number between 0 and 1 representing the `y` axis base opacity.
     * `width` : an integer positive number representing the line width of the `y` axis base.
-* `callback` is a callback function that is run after the properties of the axis base are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis base are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -537,7 +539,7 @@ It is only necessary to define the values that you want to change and only that 
       * A number representing the amount of ticks in the axis. The ticks will be equally spaced and will contain the start and end of the axis.
       * An array of numbers representing the location of the ticks to be displayed.
     * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
-* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -599,7 +601,7 @@ It is only necessary to define the values that you want to change and only that 
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `y` axis.
     * `font`: a string representing the font of the text in the `y` axis.
     * `size`: a string representing the size of the text in the `y` axis.
-* `callback` is a callback function that is run after the properties of the axis text are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis text are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -665,7 +667,7 @@ It is only necessary to define the values that you want to change and only that 
   * `y`: and object with the following properties:
     * `dynamic`: a boolean that determines whether the `y` axis text changes position relative to the base.
     * `contained`: a boolean that determines whether the `y` axis shifts to remain visible.
-* `callback` is a callback function that is run after the properties of the axis dynamics are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis dynamics are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 *Returns:*
 
@@ -714,7 +716,7 @@ It is only necessary to define the values that you want to change and only that 
   * `priority`: a string with the values `"x"` or `"y"`.  
   * `x`: a boolean representing whether a small area arround the text of the `x` axis should be cleared.
   * `y`: a boolean representing whether a small area arround the text of the `y` axis should be cleared.
-* `callback` is a callback function that is run after the properties of the axis overlap are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis overlap are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: In the case that the text of one axis overlaps with the text of the other, the one render on top will be determined by the value of the `priority` property.
 
@@ -760,7 +762,7 @@ It is only necessary to define the values that you want to change and only that 
 * `options` is an object containing the following properties:
   * `x`: a boolean that determines whether the secondary `x` axis must be enable.
   * `y`: a boolean that determines whether the secondary `y` axis must be enable.
-* `callback` is a callback function that is run after the properties of the secondary axis enable are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the secondary axis enable are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The secondary axis will *not* be enabled if the axis `position` is set to `center`.
 
@@ -801,7 +803,7 @@ It is only necessary to define the values that you want to change and only that 
   * `y` : An object containing the properties `start` and `end`.
     * The property `start` is the value at the bottom of the `y` axis.
     * The property `end` is the value at the top of the `y` axis.
-*  `callback` is a callback function that is run after the axis domain is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+*  `callback` is a function that is run after the axis domain is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Why the `end` value of the `y` axis is at the top and not the bottom? :
 > Because of the convention of having the vertical axis values increase from bottom to top, this is a convention to follow for other similar properties.
@@ -863,7 +865,7 @@ It is only necessary to define the values that you want to change and only that 
   * `text` : an object containing the following properties:
     * `x`: a string representing the color of the `x` axis `text`.
     * `y`: a string representing the color of the `y` axis `text`.
-* `callback` is a callback function that is run after the axis color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis color is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -927,7 +929,7 @@ It is only necessary to define the values that you want to change and only that 
   * `text` : an object containing the following properties:
     * `x`: a number between 0 and 1 representing the opacity of the `x` axis `text`.
     * `y`: a number between 0 and 1 representing the opacity of the `y` axis `text`.
-* `callback` is a callback function that is run after the axis opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis opacity is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: To change any secondary axis property, the corresponding axis must be enabled first.
 
@@ -976,7 +978,7 @@ ___
 * `options` is an object containing the following properties:
   * `x` : a string representig the `x` axis units:
   * `y` : a string representig the `y` axis units:
-* `callback` is a callback function that is run after the axis units are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the axis units are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: To change any secondary axis property, the corresponding axis must be enabled first.
 
@@ -1021,7 +1023,7 @@ It is only necessary to define the values that you want to change and only that 
     * `color` : a string representing the `y` axis base color.
     * `opacity` : a number between 0 and 1 representing the `y` axis base opacity.
     * `width` : an integer positive number representing the line width of the `y` axis base.
-* `callback` is a callback function that is run after the properties of the axis base are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis base are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -1089,7 +1091,7 @@ It is only necessary to define the values that you want to change and only that 
       * A number representing the amount of ticks in the axis. The ticks will be equally spaced and will contain the start and end of the axis.
       * An array of numbers representing the location of the ticks to be displayed.
     * `minSpacing`: If the `ticks` property is set to `"auto"` controls the minimum space in pixels that the ticks can have between them, otherwise it has no effect.
-* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -1153,7 +1155,7 @@ It is only necessary to define the values that you want to change and only that 
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `y` axis.
     * `font`: a string representing the font of the text in the `y` axis.
     * `size`: a string representing the size of the text in the `y` axis.
-* `callback` is a callback function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -1208,7 +1210,7 @@ It is only necessary to define the values that you want to change and only that 
 * `options` is an object containing the following properties:
   * `x` : a string with the value "rectangular" or "log" representing the type of the secondary axis `x`.
   * `y` : a string with the value "rectangular" or "log" representing the type of the secondary axis `y`.
-* `callback` is a callback function that is run after the properties of the axis type are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the properties of the axis type are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Warning: An axis cannot have a logarithmic scale set unless its domain is strictly positive or negative, in other words the axis domain must contain only positive values or only negative values not include zero.
 
@@ -1285,7 +1287,7 @@ It is only necessary to define the values that you want to change and only that 
   * `y`: an object with the following properties:
     * `primary`: a string representing the color of the `y` component of the `primary` grid.
     * `secondary`: a string representing the color of the `y` component of the `secondary` grid.
-* `callback` is a callback function that is run after the color properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the color properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -1338,7 +1340,7 @@ It is only necessary to define the values that you want to change and only that 
   * `y`: an object with the following properties:
     * `primary`: a number representing the opacity of the `y` component of the `primary` grid.
     * `secondary`: a number representing the opacity of the `y` component of the `secondary` grid.
-* `callback` is a callback function that is run after the opacity properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the opacity properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The value of the opacity must be a number between 0 and 1.
 
@@ -1390,7 +1392,7 @@ It is only necessary to define the values that you want to change and only that 
   * `y`: an object with the following properties:
     * `primary`: a string representing the style of the `y` component of the `primary` grid.
     * `secondary`: a string representing the style of the `y` component of the `secondary` grid.
-* `callback` is a callback function that is run after the style properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the style properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 The style can be represented with one of the following options:
 
@@ -1457,7 +1459,7 @@ It is only necessary to define the values that you want to change and only that 
   * `y`: an object with the following properties:
     * `primary`: a number representing the width of the `y` component of the `primary` grid.
     * `secondary`: a number representing the width of the `y` component of the `secondary` grid.
-* `callback` is a callback function that is run after the width properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the width properties of the grids are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The value of the width must be a positive integer.
 
@@ -1483,7 +1485,7 @@ The defaul values for the width properties of the grids are as follows:
 
 ___
 
-### Primary
+### Primary:
 
 This method lets you set or get all properties of the primary grid.
 
@@ -1516,7 +1518,7 @@ It is only necessary to define the values that you want to change and only that 
      * `opacity`: a number representing the opacity of the grid `y` component.
      * `width`: a number representing the line width of the grid `y` component.
      * `style`: a string representing the line style of the grid `y` component.
-* `callback` is a callback function that is run after the grid properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the grid properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -1570,7 +1572,7 @@ The defaul values for the properties of the primary grid are as follows:
 
 ___
 
-### Secondary
+### Secondary:
 
 This method lets you set or get all properties of the secondary grid.
 
@@ -1618,7 +1620,7 @@ It is only necessary to define the values that you want to change and only that 
        * A number representing how many divisions to make on each tick.
      * `minSpacing`: a number that represent the minimum length in pixels that a subdivision can have. This property is only relevant when the `density` value is set to `"auto"`.
      * `maxDensity`: a number that represents the maximum number of subdivision that a tick can have. This property is only relevant when the `density` value is set to `"auto"`.
-* `callback` is a callback function that is run after the grid properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `callback` is a function that is run after the grid properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
@@ -1684,7 +1686,7 @@ The defaul values for the properties of the secondary grid are as follows:
 
 ___
 
-### Polar
+### Polar:
 
 This method lets you set or get the amount of divisions in the main grid if the axis `type` is set to `center`.
 
@@ -1698,18 +1700,271 @@ This only affects the `y` component of the `primary` grid. The angle divisions a
 
 *Where:*
 
-* `option` is a number representing the number of main divisions in the angle grid.
-* `callback` is a callback function that is run after the grid polar property is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+* `option` is a number representing the number of main divisions in the angle grid if no arguments are pass.
+* `callback` is a function that is run after the grid polar property is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: `option` must be a positive integer, this property is only relevant when the axis `type` is set to `polar`.
 
 *Returns:*
 
-* A number representing the number of main divisions in the angle grid.
+* A number representing the number of main divisions in the angle grid if no arguments are pass.
 * A reference to the graph object from which the method is called upon.
 
 *Default Value:*
 
 * The defaul values for this property is: `16`.
+
+___
+
+## Labels
+
+Currently, the available labels are:
+
+* `Title`: Located at the top of the graph.
+* `Subtitle`: Located below the `Title`.
+* `x Label`: Located beside the `x` axis.
+* `y Label`: Located beside the `y` axis.
+* `Secondary x Label`: Located beside the `x` secondary axis.
+* `Secondary y Label`: Located beside the `y` secondary axis.
+
+The `Title` and `Subtitle` can be set at any time, while the `x Label` and `y Label` can be set only when the axis `position` is *NOT* set to `center`.
+
+The secondary labels will render only if the corresponding axis is enabled.
+
+The graph `client` area will change to acomodate the labels.
+
+___
+
+### Title:
+
+This method lets you set or get the properties of the title.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    title()
+    title(options)
+    title(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `enable`: a boolean that determines whether the `title` mus be unabled.
+  * `text`: a string representing the text to show as a `title`.
+  * `font`: a string representing the font of the `title`.
+  * `size`: a string representing the size off the `title`.
+  * `color`: a string representing the color of the `title`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `title`.
+  * `filled`: a boolean that determines whether the text must be filled or just outlined.
+  * `position`: this property controls the relative position of the `title`, can be one of the following values:
+    * `"start"`.
+    * `"center"`.
+    * `"end"`.
+* `callback` is a function that is run after the title properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+> Note: The `size` value can be any valid css size including em, rem, etc.
+
+*Returns*:
+
+* `undefined` if the `title` is not defined yet and no arguments are pass.
+* An object representing the properties of the `title` if no arguments are pass.
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `title` are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      enable : true,
+      text : "",
+      font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+      size : "25px",
+      color : "#000000",
+      opacity : 1,
+      filled : true,
+      position : "start"
+    }
+
+___
+
+### Subtitle:
+
+This method lets you set or get the properties of the subtitle.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    subtitle()
+    subtitle(options)
+    subtitle(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `enable`: a boolean that determines whether the `subtitle` mus be unabled.
+  * `text`: a string representing the text to show as a `subtitle`.
+  * `font`: a string representing the font of the `subtitle`.
+  * `size`: a string representing the size off the `subtitle`.
+  * `color`: a string representing the color of the `subtitle`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `subtitle`.
+  * `filled`: a boolean that determines whether the text must be filled or just outlined.
+  * `position`: this property controls the relative position of the `subtitle`, can be one of the following values:
+    * `"start"`.
+    * `"center"`.
+    * `"end"`.
+* `callback` is a function that is run after the subtitle properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+> Note: The `size` value can be any valid css size including em, rem, etc.
+
+*Returns*:
+
+* `undefined` if the `subtitle` is not defined yet and no arguments are pass.
+* An object representing the properties of the `subtitle` if no arguments are pass.
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `subtitle` are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      enable : true,
+      text : "",
+      font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+      size : "15px",
+      color : "#000000",
+      opacity : 1,
+      filled : true,
+      position : "start"
+    }
+
+___
+
+### x Label:
+
+This method lets you set or get the properties of the x label.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    xLabel()
+    xLabel(options)
+    xLabel(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `enable`: a boolean that determines whether the `x label` mus be unabled.
+  * `text`: a string representing the text to show as a `x label`.
+  * `font`: a string representing the font of the `x label`.
+  * `size`: a string representing the size off the `x label`.
+  * `color`: a string representing the color of the `x label`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `x label`.
+  * `filled`: a boolean that determines whether the text must be filled or just outlined.
+  * `position`: this property controls the relative position of the `x label`, can be one of the following values:
+    * `"start"`.
+    * `"center"`.
+    * `"end"`.
+* `callback` is a function that is run after the x label properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+> Note: The `size` value can be any valid css size including em, rem, etc.
+
+
+
+*Returns*:
+
+* `undefined` if the `x label` is not defined yet and no arguments are pass.
+* An object representing the properties of the `x label` if no arguments are pass.
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `x label` are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      enable : true,
+      text : "",
+      font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+      size : "15px",
+      color : "#000000",
+      opacity : 1,
+      filled : true,
+      position : "center"
+    }
+
+___
+
+### y Label:
+
+This method lets you set or get the properties of the y label.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    yLabel()
+    yLabel(options)
+    yLabel(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `enable`: a boolean that determines whether the `y label` mus be unabled.
+  * `text`: a string representing the text to show as a `y label`.
+  * `font`: a string representing the font of the `y label`.
+  * `size`: a string representing the size off the `y label`.
+  * `color`: a string representing the color of the `y label`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `y label`.
+  * `filled`: a boolean that determines whether the text must be filled or just outlined.
+  * `position`: this property controls the relative position of the `y label`, can be one of the following values:
+    * `"start"`.
+    * `"center"`.
+    * `"end"`.
+* `callback` is a function that is run after the y label properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+>Note: The `size` value can be any valid css size including em, rem, etc.
+
+*Returns*:
+
+* `undefined` if the `y label` is not defined yet and no arguments are pass.
+* An object representing the properties of the `y label` if no arguments are pass.
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `y label` are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      enable : true,
+      text : "",
+      font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+      size : "15px",
+      color : "#000000",
+      opacity : 1,
+      filled : true,
+      position : "center"
+    }
 
 ___
