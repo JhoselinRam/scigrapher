@@ -28,7 +28,7 @@ At the moment, the library offers four chart types, including:
   * [Graph Properties](#graph-properties)
   * [Readonly Methods](#readonly-methods)
 * [Datasets](#datasets)
-  * [Line Chart](#linechart)
+  * [Line Chart](#line-chart)
     * [Line Data](#line-data)
     * [Marker](#marker)
     * [Error bars](#error-bars)
@@ -2728,4 +2728,34 @@ This method can be used alongside the utility function `restoreGraph` to restore
 *Returns:*
 
 * An object with the following properties:
-   * `graph`: 
+   * `graph`: an object with the state of the graph. This object is compatible with the `options` arument of the `graph2D` function.
+   * `assets`: an array of objects, this objects represent all the datasets, colorbars and legends associated with the graph. Each object contains:
+     * `options`: an object with the state of the asset. This object is compatible with the `options` argument of its corresponding function.
+     * `assetType`: a string that identifies the asset type, can be one of the following options:
+       * `"linechart"`  
+       * `"area"`  
+       * `"heatmap"`  
+       * `"vectorfield"`  
+       * `"colorbar"`  
+       * `"legend"`  
+
+> Note: This method saves the graph statically. That is if any dataset has its data points or any property generated dynamically via a callback function, that callback will be evaluated and only the result will be saved.
+
+___
+
+# Datasets
+
+## Line Chart:
+
+The line chart dataset is use to create, as the name implies, line charts but also can create dispersion graphs.
+
+It uses a set of datapoints that consist of two arrays of numbers with the same size representing the `[x, y]` coordinates of each point.
+
+The main components of a line chart are:
+
+* The data itself.
+* The `lines` that can be draw connecting each datapoint.
+* The `markers` that can be draw on each datapoint.
+* The `error bars` that can be draw on each datapoint.
+
+Each of these components can be individually configured with great detail.
