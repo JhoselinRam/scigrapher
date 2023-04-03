@@ -366,7 +366,7 @@ export function graph2D(container:HTMLDivElement, options:RecursivePartial<Graph
     graphHandler.clientRect = properties.clientRect;
     graphHandler.graphRect = properties.graphRect;
     graphHandler.draw = properties.draw;
-    graphHandler.mapping = properties.mapping;
+    graphHandler.coordinateMaps = properties.coordinateMaps;
     graphHandler.save = properties.save;
     graphHandler.containerSize = properties.containerSize;
     graphHandler.border = border.border;

@@ -2653,6 +2653,8 @@ This method returns the client rec.
 The client rect is a rectangle defined inside the graph and contains the axis and the graph rect.
 This area is affected by the labels.
 
+The graph rect is contained within the client rect.
+
 *Method:*
 
     clientRect()
@@ -2695,3 +2697,35 @@ Examples of the graph rect:
 ![graph-3](/assets/images/graph-3.jpg)
 
 ___
+
+### Coordinate Maps:
+
+This method returns the mappin objets used to transform between pixel coordinates and internal axis coordinates.
+
+The mapping domain is the axis coordinates, while the range is the pixel coordinates. 
+The pixel coordinates are measured from the graph rect.
+
+*Method:*
+
+    coordinateMaps()
+
+*Returns:*
+
+* An object with the mapping or scale of each axis. The mapping of the secondary axis may be undefined if that axis is not enabled.
+
+___
+
+### Save:
+
+This method lets you save the graph state, including the datasets, legends and colorbars. The resulting object can be serialized, usin JSON.stringify() for example.
+
+This method can be used alongside the utility function `restoreGraph` to restore a saved graph.
+
+*Method:*
+
+    save()
+
+*Returns:*
+
+* An object with the following properties:
+   * `graph`: 

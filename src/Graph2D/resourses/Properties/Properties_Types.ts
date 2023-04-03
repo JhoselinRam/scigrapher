@@ -6,7 +6,7 @@ export interface Properties{
     clientRect : ()=> Rect,
     graphRect : ()=>Rect,
     draw : ()=>Graph2D,
-    mapping : ()=>Graph2D_Mappings,
+    coordinateMaps : ()=>Graph2D_Mappings,
     save : ()=> Graph2D_Save_Graph,
     containerSize : {
         (size:Partial<Container_Size>, callback ?: graphCallback) : Graph2D,

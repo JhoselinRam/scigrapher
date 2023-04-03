@@ -74,10 +74,13 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
 //--------------------------------------------- 
 //------------ Mapping ------------------------ 
 
-    function mapping() : Graph2D_Mappings{
+    function coordinateMaps() : Graph2D_Mappings{
         return {
             primary : {...state.scale.primary},
-            secondary : {...state.scale.secondary}
+            secondary : {
+                x : state.scale.secondary.x,
+                y : state.scale.secondary.y
+            }
         }
     }
 
@@ -192,7 +195,7 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
         clientRect,
         draw,
         graphRect,
-        mapping,
+        coordinateMaps,
         save,
         containerSize
     }
