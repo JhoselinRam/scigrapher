@@ -1,7 +1,7 @@
 import { computePositions, createLabels } from "../../../tools/Axis_Obj/Axis_Obj.js";
 import mapping from "../../../tools/Mapping/Mapping.js";
 import { Graph2D, graphCallback, Method_Generator, RecursivePartial } from "../../Graph2D_Types";
-import { Margin, Margin_Props } from "./Margin_Types";
+import { Margin, Margins, Margin_Props } from "./Margin_Types";
 
 function Margin({state, graphHandler}:Method_Generator) : Margin {
  
@@ -119,8 +119,8 @@ function Margin({state, graphHandler}:Method_Generator) : Margin {
 //----------------- Margin --------------------
 
     function margin(margins:RecursivePartial<Margin_Props>, callback?:graphCallback):Graph2D;
-    function margin(arg:void):Margin_Props;
-    function margin(margins:RecursivePartial<Margin_Props> | void, callback?:graphCallback) : Graph2D | Margin_Props | undefined{
+    function margin(arg:void):Margins;
+    function margin(margins:RecursivePartial<Margin_Props> | void, callback?:graphCallback) : Graph2D | Margins | undefined{
         if(typeof margins === "undefined" && callback == null)
             return {
                     x : {...state.marginUsed.x}, 

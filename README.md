@@ -24,8 +24,9 @@ At the moment, the library offers four chart types, including:
   * [Axis](#axis)
   * [Grid](#grid)
   * [Labels](#labels)
-  * [Events](#events)
+  * [Utilities](#utilities)
   * [Graph Properties](#graph-properties)
+  * [Readonly Methods](#readonly-methods)
 * [Datasets](#datasets)
   * [Line Chart](#linechart)
     * [Line Data](#line-data)
@@ -88,6 +89,8 @@ Additionally, almost every method accepts a callback function as a second parame
 The callback function can accept one optional parameter that represents the graph object from which the method is call upon.
 
 > Note: The execution of the optional callback function is unique to that method call, so in order to execute that function more than ones it needs to be passed to the method on each call.
+
+> Warning: The callback function will only run if there is a change in the graph properties. For example, if you try to change the axis `type` to `polar` but the axis already have that property value the function will skyp all calculations, including the callback, and continue with the normal flow.
 
 ___
 
@@ -1750,7 +1753,7 @@ It is only necessary to define the values that you want to change and only that 
 *Where:*
 
 * `options` is an object containing the following properties:
-  * `enable`: a boolean that determines whether the `title` mus be unabled.
+  * `enable`: a boolean that determines whether the `title` must be enabled.
   * `text`: a string representing the text to show as a `title`.
   * `font`: a string representing the font of the `title`.
   * `size`: a string representing the size off the `title`.
@@ -1808,7 +1811,7 @@ It is only necessary to define the values that you want to change and only that 
 *Where:*
 
 * `options` is an object containing the following properties:
-  * `enable`: a boolean that determines whether the `subtitle` mus be unabled.
+  * `enable`: a boolean that determines whether the `subtitle` must be enabled.
   * `text`: a string representing the text to show as a `subtitle`.
   * `font`: a string representing the font of the `subtitle`.
   * `size`: a string representing the size off the `subtitle`.
@@ -1866,7 +1869,7 @@ It is only necessary to define the values that you want to change and only that 
 *Where:*
 
 * `options` is an object containing the following properties:
-  * `enable`: a boolean that determines whether the `x label` mus be unabled.
+  * `enable`: a boolean that determines whether the `x label` must be enabled.
   * `text`: a string representing the text to show as a `x label`.
   * `font`: a string representing the font of the `x label`.
   * `size`: a string representing the size off the `x label`.
@@ -1885,7 +1888,7 @@ It is only necessary to define the values that you want to change and only that 
 
 > Note: The `size` value can be any valid css size including em, rem, etc.
 
-
+> Note: The label will render only if the axis `position` is *not* set to `center`.
 
 *Returns*:
 
@@ -1926,7 +1929,7 @@ It is only necessary to define the values that you want to change and only that 
 *Where:*
 
 * `options` is an object containing the following properties:
-  * `enable`: a boolean that determines whether the `y label` mus be unabled.
+  * `enable`: a boolean that determines whether the `y label` must be enabled.
   * `text`: a string representing the text to show as a `y label`.
   * `font`: a string representing the font of the `y label`.
   * `size`: a string representing the size off the `y label`.
@@ -1944,6 +1947,8 @@ It is only necessary to define the values that you want to change and only that 
 > Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
 
 >Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The label will render only if the axis `position` is *not* set to `center`.
 
 *Returns*:
 
@@ -1966,5 +1971,727 @@ The default values for the properties of the `y label` are as follows:
       filled : true,
       position : "center"
     }
+
+___
+
+### Secondary x Label:
+
+This method lets you set or get the properties of the secondary x label.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    xLabelSecondary()
+    xLabelSecondary(options)
+    xLabelSecondary(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `enable`: a boolean that determines whether the `secondary x label` must be enabled.
+  * `text`: a string representing the text to show as a `secondary x label`.
+  * `font`: a string representing the font of the `secondary x label`.
+  * `size`: a string representing the size off the `secondary x label`.
+  * `color`: a string representing the color of the `secondary x label`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `secondary x label`.
+  * `filled`: a boolean that determines whether the text must be filled or just outlined.
+  * `position`: this property controls the relative position of the `secondary x label`, can be one of the following values:
+    * `"start"`.
+    * `"center"`.
+    * `"end"`.
+* `callback` is a function that is run after the secondary x label properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+>Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The label will render only if the axis `position` is *not* set to `center`.
+
+> Note: This label will not render if the secodary `x` axis is not enabled.
+
+*Returns*:
+
+* `undefined` if the `secondary x label` is not defined yet and no arguments are pass.
+* An object representing the properties of the `secondary x label` if no arguments are pass.
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `secondary x label` are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      enable : true,
+      text : "",
+      font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+      size : "15px",
+      color : "#000000",
+      opacity : 1,
+      filled : true,
+      position : "center"
+    }
+
+___
+
+### Secondary y Label:
+
+This method lets you set or get the properties of the secondary y label.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    yLabelSecondary()
+    yLabelSecondary(options)
+    yLabelSecondary(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `enable`: a boolean that determines whether the `secondary y label` must be enabled.
+  * `text`: a string representing the text to show as a `secondary y label`.
+  * `font`: a string representing the font of the `secondary y label`.
+  * `size`: a string representing the size off the `secondary y label`.
+  * `color`: a string representing the color of the `secondary y label`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `secondary y label`.
+  * `filled`: a boolean that determines whether the text must be filled or just outlined.
+  * `position`: this property controls the relative position of the `secondary y label`, can be one of the following values:
+    * `"start"`.
+    * `"center"`.
+    * `"end"`.
+* `callback` is a function that is run after the secondary y label properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+>Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The label will render only if the axis `position` is *not* set to `center`.
+
+> Note: This label will not render if the secodary `y` axis is not enabled.
+
+*Returns*:
+
+* `undefined` if the `secondary y label` is not defined yet and no arguments are pass.
+* An object representing the properties of the `secondary y label` if no arguments are pass.
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `secondary y label` are as follows:
+(`"#000000"` represents the color black)
+
+    {
+      enable : true,
+      text : "",
+      font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
+      size : "15px",
+      color : "#000000",
+      opacity : 1,
+      filled : true,
+      position : "center"
+    }
+
+___
+
+## Utilities
+
+The graph object implements some general utility methods to help you to move, zoom and resize the graph and all its components.
+
+Three of the four methods set event listeners on the container div element, all these event perform changes on the graph properties.
+
+As usual, all this methods accept an optional callback if you need aditional functionality.
+
+The available utility methods are:
+
+* `pointerMove`: Lets you pan the graph with a pointer based event (mouse and touch).
+* `pointerZoom`: Lets you zoom the graph with a pointer based event (mouse and touch).
+* `containerResize`: Lets you adjust the graph size with a resize observer event.
+* `aspectRatio`: Sets the aspect ratio of an axis with respect of other.
+
+> Note: The utilities `pointerMove` and `pointerZoom` are incompatibles when used with a *non* touch device.
+
+It is importan to note that the utilities `pointerMove` and `pointerZoom` use both pointer based events, so if a mouse fire the event and are both enabled, only `pointerMove` will take effect. For this to work you must enable and disable the utilities manually.
+
+This is not a problem when usin a movile (touch based) device. This is because diferent gestures are used each one, touch and grab for `pointerMove` and pinch for `pointerZoom`.
+
+___
+
+### Pointer Move:
+
+This method allows you to move the graph using the pointer (mouse or touch).
+
+This method creates a new instance of the event listener, discartign any previous one.
+
+It is only necessary to define the values that you want to customize, the rest will be set to its default.
+
+*Method:*
+
+    pointerMove()
+    pointerMove(options)
+
+*Where:*
+
+* `options` is an object with the following properties:
+  * `enable`: a boolean tha determines whether the utility must be enabled.
+  * `delay`: a number representing the delay in milliseconds of the throttle implementation.
+  * `pointerCapture`: a boolean that determines whether the pointer event should be capture.
+  * `defaultCursor`: a string that represent the default cursor. 
+  * `hoverCursor`: a string that represent the cursor when its hovering the active area.
+  * `moveCursor`: a string that represent the cursor when is performing the move.
+  * `primaryAxis`: a boolean that determines if the move affects the `primary` axis.
+  * `secondaryAxis`: a boolean that determines if the move affects the `secondary` axis.
+  * `callback` : a function that runs afther the graph new properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The properties of the graph after the move is made are computed in a throttle function to avoid overload de browser. The `delay` property affects how often that calculations are made.
+
+> Note: The value of the `defaultCursor`, `hoverCursor`, `moveCursor` can be any of the standar cursor names.
+
+> Note: When disabled, the cursor will be set to `defaultCursor`.
+
+> Note: Unlike other methods, the `callback` function is contained inside the `options` object.
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `pointerMove` method are as follow:
+
+    {
+      enable : true,
+      delay : 12,
+      pointerCapture: true,
+      defaultCursor : "default",
+      hoverCursor : "grab",
+      moveCursor : "grabbing",
+      primaryAxis : true,
+      secondaryAxis : true,
+      callback : undefined
+    }
+
+___
+
+### Pointer Zoom:
+
+This method allows you to zoom the graph using the pointer (mouse or touch).
+
+This method creates a new instance of the event listener, discartign any previous one.
+
+The zoom applied is calculated using the primary axis.
+
+It is only necessary to define the values that you want to customize, the rest will be set to its default.
+
+*Method:*
+
+    pointerZoom()
+    pointerZoom(options)
+
+*Where:*
+
+* `options` is an object with the following properties:
+  * `enable`: a boolean tha determines whether the utility must be enabled.
+  * `delay`: a number representing the delay in milliseconds of the throttle implementation.
+  * `pointerCapture`: a boolean that determines whether the pointer event should be capture.
+  * `defaultCursor`: a string that represent the default cursor. 
+  * `hoverCursor`: a string that represent the cursor when its hovering the active area.
+  * `moveCursor`: a string that represent the cursor when is performing the move.
+  * `primaryAxis`: a boolean that determines if the move affects the `primary` axis.
+  * `secondaryAxis`: a boolean that determines if the move affects the `secondary` axis.
+  * `anchor` : this property controls the point that will remain constant during the zoom. It can be one of the following options:
+    * The string `"center"` to fix the mid point of both axis.
+    * The string `"pointer`" to fix the point that the pointer was at the start of the action.
+    * An array of two numbers `[x, y]` representing the coordinate of the fixed point.
+  * `type` : this property control the type of zoom gesture. It can be one of the following options: 
+    * The string `"area"` to make zoom drawing a rectangle.
+    * The string `"drag"` to make zoom dragging the pointer.
+  * `strength` : a number representing the strength of the zoom. This property is only relevant when the `type` property is set to `drag` or when using touch devices.
+  * `rect`: an object representing the rectangle draw when usin the `drag` zoom `type`:
+    * `background`: a string representing the background color of the rectangle.
+    * `opacity`: a number representing the opacity of the rectangle.
+    * `borderColor`: a string representing the color of the rectangle border.
+    * `borderOpacity`: a number representing the opacity of the rectangle border.
+    * `borderWidth`: a number representing the line width of the rectangle border.
+  * `callback` : a function that runs afther the graph new properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The properties of the graph after the zoom is made are computed in a throttle function to avoid overload de browser. The `delay` property affects how often that calculations are made.
+
+> Note: The value of the `defaultCursor`, `hoverCursor`, `moveCursor` can be any of the standar cursor names.
+
+> Note: When disabled, the cursor will be set to `defaultCursor`.
+
+> Note: Unlike other methods, the `callback` function is contained inside the `options` object.
+
+When using the zoom with the `type` set to `"area" you can draw a rectangle, and the area of that rectangle will be represented by the axis after the mouse is released.
+
+Also, while drawing the area, you can hold the `shift` key to move the origin of the rectangle.
+In this mode, only zoom-in is available.
+
+![zoom-area](/assets/gifts/zoom-area.gif)
+
+When using the zoom whith the `type` set to `"drag"` you must click and drag to perform the zoom. Dragging to the right relative to the initial click will zoom-in, while gragging to the left will perform a zoom-out.
+
+In this mode, the zoom conserve the axis aspect ratio.
+
+![zoom-drag](/assets/gifts/zoom-drag.gif)
+
+If you are using a touch device, the zoom will perform using the pinch gesture regardless the value of the property `type`.
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `pointerZoom` method are as follow:
+
+    {
+      enable : true,
+      delay : 12,
+      pointerCapture: true,
+      defaultCursor : "default",
+      hoverCursor : "zoom-in",
+      moveCursor : "zoom-in",
+      primaryAxis : true,
+      secondaryAxis : true,
+      callback : undefined,
+      anchor : "pointer",
+      type : "area",
+      strength : 5,
+      rect : {
+        background : "#0075FF",
+        opacity : 0.05,
+        borderColor  : "#0057bd",
+        borderOpacity : 0.5,
+        borderWidth : 1
+      }
+    }
+
+___
+
+### Container Resize:
+
+This method allows the resize of the graph whether the container div element changes size.
+
+This method creates a new instance of the event listener, discartign any previous one.
+
+It is only necessary to define the values that you want to customize, the rest will be set to its default.
+
+*Method:*
+
+    constainerResize()
+    constainerResize(options)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `enable`: a boolean tha determines whether the utility must be enabled.
+  * `delay`: a number representing the delay in milliseconds of the throttle implementation.
+  * `preserveAspectRatio`: a boolean that determines whether the axis aspect ratio must be conserved after the resize.
+  * `anchor` : this property controls the point in the primary axis that will remain constant during the resize. It can be one of the following options:
+    * The string `"center"` to fix the mid point of both axis.
+    * An array of two numbers `[x, y]` representing the coordinate in the primary axis of the fixed point.
+  * `secondaryAnchor` : this property controls the point in the secondary axis that will remain constant during the resize. It can be one of the following options:
+    * The string `"center"` to fix the mid point of both axis.
+    * An array of two numbers `[x, y]` representing the coordinate in the secondary axis of the fixed point.
+  * `primaryAxis`: a boolean that determines if the move affects the `primary` axis.
+  * `secondaryAxis`: a boolean that determines if the move affects the `secondary` axis.
+  * `callback` : a function that runs afther the graph new properties are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+| `preserveAspectRatio` | Result       |
+|:---------------------:|:------------:|
+| `true`                | ![resize-true](/assets/gifts/resize-true.gif)|
+| `false`                | ![resize-false](/assets/gifts/resize-false.gif)|
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `containerResize` method are as follow:
+
+    {
+      enable : true,
+      delay : 12,
+      preserveAspectRatio : true,
+      anchor : "center",
+      secondaryAnchor : "center",
+      primaryAxis : true,
+      secondaryAxis : true,
+      callback : undefined
+    }
+
+___
+
+### Aspect Ratio:
+
+This method allows you to set the aspect ratio of one axis relative to another.
+
+This utility is *not* event-based, so its effects will only be applied once.
+
+It is only necessary to define the values that you want to customize, the rest will be set to its default.
+
+*Method:*
+
+    aspectRatio()
+    aspectRatio(options)
+    aspectRatio(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `ratio`: a number representing the aspect ratio to set.
+  * `source`: a string representing the source axis. It can be one of the folloging options:
+    * The string `"x"` to set the `x` axis as the `source`.
+    * The string `"y"` to set the `y` axis as the `source`.
+    * The string `"xSecondary"` to set the secondary `x` axis as the `source`.
+    * The string `"ySecondary"` to set the secondary `y` axis as the `source`.
+  * `target`: a string representing the target axis. It can be one of the folloging options:
+    * The string `"x"` to set the `x` axis as the `target`.
+    * The string `"y"` to set the `y` axis as the `target`.
+    * The string `"xSecondary"` to set the secondary `x` axis as the `target`.
+    * The string `"ySecondary"` to set the secondary `y` axis as the `target`.
+  * `anchor`: this property controls the point on the `target` axis that will remain unchaged afther the transformation. It can be one of the following values:
+    * The string `"start"` to fix the `start` value of the `target` axis domain.
+    * The string `"end"` to fix the `end` value of the `target` axis domain.
+    * A number to fix that coordinate of the `target` axis domain.
+* `callback` is a function that is run after the aspect ratio is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+The aspect ratio represents the amount of pixels that each unit of the `target` axis takes with respect the `source` axis.
+
+For example, if the `ratio` property is set to `2`, each unit of the `target` axis will occupy twice as much pixels that one unit of the `source` axis.
+
+> Note: If the `source` or `target` properties are set to either secondary axis, and that axis is not enabled, the method will take no effect.
+
+> Note: The the `source` or `target` properties can both be set to the same axis, in that case only that axis will change.
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon. 
+
+*Default Values:*
+
+The default values for the properties of the `aspectRatio` method are as follow:
+
+    {
+      ratio : 1,
+      source : "x",
+      target : "y",
+      anchor : "start"
+    }
+
+___
+
+## Graph Properties
+
+### Margin:
+
+This method lets you set or get the margins of the graph.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    margin()
+    margin(options)
+    margin(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `x`: an object whith the properties:
+    * `start`: this property controls the margin at the left most side of the `x` axis. It can have one of the following values:
+      * The string `"auto"` to compute the margin automatically.
+      * A number representing the margin in pixels.
+    * `end`: this property controls the margin at the right most side of the `x` axis. It can have one of the following values:
+      * The string `"auto"` to compute the margin automatically.
+      * A number representing the margin in pixels.
+  * `y`: an object whith the properties:
+    * `start`: this property controls the margin at the bottom of the `y` axis. It can have one of the following values:
+      * The string `"auto"` to compute the margin automatically.
+      * A number representing the margin in pixels.
+    * `end`: this property controls the margin at the top of the `y` axis. It can have one of the following values:
+      * The string `"auto"` to compute the margin automatically.
+      * A number representing the margin in pixels.
+* `callback` is a function that is run after the margins are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Why the `end` value of the `y` component is at the top and not the bottom? :
+> Because of the convention of having the vertical axis values increase from bottom to top, this is a convention to follow for other similar properties.
+
+> Note: Any margin can have negative values, the behavior is as expected.
+
+*Return:*
+
+* An object representing the current margins if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+> Note: Even when the value of any margin is set to `"auto"`, this method will always return an object with numeric values.
+
+*Default values:*
+
+The default values for the margins are as follows:
+
+    {
+      x : {
+        start : "auto",
+        end : "auto",
+      },
+      y : {
+        start : "auto",
+        end : "auto",
+      },
+    }
+
+___
+
+### Border:
+
+This method lets you set or get the border properties of the graph.
+
+The `options` object has some properties that change the borders in a generalized way, and those changes cascaded towards the more specific properties. The more specific the property is, the more priority takes.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    border()
+    border(options)
+    border(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `border`: an object with the properties:
+    * `enable`: a boolean that determines whether all borders should be enabled.
+    * `color`: a string that represent the color of all borders.
+    * `opacity`: a number between 0 and 1 that represent the opacity of all borders.
+    * `width`: a number that represent the line width of all borders.
+    * `style`: a string that represents the line style of all borders.
+  * `x` : a object with the following properties:
+    * `start`: an object that represent the properties of the left border:
+      * `enable`: a boolean that determines whether the border should be enabled.
+      * `color`: a string that represent the color of the border.
+      * `opacity`: a number between 0 and 1 that represent the opacity of the border.
+      * `width`: a number that represent the line width of the border.
+      * `style`: a string that represents the line style of the border.
+    * `end`: an object that represent the properties of the right border:
+      * `enable`: a boolean that determines whether the border should be enabled.
+      * `color`: a string that represent the color of the border.
+      * `opacity`: a number between 0 and 1 that represent the opacity of the border.
+      * `width`: a number that represent the line width of the border.
+      * `style`: a string that represents the line style of the border.
+  * `y` : a object with the following properties:
+    * `start`: an object that represent the properties of the bottom border:
+      * `enable`: a boolean that determines whether the border should be enabled.
+      * `color`: a string that represent the color of the border.
+      * `opacity`: a number between 0 and 1 that represent the opacity of the border.
+      * `width`: a number that represent the line width of the border.
+      * `style`: a string that represents the line style of the border.
+    * `end`: an object that represent the properties of the top border:
+      * `enable`: a boolean that determines whether the border should be enabled.
+      * `color`: a string that represent the color of the border.
+      * `opacity`: a number between 0 and 1 that represent the opacity of the border.
+      * `width`: a number that represent the line width of the border.
+      * `style`: a string that represents the line style of the border.
+* `callback` is a function that is run after the borders are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+> Note: The value of the width must be a positive integer.
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* An object representing the current border properties if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the borders are as follows:
+
+    {
+      x : {
+        start : {
+          enable : false,
+          color : "#000000",
+          opacity : 1,
+          width : 1,
+          style : "solid"
+        },
+        end : {
+          enable : false,
+          color : "#000000",
+          opacity : 1,
+          width : 1,
+          style : "solid"
+        }
+      },
+      y : {
+        start : {
+          enable : false,
+          color : "#000000",
+          opacity : 1,
+          width : 1,
+          style : "solid"
+        },
+        end : {
+          enable : false,
+          color : "#000000",
+          opacity : 1,
+          width : 1,
+          style : "solid"
+        }
+      }
+    }
+
+___
+
+### Container Size:
+
+This method lets you get or set the size of the container div element.
+
+The graph change sizes accordingly, maintaining the values of the axis `domain`. In other words, this method do not conserve the axis aspect ratio.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    containerSize()
+    containerSize(options)
+    containerSize(options, callback)
+
+*Where:*
+
+* `options` is an object containing the following properties:
+  * `width`: a number representing the width of the container in pixels.
+  * `height`: a number representing the height of the container in pixels.
+* `callback` is a function that is run after the container size is set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note: The `width` and `height` properties mus be a positive integer.
+
+*Returns:*
+
+* An object representing the current size of the container if no arguments are pass.
+* A reference to the graph object from which the method is called upon.
+
+*Default values:*
+
+The default values for the container size are as follows:
+
+    {
+      width : 500,
+      height : 500
+    }
+
+___
+
+## Readonly Methods
+
+The graph implements some read only methods that are valuable for external interactions/calculations. For example if you want to write a custom event listener.
+
+___
+
+### Draw:
+
+This method render the graph only if its properties have been changed since the last call.
+
+You need to call this method every time you made some change to the graph, add, remove or change data.
+
+*Method:*
+
+    draw()
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon.
+
+___
+
+### Canvas Elements:
+
+This method returns the html canvas elements used in the graph.
+
+Those are children elements of the div container.
+
+*Method:*
+
+    canvasElements()
+
+*Returns:*
+
+* An array of two html canvas elements, the first is used to draw the axis, grids and labels, and the second one is were the data, colorbars and legends are draw.
+
+> Note: The pointer events of the `pointerMove` and  `pointerZoom` methods are set on the second element of the array.
+
+___
+
+### Client Rect:
+
+This method returns the client rec. 
+
+The client rect is a rectangle defined inside the graph and contains the axis and the graph rect.
+This area is affected by the labels.
+
+*Method:*
+
+    clientRect()
+
+*Returns:*
+
+* An object representing the `x` and `y` coordinates of the top left corner and the width and height in pixels of the client rect.
+
+Examples of the client rect:
+
+![client-1](/assets/images/client-1.jpg)
+
+![client-2](/assets/images/client-2.jpg)
+
+![client-3](/assets/images/client-3.jpg)
+
+___
+
+### Graph Rect:
+
+This method returns the graph rec. 
+
+The graph rect is a rectangle defined inside the graph and contains only the graphing area.
+This area is affected by the labels, margins and the axis size.
+
+*Method:*
+
+    graphRect()
+
+*Returns:*
+
+* An object representing the `x` and `y` coordinates of the top left corner and the width and height in pixels of the graph rect.
+
+Examples of the graph rect:
+
+![graph-1](/assets/images/graph-1.jpg)
+
+![graph-2](/assets/images/graph-2.jpg)
+
+![graph-3](/assets/images/graph-3.jpg)
 
 ___

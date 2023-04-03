@@ -9,6 +9,11 @@ export interface Margin{
 }
 
 export type Margin_Props = Axis_Property<{
+    start : number | "auto",
+    end : number | "auto"
+}>
+
+export type Margins  = Axis_Property<{
     start : number,
     end : number
 }>

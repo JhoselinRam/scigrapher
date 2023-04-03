@@ -239,13 +239,14 @@ function onStyle(e : PointerEvent){
 //------------- In Client Rect ----------------
 
 function inClientRect(x:number, y:number) : boolean{
+    const graphRect = state.context.graphRect();
     const canvasRect = state.canvasDataElement.getBoundingClientRect();
     const pointerX = Math.round(x - canvasRect.x);
     const pointerY = Math.round(y - canvasRect.y);
-    const minX = state.context.clientRect.x;
-    const maxX = minX + state.context.clientRect.width;
-    const minY = state.context.clientRect.y;
-    const maxY = minY + state.context.clientRect.height;
+    const minX = graphRect.x;
+    const maxX = minX + graphRect.width;
+    const minY = graphRect.y;
+    const maxY = minY + graphRect.height;
 
     return pointerX>=minX && pointerX<=maxX && pointerY>=minY && pointerY<=maxY
 }
@@ -255,8 +256,9 @@ function inClientRect(x:number, y:number) : boolean{
 
     function clientCoords(x:number, y:number) : [number, number] {
         const canvasRect = state.canvasDataElement.getBoundingClientRect();
+        const graphRect = state.context.graphRect();
 
-        return [x - canvasRect.x - state.context.clientRect.x, y - canvasRect.y - state.context.clientRect.y];
+        return [x - canvasRect.x - graphRect.x, y - canvasRect.y - graphRect.y];
     }
 
 //------------ Move On Pointer ----------------
@@ -334,6 +336,7 @@ function inClientRect(x:number, y:number) : boolean{
 
 function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         if(type === "area"){
+            const graphRect = state.context.graphRect();
             state.dirty.client = true;
             state.draw.client()
             
@@ -361,7 +364,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             pointerY += pointerY === initialY? 2 : 0;
 
             state.context.canvas.save();
-            state.context.canvas.translate(state.context.clientRect.x, state.context.clientRect.y);
+            state.context.canvas.translate(graphRect.x, graphRect.y);
             state.context.canvas.fillStyle = zoomState.rect.background;
             state.context.canvas.globalAlpha = zoomState.rect.opacity;
             state.context.canvas.fillRect(initialX, initialY, pointerX-initialX, pointerY-initialY);
@@ -816,49 +819,49 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         //Combines the default values and the arguments pased
         const options : Aspect_Ratio = {
             ratio : 1,
-            sourse : "x",
+            source : "x",
             target : "y",
             anchor : "start",
             ...args
         }
 
-        if(state.secondary.x == null && (options.sourse==="xSecondary" || options.target==="xSecondary")){
+        if(state.secondary.x == null && (options.source==="xSecondary" || options.target==="xSecondary")){
             console.error("Secondary X axis not defined yet");
             return graphHandler;
         }
         
-        if(state.secondary.y == null && (options.sourse==="ySecondary" || options.target==="ySecondary")){
+        if(state.secondary.y == null && (options.source==="ySecondary" || options.target==="ySecondary")){
             console.error("Secondary Y axis not defined yet");
             return graphHandler;
         }
 
 
-        //Set the sourse and target properties
+        //Set the source and target properties
         const graphRect = state.context.graphRect();
-        let sourseAxis : Primary_Axis | Secondary_Axis = state.axis.x;
+        let sourceAxis : Primary_Axis | Secondary_Axis = state.axis.x;
         let targetAxis : Primary_Axis | Secondary_Axis = state.axis.y;
-        let sourseType : Mapping_Type = "linear";
+        let sourceType : Mapping_Type = "linear";
         let targetType : Mapping_Type = "linear";
-        let sourseSize = graphRect.width;
+        let sourceSize = graphRect.width;
         let targetSize = graphRect.height;
         
-        switch(options.sourse){
+        switch(options.source){
             case "x":
-                sourseType = state.scale.primary.x.type;
+                sourceType = state.scale.primary.x.type;
                 break;
             case "y":
-                sourseAxis = state.axis.y;
-                sourseType = state.scale.primary.y.type;
-                sourseSize = graphRect.height;
+                sourceAxis = state.axis.y;
+                sourceType = state.scale.primary.y.type;
+                sourceSize = graphRect.height;
                 break;
             case "xSecondary":
-                sourseAxis = state.secondary.x as Secondary_Axis;
-                sourseType = (state.scale.secondary as Axis_Property<Mapping>).x.type;
+                sourceAxis = state.secondary.x as Secondary_Axis;
+                sourceType = (state.scale.secondary as Axis_Property<Mapping>).x.type;
                 break;
             case "ySecondary":
-                sourseAxis = state.secondary.y as Secondary_Axis;
-                sourseType = (state.scale.secondary as Axis_Property<Mapping>).y.type;
-                sourseSize = graphRect.height;
+                sourceAxis = state.secondary.y as Secondary_Axis;
+                sourceType = (state.scale.secondary as Axis_Property<Mapping>).y.type;
+                sourceSize = graphRect.height;
                 break;
         }
         
@@ -884,14 +887,14 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
 
         //Start the calculations
         const fixpoint = typeof options.anchor === "number"? options.anchor : targetAxis[options.anchor];
-        let sourseDomain = Math.abs(sourseAxis.start - sourseAxis.end);
+        let sourceDomain = Math.abs(sourceAxis.start - sourceAxis.end);
         let targetDomain = Math.abs(targetAxis.start - targetAxis.end);
 
-        if(sourseType === "log")
-            sourseDomain = Math.abs(Math.log10(Math.abs(sourseAxis.start)) - Math.log10(Math.abs(sourseAxis.end)));
+        if(sourceType === "log")
+            sourceDomain = Math.abs(Math.log10(Math.abs(sourceAxis.start)) - Math.log10(Math.abs(sourceAxis.end)));
 
         if(targetType === "linear"){
-            const newTargetDomain = targetSize/sourseSize * sourseDomain/options.ratio;
+            const newTargetDomain = targetSize/sourceSize * sourceDomain/options.ratio;
             const m = newTargetDomain/targetDomain;
             targetAxis.start = m*(targetAxis.start - fixpoint) + fixpoint;
             targetAxis.end = m*(targetAxis.end - fixpoint) + fixpoint;
@@ -899,7 +902,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         
         if(targetType === "log"){
             targetDomain = Math.abs(Math.log10(Math.abs(targetAxis.start)) - Math.log10(Math.abs(targetAxis.end)));
-            const newTargetDomain = targetSize/sourseSize * sourseDomain/options.ratio;
+            const newTargetDomain = targetSize/sourceSize * sourceDomain/options.ratio;
             const m = newTargetDomain/targetDomain;
 
             if(targetAxis.start>0 && targetAxis.end>0){

@@ -12,7 +12,7 @@ export interface Events {
 
 export interface Aspect_Ratio {
     ratio : number,
-    sourse : Aspect_Ratio_Axis,
+    source : Aspect_Ratio_Axis,
     target : Aspect_Ratio_Axis,
     anchor : "start" | "end" | number
 }

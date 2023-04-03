@@ -180,7 +180,6 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
             state.compute.full();
             if(callback != null) callback(graphHandler);
             state.dirty.full = true;
-            state.draw.full();
 
             return graphHandler;
         }

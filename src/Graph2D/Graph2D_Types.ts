@@ -138,7 +138,7 @@ export interface BorderProperties {
     color : string,
     opacity : number,
     width : number,
-    style : Line_Style
+    style : Line_Style | string
 }
 
 export interface Graph2D_State extends Graph2D_Options {
