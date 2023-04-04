@@ -652,7 +652,7 @@ Those two are the behaviors that this method can change.
 
 For example, in the next illustration, the axis shift when the `start` value of the `y` axis domain is bigger than zero.
 
-![axis_dynamic](/assets/gifts/axis_dynamic.gif)
+![axis_dynamic](/assets/gifs/axis_dynamic.gif)
 
 It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
 
@@ -2233,13 +2233,13 @@ When using the zoom with the `type` set to `"area" you can draw a rectangle, and
 Also, while drawing the area, you can hold the `shift` key to move the origin of the rectangle.
 In this mode, only zoom-in is available.
 
-![zoom-area](/assets/gifts/zoom-area.gif)
+![zoom-area](/assets/gifs/zoom-area.gif)
 
 When using the zoom whith the `type` set to `"drag"` you must click and drag to perform the zoom. Dragging to the right relative to the initial click will zoom-in, while gragging to the left will perform a zoom-out.
 
 In this mode, the zoom conserve the axis aspect ratio.
 
-![zoom-drag](/assets/gifts/zoom-drag.gif)
+![zoom-drag](/assets/gifs/zoom-drag.gif)
 
 If you are using a touch device, the zoom will perform using the pinch gesture regardless the value of the property `type`.
 
@@ -2306,8 +2306,8 @@ It is only necessary to define the values that you want to customize, the rest w
 
 | `preserveAspectRatio` | Result       |
 |:---------------------:|:------------:|
-| `true`                | ![resize-true](/assets/gifts/resize-true.gif)|
-| `false`                | ![resize-false](/assets/gifts/resize-false.gif)|
+| `true`                | ![resize-true](/assets/gifs/resize-true.gif)|
+| `false`                | ![resize-false](/assets/gifs/resize-false.gif)|
 
 *Returns:*
 
@@ -2940,7 +2940,110 @@ The main components of a line chart are:
 * The `markers` that can be draw on each datapoint.
 * The `error bars` that can be draw on each datapoint.
 
-Each of these components can be individually configured with great detail.
+The datapoints and properties of that datapoints of the `linechart` can be defined to be static or dynamic, meaning that its values can be static and never change or be computed on each draw and even be based on the values of other properties.
+
+If you set any of the datapoints `x` or `y` component to be dynamic, that component must be defined by a function of the type:
+
+    generator()
+    generator(dataset)
+    generator(dataset, graph)
+
+*Where:*
+
+* `dataset` is a reference to the dataset from which the function is call upon.
+* `graph` is a reference of the graph that the dataset is bound to.
+
+These two optional arguments always holds the dataset and graph latest state at the moment of the call.
+
+> Note: Unlike the callback that most methods accept, the generator function runs on every draw.
+
+Example:
+
+First, lets create a static line chart.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisDomain({
+      x : {start : -8, end : 8},
+      y : {start : -1.2, end : 1.2}
+    })
+    .containerSize({width : 800,  height : 300})
+    .pointerMove();
+
+    //Creates the linechart
+    const line_chart = my_graph.addDataset("linechart");
+
+    //Creates the data number arrays
+    const x_data = linspace(-8, 8, 150);
+    const y_data = x_data.map(x => Math.cos(x));
+    
+    //Add the data to the linechart
+    line_chart.dataX(x_data).dataY(y_data);
+
+Result:
+
+![static-linecart1](/assets/gifs/static-linechart1.gif)
+
+>Note: `linspace` is a utility function, you can learn more about this functions on the [extras](#extras) section.
+
+The properties of the line chart can be easily modified, for example by adding the line to the las script.
+
+    line_cart.lineColor("#cf0808");
+
+Changes the line color
+
+![static-linecart2](/assets/images/static-linechart2.jpg)
+
+Now let's recreate the same graph but using dynamic data instead.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisDomain({
+      x : {start : -8, end : 8},
+      y : {start : -1.2, end : 1.2}
+    })
+    .containerSize({width : 800,  height : 300})
+    .pointerMove();
+
+    //Creates the linechart and adds the data
+    const line_chart = my_graph.addDataset("linechart");
+
+    line_chart.dataX((dataset, graph)=>{
+      //This function will run on every draw
+      //Inside this function, dataset makes reference to line_chart and 
+      //graph to my_graph
+
+      const domain = graph.axisDomain(); 
+
+      //The return value must be an array of numbers
+      return linspace(domain.x.start, domain.x.end, 150)
+    })
+    .dataY( dataset=>{
+      //In this case we only need a reference to the dataset
+
+      const x_values = dataset.dataX(); //From here we can get the generated x values and other NOT dynamic properties.
+
+      const y = x_values.map(x=>Math.cos(x));
+
+      //Again, the return value must be an array of numbers
+      return y;
+    });
+
+Result:
+
+![dynamic-linecart1](/assets/gifs/dynamic-linechart1.gif)
+
+As shown, the graph can be moved indefinitely and the data moves along with it. This is because the way it was defined.
+
+> Warning: you 
 
 ___
 
@@ -2950,7 +3053,76 @@ The data in the `linechart` is composed of two arrays of numbers with equal leng
 
 Each array must be defined independently.
 
+___
+
 ### Data x:
 
 This method lets you get ot set the `x` component of the data points.
 
+*Method:*
+
+    dataX()
+    dataX(data)
+    dataX(data, callback)
+
+*Where:*
+
+* `data` represents the `x` component of the data points. It can be one of the following options:
+  * An array of numbers.
+  * A function that returns an array of numbers. This function can accept two optional parameters:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback` is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `dataX()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will halt.
+
+When the data is defined as a function, we say that is dynamically generated.
+
+If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+*Returns:*
+
+* An array of numbers representing the `x` component of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the data is defined as a function, this method will return an array of numbers.
+
+___
+
+### Data y:
+
+This method lets you get ot set the `y` component of the data points.
+
+*Method:*
+
+    dataY()
+    dataY(data)
+    dataY(data, callback)
+
+*Where:*
+
+* `data` represents the `y` component of the data points. It can be one of the following options:
+  * An array of numbers.
+  * A function that returns an array of numbers. This function can accept two optional parameters:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback` is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `dataY()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will halt.
+
+When the data is defined as a function, we say that is dynamically generated.
+
+If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+*Returns:*
+
+* An array of numbers representing the `y` component of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the data is defined as a function, this method will return an array of numbers.
+
+___
