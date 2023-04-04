@@ -27,6 +27,7 @@ At the moment, the library offers four chart types, including:
   * [Utilities](#utilities)
   * [Graph Properties](#graph-properties)
   * [Readonly Methods](#readonly-methods)
+  * [Assets](#assets)
 * [Datasets](#datasets)
   * [Line Chart](#line-chart)
     * [Line Data](#line-data)
@@ -106,7 +107,7 @@ Where:
 
 > Note. The options object has a lot of properties and complex structure, its use is intended for copying or generate datasets from another datasets. All its properties are breake down in the corresponding dataset methods, is best to use those instead.
 
-The resulting dataset is bound to the graph, so in order to show render the result, you must call the `draw` method of the graph after the dataset creation or any modification made to it.
+The resulting dataset is bound to the graph, so in order to render the result, you must call the `draw` method of the graph after the dataset creation or any modification made to it.
 
 Example:
 
@@ -2743,6 +2744,40 @@ This method can be used alongside the utility function `restoreGraph` to restore
 
 ___
 
+## Assets:
+
+The graph object can hold a variety of assets, that includes colorbars, legends or any of the available datasets.
+
+Each of these assets is bound to the graph at the moment of its creation. 
+___
+
+### Add Dataset:
+
+This method lets you create a dataset.
+
+*Method:*
+
+    addDataset(type)
+    addDataset(type, options)
+    addDataset(type, options, callback)
+
+*Where:*
+
+* `type` is a string indicating one of the available datasets. The posible values are:
+  * `"linechart"`.
+  * `"area"`.
+  * `"heatmap"`.
+  * `"vectorfield"`.
+* `options` is an object containing the options to change the default behavior and appearance of the dataset.
+* `callback` is a function that is run after the dataset is created but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note. The options object has a lot of properties and complex structure, its use is intended for copying or generate datasets from another datasets. All its properties are breake down in the corresponding dataset methods, is best to use those instead.
+
+*Returns:*
+
+* A dataset object. This object contains the methods of the selected `type` so it's convenient to assign this value to a variable for later use.
+___
+
 # Datasets
 
 ## Line Chart:
@@ -2759,3 +2794,16 @@ The main components of a line chart are:
 * The `error bars` that can be draw on each datapoint.
 
 Each of these components can be individually configured with great detail.
+
+___
+
+## Line Data
+
+The data in the `linechart` is composed of two arrays of numbers with equal length. Each pair of numbers that share the same index in the arrays represent the `[x, y]` coordinates of one data point.
+
+Each array must be defined independently.
+
+### Data x:
+
+This method lets you get ot set the `x` component of the data points.
+
