@@ -2749,6 +2749,7 @@ ___
 The graph object can hold a variety of assets, that includes colorbars, legends or any of the available datasets.
 
 Each of these assets is bound to the graph at the moment of its creation. 
+
 ___
 
 ### Add Dataset:
@@ -2776,6 +2777,152 @@ This method lets you create a dataset.
 *Returns:*
 
 * A dataset object. This object contains the methods of the selected `type` so it's convenient to assign this value to a variable for later use.
+
+___
+
+### Get Datasets
+
+This method returns an array containing all the datasets associated with the graph.
+
+*Method:*
+
+    getDatasets()
+
+*Returns:*
+
+* An array with all datasets. The datasets are sorted by its inner index in ascending order.
+
+___
+
+### Remove Dataset
+
+This method removes a dataset form the graph.
+
+*Method:*
+    removeDataset(id)
+    removeDataset(id, callback)
+
+*Where:*
+
+* `id` is the id string of the dataset you want to remove.
+* `callback` is a function that is run after the dataset is removed but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon.
+
+___
+
+### Add Colorbar:
+
+This method lets you create a colorbar.
+
+*Method:*
+
+    addColorbar()
+    addColorbar(options)
+    addColorbar(options, callback)
+
+*Where:*
+
+* `options` is an object containing the options to change the default behavior and appearance of the colorbar.
+* `callback` is a function that is run after the colorbar is created but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note. The options object has a lot of properties and complex structure, its use is intended for copying or generate colorbars from another colorbars. All its properties are breake down in the colorbar methods, is best to use those instead.
+
+*Returns:*
+
+* A colorbar object. This object contains the methods to change the behavior and appearence of the colorbar, so it's convenient to assign this value to a variable for later use.
+
+___
+
+### Get Colorbars
+
+This method returns an array containing all the colorbars associated with the graph.
+
+*Method:*
+
+    getColorbars()
+
+*Returns:*
+
+* An array with all colorbars. 
+
+___
+
+### Remove Colorbar
+
+This method removes a colorbar form the graph.
+
+*Method:*
+    removeColorbar(id)
+    removeColorbar(id, callback)
+
+*Where:*
+
+* `id` is the id string of the colorbar you want to remove.
+* `callback` is a function that is run after the colorbar is removed but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon.
+
+___
+
+### Add Legend:
+
+This method lets you create a colorbar.
+
+*Method:*
+
+    addLegend()
+    addLegend(options)
+    addLegend(options, callback)
+
+*Where:*
+
+* `options` is an object containing the options to change the default behavior and appearance of the legend.
+* `callback` is a function that is run after the legend is created but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+> Note. The options object has a lot of properties and complex structure, its use is intended for copying or generate legends from another legends. All its properties are breake down in the legend methods, is best to use those instead.
+
+*Returns:*
+
+* A legend object. This object contains the methods to change the behavior and appearence of the legend, so it's convenient to assign this value to a variable for later use.
+
+___
+
+### Get Legends
+
+This method returns an array containing all the legends associated with the graph.
+
+*Method:*
+
+    getLegends()
+
+*Returns:*
+
+* An array with all legends. 
+
+___
+
+### Remove Legend
+
+This method removes a legend form the graph.
+
+*Method:*
+    removeLegend(id)
+    removeLegend(id, callback)
+
+*Where:*
+
+* `id` is the id string of the legend you want to remove.
+* `callback` is a function that is run after the legend is removed but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
+
+*Returns:*
+
+* A reference to the graph object from which the method is called upon.
+
 ___
 
 # Datasets

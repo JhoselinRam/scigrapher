@@ -22,8 +22,13 @@ function Legends({graphHandler, state} : Method_Generator) : Legends {
 //-------------- Remove Legend ----------------
 
     function removeLegend(id : string, callback?:graphCallback) : Graph2D{
-        state.legends = state.legends.filter(item=>item.legend.id() !== id);
+        const index = state.legends.findIndex(item=>item.legend.id() === id);
 
+        if(index === -1)
+            return graphHandler;
+
+
+        state.legends.splice(index, 1);
         if(callback != null) callback(graphHandler);
         state.dirty.data = true;
 

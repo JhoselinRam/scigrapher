@@ -63,7 +63,12 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 //------------- Remove Dataset ----------------
 
     function removeDataset(id:string, callback?:graphCallback) : Graph2D{
-        state.data = state.data.filter(item => item.dataset.id()!==id);
+        const index = state.data.findIndex(item=>item.dataset.id() === id);
+
+        if(index === -1)
+            return graphHandler;
+
+        state.data.splice(index, 1); 
         state.dirty.data = true;
         if(callback != null) callback(graphHandler);
 

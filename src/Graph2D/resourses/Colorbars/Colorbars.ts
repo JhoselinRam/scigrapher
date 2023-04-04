@@ -22,9 +22,12 @@ function Colorbars({graphHandler, state} : Method_Generator) : Colorbars{
 //------------- Remove Colorbar ---------------
 
     function removeColorbar(id:string, callback?:graphCallback) : Graph2D{
-        
-        state.colorbars = state.colorbars.filter(item=>item.bar.id()!==id);
+        const index = state.colorbars.findIndex(item=>item.bar.id() === id);
 
+        if(index === -1)
+            return graphHandler;
+
+        state.colorbars.splice(index, 1);
         state.compute.client();
         if(callback != null) callback(graphHandler);
         state.dirty.client = true;
