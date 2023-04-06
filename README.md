@@ -31,9 +31,9 @@ At the moment, the library offers four chart types, including:
 * [Datasets](#datasets)
   * [Line Chart](#line-chart)
     * [Line Data](#line-data)
+    * [Line Properties](#line-properties)   
     * [Marker](#marker)
     * [Error bars](#error-bars)
-    * [Line Properties](#line-properties)   
   * [Area](#area)
     * [Area Data](#area-data)
     * [Area Properties](#area-properties) 
@@ -3113,6 +3113,59 @@ Result:
 
 ___
 
+## ID:
+
+This method lets you get or set the id string of the dataset.
+
+*Method:*
+
+    id()
+    id(option)
+    id(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the `id` of the dataset.
+* `callback` is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `id` is used to identify the dataset, so the string must be unique among other datasets.
+
+By default, the `id` is generated automatically to guarantee its uniqueness, so in the majority of cases it is best to leave it as it is.
+
+*Returns:*
+
+* A string representing the `id` of the dataset.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
+## Index:
+
+This method lets you get or set the index of the dataset.
+
+The index is used to determine the order in which the datasets will be drawn.
+The dataset with the lower index value will be drawn first and appear to be behind the other datasets.
+
+*Method:*
+
+    index()
+    index(option)
+    index(option, callback)
+
+*Where:*
+
+* `option`: is a number representing the `index` value of the dataset.
+* `callback` is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The draw order of datasets with the same `index` value will be indeterminate.
+
+*Returns:*
+
+* A number that represents the `index` of the dataset.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
 ## Line Data
 
 The data in the `linechart` is composed of two arrays of numbers with equal length. Each pair of numbers that share the same index in the arrays represent the `[x, y]` coordinates of one data point.
@@ -3135,14 +3188,18 @@ This method lets you get ot set the `x` component of the data points.
 
 * `data` represents the `x` component of the data points. It can be one of the following options:
   * An array of numbers.
-  * A function that returns an array of numbers. This function can accept two optional parameters:
+  * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
     * An object that represents the dataset from which the method is called upon.
     * An object that represents the graph object that the dataset is bound to.
 * `callback` is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
 
-> Warning: Neither `dataX()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will halt.
+> Warning: Neither `dataX()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will stop.
+
+> Warning: Any dynamic property should not be read from within the data function, because that will cause a circular dependency and the program will stop.
+
+> Note: It is safe to call static properties.
 
 When the data is defined as a function, we say that is dynamically generated.
 
@@ -3171,14 +3228,18 @@ This method lets you get ot set the `y` component of the data points.
 
 * `data` represents the `y` component of the data points. It can be one of the following options:
   * An array of numbers.
-  * A function that returns an array of numbers. This function can accept two optional parameters:
+  * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
     * An object that represents the dataset from which the method is called upon.
     * An object that represents the graph object that the dataset is bound to.
 * `callback` is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
 
-> Warning: Neither `dataY()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will halt.
+> Warning: Neither `dataY()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will stop.
+
+> Warning: Any dynamic property should not be read from within the data function, because that will cause a circular dependency and the program will stop.
+
+> Note: It is safe to call static properties.
 
 When the data is defined as a function, we say that is dynamically generated.
 
