@@ -2799,6 +2799,7 @@ ___
 This method removes a dataset form the graph.
 
 *Method:*
+
     removeDataset(id)
     removeDataset(id, callback)
 
@@ -2855,6 +2856,7 @@ ___
 This method removes a colorbar form the graph.
 
 *Method:*
+
     removeColorbar(id)
     removeColorbar(id, callback)
 
@@ -2911,6 +2913,7 @@ ___
 This method removes a legend form the graph.
 
 *Method:*
+
     removeLegend(id)
     removeLegend(id, callback)
 
@@ -2929,7 +2932,7 @@ ___
 
 ## Line Chart:
 
-The line chart dataset is use to create, as the name implies, line charts but also can create dispersion graphs.
+The `linechart` dataset is use to create, as the name implies, line charts but also can create dispersion graphs.
 
 It uses a set of datapoints that consist of two arrays of numbers with the same size representing the `[x, y]` coordinates of each point.
 
@@ -2940,9 +2943,9 @@ The main components of a line chart are:
 * The `markers` that can be draw on each datapoint.
 * The `error bars` that can be draw on each datapoint.
 
-The datapoints and properties of that datapoints of the `linechart` can be defined to be static or dynamic, meaning that its values can be static and never change or be computed on each draw and even be based on the values of other properties.
+The datapoints and properties of that datapoints can be defined to be static or dynamic, meaning that its values can be static and never change or be computed on each draw and even be based on the values of other properties.
 
-If you set any of the datapoints `x` or `y` component to be dynamic, that component must be defined by a function of the type:
+If you set any of the datapoint `x` or `y` component to be dynamic, that component must be defined by a function of the type:
 
     generator()
     generator(dataset)
@@ -2950,8 +2953,8 @@ If you set any of the datapoints `x` or `y` component to be dynamic, that compon
 
 *Where:*
 
-* `dataset` is a reference to the dataset from which the function is call upon.
-* `graph` is a reference of the graph that the dataset is bound to.
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
 
 These two optional arguments always holds the dataset and graph latest state at the moment of the call.
 
@@ -2984,19 +2987,25 @@ First, lets create a static line chart.
     //Add the data to the linechart
     line_chart.dataX(x_data).dataY(y_data);
 
+    //Finally draws the graph
+    my_graph.draw();
+
 Result:
 
-![static-linecart1](/assets/gifs/static-linechart1.gif)
+![static-linechart1](/assets/gifs/static-linechart1.gif)
 
 >Note: `linspace` is a utility function, you can learn more about this functions on the [extras](#extras) section.
 
-The properties of the line chart can be easily modified, for example by adding the line to the las script.
+The properties of the linechart can be easily modified, for example by adding to the last script.
 
     line_cart.lineColor("#cf0808");
+    
+    //Don't forget to call the draw() method after each change.
+    my_graph.draw();
 
 Changes the line color
 
-![static-linecart2](/assets/images/static-linechart2.jpg)
+![static-linechart2](/assets/images/static-linechart2.jpg)
 
 Now let's recreate the same graph but using dynamic data instead.
 
@@ -3029,7 +3038,7 @@ Now let's recreate the same graph but using dynamic data instead.
     .dataY( dataset=>{
       //In this case we only need a reference to the dataset
 
-      const x_values = dataset.dataX(); //From here we can get the generated x values and other NOT dynamic properties.
+      const x_values = dataset.dataX(); //From here we can get the generated x values and other non dynamic properties.
 
       const y = x_values.map(x=>Math.cos(x));
 
@@ -3037,13 +3046,70 @@ Now let's recreate the same graph but using dynamic data instead.
       return y;
     });
 
+    //Finally draws the graph
+    my_graph.draw();
+
+    
+
 Result:
 
-![dynamic-linecart1](/assets/gifs/dynamic-linechart1.gif)
+![dynamic-linechart1](/assets/gifs/dynamic-linechart1.gif)
 
-As shown, the graph can be moved indefinitely and the data moves along with it. This is because the way it was defined.
+As shown, the graph can be moved indefinitely and the data moves along with it.
 
-> Warning: you 
+> Warning: You may only read static properties from dynamic data generators, this is because dynamic properties depend on the `x` and `y` data values, so calling those from a data gnerator will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `dataX()` or `draw()` method from the `x` data generator because that will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `dataY()` or `draw()` method from the `y` data generator because that will create a circular dependency and the program will stop.
+
+> Note: It is safe to call the `dataX()` method from within the `y` data generator and vice versa.
+
+The creation of dynamic properties is slightly different. This is because the properties are assigned to each datapoint so the generator function depends directly on the `x` and `y` data components.
+
+The generator function will be call once for each datapoint and must return a suitable value for that datapoint.
+
+The generator can accept some optional parameters that must be call in the next order:
+
+    generator(x, y, index, arrayX, arrayY, dataset, graph)
+
+*Where:*
+
+* `x`: is the `x` value of the datapoint.
+* `y`: is the `y` value of the datapoint.
+* `index`: is the index corresponding to the `x` and `y` values.
+* `arrayX`: is the complete arary of `x` data values.
+* `arrayY`: is the complete arary of `y` data values.
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+> Note: All the arguments of the property generator function are optional.
+
+> Note: The property generator operates in a similar way of the array methods (map, forEach, etc).
+
+For example, the line color of the last graph can be dynamically change to be dependent of the `y` values by adding:
+    
+    //Create a colormap
+    const color = colorMap({
+      from : -1,
+      to : 1,
+      type : "magnet"
+    });
+
+    line_chart.lineColor((x, y)=>{
+      //In this case we only need access to the data values in the arguments.
+      
+      //The return value will be assigned to the corresponding datapoint
+      return color(y);
+    });
+
+    my_graph.draw();
+
+Result:
+
+![dynamic-linechart2](/assets/gifs/dynamic-linechart2.gif)
+
+>Note: `colorMap` is a utility function, you can learn more about this functions on the [extras](#extras) section.
 
 ___
 
