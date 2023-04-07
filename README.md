@@ -3205,7 +3205,7 @@ When the data is defined as a function, we say that is dynamically generated.
 
 If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
 
-> Note: The `linechart` data generator functions are discussed in deep [here](#line-chart)
+> Note: The `linechart` data generator functions are discussed in deep [here](#line-chart).
 
 *Returns:*
 
@@ -3247,7 +3247,7 @@ When the data is defined as a function, we say that is dynamically generated.
 
 If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
 
-> Note: The `linechart` data generator functions are discussed in deep [here](#line-chart)
+> Note: The `linechart` data generator functions are discussed in deep [here](#line-chart).
 
 *Returns:*
 
@@ -3365,7 +3365,7 @@ This method lets you get or set the `enable` status of the line drawn.
 * `option`: is a boolea that determines whether the line must be enabled.
 * `callback`: is a function that is run after the line `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
-> Note: This method only affects the line that is draw between datapoints, to fully disable a `linechart` the marks and error bars must be desable as well.
+> Note: This method only affects the line that is draw between datapoints, to fully disable a `linechart` the marks and error bars must be disabled as well.
 
 *Returns:*
 
@@ -3400,7 +3400,7 @@ This method lets you set or get the `color` of the line drawn between datapoints
 
 > Note: If the `color` is defined as an array, its length must be the same as the data arrays.
 
-> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
 
 *Returns:*
 
@@ -3437,7 +3437,7 @@ This method lets you set or get the `opacity` of the line drawn between datapoin
 
 > Note: If the `opacity` is defined as an array, its length must be the same as the data arrays.
 
-> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
 
 *Returns:*
 
@@ -3472,7 +3472,7 @@ This method lets you set or get the `style` of the line drawn between datapoints
 
 > Note: If the `style` is defined as an array, its length must be the same as the data arrays.
 
-> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
 
 The style can be represented with one of the following options:
 
@@ -3526,7 +3526,7 @@ This method lets you set or get the `width` of the line drawn between datapoints
 
 > Note: If the `width` is defined as an array, its length must be the same as the data arrays.
 
-> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
 
 *Returns:*
 
@@ -3538,5 +3538,243 @@ This method lets you set or get the `width` of the line drawn between datapoints
 *Default Value:*
 
 The defaul value for the line `width` is `1`.
+
+___
+
+## Marker
+
+The markers are symbols that can be drawn on each data point. 
+
+These are useful when the data is not that dense and you need to show exactly where each datapoint is.
+
+___
+
+### Marker Enable:
+
+This method lets you get or set the `enable` status of the markers.
+
+*Method:*
+
+    markerEnable()
+    markerEnable(option)
+    markerEnable(option, callback)
+
+*Where:*
+
+* `option`: is a boolea that determines whether the markers must be enabled.
+* `callback`: is a function that is run after the markers `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: This method only affects the markers, to fully disable a `linechart` the line and error bars must be disabled as well.
+
+*Returns:*
+
+* A bolean representing the `enable` status of the line.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default values for the `enable` property of the line is `true`.
+
+___
+
+### Marker Color:
+
+This method lets you set or get the `color` of the markers.
+
+*Method:*
+
+    markerColor()
+    markerColor(option)
+    markerColor(option, callback)
+
+*Where:*
+
+* `option`: represents the marker `color`. It can be one of the following options:
+  * A string that represents the `color` of all markers.
+  * An array of strings, each representing the marker `color` at each datapoint.
+  * A generator function that returns a string representing the `color` at each datapoint.
+* `callback`: is a function that is run after the marker `color` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: If the `color` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A string or an array of strings representing the markers `color` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `color` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the markers `color` is `"#0043e0"`.
+
+___
+
+### Marker Opacity:
+
+This method lets you set or get the `opacity` of the markers.
+
+*Method:*
+
+    markerOpacity()
+    markerOpacity(option)
+    markerOpacity(option, callback)
+
+*Where:*
+
+* `option`: represents the marker `opacity`. It can be one of the following options:
+  * A number that represents the `opacity` of all markers.
+  * An array of numbers, each representing the marker `opacity` at each datapoint.
+  * A generator function that returns a number representing the marker `opacity` at each datapoint.
+* `callback`: is a function that is run after the marker `opacity` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `opacity` values must be a number between 0 and 1.
+
+> Note: If the `opacity` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the marker `opacity` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `opacity` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the marker `opacity` is `1`.
+
+___
+
+### Marker Style:
+
+This method lets you set or get the `style` of the markers.
+
+*Method:*
+
+    markerStyle()
+    markerStyle(option)
+    markerStyle(option, callback)
+
+*Where:*
+
+* `option`: represents the marker line `style`. It can be one of the following options:
+  * A string that represents the `style` of all markers.
+  * An array of strings, each representing the marker line `style` at each datapoint.
+  * A generator function that returns a string representing the marker line `style` at each datapoint.
+* `callback`: is a function that is run after the marker `style` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: This method is only relevant wen the marker `filled` property is set to `false`.
+
+> Note: If the `style` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* A string or an array of strings representing the marker line `style` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `style` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the marker line `style` is `"solid"`.
+
+___
+
+### Marker Width:
+
+This method lets you set or get the line `width` of markers.
+
+*Method:*
+
+    markerWidth()
+    markerWidth(option)
+    markerWidth(option, callback)
+
+*Where:*
+
+* `option`: represents the marker line `width`. It can be one of the following options:
+  * A number that represents line `width` of all markers.
+  * An array of numbers, each representing the marker line `width` at each datapoint.
+  * A generator function that returns a number representing the marker line `width` at each datapoint.
+* `callback`: is a function that is run after the marker line `width` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `width` values must be a positive integer.
+
+> Note: If the `width` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the marker line `width` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `width` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the marker line `width` is `1`.
+
+___
+
+### Marker Filled:
+
+This method lets you get or set the `filled` property of the markers.
+
+If set to `true`, the marker will be drawn as a solid figure, otherwise only will be outlined.
+
+*Method:*
+
+    markerFilled()
+    markerFilled(option)
+    markerFilled(option, callback)
+
+*Where:*
+
+* `option`: represents the marker `filled` property. It can be one of the following options:
+  * A boolean that determine whether all markers should be `filled`.
+  * An array of boolean, each representing whether the marker should be `filled` at each datapoint.
+  * A generator function that returns a boolean determining whether the marker should be `filled` at each datapoint.
+* `callback`: is a function that is run after the marker `filled` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `filled` property is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A bolean or a string of boolean representing the marker `filled` property.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if `filled` is defined as a function.
+
+*Default Value:*
+
+* The default values for the `enable` property of the line is `true`.
 
 ___
