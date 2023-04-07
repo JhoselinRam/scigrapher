@@ -3126,7 +3126,7 @@ This method lets you get or set the id string of the dataset.
 *Where:*
 
 * `option`: is a string representing the `id` of the dataset.
-* `callback` is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+* `callback`: is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: The `id` is used to identify the dataset, so the string must be unique among other datasets.
 
@@ -3134,7 +3134,7 @@ By default, the `id` is generated automatically to guarantee its uniqueness, so 
 
 *Returns:*
 
-* A string representing the `id` of the dataset.
+* A string representing the `id` of the dataset if no arguments are pass.
 * A reference to the dataset object from which the method is called upon.
 
 ___
@@ -3155,13 +3155,13 @@ The dataset with the lower index value will be drawn first and appear to be behi
 *Where:*
 
 * `option`: is a number representing the `index` value of the dataset.
-* `callback` is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+* `callback`: is a function that is run after the `index` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: The draw order of datasets with the same `index` value will be indeterminate.
 
 *Returns:*
 
-* A number that represents the `index` of the dataset.
+* A number that represents the `index` of the dataset if no aguments are pass.
 * A reference to the dataset object from which the method is called upon.
 
 ___
@@ -3186,12 +3186,12 @@ This method lets you get ot set the `x` component of the data points.
 
 *Where:*
 
-* `data` represents the `x` component of the data points. It can be one of the following options:
+* `data`: represents the `x` component of the data points. It can be one of the following options:
   * An array of numbers.
   * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
     * An object that represents the dataset from which the method is called upon.
     * An object that represents the graph object that the dataset is bound to.
-* `callback` is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
 
@@ -3204,6 +3204,8 @@ This method lets you get ot set the `x` component of the data points.
 When the data is defined as a function, we say that is dynamically generated.
 
 If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+> Note: The `linechart` data generator functions are discussed in deep [here](#line-chart)
 
 *Returns:*
 
@@ -3226,12 +3228,12 @@ This method lets you get ot set the `y` component of the data points.
 
 *Where:*
 
-* `data` represents the `y` component of the data points. It can be one of the following options:
+* `data`: represents the `y` component of the data points. It can be one of the following options:
   * An array of numbers.
   * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
     * An object that represents the dataset from which the method is called upon.
     * An object that represents the graph object that the dataset is bound to.
-* `callback` is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
 
@@ -3245,11 +3247,296 @@ When the data is defined as a function, we say that is dynamically generated.
 
 If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
 
+> Note: The `linechart` data generator functions are discussed in deep [here](#line-chart)
+
 *Returns:*
 
 * An array of numbers representing the `y` component of the datapoints if no arguments are pass.
 * A reference to the dataset object from which the method is called upon.
 
 > Note: Even when the data is defined as a function, this method will return an array of numbers.
+
+___
+
+## Axis Used:
+
+This method lets you set or get the axis used by the `linechart`.
+
+*Method:*
+
+    axisUsed()
+    axisUsed(options)
+    axisUsed(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `x`: a string representing the `x` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+  * `y`: a string representing the `y` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+* `callback`: is a function that is run after the axis used is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* An object representing the axis being used by the dataset if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default values for the axis used property are as follow.
+
+    {
+      x : "primary",
+      y : "primary"
+    }    
+
+___
+
+## Polar:
+
+This method lets you set or get the `polar` property of the `linechart`.
+
+This property controls whether the `data` arrays must be interpreted in `rectangular` or `polar` coordinates system.
+
+*Method:*
+
+    polar()
+    polar(option)
+    polar(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `data` must be interpreted in `polar` coordinates.
+* `callback`: is a function that is run after the `polar` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+If the `polar` property is set to true then:
+
+* `dataX` will be interpreted as the radial coordinates.
+* `dataY` will be interpreted as the angular coordinates.
+
+For example, consider the data arrays:
+
+    const r = linspace(1, 1, 200);          //[1,1,1, ..., 1]
+    const theta = linspace(0, 2*Math.PI, 200);  //[0, 0.042, ..., 6.283]
+
+    //Assign the data to the linechart
+    line_chart.dataX(r).dataY(theta);
+
+    //Don't forget to render the new state.
+    my_graph.draw();
+
+| `polar(false)`   |   `polar(true)`  |
+|:----------------:|:----------------:|
+|![linechart-polar-false](/assets/images/linechart-polar-false.jpg)|![linechart-polar-true](/assets/images/linechart-polar-true.jpg)|
+
+When the `polar` property is set to `false` the linechart only shows a straight line but the data is correctly interpreted as a full circumference of radius one if the `polar` property is set as `true`.
+
+___
+
+### Dataset Type:
+
+This method returns the `linechart` dataset type.
+
+*Method:*
+
+    datasetType()
+
+*Returns:*
+
+* This method always return the string `"linechart"`.
+
+This is usefull when you read the dataset from the `graph2D` `getDatasets()` method or the `restoreGraph()` function.
+
+___
+
+## Line Properties
+
+### Line Enable:
+
+This method lets you get or set the `enable` status of the line drawn.
+
+*Method:*
+
+    lineEnable()
+    lineEnable(option)
+    lineEnable(option, callback)
+
+*Where:*
+
+* `option`: is a boolea that determines whether the line must be enabled.
+* `callback`: is a function that is run after the line `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: This method only affects the line that is draw between datapoints, to fully disable a `linechart` the marks and error bars must be desable as well.
+
+*Returns:*
+
+* A bolean representing the `enable` status of the line.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default values for the `enable` property of the line is `true`.
+
+___
+
+### Line Color:
+
+This method lets you set or get the `color` of the line drawn between datapoints.
+
+*Method:*
+
+    lineColor()
+    lineColor(option)
+    lineColor(option, callback)
+
+*Where:*
+
+* `option`: represents the line `color`. It can be one of the following options:
+  * A string that represents the whole line `color`.
+  * An array of strings, each representing the line `color` on each datapoint.
+  * A generator function that returns a string representing the `color` at each datapoint.
+* `callback`: is a function that is run after the line `color` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: If the `color` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+
+*Returns:*
+
+* A string or an array of strings representing the line `color` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `color` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the line `color` is `"#0043e0"`.
+
+___
+
+### Line Opacity:
+
+This method lets you set or get the `opacity` of the line drawn between datapoints.
+
+*Method:*
+
+    lineOpacity()
+    lineOpacity(option)
+    lineOpacity(option, callback)
+
+*Where:*
+
+* `option`: represents the line `opacity`. It can be one of the following options:
+  * A number that represents the whole line `opacity`.
+  * An array of numbers, each representing the line `opacity` on each datapoint.
+  * A generator function that returns a number representing the `opacity` at each datapoint.
+* `callback`: is a function that is run after the line `opacity` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `opacity` values must be a number between 0 and 1.
+
+> Note: If the `opacity` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+
+*Returns:*
+
+* A number or an array of numbers representing the line `opacity` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `opacity` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the line `opacity` is `1`.
+
+___
+
+### Line Style:
+
+This method lets you set or get the `style` of the line drawn between datapoints.
+
+*Method:*
+
+    lineStyle()
+    lineStyle(option)
+    lineStyle(option, callback)
+
+*Where:*
+
+* `option`: represents the line `style`. It can be one of the following options:
+  * A string that represents the whole line `style`.
+  * An array of strings, each representing the line `style` on each datapoint.
+  * A generator function that returns a string representing the `style` at each datapoint.
+* `callback`: is a function that is run after the line `style` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `style` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* A string or an array of strings representing the line `style` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `style` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the line `style` is `"solid"`.
+
+___
+
+### Line Width:
+
+This method lets you set or get the `width` of the line drawn between datapoints.
+
+*Method:*
+
+    lineWidth()
+    lineWidth(option)
+    lineWidth(option, callback)
+
+*Where:*
+
+* `option`: represents the line `width`. It can be one of the following options:
+  * A number that represents the whole line `width`.
+  * An array of numbers, each representing the line `width` on each datapoint.
+  * A generator function that returns a number representing the `width` at each datapoint.
+* `callback`: is a function that is run after the line `width` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `width` values must be a positive integer.
+
+> Note: If the `width` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart)
+
+*Returns:*
+
+* A number or an array of numbers representing the line `width` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `width` is defined as a function.
+
+*Default Value:*
+
+The defaul value for the line `width` is `1`.
 
 ___
