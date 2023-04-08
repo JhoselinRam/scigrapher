@@ -3411,7 +3411,7 @@ This method lets you set or get the `color` of the line drawn between datapoints
 
 *Default Value:*
 
-The defaul value for the line `color` is `"#0043e0"`.
+* The default  value for the line `color` is `"#0043e0"`.
 
 ___
 
@@ -3448,7 +3448,7 @@ This method lets you set or get the `opacity` of the line drawn between datapoin
 
 *Default Value:*
 
-The defaul value for the line `opacity` is `1`.
+* The default value for the line `opacity` is `1`.
 
 ___
 
@@ -3500,7 +3500,7 @@ For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixel
 
 *Default Value:*
 
-The defaul value for the line `style` is `"solid"`.
+* The default value for the line `style` is `"solid"`.
 
 ___
 
@@ -3537,7 +3537,7 @@ This method lets you set or get the `width` of the line drawn between datapoints
 
 *Default Value:*
 
-The defaul value for the line `width` is `1`.
+* The default value for the line `width` is `1`.
 
 ___
 
@@ -3568,12 +3568,12 @@ This method lets you get or set the `enable` status of the markers.
 
 *Returns:*
 
-* A bolean representing the `enable` status of the line.
+* A bolean representing the `enable` status of the marker.
 * A reference to the dataset object from which the method is called upon.
 
 *Default Value:*
 
-* The default values for the `enable` property of the line is `true`.
+* The default value for the `enable` property of the marker is `false`.
 
 ___
 
@@ -3610,7 +3610,7 @@ This method lets you set or get the `color` of the markers.
 
 *Default Value:*
 
-The defaul value for the markers `color` is `"#0043e0"`.
+* The default value for the markers `color` is `"#0043e0"`.
 
 ___
 
@@ -3647,7 +3647,7 @@ This method lets you set or get the `opacity` of the markers.
 
 *Default Value:*
 
-The defaul value for the marker `opacity` is `1`.
+* The default value for the marker `opacity` is `1`.
 
 ___
 
@@ -3701,7 +3701,7 @@ For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixel
 
 *Default Value:*
 
-The defaul value for the marker line `style` is `"solid"`.
+* The default value for the marker line `style` is `"solid"`.
 
 ___
 
@@ -3723,6 +3723,8 @@ This method lets you set or get the line `width` of markers.
   * A generator function that returns a number representing the marker line `width` at each datapoint.
 * `callback`: is a function that is run after the marker line `width` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
+> Note: This method is only relevant wen the marker `filled` property is set to `false`.
+
 > Note: The `width` values must be a positive integer.
 
 > Note: If the `width` is defined as an array, its length must be the same as the data arrays.
@@ -3738,7 +3740,7 @@ This method lets you set or get the line `width` of markers.
 
 *Default Value:*
 
-The defaul value for the marker line `width` is `1`.
+* The default value for the marker line `width` is `1`.
 
 ___
 
@@ -3746,7 +3748,7 @@ ___
 
 This method lets you get or set the `filled` property of the markers.
 
-If set to `true`, the marker will be drawn as a solid figure, otherwise only will be outlined.
+If set to `true`, the marker will be drawn as a solid figure, otherwise will only be outlined.
 
 *Method:*
 
@@ -3776,5 +3778,577 @@ If set to `true`, the marker will be drawn as a solid figure, otherwise only wil
 *Default Value:*
 
 * The default values for the `enable` property of the line is `true`.
+
+___
+
+## Marker Type:
+
+This method lets you set or get the marker `type`.
+
+*Method:*
+
+    markerType()
+    markerType(option)
+    markerType(option, callback)
+
+*Where*:
+
+* `option`: represents the marker `type`. It can be one of the following options:
+  * A string representing the `type` of all markers.
+  * An array of strings representing the marker `type` at each datapoint.
+  * A generator function that returns a string representing the marker `type` at each datapoint.
+* `callback`: is a function that is run after the marker `type` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the marker `type` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+The property `type` can be any of the following options:
+
+| Type |     |     | Type |     |     |       
+|:----:|:---:|:---:|:----:|:---:|:---:|
+|   "circle"    |  ![marker-circle-true](/assets/images/marker-circle-true.jpg) |  ![marker-circle-false](/assets/images/marker-circle-false.jpg) |   "square"    |  ![marker-square-true](/assets/images/marker-square-true.jpg) |  ![marker-square-false](/assets/images/marker-square-false.jpg) |  
+|   "v-rect"    |  ![marker-v-rect-true](/assets/images/marker-v-rect-true.jpg) |  ![marker-v-rect-false](/assets/images/marker-v-rect-false.jpg) |   "h-rect"    |  ![marker-h-rect-true](/assets/images/marker-h-rect-true.jpg) |  ![marker-h-rect-false](/assets/images/marker-h-rect-false.jpg) |  
+|   "cross"    |  ![marker-cross-true](/assets/images/marker-cross-true.jpg) |  ![marker-cross-false](/assets/images/marker-cross-false.jpg) |   "star"    |  ![marker-star-true](/assets/images/marker-star-true.jpg) |  ![marker-star-false](/assets/images/marker-star-false.jpg) |  
+|   "triangle"    |  ![marker-triangle-true](/assets/images/marker-triangle-true.jpg) |  ![marker-triangle-false](/assets/images/marker-triangle-false.jpg) |   "inv-triangle"    |  ![marker-inv-triangle-true](/assets/images/marker-inv-triangle-true.jpg) |  ![marker-inv-triangle-false](/assets/images/marker-inv-triangle-false.jpg) |  
+
+*Returns:*
+
+* A string or an array of strings representing the marker `type` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `type` is defined as a function.
+
+*Default Value:*
+
+* The default value for the marker `type` is `"circle"`.
+
+___
+
+## Marker Size:
+
+This method lets you set or get the `size` of the markers.
+
+*Method:*
+
+    markerSize()
+    markerSize(option)
+    markerSize(option, callback)
+
+*Where:*
+
+* `option`: represents the marker `size`. It can be one of the following options:
+  * A number representing the `size` of all markers.
+  * An array of numbers representing the marker `size` at each datapoint.
+  * A generator function that returns a number representing the marker `size` at each datapoint.
+* `callback`: is a function that is run after the marker `size` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The marker `size` must be a positive number.
+
+> Note: If the marker `size` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+Unlike other numeric properties, the marker `size` is not expressed in pixels, but relative to the default size.
+
+That is, the default `size` is `1`, so a value of `2` will be double the size and `0.5` the half.
+
+> Note: Each `size` is different to maintain the apparent size between them consistent. For reference, the default size of the markers is approximately 10px.
+
+*Returns:*
+
+* A number or an array of numbers representing the marker `size` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `size` is defined as a function.
+
+*Default Value:*
+
+* The defaul value for the marker `size` is `1`.
+
+___
+
+## Error Bars
+
+The error bars are aditional markers that represent the error or uncertainty in the values or the datapoints.
+
+Unlike regular markers, the error bars have a precise and measurable meaning. It can represent a standad deviation, standard error or some confidence interval.
+
+Either way, the value associated with a given error bar will extend equally on both sides of the datapoint in the corresponding axis.
+
+___
+
+### Error Bar Enabled
+
+This method lets you get or set the `enable` status of the errorbars.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    markerEnable()
+    markerEnable(option)
+    markerEnable(option, callback)
+
+*Where:*
+
+* `option`: is an object containing the following properties.
+  * `x`: a boolean that determines whether the `x` error bars must be enabled.
+  * `y`: a boolean that determines whether the `y` error bars must be enabled.
+* `callback`: is a function that is run after the error bars `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: This method only affects the error bars, to fully disable a `linechart` the line and markers must be disabled as well.
+
+*Returns:*
+
+* An object representing the `enable` property of the error bars.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default values for the `enable` property of the error bars are as follows:
+
+    {
+      x : false,
+      y : false
+    }
+
+___
+
+### Error Bar Type:
+
+This method lets you set or get the `type` of the error bars.
+
+*Method:*
+
+    errorbarType()
+    errorbarType(option)
+    errorbarType(option, callback)
+
+*Where:*
+
+* `option`: represents the error bar `type`. It can be one of the following options:
+  * A string representing the `type` of all error bars.
+  * An array of strings representing the error bar `type` at each datapoint.
+  * A generator function that returns a string representing the error bar `type` at each datapoint.
+* `callback`: is a function that is run after the error bar `type` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the error bar `type` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+The property `type` can be any of the following options:
+
+|  Type  |      |  Type  |      |
+|:------:|:----:|:------:|:----:|
+| `"rectangle"` | ![error-rectangle](/assets/images/error-rectangle.jpg) | `"cross"` | ![error-cross](/assets/images/error-cross.jpg) |
+| `"corner"` | ![error-corner](/assets/images/error-corner.jpg) | `"tail-cross"` | ![error-tail-cross](/assets/images/error-tail-cross.jpg) |
+
+*Returns:*
+
+* A string or an array of strings representing the error bar `type` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `type` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `type` is `"tail-cross"`.
+
+___
+
+### Error Bar Data x
+
+This method lets you set or get the data values for the error bar `x` component.
+
+*Method:*
+
+    errorbarDataX()
+    errorbarDataX(option)
+    errorbarDataX(option, callback)
+
+*Where:*
+
+* `option`: represents the `data` of the error bar `x` component. It can be one of the following options:
+  * A number that represents the `x` `data` of all error bars.
+  * An array of numbers, each representing the errorbar `x` `data` at each datapoint.
+  * A generator function that returns a number representing the error bar `x` `data` at each datapoint.
+* `callback`: is a function that is run after the error bar `data` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `data` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the `data` of the error bar `x` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `data` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `x` `data` is `0`.
+
+___
+
+### Error Bar Data y
+
+This method lets you set or get the data values for the error bar `y` component.
+
+*Method:*
+
+    errorbarDataY()
+    errorbarDataY(option)
+    errorbarDataY(option, callback)
+
+*Where:*
+
+* `option`: represents the `data` of the error bar `y` component. It can be one of the following options:
+  * A number that represents the `y` `data` of all error bars.
+  * An array of numbers, each representing the errorbar `y` `data` at each datapoint.
+  * A generator function that returns a number representing the error bar `y` `data` at each datapoint.
+* `callback`: is a function that is run after the error bar `data` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `data` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the `data` of the error bar `y` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `data` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `y` `data` is `0`.
+
+___
+
+### Error Bar Color x:
+
+This method lets you set or get the `color` of the error bar `x` component.
+
+*Method:*
+
+    errorBarColorX()
+    errorBarColorX(option)
+    errorBarColorX(option, callback)
+
+*Where:*
+
+* `option`: represents the `color` of the error bar `x` component. It can be one of the following options:
+  * A string that represents the `color` of all error bars.
+  * An array of strings, each representing the error bar `color` at each datapoint.
+  * A generator function that returns a string representing the error bar `color` at each datapoint.
+* `callback`: is a function that is run after the error bar `color` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: If the `color` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A string or an array of strings representing the `color` of the error bar `x` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `color` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bars `x` `color` is `"#666666"`.
+
+___
+
+### Error Bar Color y:
+
+This method lets you set or get the `color` of the error bar `y` component.
+
+*Method:*
+
+    errorBarColorY()
+    errorBarColorY(option)
+    errorBarColorY(option, callback)
+
+*Where:*
+
+* `option`: represents the `color` of the error bar `y` component. It can be one of the following options:
+  * A string that represents the `color` of all error bars.
+  * An array of strings, each representing the error bar `color` at each datapoint.
+  * A generator function that returns a string representing the error bar `color` at each datapoint.
+* `callback`: is a function that is run after the error bar `color` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: If the `color` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A string or an array of strings representing the `color` of the error bar `y` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `color` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bars `y` `color` is `"#666666"`.
+
+___
+
+### Error Bar Opacity x:
+
+This method lets you set or get the `opacity` of the error bar `x` component.
+
+*Method:*
+
+    errorbarOpacityX()
+    errorbarOpacityX(option)
+    errorbarOpacityX(option, callback)
+
+*Where:*
+
+* `option`: represents the `opacity` of the error bar `x` component. It can be one of the following options:
+  * A number that represents the `opacity` of all error bars.
+  * An array of numbers, each representing the error bar `opacity` at each datapoint.
+  * A generator function that returns a number representing the error bar `opacity` at each datapoint.
+* `callback`: is a function that is run after the error bar `opacity` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `opacity` values must be a number between 0 and 1.
+
+> Note: If the `opacity` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the `opacity` of the error bar `x` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `opacity` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `x` `opacity` is `1`.
+
+___
+
+### Error Bar Opacity y:
+
+This method lets you set or get the `opacity` of the error bar `y` component.
+
+*Method:*
+
+    errorbarOpacityY()
+    errorbarOpacityY(option)
+    errorbarOpacityY(option, callback)
+
+*Where:*
+
+* `option`: represents the `opacity` of the error bar `y` component. It can be one of the following options:
+  * A number that represents the `opacity` of all error bars.
+  * An array of numbers, each representing the error bar `opacity` at each datapoint.
+  * A generator function that returns a number representing the error bar `opacity` at each datapoint.
+* `callback`: is a function that is run after the error bar `opacity` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `opacity` values must be a number between 0 and 1.
+
+> Note: If the `opacity` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the `opacity` of the error bar `y` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `opacity` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `y` `opacity` is `1`.
+
+___
+
+### Error Bar Style x:
+
+This method lets you set or get the `style` of the error bar `x` component.
+
+*Method:*
+
+    errorbarStyleX()
+    errorbarStyleX(option)
+    errorbarStyleX(option, callback)
+
+*Where:*
+
+* `option`: represents the line `style` of the error bar `x` component. It can be one of the following options:
+  * A string that represents the `style` of all error bars.
+  * An array of strings, each representing the error bar line `style` at each datapoint.
+  * A generator function that returns a string representing the error bar line `style` at each datapoint.
+* `callback`: is a function that is run after the error bar `style` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `style` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* A string or an array of strings representing the line `style` of the error bar `x` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `style` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `x` line `style` is `"solid"`.
+
+___
+
+### Error Bar Style y:
+
+This method lets you set or get the `style` of the error bar `y` component.
+
+*Method:*
+
+    errorbarStyleY()
+    errorbarStyleY(option)
+    errorbarStyleY(option, callback)
+
+*Where:*
+
+* `option`: represents the line `style` of the error bar `y` component. It can be one of the following options:
+  * A string that represents the `style` of all error bars.
+  * An array of strings, each representing the error bar line `style` at each datapoint.
+  * A generator function that returns a string representing the error bar line `style` at each datapoint.
+* `callback`: is a function that is run after the error bar `style` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `style` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* A string or an array of strings representing the line `style` of the error bar `y` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `style` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `y` line `style` is `"solid"`.
+
+___
+
+### Error Bar Width x:
+
+This method lets you set or get the line `width` of the error bar `x` component.
+
+*Method:*
+
+    errorbarWidthX()
+    errorbarWidthX(option)
+    errorbarWidthX(option, callback)
+
+*Where:*
+
+* `option`: represents the line `width` of the error bar `x` component. It can be one of the following options:
+  * A number that represents line `width` of all error bars.
+  * An array of numbers, each representing the error bar line `width` at each datapoint.
+  * A generator function that returns a number representing the error bar line `width` at each datapoint.
+* `callback`: is a function that is run after the error bar line `width` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `width` values must be a positive integer.
+
+> Note: If the `width` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the line `width` of the error bar `x` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `width` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `x` line `width` is `1`.
+
+___
+
+### Error Bar Width y:
+
+This method lets you set or get the line `width` of the error bar `y` component.
+
+*Method:*
+
+    errorbarWidthY()
+    errorbarWidthY(option)
+    errorbarWidthY(option, callback)
+
+*Where:*
+
+* `option`: represents the line `width` of the error bar `y` component. It can be one of the following options:
+  * A number that represents line `width` of all error bars.
+  * An array of numbers, each representing the error bar line `width` at each datapoint.
+  * A generator function that returns a number representing the error bar line `width` at each datapoint.
+* `callback`: is a function that is run after the error bar line `width` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `width` values must be a positive integer.
+
+> Note: If the `width` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `linechart` property generator functions are discussed in deep [here](#line-chart).
+
+*Returns:*
+
+* A number or an array of numbers representing the line `width` of the error bar `y` component if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be an array even if the `width` is defined as a function.
+
+*Default Value:*
+
+* The default value for the error bar `y` line `width` is `1`.
 
 ___

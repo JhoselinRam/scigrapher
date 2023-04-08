@@ -32,7 +32,7 @@ function ErrorLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Ge
             }
 
         if(typeof enable === "object"){
-            if(enable.x == null || enable.y == null) return dataHandler;
+            if(enable.x == null && enable.y == null) return dataHandler;
             if(enable.x === dataState.errorBar.x.enable && enable.y === dataState.errorBar.y.enable) return dataHandler;
 
             if(enable.x != null) dataState.errorBar.x.enable = enable.x;
