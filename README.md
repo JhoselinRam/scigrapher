@@ -2945,7 +2945,7 @@ The main components of a line chart are:
 
 The datapoints and properties of that datapoints can be defined to be static or dynamic, meaning that its values can be static and never change or be computed on each draw and even be based on the values of other properties.
 
-If you set any of the datapoint `x` or `y` component to be dynamic, that component must be defined by a function of the type:
+If you set any of the datapoint components to be dynamic, that component must be defined by a function of the type:
 
     generator()
     generator(dataset)
@@ -2980,7 +2980,7 @@ First, lets create a static line chart.
     //Creates the linechart
     const line_chart = my_graph.addDataset("linechart");
 
-    //Creates the data number arrays
+    //Creates the data arrays
     const x_data = linspace(-8, 8, 150);
     const y_data = x_data.map(x => Math.cos(x));
     
@@ -2990,7 +2990,7 @@ First, lets create a static line chart.
     //Finally draws the graph
     my_graph.draw();
 
-Result:
+*Result:*
 
 ![static-linechart1](/assets/gifs/static-linechart1.gif)
 
@@ -4352,3 +4352,84 @@ This method lets you set or get the line `width` of the error bar `y` component.
 * The default value for the error bar `y` line `width` is `1`.
 
 ___
+
+## Area:
+
+The `area` dataset is used to show the area between two curves, for example when you need to represent the integral of a given function.
+
+It uses two sets of datapoints, each consisting of two array of numbers representing the `[x, y]` coordinates of each point.
+
+The two sets of datapoints can be defined to be static or dynamic, meaning that its values can be static and never change or be computed on each draw and even be based on the values of other properties.
+
+If you set any of the datapoint components to be dynamic, that component must be defined by a function of the type:
+
+    generator()
+    generator(dataset)
+    generator(dataset, graph)
+
+*Where:*
+
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+These two optional arguments always holds the dataset and graph latest state at the moment of the call.
+
+> Note: Unlike the callback that most methods accept, the generator function runs on every draw.
+
+
+First lets create a static `area` graph.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisDomain({
+      x : {start : -12, end : 12},
+      y : {start : -0.3, end : 1.1}
+    })
+    .containerSize({width : 800,  height : 300})
+    .pointerMove();
+
+
+    //Creates a simple linechart for reference
+    const line_chart = my_graph.addDataset("linechart");
+
+    const line_data_x = linspace(-12, 12, 150);
+    const line_data_y = line_data_x.map(x => Math.sin(x)/x);
+
+    line_chart.dataX(line_data_x).dataY(line_data_y);
+
+
+    //Now creates the area graph.
+    const area = my_graph.addDataset("area");
+
+    //Creates the data arrays
+    const area_data_x = linspace(-12, 12, 150);
+    const area_data_y = area_data_x.map(x => Math.sin(x)/x); 
+
+    //The area need two sets of data arrays
+    const area_base_x = [-12, 12];
+    const area_base_y : [0, 0];
+
+    //Add the data to the area graph
+    area.dataX(area_data_x)
+        .dataY(area_data_y)
+        .baseX(area_base_x)
+        .baseY(area_base_y);
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![static-area](/assets/gifs/static-area.gif)
+
+>Note: `linspace` is a utility function, you can learn more about this functions on the [extras](#extras) section.
+
+As shown, the area is being drawn between the `data` and the `base` curve. In this case, the `data` curve follows the `linechar` and the `base` curve follows the `x` axis, that is, a straight line from `[-12, 0]` to `[12, 0]`.
+
+> Note: It is not necessary for the `base` to be a straight line, it can be any arbitrary curve.
+
+> Note: It is not necessary for the `data` and `base` curves to share the same endpoints or number of datapoints, they both are independent.

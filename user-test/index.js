@@ -3,34 +3,27 @@ import { graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping, rest
 
 //Grafica original
 const graph = graph2D(document.querySelector(".graph1"))
-                    
+.containerSize({width : 800,  height : 300})
+.axisDomain({
+    x : {start : -12, end : 12},
+    y : {start : -0.3, end : 1.1}
+  })
+
+         
+
+const line = graph.addDataset("linechart")
+.dataX((set, graph)=>linspace(graph.axisDomain().x.start, graph.axisDomain().x.end, 150))
+.dataY(set=>set.dataX().map(x=>Math.sin(x)/x))
+
+const area = graph.addDataset("area")
+.dataX(linspace(-12,12,100))
+.dataY(set=>set.dataX().map(x=>Math.sin(x)/x))
+.baseX([-12,12])
+.baseY([0,0])
 
 
+graph.draw();
 
-
-
-//Guarda el estado completo de la grafica en cuestion
- //const graphSave = graph1.save();
-
-//Se convierten a JSON para simular transferencia de datos
- //const stringGraph = JSON.stringify(graphSave);
-
-
-//---------------------------------------------
-//---------------------------------------------
-
-
-//Fulano recibe la informacion y la interpreta
- //const receivedData = JSON.parse(stringGraph);
-
-//Restaura la grafica
-//  const {graph, linechart, legend} = restoreGraph({
-//      container : document.querySelector(".graph2"),
-//      data : receivedData
-//  }); 
-
-// A ver!!
- //graph.draw()
 
 
 
