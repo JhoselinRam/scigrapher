@@ -68,6 +68,11 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
             
         }
 
+        rect.x = Math.round(rect.x);
+        rect.y = Math.round(rect.y);
+        rect.width = Math.round(rect.width);
+        rect.height = Math.round(rect.height);
+
         return rect;
     }
 

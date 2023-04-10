@@ -2570,7 +2570,7 @@ ___
 
 ### Container Size:
 
-This method lets you get or set the size of the container div element.
+This method lets you set or get the size of the container div element.
 
 The graph change sizes accordingly, maintaining the values of the axis `domain`. In other words, this method do not conserve the axis aspect ratio.
 
@@ -2960,6 +2960,8 @@ These two optional arguments always holds the dataset and graph latest state at 
 
 > Note: Unlike the callback that most methods accept, the generator function runs on every draw.
 
+The `linechart` data generator must return an array of numbers.
+
 Example:
 
 First, lets create a static line chart.
@@ -3022,7 +3024,7 @@ Now let's recreate the same graph but using dynamic data instead.
     .containerSize({width : 800,  height : 300})
     .pointerMove();
 
-    //Creates the linechart and adds the data
+    //Creates the linechart and add the data
     const line_chart = my_graph.addDataset("linechart");
 
     line_chart.dataX((dataset, graph)=>{
@@ -3051,13 +3053,13 @@ Now let's recreate the same graph but using dynamic data instead.
 
     
 
-Result:
+*Result:*
 
 ![dynamic-linechart1](/assets/gifs/dynamic-linechart1.gif)
 
 As shown, the graph can be moved indefinitely and the data moves along with it.
 
-> Warning: You may only read static properties from dynamic data generators, this is because dynamic properties depend on the `x` and `y` data values, so calling those from a data gnerator will create a circular dependency and the program will stop.
+> Warning: You may only read static properties from dynamic data generators, this is because dynamic properties depend on the `x` and `y` data values, so calling those from a data generator will create a circular dependency and the program will stop.
 
 > Warning: You must not call the `dataX()` or `draw()` method from the `x` data generator because that will create a circular dependency and the program will stop.
 
@@ -3113,9 +3115,9 @@ Result:
 
 ___
 
-## ID:
+### ID:
 
-This method lets you get or set the id string of the dataset.
+This method lets you set or get the id string of the dataset.
 
 *Method:*
 
@@ -3139,12 +3141,12 @@ By default, the `id` is generated automatically to guarantee its uniqueness, so 
 
 ___
 
-## Index:
+### Index:
 
-This method lets you get or set the index of the dataset.
+This method lets you set or get the index of the dataset.
 
 The index is used to determine the order in which the datasets will be drawn.
-The dataset with the lower index value will be drawn first and appear to be behind the other datasets.
+The dataset with the lower index value will be drawn first and appear to be behind other datasets.
 
 *Method:*
 
@@ -3163,6 +3165,22 @@ The dataset with the lower index value will be drawn first and appear to be behi
 
 * A number that represents the `index` of the dataset if no aguments are pass.
 * A reference to the dataset object from which the method is called upon.
+
+___
+
+### Dataset Type:
+
+This method returns the `linechart` dataset type.
+
+*Method:*
+
+    datasetType()
+
+*Returns:*
+
+* This method always return the string `"linechart"`.
+
+This is usefull when you read the dataset from the `graph2D` `getDatasets()` method or the `restoreGraph()` function.
 
 ___
 
@@ -3330,21 +3348,13 @@ For example, consider the data arrays:
 
 When the `polar` property is set to `false` the linechart only shows a straight line but the data is correctly interpreted as a full circumference of radius one if the `polar` property is set as `true`.
 
-___
-
-### Dataset Type:
-
-This method returns the `linechart` dataset type.
-
-*Method:*
-
-    datasetType()
-
 *Returns:*
+* A boolean that represents the linechart `polar` property value if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
 
-* This method always return the string `"linechart"`.
+*Default Value:*
 
-This is usefull when you read the dataset from the `graph2D` `getDatasets()` method or the `restoreGraph()` function.
+The default value for the linechart `polar` property is `false`.
 
 ___
 
@@ -3352,7 +3362,7 @@ ___
 
 ### Line Enable:
 
-This method lets you get or set the `enable` status of the line drawn.
+This method lets you set or get the `enable` status of the line drawn.
 
 *Method:*
 
@@ -3362,7 +3372,7 @@ This method lets you get or set the `enable` status of the line drawn.
 
 *Where:*
 
-* `option`: is a boolea that determines whether the line must be enabled.
+* `option`: is a boolean that determines whether the line must be enabled.
 * `callback`: is a function that is run after the line `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: This method only affects the line that is draw between datapoints, to fully disable a `linechart` the marks and error bars must be disabled as well.
@@ -3551,7 +3561,7 @@ ___
 
 ### Marker Enable:
 
-This method lets you get or set the `enable` status of the markers.
+This method lets you set or get the `enable` status of the markers.
 
 *Method:*
 
@@ -3561,7 +3571,7 @@ This method lets you get or set the `enable` status of the markers.
 
 *Where:*
 
-* `option`: is a boolea that determines whether the markers must be enabled.
+* `option`: is a boolean that determines whether the markers must be enabled.
 * `callback`: is a function that is run after the markers `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
 
 > Note: This method only affects the markers, to fully disable a `linechart` the line and error bars must be disabled as well.
@@ -3746,7 +3756,7 @@ ___
 
 ### Marker Filled:
 
-This method lets you get or set the `filled` property of the markers.
+This method lets you set or get the `filled` property of the markers.
 
 If set to `true`, the marker will be drawn as a solid figure, otherwise will only be outlined.
 
@@ -3880,7 +3890,7 @@ ___
 
 ### Error Bar Enabled
 
-This method lets you get or set the `enable` status of the errorbars.
+This method lets you set or get the `enable` status of the errorbars.
 
 It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
 
@@ -4428,8 +4438,1108 @@ First lets create a static `area` graph.
 
 >Note: `linspace` is a utility function, you can learn more about this functions on the [extras](#extras) section.
 
-As shown, the area is being drawn between the `data` and the `base` curve. In this case, the `data` curve follows the `linechar` and the `base` curve follows the `x` axis, that is, a straight line from `[-12, 0]` to `[12, 0]`.
+As shown, the area is being drawn between the `data` and the `base` curves. In this case, the `data` curve follows the `linechar` and the `base` curve follows the `x` axis, that is, a straight line from `[-12, 0]` to `[12, 0]`.
 
 > Note: It is not necessary for the `base` to be a straight line, it can be any arbitrary curve.
 
-> Note: It is not necessary for the `data` and `base` curves to share the same endpoints or number of datapoints, they both are independent.
+> Note: It is not necessary for the `data` and `base` curves to share the same endpoints or datapoint number, they both are independent.
+
+Now let's recreate the same graph but using dynamic data instead.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisDomain({
+      x : {start : -12, end : 12},
+      y : {start : -0.3, end : 1.1}
+    })
+    .containerSize({width : 800,  height : 300})
+    .pointerMove();
+
+
+    //Creates a simple linechart for reference
+    const line_chart = my_graph.addDataset("linechart");
+
+    //The linechart data remains static
+    const line_data_x = linspace(-12, 12, 150);
+    const line_data_y = line_data_x.map(x => Math.sin(x)/x);
+
+    line_chart.dataX(line_data_x).dataY(line_data_y);
+
+
+
+    //Now creates the area graph ans add the data.
+    const area = my_graph.addDataset("area");
+
+    area.dataX((dataset, graph)=>{
+      //This function will run on every draw
+      //Inside this function, dataset makes reference to line_chart and 
+      //graph to my_graph
+
+      const domain = graph.axisDomain(); 
+
+      //The return value must be an array of numbers
+      return linspace(domain.x.start, domain.x.end, 150)
+    })
+    .dataY( dataset=>{
+      //In this case we only need a reference to the dataset
+
+      const x_values = dataset.dataX(); //From here we can get the generated x values
+
+      const y = x_values.map(x=>Math.sin(x)/x);
+
+      //Again, the return value must be an array of numbers
+      return y;
+    } )
+    .baseX((dataset, graph)=>{
+      const domain = graph.axisDomain();
+
+      //In this case only the axis endpoints are need.
+      return [domain.x.start, domain.x.end];
+    })
+    .baseY([0, 0]);
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![dynamic-area](/assets/gifs/dynamic-area.gif)
+
+As shown, the graph can be moved indefinitely and the area moves along with it.
+
+> Warning: You must not call the `dataX()` or `draw()` method from the `x` data generator because that will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `dataY()` or `draw()` method from the `y` data generator because that will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `baseX()` or `draw()` method from the `x` base generator because that will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `baseY()` or `draw()` method from the `y` base generator because that will create a circular dependency and the program will stop.
+
+> It is safe to call every other method from the generator functions.
+
+___
+
+### ID:
+
+This method lets you set or get the id string of the dataset.
+
+*Method:*
+
+    id()
+    id(option)
+    id(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the `id` of the dataset.
+* `callback`: is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `id` is used to identify the dataset, so the string must be unique among other datasets.
+
+By default, the `id` is generated automatically to guarantee its uniqueness, so in the majority of cases it is best to leave it as it is.
+
+*Returns:*
+
+* A string representing the `id` of the dataset if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
+### Index:
+
+This method lets you set or get the index of the dataset.
+
+The index is used to determine the order in which the datasets will be drawn.
+The dataset with the lower index value will be drawn first and appear to be behind other datasets.
+
+*Method:*
+
+    index()
+    index(option)
+    index(option, callback)
+
+*Where:*
+
+* `option`: is a number representing the `index` value of the dataset.
+* `callback`: is a function that is run after the `index` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The draw order of datasets with the same `index` value will be indeterminate.
+
+*Returns:*
+
+* A number that represents the `index` of the dataset if no aguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
+### Enable:
+
+This method lets you set or get the `enable` status of the area.
+
+*Method:*
+
+    enable()
+    enable(option)
+    enable(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the area must be enabled.
+* `callback`: is a function that is run after the area `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A bolean representing the `enable` status of the area.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default values for the `enable` property of the area is `true`.
+
+___
+
+### Dataset Type:
+
+This method returns the `area` dataset type.
+
+*Method:*
+
+    datasetType()
+
+*Returns:*
+
+* This method always return the string `"area"`.
+
+This is usefull when you read the dataset from the `graph2D` `getDatasets()` method or the `restoreGraph()` function.
+
+___
+
+## Area Data
+
+The data in the `area` dataset is composed of two different sets each with two arrays of numbers with equal length. Each pair of numbers that share the same index in the arrays represent the `[x, y]` coordinates of one data point.
+
+Each set of data is independent and are named the `data` and the `base` curves. The area is drawn between these two curves.
+
+Each array must be defined independently.
+
+___
+
+### Data x:
+
+This method lets you get ot set the `x` component of the `data` curve.
+
+*Method:*
+
+    dataX()
+    dataX(data)
+    dataX(data, callback)
+
+*Where:*
+
+* `data`: represents the `x` component of the `data` curve. It can be one of the following options:
+  * An array of numbers.
+  * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `dataX()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will stop.
+
+When the data is defined as a function, we say that is dynamically generated.
+
+If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+> Note: The `area` data generator functions are discussed in deep [here](#area).
+
+*Returns:*
+
+* An array of numbers representing the `x` component of the `data` curve if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the data is defined as a function, this method will return an array of numbers.
+
+___
+
+### Data y:
+
+This method lets you get ot set the `y` component of the `data` curve.
+
+*Method:*
+
+    dataY()
+    dataY(data)
+    dataY(data, callback)
+
+*Where:*
+
+* `data`: represents the `y` component of the `data` curve. It can be one of the following options:
+  * An array of numbers.
+  * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `dataY()` nor `draw()` should be called from within the data function, because that will cause a circular dependency and the program will stop.
+
+When the data is defined as a function, we say that is dynamically generated.
+
+If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the base will not update.
+
+> Note: The `area` data generator functions are discussed in deep [here](#area).
+
+*Returns:*
+
+* An array of numbers representing the `y` component of the `data` curve if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the data is defined as a function, this method will return an array of numbers.
+
+___
+
+### Base x:
+
+This method lets you get ot set the `x` component of the `base` curve.
+
+*Method:*
+
+    baseX()
+    baseX(base)
+    baseX(base, callback)
+
+*Where:*
+
+* `base`: represents the `x` component of the `base` curve. It can be one of the following options:
+  * An array of numbers.
+  * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the `base` as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `baseX()` nor `draw()` should be called from within the `base` function, because that will cause a circular dependency and the program will stop.
+
+When the base is defined as a function, we say that is dynamically generated.
+
+If the base is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+> Note: The `area` data generator functions are discussed in deep [here](#area).
+
+*Returns:*
+
+* An array of numbers representing the `x` component of the `base` curve if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the base is defined as a function, this method will return an array of numbers.
+
+___
+
+### Base y:
+
+This method lets you get ot set the `y` component of the `base` curve.
+
+*Method:*
+
+    baseX()
+    baseX(base)
+    baseX(base, callback)
+
+*Where:*
+
+* `base`: represents the `y` component of the `base` curve. It can be one of the following options:
+  * An array of numbers.
+  * A function that returns an array of numbers. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the base is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the `base` as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `baseY()` nor `draw()` should be called from within the `base` function, because that will cause a circular dependency and the program will stop.
+
+When the base is defined as a function, we say that is dynamically generated.
+
+If the base is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the base will not update.
+
+> Note: The `area` data generator functions are discussed in deep [here](#area).
+
+*Returns:*
+
+* An array of numbers representing the `y` component of the `base` curve if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the base is defined as a function, this method will return an array of numbers.
+
+___
+
+## Axis Used:
+
+This method lets you set or get the axis used by the `area`.
+
+*Method:*
+
+    axisUsed()
+    axisUsed(options)
+    axisUsed(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `x`: a string representing the `x` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+  * `y`: a string representing the `y` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+* `callback`: is a function that is run after the axis used is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* An object representing the axis being used by the dataset if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default values for the axis used property are as follow.
+
+    {
+      x : "primary",
+      y : "primary"
+    }    
+
+___
+
+## Polar:
+
+This method lets you set or get the `polar` property of the `area`.
+
+This property controls whether the `data` and `base` arrays must be interpreted in `rectangular` or `polar` coordinates system.
+
+*Method:*
+
+    polar()
+    polar(option)
+    polar(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `data` and `base` must be interpreted in `polar` coordinates.
+* `callback`: is a function that is run after the `polar` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+If the `polar` property is set to true then:
+
+* `dataX` will be interpreted as the radial coordinates of the `data` curve.
+* `dataY` will be interpreted as the angular coordinates of the `data` curve.
+* `baseX` will be interpreted as the radial coordinates of the `base` curve.
+* `baseY` will be interpreted as the angular coordinates of the `base` curve.
+
+For example, consider the data arrays:
+
+    const r = linspace(1, 1, 200);          //[1,1,1, ..., 1]
+    const theta = linspace(0, 2*Math.PI, 200);  //[0, 0.042, ..., 6.283]
+
+    //Assign the data to the linechart
+    line_chart.dataX(r).dataY(theta);
+
+    //Don't forget to render the new state.
+    my_graph.draw();
+
+| `polar(false)`   |   `polar(true)`  |
+|:----------------:|:----------------:|
+|![area-polar-false](/assets/images/area-polar-false.jpg)|![area-polar-true](/assets/images/area-polar-true.jpg)|
+
+When the `polar` property is set to `false` the area is shows a triengle but the data is correctly interpreted as a full circle of radius one if the `polar` property is set as `true`.
+
+*Returns:*
+* A boolean that represents the area `polar` property value if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default value for the area `polar` property is `false`.
+
+___
+
+## Area Properties
+
+### Color:
+
+This method lets you set or get the `color` of the area.
+
+*Method:*
+
+    color()
+    color(option)
+    color(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the color of the area.
+* `callback`: is a function that is run after the area `color` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+*Returns:*
+* A string that represents the area `color` if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default value for the area `color` is `"#0043e0"`.
+
+___
+
+### Opacity:
+
+This method lets you set or get the `opacity` of the area.
+
+*Method:*
+
+    opacity()
+    opacity(option)
+    opacity(option, callback)
+
+*Where:*
+
+* `opacity`: is a number representing the opacity of the area.
+* `callback`: is a function that is run after the area `opacity` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The opacity must be a number between 0 and 1.
+
+*Returns:*
+* A number that represents the area `opacity` if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default value for the area `opacity` is `0.3`.
+
+___
+
+## Heatmap
+
+The `heatmap` dataset is used to represent two dimensional functions or scalar fields. The field values is represented as a color.
+
+The datapoints in this dataset are represented by three arrays, two of which are used to determine the location of the datapoint, these are call the `meshX` and `meshY` arrays and the third stores the value itself, this is the `data` array.
+
+These arrays have a specific structure: All three are two-dimensional matrices
+
+    const data = [
+      [1,2,3],
+      [4,5,6],
+      [7,8,9]
+    ]
+
+That is, and array that holds arrays of numbers. Each of the inner arrays can have different lengths as long that difference is present in `meshX`, `meshY` and `data` at the same location.
+
+> Note: The `meshX`, `meshY` and `data` arrays must have the same structure.
+
+The datapoints are characterized with two indices `(i, j)` that represent the row and column of the `meshX`, `meshY` and `data` arrays.
+
+So the `x` coordinate of the datapoint is at `meshX[i][j]`, the `y` coordinate at `meshY[i][j]` and its value is `data[i][j]`.
+
+The mesh, data and datapoint properties can be defined to be static or dynamic, meaning that its values can be static and never change or be computed on each draw and even be based on the values of other properties.
+
+Example:
+
+First, lets create a static `heatmap` graph.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisPosition("bottom-left")
+    .primaryGrid({
+      grid : {enable : false}
+    })
+    .secondaryGrid({
+      grid : {enable : false}
+    })
+    .containerSize({width : 400, height : 400})
+    .pointerMove();
+
+    
+
+    //Creates the heatmap
+    const heat_map = my_graph.addDataset("heatmap");
+
+    //Creates the mesh
+    const x_positions = linespace(-3,3,100);
+    const y_positions = linespace(-3,3,100);
+    const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+    //Creates the data
+    const values = [];
+    for(let i=0; i<x_mesh.length; i++){
+      values.push([]);
+      for(let j=0; j<x_mesh[i].length; j++){
+        const x = x_mesh[i][j];
+        const y = y_mesh[i][j];
+        const r = Math.hypot(x, y);
+
+        values[i].push(Math.cos(r));    
+      }
+    }
+
+    //Add the data to the heatmap
+    heat_map.meshX(x_mesh).meshY(y_mesh).data(values);
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![static-heatmap](/assets/gifs/static-heatmap.gif)
+
+>Note: `linspace` and `meshgrid` are utility functions, you can learn more about this functions on the [extras](#extras) section.
+
+As shown, the `heatmap` position and values are static and remain unchanged.
+
+Now let's make the mesh dynamic. To do that, we need to define each mesh component as a generator function.
+
+The mesh generator function has the form:
+
+    generator()
+    generator(dataset)
+    generator(dataset, graph)
+
+*Where:*
+
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+These two optional arguments always holds the dataset and graph latest state at the moment of the call.
+
+> Note: Unlike the callback that most methods accept, the generator function runs on every draw.
+
+The mesh generator function must return the mesh values.
+
+We will keep the last script up until the data is add to the `heatmap`.
+
+    //Add the data to the heatmap
+    heat_map.meshX((dataset, graph)=>{
+      //This function will run on every draw
+      //Inside this function, dataset makes reference to heat_map and 
+      //graph to my_graph
+
+      const domain = graph.axisDomain();
+
+      const x_positions = linspace(domain.x.start, domain.x.end);
+      const y_positions = linspace(domain.y.start, domain.y.end);
+      const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+      //The return value must be the x mesh component.
+      return x_mesh;
+    })
+    .meshY((dataset, graph)=>{
+      const domain = graph.axisDomain();
+
+      const x_positions = linspace(domain.x.start, domain.x.end);
+      const y_positions = linspace(domain.y.start, domain.y.end);
+      const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+      //This time we return the y mesh component.
+      return y_mesh;
+    })
+    .data(values);
+
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![dynamic-heatmap1](/assets/gifs/dynamic-heatmap1.gif)
+
+> Warning: You may only read static properties from dynamic mesh generators, this is because dynamic properties depend on the `x` and `y` mesh values, so calling those from a data generator will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `meshX()` ot `draw()` methods from the `x` mesh generator because that will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `meshY()` ot `draw()` methods from the `y` mesh generator because that will create a circular dependency and the program will stop.
+
+> Note: It is safe to call the `meshX()` method from within the `y` mesh generator and vice versa.
+
+Now in this case, the mesh moves along with the axis and appears always at the center of the graph, but the `heatmap` values are still static.
+
+To change that, the data values must be defined as a generator function. This function will be call once for each datapoint position and must return a value for that datapoint.
+
+The `heatmap` data generator can accept some optional parameters that must be call in the next order:
+
+    generator(x, y, i, j, meshX, meshY, dataset, graph)
+
+*Where:*
+
+* `x`: is the `x` position of the datapoint.
+* `y`: is the `y` position of the datapoint.
+* `i`: is the `i` index corresponding to the `x` and `y` values.
+* `j`: is the `j` index corresponding to the `x` and `y` values.
+* `meshX`: is the complete `meshX` array.
+* `meshY`: is the complete `meshY` array.
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+> Note: All the arguments of the data generator function are optional.
+
+> Note: The data generator operates in a similar way of the array methods (map, forEach, etc).
+
+In our example, instead of defining the data statically, we will use a generator:
+
+    heat_map.data((x, y)=> {
+      //This function will run on every draw
+      //In this case we only need the x and y positions.
+
+      const r = Math.hypot(x,y);
+
+      //Return the data value at each datapoint
+      return Math.cos(2*r);
+    })
+    
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![dynamic-heatmap2](/assets/gifs/dynamic-heatmap2.gif)
+
+> Warning: You may only read static properties from dynamic data generators, this is because dynamic properties depend on the mesh values, so calling those from a data generator will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `data()` or `draw()` methods from the data generator because that will create a circular dependency and the program will stop.
+
+As shown, the data moves along with the axis and mesh.
+
+Finally, some properties can be dynamic too. The `heatmap` property generator function in a similar manner than the data generator. 
+
+The function will be called once for each datapoint and must return a suitable property value.
+
+The `heatmap` property generator can accept some optional parameters that must be call in the next order:
+
+    generator(value, x, y, i, j, data, meshX, meshY, dataset, graph)
+
+*Where:*
+
+* `value`: is the value of the datapoint.
+* `x`: is the `x` position of the datapoint.
+* `y`: is the `y` position of the datapoint.
+* `i`: is the `i` index corresponding to the `x` and `y` values.
+* `j`: is the `j` index corresponding to the `x` and `y` values.
+* `data`: is the complete `data` array.
+* `meshX`: is the complete `meshX` array.
+* `meshY`: is the complete `meshY` array.
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+> Note: All the arguments of the data generator function are optional.
+
+> Note: The data generator operates in a similar way of the array methosds (map, forEach, etc).
+
+In the last script we can add:
+
+    heat_map.opacity((value, x, y)=>{
+      //This function will run on each draw
+      //In this case we only need the datapoint value
+
+      const opacity_map = mapping({ from:[-1,1], to:[0,1] });
+
+      //The generator function must return a suitable value.
+      return opacity_map.map(value);
+    });
+
+    //Draw the graph after any change
+    my_graph.draw();
+
+*Result:*
+
+![dynamic-heatmap3](/assets/gifs/dynamic-heatmap3.gif)
+
+> Warning: You must not call the `draw()` method from the property generator because that will create a circular dependency and the program will stop.
+
+>Note: `mapping` is a utility function, you can learn more about this functions on the [extras](#extras) section.
+
+___
+
+
+### ID:
+
+This method lets you set or get the id string of the dataset.
+
+*Method:*
+
+    id()
+    id(option)
+    id(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the `id` of the dataset.
+* `callback`: is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `id` is used to identify the dataset, so the string must be unique among other datasets.
+
+By default, the `id` is generated automatically to guarantee its uniqueness, so in the majority of cases it is best to leave it as it is.
+
+*Returns:*
+
+* A string representing the `id` of the dataset if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
+### Index:
+
+This method lets you set or get the index of the dataset.
+
+The index is used to determine the order in which the datasets will be drawn.
+The dataset with the lower index value will be drawn first and appear to be behind other datasets.
+
+*Method:*
+
+    index()
+    index(option)
+    index(option, callback)
+
+*Where:*
+
+* `option`: is a number representing the `index` value of the dataset.
+* `callback`: is a function that is run after the `index` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The draw order of datasets with the same `index` value will be indeterminate.
+
+*Returns:*
+
+* A number that represents the `index` of the dataset if no aguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
+### Enable:
+
+This method lets you set or get the `enable` status of the `heatmap`.
+
+*Method:*
+
+    enable()
+    enable(option)
+    enable(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `heatmap` must be enabled.
+* `callback`: is a function that is run after the heatmap `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A bolean representing the `enable` status of the `heatmap`.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default values for the `enable` property of the `heatmap` is `true`.
+
+___
+
+### Dataset Type:
+
+This method returns the `heatmap` dataset type.
+
+*Method:*
+
+    datasetType()
+
+*Returns:*
+
+* This method always return the string `"heatmap"`.
+
+This is usefull when you read the dataset from the `graph2D` `getDatasets()` method or the `restoreGraph()` function.
+
+___
+
+## Heatmap Data
+
+The `heatmap` uses a set of three two-dimensional matrices, two of which are used to determine the location of the datapoint, these are call the `meshX` and `meshY` arrays and the third stores the value itself, this is the `data` array.
+
+Each matrix must be defined independently.
+
+___
+
+## Mesh X:
+
+This method lets you set or get the `heatmap` `meshX` array.
+
+*Method:*
+
+    meshX()
+    meshX(mesh)
+    meshX(mesh, callback)
+
+*Where:*
+
+* `mesh`: represents the `x` position of the `heatmap` datapoints. It can be one of the following options:
+  * A two-dimensional matrix.
+  * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the mesh is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the mesh as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `meshX()` nor `draw()` should be called from within the mesh function, because that will cause a circular dependency and the program will stop.
+
+When the mesh is defined as a function, we say that is dynamically generated.
+
+If the mesh is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the mesh function, it will not be detected and the data will not update.
+
+> Note: The `heatmap` mesh generator functions are discussed in deep [here](#heatmap).
+
+*Returns:*
+
+* A two-dimensional matrix representing the `x` coordinate of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the mesh is defined as a function, this method will return a two-dimensional matrix of numbers.
+
+___
+
+## Mesh Y:
+
+This method lets you set or get the `heatmap` `meshY` array.
+
+*Method:*
+
+    meshY()
+    meshY(mesh)
+    meshY(mesh, callback)
+
+*Where:*
+
+* `mesh`: represents the `y` position of the `heatmap` datapoints. It can be one of the following options:
+  * A two-dimensional matrix.
+  * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the mesh is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the mesh as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `meshY()` nor `draw()` should be called from within the mesh function, because that will cause a circular dependency and the program will stop.
+
+When the mesh is defined as a function, we say that is dynamically generated.
+
+If the mesh is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the mesh function, it will not be detected and the data will not update.
+
+> Note: The `heatmap` mesh generator functions are discussed in deep [here](#heatmap).
+
+*Returns:*
+
+* A two-dimensional matrix representing the `y` coordinate of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the mesh is defined as a function, this method will return a two-dimensional matrix of numbers.
+
+___
+
+## Data:
+
+This method lets you set or get the `heatmap` `data` array.
+
+*Method:*
+
+    data()
+    data(mesh)
+    data(mesh, callback)
+
+*Where:*
+
+* `mesh`: represents the value of the `heatmap` datapoints. It can be one of the following options:
+  * A two-dimensional matrix.
+  * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `data()` nor `draw()` should be called from within the mesh function, because that will cause a circular dependency and the program will stop.
+
+When the data is defined as a function, we say that is dynamically generated.
+
+If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+> Note: The `heatmap` data generator functions are discussed in deep [here](#heatmap).
+
+*Returns:*
+
+* A two-dimensional matrix representing the value of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the data is defined as a function, this method will return a two-dimensional matrix of numbers.
+
+___
+
+## Axis Used:
+
+This method lets you set or get the axis used by the `heatmap`.
+
+*Method:*
+
+    axisUsed()
+    axisUsed(options)
+    axisUsed(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `x`: a string representing the `x` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+  * `y`: a string representing the `y` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+* `callback`: is a function that is run after the axis used is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* An object representing the axis being used by the dataset if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default values for the axis used property are as follow.
+
+    {
+      x : "primary",
+      y : "primary"
+    }    
+
+___
+
+## Heatmap Properties
+
+### Color:
+
+This method lets you set or get the `color` of the `heatmap`.
+
+*Method:*
+
+    color()
+    color(option)
+    color(option, callback)
+
+*Where:*
+
+* `option`: represents the `color` at each datapoint. It can be one of the following options:
+  * A string with the name of any predefined color map. The predefined color maps are:
+    * `"viridis"`.
+    * `"plasma"`.
+    * `"magma"`.
+    * `"magnet"`.
+    * `"inv_magnet"`.
+    * `"fairy"`.
+    * `"inv_fairy"`.
+    * `"swamp"`.
+    * `"inv_swamp"`.
+    * `"fire"`.
+    * `"royal"`.
+    * `"hsv"`.
+  * A two-dimensional matrix of strings, each representing the `color` at each datapoint.
+  * A generator function that returns a string representing the `color` at each datapoint.
+* `callback`: is a function that is run after the `color` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` string can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: If the `color` is defined as a marix, its dimensions must be the same as the data arrays.
+
+> Note: The `heatmap` property generator functions are discussed in deep [here](#heatmap).
+
+If the color is defined as one of the predefined color maps, it will be considered dynamic. In this case, the color map range will be calculated automatically on each draw to accommodate the data.
+
+This may be misleading if the data range changes constantly.
+
+*Returns:*
+
+* A two-dimensional matrix of strings representing the `color` at each datapoint if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be a matrix even if the `color` is defined as a function.
+
+*Default Value:*
+
+* The default value for `heatmap` `color` is `"viridis"`.
+
+___
+
+### Opacity:
+
+This method lets you set or get the `opacity` of the `heatmap`.
+
+*Method:*
+
+    opacity()
+    opacity(option)
+    opacity(option, callback)
+
+*Where:*
+
+* `option`: represents the `opacity` of the `heatmap`. It can be one of the following options:
+  * A number that represents the `opacity` of all datapoints.
+  * A two-dimensional matrix of numbers, each representing the `opacity` at each datapoint.
+  * A generator function that returns a number representing the `opacity` at each datapoint.
+* `callback`: is a function that is run after the `opacity` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `opacity` values must be a number between 0 and 1.
+
+> Note: If the `opacity` is defined as a matrix, its dimensions must be the same as the data arrays.
+
+> Note: The `heatmap` property generator functions are discussed in deep [here](#heatmap).
+
+*Returns:*
+
+* A number or a two-dimensional matrix of numbers representing the `opacity` of the `heatmap` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be a matrix even if the `opacity` is defined as a function.
+
+*Default Value:*
+
+* The default value for `heatmap` `opacity` is `1`.
+
+___
+
+## Smooth:
+
+This method lets you set or get the `smooth` property of the `heatmap`.
+
+If set to true, the `heatmap` will perform a pixel-wise bi-linear interpolation of the datapoint properties, resulting in a clearer, less pixelated image.
+
+> The accuracy of the final image will depend on the density of datapoints.
+
+> Warning: This is a complex computation, so it may harm the responsivity of the application. If you plan to use this feature, is best to avoid contant redraws.
+
+*Method:*
+
+    smooth()
+    smooth(option)
+    smooth(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `heatmap` should be `smooth`. 
+* `callback`: is a function that is run after the `smooth` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+Example:
+
+| `smooth(false)`   |   `smooth(true)`  |
+|:----------------:|:----------------:|
+|![heatmap-smooth-false](/assets/images/heatmap-smooth-false.jpg)|![heatmap-smooth-true](/assets/images/heatmap-smooth-true.jpg)|
+
+*Returns:*
+
+* A boolean that represents the `smooth` property if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default value for `smooth` property is `false`.
+
+___
