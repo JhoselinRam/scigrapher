@@ -4938,7 +4938,7 @@ That is, and array that holds arrays of numbers. Each of the inner arrays can ha
 
 > Note: The `meshX`, `meshY` and `data` arrays must have the same structure.
 
-The datapoints are characterized with two indices `(i, j)` that represent the row and column of the `meshX`, `meshY` and `data` arrays.
+The datapoints are characterized with two indices `(i, j)` that represent the row and column of the matrices.
 
 So the `x` coordinate of the datapoint is at `meshX[i][j]`, the `y` coordinate at `meshY[i][j]` and its value is `data[i][j]`.
 
@@ -4970,13 +4970,14 @@ First, lets create a static `heatmap` graph.
     const heat_map = my_graph.addDataset("heatmap");
 
     //Creates the mesh
-    const x_positions = linespace(-3,3,100);
-    const y_positions = linespace(-3,3,100);
+    const x_positions = linespace(-4, 4, 100);
+    const y_positions = linespace(-4, 4, 100);
     const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
 
     //Creates the data
     const values = [];
-    for(let i=0; i<x_mesh.length; i++){
+    
+    for(let i=0; i < x_mesh.length; i++){
       values.push([]);
       for(let j=0; j<x_mesh[i].length; j++){
         const x = x_mesh[i][j];
@@ -5543,3 +5544,71 @@ Example:
 * The default value for `smooth` property is `false`.
 
 ___
+
+## Vector Field:
+
+The `vectorfield` is used to create, as the name implies, two-dimensional vector field graphs. It can calso be used to draw single vectors or arrows.
+
+The datapoints in this dataset are represented by four arrays, two of which are used to determine the location of the datapoint, these are call the `meshX` and `meshY` arrays and the other two stores the data values, these are the `dataX` and `dataY` arrays.
+
+These arrays have a specific structure: All four are two-dimensional matrices
+
+    const data = [
+      [1,2,3],
+      [4,5,6],
+      [7,8,9]
+    ]
+
+That is, and array that holds arrays of numbers. Each of the inner arrays can have different lengths as long that difference is present in `meshX`, `meshY`, `dataX` and `dataY` at the same location.
+
+> Note: The `meshX`, `meshY`, `dataX` and `dataY` arrays must have the same structure.
+
+The datapoints are characterized with two indices `(i, j)` that represent the row and column of the matrices.
+
+So the `x` coordinate of the datapoint is at `meshX[i][j]`, the `y` coordinate at `meshY[i][j]`, the `x` component of the vector is at `dataX[i][j]` and the `y` component at `dataY[i][j]`.
+
+The mesh, data and datapoint properties can be defined to be static or dynamic, meaning that its values can be static and never change or be computed on each draw and even be based on the values of other properties.
+
+Example:
+
+First, lest create a static `vectorfield` graph.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisPosition("bottom-left")
+    .primaryGrid({
+      grid : {enable : false}
+    })
+    .secondaryGrid({
+      grid : {enable : false}
+    })
+    .containerSize({width : 400, height : 400})
+    .pointerMove();
+
+    
+
+    //Creates the vectorfield
+    const vector_field = my_graph.addDataset("vectorfiel");
+
+    //Creates the mesh
+    const x_positions = linespace(-3, 3, 30);
+    const y_positions = linespace(-3, 3, 30);
+    const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+    //Creates the data
+    const x_values = [];
+    const y_values = [];
+
+    for(let i=0; i < x_mesh.length; i++){
+      x_values.push([]);
+      y_values.push([]);
+      for(let j=0; j < x_mesh[i].length; j++){
+        const x = x_mesh[i][j];
+        const y = y_mesh[i][j];
+        const r = Math.hypot(x, y);
+      }
+    }
