@@ -3,23 +3,56 @@ import { graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping, rest
 
 //Grafica original
 const graph = graph2D(document.querySelector(".graph1"))
-.containerSize({width : 800,  height : 300})
 .axisDomain({
-    x : {start : -12, end : 12},
-    y : {start : -0.3, end : 1.1}
+    x : {start : -3, end : 3},
+    y : {start : -3, end : 3}
+  })
+  .pointerMove();
+
+  
+
+  
+  const vect = graph.addDataset("vectorfield");
+  
+  function getMesh(graph){
+    const domain = graph.axisDomain();
+    const xStart = Math.floor(domain.x.start);
+    const yStart = Math.floor(domain.y.start);
+    const x = [];
+    const y = [];
+    const delta = 0.25;
+
+    let x_pos = xStart;
+    while(x_pos < domain.x.end + delta){
+        x.push(x_pos);
+        x_pos += delta;
+    }
+    
+    let y_pos = yStart;
+    while(y_pos < domain.y.end + delta){
+        y.push(y_pos);
+        y_pos += delta;
+    }
+
+
+    const [X, Y] = meshgrid(x, y);
+
+    return {X, Y};
+  }
+
+  const color_map = colorMap({from:Math.PI, to:-Math.PI, type:"royal"});
+
+  vect.meshX((set,graph)=>getMesh(graph).X)
+  .meshY((set,graph)=>getMesh(graph).Y)
+  .dataX((x,y)=>Math.sin(x+y))
+  .dataY((x,y)=>Math.cos(x-y))
+  .color((x,y)=>{
+    const angle = Math.atan2(y,x);
+
+    return color_map(angle)
   })
 
          
-
-const line = graph.addDataset("linechart")
-.dataX((set, graph)=>linspace(graph.axisDomain().x.start, graph.axisDomain().x.end, 150))
-.dataY(set=>set.dataX().map(x=>Math.sin(x)/x))
-
-const area = graph.addDataset("area")
-.dataX(linspace(-12,12,100))
-.dataY(set=>set.dataX().map(x=>Math.sin(x)/x))
-.baseX([-12,12])
-.baseY([0,0])
 
 
 graph.draw();

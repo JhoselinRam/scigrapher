@@ -4970,8 +4970,8 @@ First, lets create a static `heatmap` graph.
     const heat_map = my_graph.addDataset("heatmap");
 
     //Creates the mesh
-    const x_positions = linespace(-4, 4, 100);
-    const y_positions = linespace(-4, 4, 100);
+    const x_positions = linspace(-4, 4, 100);
+    const y_positions = linspace(-4, 4, 100);
     const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
 
     //Creates the data
@@ -5031,8 +5031,8 @@ We will keep the last script up until the data is add to the `heatmap`.
 
       const domain = graph.axisDomain();
 
-      const x_positions = linspace(domain.x.start, domain.x.end);
-      const y_positions = linspace(domain.y.start, domain.y.end);
+      const x_positions = linspace(domain.x.start+1, domain.x.end-1, 100);
+      const y_positions = linspace(domain.y.start+1, domain.y.end-1, 100);
       const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
 
       //The return value must be the x mesh component.
@@ -5041,8 +5041,8 @@ We will keep the last script up until the data is add to the `heatmap`.
     .meshY((dataset, graph)=>{
       const domain = graph.axisDomain();
 
-      const x_positions = linspace(domain.x.start, domain.x.end);
-      const y_positions = linspace(domain.y.start, domain.y.end);
+      const x_positions = linspace(domain.x.start+1, domain.x.end-1, 100);
+      const y_positions = linspace(domain.y.start+1, domain.y.end-1, 100);
       const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
 
       //This time we return the y mesh component.
@@ -5058,7 +5058,7 @@ We will keep the last script up until the data is add to the `heatmap`.
 
 ![dynamic-heatmap1](/assets/gifs/dynamic-heatmap1.gif)
 
-> Warning: You may only read static properties from dynamic mesh generators, this is because dynamic properties depend on the `x` and `y` mesh values, so calling those from a data generator will create a circular dependency and the program will stop.
+> Warning: You may only read static properties and data from dynamic mesh generators, this is because dynamic properties depend on the `x` and `y` mesh values, so calling those from a data generator will create a circular dependency and the program will stop.
 
 > Warning: You must not call the `meshX()` ot `draw()` methods from the `x` mesh generator because that will create a circular dependency and the program will stop.
 
@@ -5068,7 +5068,7 @@ We will keep the last script up until the data is add to the `heatmap`.
 
 Now in this case, the mesh moves along with the axis and appears always at the center of the graph, but the `heatmap` values are still static.
 
-To change that, the data values must be defined as a generator function. This function will be call once for each datapoint position and must return a value for that datapoint.
+To change that, the data values must be defined as a generator function as well. This function will be call once for each datapoint position and must return a value for that datapoint.
 
 The `heatmap` data generator can accept some optional parameters that must be call in the next order:
 
@@ -5091,7 +5091,7 @@ The `heatmap` data generator can accept some optional parameters that must be ca
 
 In our example, instead of defining the data statically, we will use a generator:
 
-    heat_map.data((x, y)=> {
+    heat_map.data((x, y)=>{
       //This function will run on every draw
       //In this case we only need the x and y positions.
 
@@ -5163,7 +5163,6 @@ In the last script we can add:
 >Note: `mapping` is a utility function, you can learn more about this functions on the [extras](#extras) section.
 
 ___
-
 
 ### ID:
 
@@ -5280,7 +5279,7 @@ This method lets you set or get the `heatmap` `meshX` array.
 
 *Where:*
 
-* `mesh`: represents the `x` position of the `heatmap` datapoints. It can be one of the following options:
+* `mesh`: represents the `x` positions of the `heatmap` datapoints. It can be one of the following options:
   * A two-dimensional matrix.
   * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
     * An object that represents the dataset from which the method is called upon.
@@ -5318,7 +5317,7 @@ This method lets you set or get the `heatmap` `meshY` array.
 
 *Where:*
 
-* `mesh`: represents the `y` position of the `heatmap` datapoints. It can be one of the following options:
+* `mesh`: represents the `y` positions of the `heatmap` datapoints. It can be one of the following options:
   * A two-dimensional matrix.
   * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
     * An object that represents the dataset from which the method is called upon.
@@ -5351,12 +5350,12 @@ This method lets you set or get the `heatmap` `data` array.
 *Method:*
 
     data()
-    data(mesh)
-    data(mesh, callback)
+    data(data)
+    data(data, callback)
 
 *Where:*
 
-* `mesh`: represents the value of the `heatmap` datapoints. It can be one of the following options:
+* `data`: represents the values of the `heatmap` datapoints. It can be one of the following options:
   * A two-dimensional matrix.
   * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
     * An object that represents the dataset from which the method is called upon.
@@ -5511,7 +5510,7 @@ ___
 
 This method lets you set or get the `smooth` property of the `heatmap`.
 
-If set to true, the `heatmap` will perform a pixel-wise bi-linear interpolation of the datapoint properties, resulting in a clearer, less pixelated image.
+If set, the `heatmap` will perform a pixel-wise bi-linear interpolation of the datapoint properties, resulting in a clearer, less pixelated image.
 
 > The accuracy of the final image will depend on the density of datapoints.
 
@@ -5579,24 +5578,20 @@ First, lest create a static `vectorfield` graph.
     //Creates and customize the graph object
     const my_graph = graph2D(element);
 
-    my_graph.axisPosition("bottom-left")
-    .primaryGrid({
-      grid : {enable : false}
+    my_graph.axisDomain({
+      x : {start : -3, end : 3},
+      y : {start : -3, end : 3}
     })
-    .secondaryGrid({
-      grid : {enable : false}
-    })
-    .containerSize({width : 400, height : 400})
     .pointerMove();
 
     
 
     //Creates the vectorfield
-    const vector_field = my_graph.addDataset("vectorfiel");
+    const vector_field = my_graph.addDataset("vectorfield");
 
     //Creates the mesh
-    const x_positions = linespace(-3, 3, 30);
-    const y_positions = linespace(-3, 3, 30);
+    const x_positions = linspace(-3, 3, 25);
+    const y_positions = linspace(-3, 3, 25);
     const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
 
     //Creates the data
@@ -5609,6 +5604,719 @@ First, lest create a static `vectorfield` graph.
       for(let j=0; j < x_mesh[i].length; j++){
         const x = x_mesh[i][j];
         const y = y_mesh[i][j];
-        const r = Math.hypot(x, y);
+        
+        x_values[i].push(Math.sin(x + y));
+        y_values[i].push(Math.cos(x - y));
       }
     }
+
+    //Add the data to the vectorfield
+    vector_field.meshX(x_mesh)
+    .meshY(y_mesh)
+    .dataX(x_values)
+    .dataY(y_values);
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![static-vectorfield](/assets/gifs/static-vectorfield.gif)
+
+>Note: `linspace` and `meshgrid` are utility functions, you can learn more about this functions on the [extras](#extras) section.
+
+As shown, the `vectorfield` position and values are static and remain unchanged.
+
+Now let's make the mesh dynamic. To do that, we need to define each mesh component as a generator function.
+
+The mesh generator function has the form:
+
+    generator()
+    generator(dataset)
+    generator(dataset, graph)
+
+*Where:*
+
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+These two optional arguments always holds the dataset and graph latest state at the moment of the call.
+
+> Note: Unlike the callback that most methods accept, the generator function runs on every draw.
+
+The mesh generator function must return the mesh values.
+
+We will keep the last script up until the data is add to the `vectorfield`.
+
+    //Add the data to the vectorfield
+    vector_field.meshX((dataset, graph)=>{
+      //This function will run on every draw
+      //Inside this function, dataset makes reference to vector_field and 
+      //graph to my_graph
+
+      const domain = graph.axisDomain();
+
+      const x_positions = linspace(domain.x.start, domain.x.end, 25);
+      const y_positions = linspace(domain.y.start, domain.y.end, 25);
+      const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+      //The return value must be the x mesh component.
+      return x_mesh;
+    })
+    meshY((dataset, graph)=>{
+      const domain = graph.axisDomain();
+
+      const x_positions = linspace(domain.x.start, domain.x.end, 25);
+      const y_positions = linspace(domain.y.start, domain.y.end, 25);
+      const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+      //This time we return the y mesh component.
+      return y_mesh;
+    })
+    .dataX(x_values)
+    .dataY(y_values)
+
+    //Finally draws the graph
+    my_graph.draw();
+
+As shown, the `mesX` and `meshY` generator function are very similar, so we can condense them into a single function.
+
+    //Creates the mesh generator function
+    function getMesh(graph){
+      const domain = graph.axisDomain();
+
+      const x_positions = linspace(domain.x.start, domain.x.end, 25);
+      const y_positions = linspace(domain.y.start, domain.y.end, 25);
+      const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+      return {x_mesh, y_mesh};
+    }
+
+
+
+    //Add the data to the vectorfield
+    vector_field.meshX((dataset, graph)=>getMesh(graph).x_mesh)
+    meshY((dataset, graph)=>getMesh(graph).y_mesh)
+    .dataX(x_values)
+    .dataY(y_values)
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![dynamic-vectorfield1](/assets/gifs/dynamic-vectorfield1.gif)
+
+> Warning: You may only read static properties and data from dynamic mesh generators, this is because dynamic properties depend on the `x` and `y` mesh values, so calling those from a data generator will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `meshX()` ot `draw()` methods from the `x` mesh generator because that will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `meshY()` ot `draw()` methods from the `y` mesh generator because that will create a circular dependency and the program will stop.
+
+> Note: It is safe to call the `meshX()` method from within the `y` mesh generator and vice versa.
+
+Now in this case, the mesh moves along with the axis and appears always at the center of the graph, but the `heatmap` values are still static.
+
+To change that, the data values must be defined as a generator function as well. This function will be call once for each datapoint position and must return a value for that datapoint.
+
+The `vectorfield` data generator can accept some optional parameters that must be call in the next order:
+
+    generator(x, y, i, j, meshX, meshY, dataset, graph)
+
+*Where:*
+
+* `x`: is the `x` position of the datapoint.
+* `y`: is the `y` position of the datapoint.
+* `i`: is the `i` index corresponding to the `x` and `y` values.
+* `j`: is the `j` index corresponding to the `x` and `y` values.
+* `meshX`: is the complete `meshX` array.
+* `meshY`: is the complete `meshY` array.
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+> Note: All the arguments of the data generator function are optional.
+
+> Note: The data generator operates in a similar way of the array methods (map, forEach, etc).
+
+In our example, instead of defining the data statically, we will use a generator:
+
+    //vector_field.dataX((x,y)=>{
+      //This function will run on every draw
+      //In this case we only need the x and y positions.
+
+      const x_value = Math.sin(x + y);
+
+      //The generator must return the x component of the vector
+      return x_value;
+    })
+    .dataY((x,y)=>{
+      const y_value = Math.cos(x - y);
+
+      //In this case the return value will be the y component of the vector
+      return y_value;
+    })
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![dynamic-vectorfield2](/assets/gifs/dynamic-vectorfield2.gif)
+
+> Warning: You may only read static properties from dynamic data generators, this is because dynamic properties depend on the mesh values, so calling those from a data generator will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `dataX()` or `draw()` methods from the x data generator because that will create a circular dependency and the program will stop.
+
+> Warning: You must not call the `dataY()` or `draw()` methods from the y data generator because that will create a circular dependency and the program will stop.
+
+As shown, the data now moves along with the axis and mesh.
+
+But there is a catch, the vectors appear to change size and rotate as the graph moves. This is because the mesh positions remain constant relative to the graph rect, but no to the axis.
+
+To fix that we need to make shure the mesh values always land on the same position relative to the axis. 
+
+The `getMesh` will be replaced by:
+
+    //Creates the mesh generator function
+    function getMesh(graph){
+      const domain = graph.axisDomain();
+      const delta = 0.25;
+      const x_positions = [];
+      const y_positions = [];
+
+      let x_current = domain.x.start;
+      while(x_current < domain.x.end + delta){
+        x_positions.push(x_current);
+        x_current += delta;
+      }
+
+      let y_current = domain.y.start;
+      while(y_current < domain.y.end + delta){
+        y_positions.push(y_current);
+        y_current += delta;
+      }
+
+      const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+      return {x_mesh, y_mesh};
+    }
+
+*Result:*
+
+![dynamic-vectorfield3](/assets/gifs/dynamic-vectorfield3.gif)
+
+Finally, some properties can be dynamic too. The `vectorfield` property generator function in a similar manner than the data generator. 
+
+The function will be called once for each datapoint and must return a suitable property value.
+
+The `vectorfield` property generator can accept some optional parameters that must be call in the next order:
+
+    generator(vectorX, vectorY, x, y, i, j, dataX, dataY, meshX, meshY, dataset, graph)
+
+*Where:*
+
+* `vectorX`: is the value of the datapoint `x` component.
+* `vectorY`: is the value of the datapoint `y` component.
+* `x`: is the `x` position of the datapoint.
+* `y`: is the `y` position of the datapoint.
+* `i`: is the `i` index corresponding to the `x` and `y` values.
+* `j`: is the `j` index corresponding to the `x` and `y` values.
+* `dataX`: is the complete `dataX` array.
+* `dataY`: is the complete `dataY` array.
+* `meshX`: is the complete `meshX` array.
+* `meshY`: is the complete `meshY` array.
+* `dataset`: is a reference to the dataset from which the function is call upon.
+* `graph`: is a reference of the graph that the dataset is bound to.
+
+> Note: All the arguments of the data generator function are optional.
+
+> Note: The data generator operates in a similar way of the array methosds (map, forEach, etc).
+
+In the last script we can add:
+
+    //Create a colormap´
+    const color = colorMap({
+      from : -Math.PI,
+      to : Math.PI,
+      type : "royal"
+    });
+
+    vector_field.color((x_value, y_value)=>{
+      //In this case we can only need the x and y vector values;
+
+      const angle = Math.atan2(y, x);
+
+      //The return value will be assigned to the corresponding datapoint
+      return color(angle);
+    });
+
+    my_graph.draw();
+
+![dynamic-vectorfield4](/assets/gifs/dynamic-vectorfield4.gif)
+
+>Note: `colorMap` is a utility function, you can learn more about this functions on the [extras](#extras) section.
+
+___
+
+### ID:
+
+This method lets you set or get the id string of the dataset.
+
+*Method:*
+
+    id()
+    id(option)
+    id(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the `id` of the dataset.
+* `callback`: is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `id` is used to identify the dataset, so the string must be unique among other datasets.
+
+By default, the `id` is generated automatically to guarantee its uniqueness, so in the majority of cases it is best to leave it as it is.
+
+*Returns:*
+
+* A string representing the `id` of the dataset if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
+### Index:
+
+This method lets you set or get the index of the dataset.
+
+The index is used to determine the order in which the datasets will be drawn.
+The dataset with the lower index value will be drawn first and appear to be behind other datasets.
+
+*Method:*
+
+    index()
+    index(option)
+    index(option, callback)
+
+*Where:*
+
+* `option`: is a number representing the `index` value of the dataset.
+* `callback`: is a function that is run after the `index` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The draw order of datasets with the same `index` value will be indeterminate.
+
+*Returns:*
+
+* A number that represents the `index` of the dataset if no aguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+___
+
+### Enable:
+
+This method lets you set or get the `enable` status of the `vectorfield`.
+
+*Method:*
+
+    enable()
+    enable(option)
+    enable(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `heatmap` must be enabled.
+* `callback`: is a function that is run after the heatmap `enable` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A bolean representing the `enable` status of the `vectorfield`.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default values for the `enable` property of the `vectorfield` is `true`.
+
+___
+
+### Dataset Type:
+
+This method returns the `vectorfield` dataset type.
+
+*Method:*
+
+    datasetType()
+
+*Returns:*
+
+* This method always return the string `"vectorfield"`.
+
+This is usefull when you read the dataset from the `graph2D` `getDatasets()` method or the `restoreGraph()` function.
+
+___
+
+## Vector Field Data
+
+The `vectorfield` uses a set of four two-dimensional matrices, two of which are used to determine the location of the datapoint, these are call the `meshX` and `meshY` arrays and the last two stores the data values. these are the `dataX` and `dataY` arrays.
+
+Each matrix must be defined independently.
+
+___
+
+## Mesh X:
+
+This method lets you set or get the `vectorfield` `meshX` array.
+
+*Method:*
+
+    meshX()
+    meshX(mesh)
+    meshX(mesh, callback)
+
+*Where:*
+
+* `mesh`: represents the `x` positions of the `vectorfield` datapoints. It can be one of the following options:
+  * A two-dimensional matrix.
+  * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the mesh is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the mesh as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `meshX()` nor `draw()` should be called from within the mesh function, because that will cause a circular dependency and the program will stop.
+
+When the mesh is defined as a function, we say that is dynamically generated.
+
+If the mesh is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the mesh function, it will not be detected and the data will not update.
+
+> Note: The `vectorfield` mesh generator functions are discussed in deep [here](#vectorfield).
+
+*Returns:*
+
+* A two-dimensional matrix representing the `x` coordinate of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the mesh is defined as a function, this method will return a two-dimensional matrix of numbers.
+
+___
+
+## Mesh Y:
+
+This method lets you set or get the `vectorfield` `meshY` array.
+
+*Method:*
+
+    meshY()
+    meshY(mesh)
+    meshY(mesh, callback)
+
+*Where:*
+
+* `mesh`: represents the `y` positions of the `vectorfield` datapoints. It can be one of the following options:
+  * A two-dimensional matrix.
+  * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the mesh is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the mesh as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `meshY()` nor `draw()` should be called from within the mesh function, because that will cause a circular dependency and the program will stop.
+
+When the mesh is defined as a function, we say that is dynamically generated.
+
+If the mesh is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the mesh function, it will not be detected and the data will not update.
+
+> Note: The `vectorfield` mesh generator functions are discussed in deep [here](#vectorfield).
+
+*Returns:*
+
+* A two-dimensional matrix representing the `y` coordinate of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the mesh is defined as a function, this method will return a two-dimensional matrix of numbers.
+
+___
+
+## Data X:
+
+This method lets you set or get the `vectorfield` `dataX` array.
+
+*Method:*
+
+    dataX()
+    dataX(data)
+    dataX(data, callback)
+
+*Where:*
+
+* `data`: represents the values of the `vectorfield` datapoints. It can be one of the following options:
+  * A two-dimensional matrix.
+  * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `dataX()` nor `draw()` should be called from within the mesh function, because that will cause a circular dependency and the program will stop.
+
+When the data is defined as a function, we say that is dynamically generated.
+
+If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+> Note: The `vectorfield` data generator functions are discussed in deep [here](#heatmap).
+
+*Returns:*
+
+* A two-dimensional matrix representing the value of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the data is defined as a function, this method will return a two-dimensional matrix of numbers.
+
+___
+
+## Data Y:
+
+This method lets you set or get the `vectorfield` `dataY` array.
+
+*Method:*
+
+    dataY()
+    dataY(data)
+    dataY(data, callback)
+
+*Where:*
+
+* `data`: represents the values of the `vectorfield` datapoints. It can be one of the following options:
+  * A two-dimensional matrix.
+  * A function that returns a two-dimensional matrix. This function can accept two optional parameters in the following order:
+    * An object that represents the dataset from which the method is called upon.
+    * An object that represents the graph object that the dataset is bound to.
+* `callback`: is a function that is run after the data is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: Unlike the callback, If you define the data as a function, that function will be executed on each subsequent draw and the arguments will hold the latest state of the dataset and graph at the moment of the call. 
+
+> Warning: Neither `dataY()` nor `draw()` should be called from within the mesh function, because that will cause a circular dependency and the program will stop.
+
+When the data is defined as a function, we say that is dynamically generated.
+
+If the data is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the data function, it will not be detected and the data will not update.
+
+> Note: The `vectorfield` data generator functions are discussed in deep [here](#heatmap).
+
+*Returns:*
+
+* A two-dimensional matrix representing the value of the datapoints if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: Even when the data is defined as a function, this method will return a two-dimensional matrix of numbers.
+
+___
+
+## Axis Used:
+
+This method lets you set or get the axis used by the `vectorfield`.
+
+*Method:*
+
+    axisUsed()
+    axisUsed(options)
+    axisUsed(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `x`: a string representing the `x` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+  * `y`: a string representing the `y` axis that the dataset is goin to use. It can be `"primary"` or `"secondary"`.
+* `callback`: is a function that is run after the axis used is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* An object representing the axis being used by the dataset if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+The default values for the axis used property are as follow.
+
+    {
+      x : "primary",
+      y : "primary"
+    }    
+
+___
+
+## Vector Field Properties
+
+### Color:
+
+This methd lets you set or get the `color` of the `vectorfield`.
+
+*Method:*
+
+    color()
+    color(option)
+    color(option, callback)
+
+*Where:*
+
+* `color`: represent the `color` of the `vectorfield`. It can be one of the following options:
+  * A string that represents the `color` of all datapoints.
+  * A two-dimensional matrix of strings, each representing the `color` at each datapoint.
+  * A generator function that returns a string representing the `color` at each datapoint.
+* `callback`: is a function that is run after the `color` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: If the `color` is defined as a marix, its dimensions must be the same as the data arrays.
+
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+
+*Returns:*
+
+* A string or a two-dimensional matrix of strings representing the `color` at each datapoint if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be a matrix even if the `color` is defined as a function.
+
+*Default Value:*
+
+* The default value for `vectorfield` `color` is `"#303030"`.
+
+___
+
+### Opacity:
+
+This method lets you set or get the `opacity` of the `vectorfield`.
+
+*Method:*
+
+    opacity()
+    opacity(option)
+    opacity(option, callback)
+
+*Where:*
+
+* `option`: represents the `opacity` of the `vectorfield`. It can be one of the following options:
+  * A number that represents the `opacity` of all datapoints.
+  * A two-dimensional matrix of numbers, each representing the `opacity` at each datapoint.
+  * A generator function that returns a number representing the `opacity` at each datapoint.
+* `callback`: is a function that is run after the `opacity` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `opacity` values must be a number between 0 and 1.
+
+> Note: If the `opacity` is defined as a matrix, its dimensions must be the same as the data arrays.
+
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+
+*Returns:*
+
+* A number or a two-dimensional matrix of numbers representing the `opacity` of the `vectorfield` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be a matrix even if the `opacity` is defined as a function.
+
+*Default Value:*
+
+* The default value for `vectorfield` `opacity` is `1`.
+
+___
+
+### Style:
+
+This method lets you set or get the `style` of the `vectorfield`.
+
+*Method:*
+
+    style()
+    style(option)
+    style(option, callback)
+
+*Where:*
+
+* `option`: represents the `style` of the `vectorfield`. It can be one of the following options:
+  * A string that represents the `style` of all datapoints.
+  * A two-dimensional matrix of strings, each representing the `style` at each datapoint.
+  * A generator function that returns a string representing the `style` at each datapoint.
+* `callback`: is a function that is run after the `style` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `style` is defined as an array, its length must be the same as the data arrays.
+
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* A string or a two-dimensional matrix of strings representing the `style` of the `vectorfield` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be a matrix even if the `style` is defined as a function.
+
+*Default Value:*
+
+* The default value for `vectorfield` `opacity` is `1`.
+
+___
+
+### Width:
+
+This method lets you set or get the line `width` of the `vectorfield`.
+
+*Method:*
+
+    width()
+    width(option)
+    width(option, callback)
+
+*Where:*
+
+* `option`: represents the line `width` of the `vectorfield`. It can be one of the following options:
+  * A number that represents the line `width` of all datapoints.
+  * A two-dimensional matrix of numbers, each representing the line `width` at each datapoint.
+  * A generator function that returns a number representing the line `width` at each datapoint.
+* `callback`: is a function that is run after the `width` is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `width` values must be positive integer.
+
+> Note: If the `width` is defined as a matrix, its dimensions must be the same as the data arrays.
+
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+
+*Returns:*
+
+* A number or a two-dimensional matrix of numbers representing the `width` of the `vectorfield` if no argument is pass.
+* A reference to the dataset object from which the method is called upon.
+
+> Note: The returned value will be a matrix even if the `width` is defined as a function.
+
+*Default Value:*
+
+* The default value for `vectorfield` `width` is `1`.
+
+___
+
+### Normalize:
+
+This method lets you set or get the `vectorfield` `normalize` property.
+
+If set, all vectors length will be scale to ensure no one is bigger than `maxLength`.
+
+> Note: This doesn't affect the `dataX` nor `dataY` values, only its visual representation.
+
+This facilitates the visualization at the expense of data accuracy.
