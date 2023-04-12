@@ -6517,3 +6517,107 @@ This method lets you set or get the `enable` status of the `colorbar`.
 
 ___
 
+### Data:
+
+This method lets you set or get the `colorbar` data.
+
+*Method:*
+
+    data()
+    data(options)
+    data(options, callback)
+
+*Where:*
+
+* `options`: represent the data of the `colorbar`. It can be one of the following options:
+  * The id string of a `heatmap` dataset.
+  * An array of objects, each of those objects represent one mark in the color bar and must have the following properties:
+    * `color`: a string representing the color of the mark.
+    * `label`: a string with the label of the mark.
+    * `position`: a number represinting the position of the mark in the `colorbar`.
+* `callback`: is a function that is run after the `data` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `position` property must be a number between 0 and 1, being 0 the start of the color bar, and 1 the end.
+
+> Note: The `color` string can be in the format `"#rrggbb"` or be any of the standard color names.
+
+In case of using an `id` string, this must belong to a `heatmap` dataset, and the `colorbar` will use the entire range of data.
+
+*Returns:*
+
+* An object with the `color`, `label` and `position` of each mark in the `colorbar` if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Value:*
+
+* There is no default value, if the data is not set, the `colorbar` will be a blank rectangle.  
+
+___
+
+### Position:
+
+This method lets you set or get the `colorbar` `position`.
+
+*Method:*
+
+    position()
+    position(option)
+    position(option, callback)
+
+*Where:*
+
+* `option`: represents the `colobar` position. It can be one of the following options:
+  * A string with one of the predefined positions:
+    * `"x-start"` will position the `colorbar` at the left. 
+    * `"x-end"` will position the `colorbar` at the right.
+    * `"y-start"` will position the `colorbar` at the bottom. 
+    * `"y-end"` will position the `colorbar` at the top.
+  * An object with the following properties to position the `colorbar` manually:
+    * `x`: a number with the `colorbar` `x` coordinate.
+    * `y`: a number with the `colorbar` `y` coordinate.
+    * `orientation`: a string with the `colorbar` `orientation`. It can be `"vertial"` or `"horizontal"`.
+* `callback`: is a function that is run after the `position` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: If the `position` is set to one of the predefined positions, the graph `margins` will be changed to accommodate the `colorbar`. This will potentially change the axis aspect ratio.
+
+> Note: The `x` and `y` values represent the coordinates of the top left `colorbar` corner relative to the client rect.
+
+*Returns:*
+
+* A string representing the `colorbar` `position` if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+> Note: The returned string will be one of the predefined positions or `"floating"` if was manually defined.
+
+*Default Value:*
+
+* The default values for the `colorbar` `position` is `"x-end"`.
+
+___
+
+### Ticks:
+
+This method lets you set or get the `colorbar` `tick` properties.
+
+*Method*:
+
+    ticks()
+    ticks(options)
+    ticks(options, callback)
+
+*Where:*
+
+* `options`: is an object with the folowing properties:
+  * `density`: represents the number of ticks in the `colorbar`. It can be one of the following options:
+    * A number representing the number of ticks.
+    * An array of strings, the length of the array will be the number of ticks and the strings the label of each one.
+    * An array of objects, each object with the following properties:
+      * `label`: a string representing the label of the tick.
+      * `position`: a number representing the position of the tick.
+  * `color`: a string representing the color of the tick.
+  * `opacity`: a number representing the opacity of the tick.
+  * `style`: a string representing the style of the tick.
+  * `width`: a number representing the line width of the tick.
+* `callback`: is a function that is run after the `position` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The 

@@ -3,54 +3,29 @@ import { graph2D, linspace, meshgrid, colorInterpolator, colorMap, mapping, rest
 
 //Grafica original
 const graph = graph2D(document.querySelector(".graph1"))
-.axisDomain({
-    x : {start : -3, end : 3},
-    y : {start : -3, end : 3}
-  })
-  .pointerMove();
+.axisPosition("bottom-left")
+.title({text:"Awesome Title"})
+.xLabel({text:"x Axis"})
+.yLabel({text:"y Axis"})
+
+const x = linspace(-3, 3, 100);
+const y = linspace(-3, 3, 100);
+const [X, Y] = meshgrid(x, y);
+
+const heat = graph.addDataset("heatmap")
+.meshX(X)
+.meshY(Y)
+.data((x,y)=>Math.sin(x +y))
+
+graph.addColorbar()
+.data(heat.id())
+.ticks({density:6})
+.position({x:50, y:0})
 
   
 
   
-  const vect = graph.addDataset("vectorfield");
   
-  function getMesh(graph){
-    const domain = graph.axisDomain();
-    const xStart = Math.floor(domain.x.start);
-    const yStart = Math.floor(domain.y.start);
-    const x = [];
-    const y = [];
-    const delta = 0.25;
-
-    let x_pos = xStart;
-    while(x_pos < domain.x.end + delta){
-        x.push(x_pos);
-        x_pos += delta;
-    }
-    
-    let y_pos = yStart;
-    while(y_pos < domain.y.end + delta){
-        y.push(y_pos);
-        y_pos += delta;
-    }
-
-
-    const [X, Y] = meshgrid(x, y);
-
-    return {X, Y};
-  }
-
-  const color_map = colorMap({from:Math.PI, to:-Math.PI, type:"royal"});
-
-  vect.meshX((set,graph)=>getMesh(graph).X)
-  .meshY((set,graph)=>getMesh(graph).Y)
-  .dataX((x,y)=>Math.sin(x+y))
-  .dataY((x,y)=>Math.cos(x-y))
-  .color((x,y)=>{
-    const angle = Math.atan2(y,x);
-
-    return color_map(angle)
-  })
 
          
 
