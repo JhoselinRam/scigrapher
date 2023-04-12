@@ -39,7 +39,7 @@ At the moment, the library offers four chart types, including:
     * [Area Properties](#area-properties) 
   * [Heatmap](#heatmap)
     * [Heatmap Data](#heatmap-data)
-    * [heatmap Properties](#heatmap-properties) 
+    * [Heatmap Properties](#heatmap-properties) 
   * [Vector Field](#vector-field)
     * [Vector Field Data](#vector-field-data)
     * [Vector Field Properties](#vector-field-properties) 
@@ -5582,6 +5582,7 @@ First, lest create a static `vectorfield` graph.
       x : {start : -3, end : 3},
       y : {start : -3, end : 3}
     })
+    .containerSize({width:400, height:400})
     .pointerMove();
 
     
@@ -5590,8 +5591,8 @@ First, lest create a static `vectorfield` graph.
     const vector_field = my_graph.addDataset("vectorfield");
 
     //Creates the mesh
-    const x_positions = linspace(-3, 3, 25);
-    const y_positions = linspace(-3, 3, 25);
+    const x_positions = linspace(-3, 3, 23);
+    const y_positions = linspace(-3, 3, 23);
     const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
 
     //Creates the data
@@ -5685,8 +5686,8 @@ As shown, the `mesX` and `meshY` generator function are very similar, so we can 
     function getMesh(graph){
       const domain = graph.axisDomain();
 
-      const x_positions = linspace(domain.x.start, domain.x.end, 25);
-      const y_positions = linspace(domain.y.start, domain.y.end, 25);
+      const x_positions = linspace(domain.x.start, domain.x.end, 23);
+      const y_positions = linspace(domain.y.start, domain.y.end, 23);
       const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
 
       return {x_mesh, y_mesh};
@@ -5784,14 +5785,14 @@ The `getMesh` will be replaced by:
       const x_positions = [];
       const y_positions = [];
 
-      let x_current = domain.x.start;
-      while(x_current < domain.x.end + delta){
+      let x_current = Math.floor(domain.x.start);
+      while(x_current < Math.ceil(domain.x.end + delta)){
         x_positions.push(x_current);
         x_current += delta;
       }
 
-      let y_current = domain.y.start;
-      while(y_current < domain.y.end + delta){
+      let y_current = Math.floor(domain.y.start);
+      while(y_current < Math.ceil(domain.y.end + delta)){
         y_positions.push(y_current);
         y_current += delta;
       }
@@ -5988,7 +5989,7 @@ When the mesh is defined as a function, we say that is dynamically generated.
 
 If the mesh is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the mesh function, it will not be detected and the data will not update.
 
-> Note: The `vectorfield` mesh generator functions are discussed in deep [here](#vectorfield).
+> Note: The `vectorfield` mesh generator functions are discussed in deep [here](#vector-field).
 
 *Returns:*
 
@@ -6026,7 +6027,7 @@ When the mesh is defined as a function, we say that is dynamically generated.
 
 If the mesh is dynamically generated, its values are updated on each draw. It is important to note that the `draw()` method only updates the graph if a change is made to it or any of its assets, so if you change an external value, even if that value is used inside the mesh function, it will not be detected and the data will not update.
 
-> Note: The `vectorfield` mesh generator functions are discussed in deep [here](#vectorfield).
+> Note: The `vectorfield` mesh generator functions are discussed in deep [here](#vector-field).
 
 *Returns:*
 
@@ -6170,7 +6171,7 @@ This methd lets you set or get the `color` of the `vectorfield`.
 
 > Note: If the `color` is defined as a marix, its dimensions must be the same as the data arrays.
 
-> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vector-field).
 
 *Returns:*
 
@@ -6207,7 +6208,7 @@ This method lets you set or get the `opacity` of the `vectorfield`.
 
 > Note: If the `opacity` is defined as a matrix, its dimensions must be the same as the data arrays.
 
-> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vector-field).
 
 *Returns:*
 
@@ -6242,7 +6243,7 @@ This method lets you set or get the `style` of the `vectorfield`.
 
 > Note: If the `style` is defined as an array, its length must be the same as the data arrays.
 
-> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vector-field).
 
 The style can be represented with one of the following options:
 
@@ -6296,7 +6297,7 @@ This method lets you set or get the line `width` of the `vectorfield`.
 
 > Note: If the `width` is defined as a matrix, its dimensions must be the same as the data arrays.
 
-> Note: The `vectorfield` property generator functions are discussed in deep [here](#vectorfield).
+> Note: The `vectorfield` property generator functions are discussed in deep [here](#vector-field).
 
 *Returns:*
 
@@ -6315,8 +6316,204 @@ ___
 
 This method lets you set or get the `vectorfield` `normalize` property.
 
-If set, all vectors length will be scale to ensure no one is bigger than `maxLength`.
+If set, all vectors length will be linearly scale to ensure no one is bigger than `maxLength`.
 
 > Note: This doesn't affect the `dataX` nor `dataY` values, only its visual representation.
 
 This facilitates the visualization at the expense of data accuracy.
+
+*Method:*
+
+    normalize()
+    normalize(option)
+    normalize(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `normalize` property should be enable.
+* `callback`: is a function that is run after the `normalize` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+Example:
+
+| `normalize(false)`   |   `normalize(true)`  |
+|:----------------:|:----------------:|
+|![vectorfield-normalize-false](/assets/images/vectorfield-normalized-false.jpg)|![vectorfield-normalize-true](/assets/images/vectorfield-normalized-true.jpg)|
+
+*Returns:*
+
+* A boolean that represents the `normalize` property if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default value for `vectorfield` `normalize` is `true`.
+
+___
+
+### Max Lenght
+
+This method lets you set or get the `maxLenght` property.
+
+This property represents the max lenght in pixels that any given vector can have.
+
+
+*Method:*
+
+    maxLength()
+    maxLength(option)
+    maxLength(option, callback)
+
+*Where:*
+
+* `option`: is a number that represents the `maxLength` property value.
+* `callback`: is a function that is run after the `normalize` property is set but before the next render, this callback accept two optional arguments that represents the dataset object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: This is only relevant when the `normalize` property is set to `true`.
+
+*Returns:*
+
+* A number that represents the `maxLength` property if no arguments are pass.
+* A reference to the dataset object from which the method is called upon.
+
+*Default Value:*
+
+* The default value for `vectorfield` `maxLength` is `20`.
+
+___
+
+# Colorbar
+
+The colorbar is a visual color scale used primarily with the `heatmap` datasets, but can be used by itself.
+
+It displays a horizontal or vertical bar with a color gradient in it and marks with the values that those colors represent.
+
+For example, consither the following graph.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisDomain({
+      x : {start : -3, end : 3},
+      y : {start : -3, end : 3}
+    })
+    .axisPosition("bottom-left")
+    .containerSize({width:450, height:400});
+
+
+    //Creates a heatmap
+    const heat_map = my_graph.addDataset("heatmap");
+
+    function getMesh(graph){
+      const domain = graph.axisDomain();
+      
+      const x_positions = linspace(domain.x.start, domain.x.end, 100); 
+      const y_positions = linspace(domain.y.start, domain.y.end, 100);
+      const [x_mesh, y_mesh] = meshgrid(x_positions, y_positions);
+
+      return {x_mesh, y_mesh}; 
+    }
+
+    function peaks(x, y){
+      return 3*(1-x)**2 * Math.exp(-(x**2)-(y+1)**2) - 10*(x/5-x**3-y**5) * Math.exp(-(x**2)-(y**2)) - 1/3*Math.exp(-((x+1)**2) - (y**2));
+    }
+
+    //Add the data
+    heat_map.meshX((dataset, graph)=>getMesh(graph).x_mesh)
+    .meshY((dataset, graph)=>getMesh(graph).y_mesh)
+    .data((x,y)=>peaks(x,y))
+
+    //Finally, draws the graph.
+    my_graph.draw();
+
+*Result:*
+
+![colorbar-1](/assets/images/colorbar-1.jpg)
+
+To add a color bar to this graph, it's as simple as adding the next code before drawing the graph.
+
+    //Creates the colorbar
+    const color_bar = my_graph.addColorbar();
+
+    //Binds the colorbar to the heatmap previously created.
+    color_bar.data(heat_map.id());
+
+    //Because in the default configuration, the margins are
+    //changed in order to accommodate the colorbar, and we don't want the 
+    //graph to be distorted.
+    my_graph.aspectRatio({anchor:0}).draw();
+
+*Result:*
+
+![colorbar-2](/assets/images/colorbar-2.jpg)
+
+A title can be easily be added.
+
+    color_bar.title({text : "Peaks Function"});
+
+    my_graph.aspectRatio({anchor:0}).draw();
+
+*Result:*
+
+![colorbar-3](/assets/images/colorbar-3.jpg)
+
+You can change the `colorbar` position, orientation, font, etc.
+
+It can also be used by itself, without the need to bind it to a `heatmap`, by setting the colors, position and labels by manually.
+
+___
+
+### ID:
+
+This method lets you set or get the id string of the `colorbar`.
+
+*Method:*
+
+    id()
+    id(option)
+    id(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the `id` of the `colorbar`.
+* `callback`: is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `id` is used to identify the colorbar, so the string must be unique among other colorbars.
+
+By default, the `id` is generated automatically to guarantee its uniqueness, so in the majority of cases it is best to leave it as it is.
+
+*Returns:*
+
+* A string representing the `id` of the `colorbar` if no arguments are pass.
+* A reference to the `colorbar` object from which the method is called upon.
+
+___
+
+### Enable:
+
+This method lets you set or get the `enable` status of the `colorbar`.
+
+*Method:*
+
+    enable()
+    enable(option)
+    enable(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `colorbar` must be enabled.
+* `callback`: is a function that is run after the colorbar `enable` property is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A bolean representing the `enable` status of the `colorbar`.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Value:*
+
+* The default values for the `enable` property of the `colorbar` is `true`.
+
+___
+
