@@ -5137,7 +5137,7 @@ The `heatmap` property generator can accept some optional parameters that must b
 
 > Note: All the arguments of the data generator function are optional.
 
-> Note: The data generator operates in a similar way of the array methosds (map, forEach, etc).
+> Note: The data generator operates in a similar way of the array methodds (map, forEach, etc).
 
 In the last script we can add:
 
@@ -5831,7 +5831,7 @@ The `vectorfield` property generator can accept some optional parameters that mu
 
 > Note: All the arguments of the data generator function are optional.
 
-> Note: The data generator operates in a similar way of the array methosds (map, forEach, etc).
+> Note: The data generator operates in a similar way of the array methodds (map, forEach, etc).
 
 In the last script we can add:
 
@@ -6597,7 +6597,7 @@ ___
 
 ### Ticks:
 
-This method lets you set or get the `colorbar` `tick` properties.
+This method lets you set or get the `colorbar` `ticks` properties.
 
 *Method*:
 
@@ -6618,6 +6618,374 @@ This method lets you set or get the `colorbar` `tick` properties.
   * `opacity`: a number representing the opacity of the tick.
   * `style`: a string representing the style of the tick.
   * `width`: a number representing the line width of the tick.
-* `callback`: is a function that is run after the `position` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+* `callback`: is a function that is run after the `ticks` values are set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
 
-> Note: The 
+> Note: The `density` property has no effect if the `data` is defined manually.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The opacity must be a number between 0 and 1.
+
+> Note: The width must be a positive integer.
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* An object with the `ticks` properties if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the `ticks` method are as follow:
+
+    {
+      density : 6,
+      color : "#000000",
+      opacity : 1,
+      style : "solid", 
+      width : 1
+    }
+
+___
+
+### Reverse:
+
+This method lets you set or get the `colorbar` `reverse` property.
+
+By default, the `colorbar` shows the values in ascending order starting from the bottom. If the `reverse` property is set to true, the values will be shown in descending order.  
+
+*Method:*
+
+    reverse()
+    reverse(option)
+    reverse(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `colorbar` should `reverse` the data.
+* `callback`: is a function that is run after the `reverse` property is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A bollean that represents the ``colorbar` `reverse` property if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+* The default values for the `reverse` property is `false`.
+
+___
+
+### Width:
+
+This method lets you set or get the `width` of the `colorbar`.
+
+This value affects only the width of the colorbar itself, and not the tick labels or title.
+
+*Method:*
+
+    width()
+    width(option)
+    width(option, callback)
+
+*Where:*
+
+* `option`: is a number that represents the width of the `colorbar`.
+* `callback`: is a function that is run after the `width` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The width is represented in pixels, so it must be a positive integer.
+
+> Note: If the `colorbar` is in `horizontal` position, this values will make reference to the colorbar height instead
+
+*Returns:*
+
+* A number that represents the `colorbar` `width` if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+* The default value for the `width` property is `20`.
+
+___
+
+### Size:
+
+This method lets you set or get the `size` of the `colorbar`.
+
+This value affects the `colorbar` height if is in `vertical` orientation, and the width if is `horizontal`.
+
+*Method:*
+
+    size()
+    size(option)
+    size(option, callback)
+
+*Where:*
+
+* `option`: is a number representing the `colorbar` `size`.
+* `callback`: is a function that is run after the `size` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `size` must be a number between 0 and 1.
+
+If the `colorbar` is in `vertical` orientation, the `size` value is relative to the `client rect` height, being `1` equal to `100%` of the `client rect` height.
+
+If is in `horizontal` orientation, the value is relative to the `cient rect` width.
+
+*Returns:*
+
+* A number that represents the `colorbar` `size` if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+* The default value for the `size` property is `0.93`.
+
+___
+
+### Opacity:
+
+This method lets you set or get the `opacity` of the `colorbar`.
+
+This value only affects the bar itself and not other elements.
+
+*Method:*
+
+    opacity()
+    opacity(option)
+    opacity(option, callback)
+
+*Where:*
+
+* `option`: is a number that represents the `colorbar` `opacity`.
+* `callback`: is a function that is run after the `opacity` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `opacity` must be a number between 0 and 1.
+
+*Returns:*
+
+* A number that represents the `colorbar` `opacity` if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+* The default value for the `opacity` property is `1`.
+
+___
+
+### Border: 
+
+This method lets you set or get the `border` properties of the `colorbar`.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    border()
+    border(options)
+    border(options, callback)
+
+*Where:*
+
+* `options`: is an object with the following properties:
+  * `color`: a string representing the color of the border.
+  * `opacity`: a number representing the opacity of the border.
+  * `style`: a string representing the style of the border.
+  * `width`: a number representing the line width of the border.
+* `callback`: is a function that is run after the `border` properties are set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The opacity must be a number between 0 and 1.
+
+> Note: The width must be a positive integer.
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* An object with the `border` properties if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the `border` method are as follow:
+
+    {
+      color : "#000000",
+      opacity : 1,
+      style : "solid", 
+      width : 1
+    }
+
+___
+
+### Label:
+
+This method lets you set or get the `label` properties of the `colorbar`.
+
+The values set with this method will only affect the text on each tick and not the title.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    label()
+    label(options)
+    label(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `font`: a string representing the font of the `label`.
+  * `size`: a string representing the size of the `label`.
+  * `color`: a string representing the color of the `label`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `label`.
+  * `position`: a string representing the positioning of the `label`. It can be one of the following values:
+    * `"start"`.
+    * `"end"`.
+* `callback`: is a function that is run after the `label` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `opacity` must be a number between 0 and 1 
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+> Note: The `size` value can be any valid css size including em, rem, etc.
+
+The `position` property has different meaning depending upon the `colorbar` orientation.
+
+If the `colorbar` is `vertical`:
+
+* `"start"` will position the labels at the left of the `colorbar`.
+* `"end"` will position the labels at the right of the `colorbar`.
+
+If the `colorbar` is `horizontal`:
+
+* `"start"` will position the labels at the bottom of the `colorbar`.
+* `"end"` will position the labels at the top of the `colorbar`.
+
+*Returns:*
+
+* An object with the `label` properties if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the `label` method are as follow:
+
+    {
+      color : "#000000",
+      font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+      size : "10px",
+      opacity : 1,
+      position : "end"
+    }
+
+___
+
+### Title:
+
+This method lets you set or get the `title` properties of the `colorbar`.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+     title()
+     title(options)
+     title(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `text`: a string representing the text of the `title`.
+  * `font`: a string representing the font of the `title`.
+  * `size`: a string representing the size of the `title`.
+  * `color`: a string representing the color of the `title`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `title`.
+  * `position`: a string representing the positioning of the `title`. It can be one of the following values:
+    * `"start"`.
+    * `"end"`.
+  * `reverse`: a boolean that determines whether the text should be reversed.
+* `callback`: is a function that is run after the `title` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `opacity` must be a number between 0 and 1 
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+> Note: The `size` value can be any valid css size including em, rem, etc.
+
+The `position` property has different meaning depending upon the `colorbar` orientation.
+
+If the `colorbar` is `vertical`:
+
+* `"start"` will position the title at the left of the `colorbar`.
+* `"end"` will position the title at the right of the `colorbar`.
+
+If the `colorbar` is `horizontal`:
+
+* `"start"` will position the title at the bottom of the `colorbar`.
+* `"end"` will position the title at the top of the `colorbar`.
+
+By default, the `title` text is read from bottom to top, the `reverse` property will reverse that orientation.
+
+> Note: The `reverse` property is only releventa when the `colorbar` is in `vertical` orientation.
+
+*Returns:*
+
+* An object with the `title` properties if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the `title` method are as follow:
+
+    {
+      text : "",
+      color : "#000000",
+      font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+      size : "12px",
+      opacity : 1,
+      position : "end",
+      reverse : false
+    }
+
+___
+
+### Text:
+
+This method 

@@ -15,7 +15,7 @@ const defaultOptions : Colorbar_Options = {
     opacity : 1,
     position : "x-end",
     ticks : {
-        density : 5,
+        density : 6,
         color : "#000000",
         opacity : 1,
         style : "solid", 
