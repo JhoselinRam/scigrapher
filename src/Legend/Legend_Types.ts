@@ -38,8 +38,8 @@ export interface Legend_Text {
 
 export interface Legend_Data_Entrie {
     dataset : string,
-    text : string,
-    label : Legend_Text,
+    label : string,
+    text : Legend_Text,
 }
 
 export interface Legend_Title extends Legend_Text {

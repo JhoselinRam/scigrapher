@@ -41,10 +41,10 @@ function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_M
 
         //Entries
         legendState.metrics.data.forEach((entrie, i)=>{
-            state.context.data.fillStyle = entrie.label.color;
-            state.context.data.globalAlpha = entrie.label.opacity;
-            state.context.data.font = `${entrie.label.size} ${entrie.label.font}`;
-            state.context.data.fillText(entrie.text, legendState.metrics.items[i].x, legendState.metrics.items[i].y);
+            state.context.data.fillStyle = entrie.text.color;
+            state.context.data.globalAlpha = entrie.text.opacity;
+            state.context.data.font = `${entrie.text.size} ${entrie.text.font}`;
+            state.context.data.fillText(entrie.label, legendState.metrics.items[i].x, legendState.metrics.items[i].y);
 
             legendState.metrics.items[i].drawIcon({
                 dataset : state.data.find(set=>set.dataset.id()===entrie.dataset)?.dataset!,

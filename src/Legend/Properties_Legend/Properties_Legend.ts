@@ -34,7 +34,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
         if(typeof data === "object"){
             const newData = data.slice();
 
-            newData.forEach((item, i)=>{ newData[i] = {...item, label:{...item.label, ...defaultLabelText}} });
+            newData.forEach((item, i)=>{ newData[i] = {...item, text:{...defaultLabelText ,...item.text}} });
             
             legendState.data = newData as Array<Legend_Data_Entrie>;
             legendState.compute();

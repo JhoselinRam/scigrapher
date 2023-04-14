@@ -7104,11 +7104,11 @@ This method returns the metrics of the `colorbar`.
   * `width`: The `width` of the `colorbar`.
   * `height`: The `height` of the `colorbar`.
 
-> Note: The `x` and `y` coordinates make reference to the top left corner of the whole `colorbar`, including the labels and the title.
+> Note: The `x` and `y` coordinates make reference to the top left corner of the whole `colorbar`, including the labels and title.
 
 > Note: The `x` and `y` coordinates are relatives to the `client rect`.
 
-> Note: The `width` and `height` values make reference to the width and height of the whole `colorbar`, including the labels and the title.
+> Note: The `width` and `height` values make reference to the width and height of the whole `colorbar`, including the labels and title.
 
 ___
 
@@ -7156,7 +7156,7 @@ Each dataset type have a distinct marker, and that marker uses the same styling 
 
 ![legend-1](/assets/images/legend-1.jpg)
 
-As shown, the legend appear at the top right corner of the graph and contain only the `linechart` mark and the label set.
+As shown, the legend appear at the top right corner of the graph and contain only the `linechart` mark and label.
 
 We can add as many datasets as we need on the legend. For example:
 
@@ -7181,3 +7181,79 @@ We can add as many datasets as we need on the legend. For example:
 *Result*
 
 ![legend-2](/assets/images/legend-2.jpg)
+
+A disabled dataset will not appear in a legend even if is part of its data.
+
+> Note: A `linechart` will not appear in a legend if both the line and markers are disabled. The error bars are not shown in the legend.
+
+___
+
+### ID:
+
+This method lets you set or get the id string of the `legend`.
+
+*Method:*
+
+    id()
+    id(option)
+    id(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the `id` of the `legend`.
+* `callback`: is a function that is run after the `id` is set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `id` is used to identify the legend, so the string must be unique among other legends.
+
+By default, the `id` is generated automatically to guarantee its uniqueness, so in the majority of cases it is best to leave it as it is.
+
+*Returns:*
+
+* A string representing the `id` of the `legend` if no arguments are pass.
+* A reference to the `legend` object from which the method is called upon.
+
+___
+
+### Enable:
+
+This method lets you set or get the `enable` status of the `legend`.
+
+*Method:*
+
+    enable()
+    enable(option)
+    enable(option, callback)
+
+*Where:*
+
+* `option`: is a boolean that determines whether the `legend` must be enabled.
+* `callback`: is a function that is run after the `enable` property is set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A bolean representing the `enable` status of the `legend`.
+* A reference to the `legend` object from which the method is called upon.
+
+*Default Value:*
+
+* The default values for the `enable` property of the `legend` is `true`.
+
+___
+
+## Data:
+
+This method lets you set or get the `legend` `data`.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    data()
+    data(options)
+    data(options, callback)
+
+*Where:*
+
+* `options`: is an array of object, each of those representig one entry in the legend. The objects have the following properties:
+  * `dataset`: is the `id` string of the dataset.
+  * `text`: is a string 
