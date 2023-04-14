@@ -6387,7 +6387,7 @@ The colorbar is a visual color scale used primarily with the `heatmap` datasets,
 
 It displays a horizontal or vertical bar with a color gradient in it and marks with the values that those colors represent.
 
-For example, consither the following graph.
+For example, consider the following graph.
 
     //Gets the container div element
     const element = document.querrySelector("#my-graph");
@@ -6988,4 +6988,196 @@ ___
 
 ### Text:
 
-This method 
+This method let you set or get the shared text properties from the `label` and `text`.
+
+The values set by this method will affect equally the `colorbar` `labels` and `title`.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    text()
+    text(options)
+    text(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `font`: a string representing the font of both `text`.
+  * `size`: a string representing the size of both `text`.
+  * `color`: a string representing the color of both `text`.
+  * `opacity`: a number between 0 and 1 representing the opacity of both `text`.
+  * `position`: a string representing the positioning of both `text`. It can be one of the following values:
+    * `"start"`.
+    * `"end"`.
+* `callback`: is a function that is run after the `text` properties are set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The `opacity` must be a number between 0 and 1 
+
+> Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
+
+> Note: The `size` value can be any valid css size including em, rem, etc.
+
+The `position` property has different meaning depending upon the `colorbar` orientation.
+
+If the `colorbar` is `vertical`:
+
+* `"start"` will position the text at the left of the `colorbar`.
+* `"end"` will position the text at the right of the `colorbar`.
+
+If the `colorbar` is `horizontal`:
+
+* `"start"` will position the text at the bottom of the `colorbar`.
+* `"end"` will position the text at the top of the `colorbar`.
+
+*Returns:*
+
+* An object with the `text` properties if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the `text` method are as follow:
+
+    {
+      label : {
+        color : "#000000",
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "10px",
+        opacity : 1,
+        position : "end"
+      },
+      title : {
+        color : "#000000",
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "12px",
+        opacity : 1,
+        position : "end"
+      }
+    }
+
+___
+
+### Unit:
+
+This method lets you set or get the `unit` of the `colorbar`
+
+The `unit` is a string that is appended to each label at the right.
+
+*Method:*
+
+    unit()
+    unit(option)
+    unit(option, callback)
+
+*Where:*
+
+* `option`: is a string representing the `colorbar` `unit`.
+* `callback`: is a function that is run after the `unit` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A string representing the `colorbar` `unit` if no argument is pass.
+* A reference to the colorbar object from which the method is called upon.
+
+*Default Value:*
+
+* The default value for the `unit` property is `""`.
+
+___
+
+### Metrics:
+
+This method returns the metrics of the `colorbar`.
+
+*Method:*
+
+    metrics()
+
+*Returns:*
+
+* An object with the following properties:
+  * `x`: The `x` coordinate of the `colorbar`.
+  * `y`: The `y` coordinate of the `colorbar`.
+  * `width`: The `width` of the `colorbar`.
+  * `height`: The `height` of the `colorbar`.
+
+> Note: The `x` and `y` coordinates make reference to the top left corner of the whole `colorbar`, including the labels and the title.
+
+> Note: The `x` and `y` coordinates are relatives to the `client rect`.
+
+> Note: The `width` and `height` values make reference to the width and height of the whole `colorbar`, including the labels and the title.
+
+___
+
+# Legend
+
+The legends are little banners, render at the top of all other information. It shows a legend for each dataset and a little marker to help to identify that dataset.
+
+Each dataset type have a distinct marker, and that marker uses the same styling as the represented dataset.
+
+    //Gets the container div element
+    const element = document.querrySelector("#my-graph");
+
+    //Creates and customize the graph object
+    const my_graph = graph2D(element);
+
+    my_graph.axisDomain({
+      x : {start : -12, end : 12},
+      y : {start : -0.3, end : 1.1}
+    })
+    .containerSize({width : 800,  height : 300})
+    .pointerMove();
+
+
+    //Creates a simple linechart
+    const line_chart_1 = my_graph.addDataset("linechart");
+
+    const data_x_1 = linspace(-12, 12, 150);
+    const data_y_1 = data_x_1.map(x => Math.sin(x)/x);
+
+    line_chart_1.dataX(data_x_1).dataY(data_y_1);
+
+
+    //Now creates the legend
+    const legend = my_graph.addLegend();
+
+    //Adds the datasets to the legend
+    legend.data([
+      {dataset : line_chart_1.id(), text : "sin(x)/x"}
+    ]);
+
+    //Finally draws the graph
+    my_graph.draw();
+
+*Result:*
+
+![legend-1](/assets/images/legend-1.jpg)
+
+As shown, the legend appear at the top right corner of the graph and contain only the `linechart` mark and the label set.
+
+We can add as many datasets as we need on the legend. For example:
+
+    //Create another linechart
+    const line_chart_2 = my_graph.addDataset("linechart");
+
+    const data_x_2 = linspace(1e-5, 12, 100);
+    const data_y_2 = data_x_2.map(x => 1/x);
+
+    line_chart_2.dataX(data_x_2).dataY(data_y_2).lineColor("#a000eb");
+
+
+    //And adds both datasets to the legend
+    legend.data([
+      {dataset : line_chart_1.id(), text : "sin(x)/x"},
+      {dataset : line_chart_2.id(), text : "1/x"}
+    ]);
+
+    //Draws the graph
+    my_graph.draw();
+
+*Result*
+
+![legend-2](/assets/images/legend-2.jpg)
