@@ -6566,7 +6566,7 @@ This method lets you set or get the `colorbar` `position`.
 
 *Where:*
 
-* `option`: represents the `colobar` position. It can be one of the following options:
+* `option`: represents the `colobar` `position`. It can be one of the following options:
   * A string with one of the predefined positions:
     * `"x-start"` will position the `colorbar` at the left. 
     * `"x-end"` will position the `colorbar` at the right.
@@ -6580,7 +6580,7 @@ This method lets you set or get the `colorbar` `position`.
 
 > Note: If the `position` is set to one of the predefined positions, the graph `margins` will be changed to accommodate the `colorbar`. This will potentially change the axis aspect ratio.
 
-> Note: The `x` and `y` values represent the coordinates of the top left `colorbar` corner relative to the client rect.
+> Note: The `x` and `y` values represent the coordinates of the `colorbar` top left corner relative to the client rect.
 
 *Returns:*
 
@@ -7039,7 +7039,7 @@ If the `colorbar` is `horizontal`:
 
 *Default Values:*
 
-The default values for the properties of the `text` method are as follow:
+The default values for the properties of the `text` method are as follows:
 
     {
       label : {
@@ -7244,8 +7244,6 @@ ___
 
 This method lets you set or get the `legend` `data`.
 
-It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
-
 *Method:*
 
     data()
@@ -7256,4 +7254,174 @@ It is only necessary to define the values that you want to change and only that 
 
 * `options`: is an array of object, each of those representig one entry in the legend. The objects have the following properties:
   * `dataset`: is the `id` string of the dataset.
-  * `text`: is a string 
+  * `label`: is a string representing the label of the dataset.
+  * `text`: an object with the `text` properties of the labels:
+    * `font`: a string representing the font of the `label`.
+    * `size`: a string representing the size of the `label`.
+    * `color`: a string representing the color of the `label`.
+    * `opacity`: a number between 0 and 1 representing the opacity of the `label`.
+* `callback`: is a function that is run after the `data` is set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* An array of object, with the `data` properties of each dataset if no argument is pass.
+* A reference to the `legend` object from which the method is called upon.
+
+*Default Values:*
+
+* The default value for the `data` is an empty array, but the entries do have default values.
+
+    {
+      dataset : "",
+      label : "",
+      text : {
+        color : "#000000",
+        opacity : 1,
+        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+        size : "12px"
+      }
+    }
+
+___
+
+### Columns: 
+
+This method lets you set or get the `columns` property of the `legend`.
+
+All the dataset entries associated with the `legend` will be display in the amount of `columns` defined by this method.
+
+*Method:*
+
+    columns()
+    columns(option)
+    columns(option, callback)
+
+*Where:*
+
+* `option`: is a number with the amount of `columns` in the `legend`.
+* `callback`: is a function that is run after the `columns` are set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A number representing the amount of `columns` in the `legend` if no argument is pass.
+* A reference to the `legend` object from which the method is called upon.
+
+*Default Value:*
+
+* The default value for the `columns` property is `1`.
+
+___
+
+### Position:
+
+This method lets you set or get the `legend` `position`.
+
+*Method:*
+
+    position()
+    position(option)
+    position(option, callback)
+
+*Where:*
+
+* `option`: represents the `legend` `position`. It can be one of the following options:
+  * A string with one of the predefined positions:
+    * `"top-right"`. 
+    * `"top-left"`.
+    * `"bottom-right"`. 
+    * `"bottom-left"`.
+    * `"center"`.
+  * An object with the following properties to position the `legend` manually:
+    * `x`: a number with the `legend` `x` coordinate.
+    * `y`: a number with the `legend` `y` coordinate.
+* `callback`: is a function that is run after the `position` is set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `x` and `y` values represent the coordinates of the `legend` top left corner relative to the graph rect.
+
+*Returns:*
+
+* A string representing the `legend` `position` if no argument is pass.
+* A reference to the legend object from which the method is called upon.
+
+> Note: The returned string will be one of the predefined positions or `"floating"` if was manually defined.
+
+*Default Value:*
+
+* The default values for the `legend` `position` is `"top-right"`.
+
+___
+
+### Width:
+
+This method lets you set or get the `width` property of the `legend`.
+
+The `width` value only affects the size of the dataset marker and not the entire `legend`.
+
+*Method:*
+
+    width()
+    width(option)
+    width(option, callback)
+
+*Where:*
+
+* `option`: is a number representing the `width` in pixels of the `legend` markers.
+* `callback`: is a function that is run after the `width` is set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* A number representing the `width` of the `legend` markers if no argument is pass.
+* A reference to the `legend` object from which the method is called upon.
+
+*Default Value:*
+
+* The default value for the `width` property is `30`.
+
+___
+
+### Title:
+
+This method lets you set or get the `title` of the `legned`.
+
+The `title` will apear at the top of the `legend`.
+
+*Method:*
+
+    title()
+    title(options)
+    title(options, callback)
+
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `text`: a string representing the text of the `title`.
+  * `font`: a string representing the font of the `title`.
+  * `size`: a string representing the size of the `title`.
+  * `color`: a string representing the color of the `title`.
+  * `opacity`: a number between 0 and 1 representing the opacity of the `title`.
+  * `position`: a string representing the `position` of the `legend`. It can be one of the following options:
+    * `"start"`.
+    * `"center"`.
+    * `"end"`.
+* `callback`: is a function that is run after the `title` is set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
+
+*Returns:*
+
+* An object with the value of the `title` properties if no argument is pass.
+* A reference to the `legend` object from which the method is called upon.
+
+*Default Value:*
+
+The default values for the properties of the `title` method are as follow:
+
+    {
+      text : "",
+      color : "#000000",
+      font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+      size : "12px",
+      opacity : 1,
+      position : "start"
+    }
+
+___

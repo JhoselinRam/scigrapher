@@ -90,7 +90,7 @@ function ComputeLegend({graphHandler, legendHandler, legendState, state} : Legen
 
             //Compute label metrics
             dataColumn.forEach(row=>{
-                const textSize = getTextSize(row.text, row.label.size, row.label.font, state.context.data);
+                const textSize = getTextSize(row.label, row.text.size, row.text.font, state.context.data);
                 const rowWidth = legendState.width + legendState.metrics.textOffset + textSize.width;
 
                 legendState.metrics.items.push({

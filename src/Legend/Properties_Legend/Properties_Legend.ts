@@ -18,11 +18,15 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
 //---------------------------------------------
 //---------------- Data -----------------------
 
-    const defaultLabelText : Legend_Text = {
-        color : "#000000",
-        opacity : 1,
-        font : "Arial, Helvetica Neue, Helvetica, sans-serif",
-        size : "12px",
+    const defaultLabel : Legend_Data_Entrie = {
+        dataset : "",
+        label : "",
+        text : {
+            color : "#000000",
+            opacity : 1,
+            font : "Arial, Helvetica Neue, Helvetica, sans-serif",
+            size : "12px"
+        }
     }
 
     function data(data:Array<Partial<Legend_Data_Entrie>>, callback?:Legend_Callback) : Legend;
@@ -34,7 +38,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
         if(typeof data === "object"){
             const newData = data.slice();
 
-            newData.forEach((item, i)=>{ newData[i] = {...item, text:{...defaultLabelText ,...item.text}} });
+            newData.forEach((item, i)=>{ newData[i] = {...defaultLabel ,...item, text:{...defaultLabel.text ,...item.text}} });
             
             legendState.data = newData as Array<Legend_Data_Entrie>;
             legendState.compute();
