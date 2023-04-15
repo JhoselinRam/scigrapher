@@ -24,7 +24,15 @@ graph.addColorbar()
 
   
 
-  
+const interpolator = colorInterpolator({
+    from : [0, 1],
+    to : ["#000000", "#ffffff"]
+  });
+
+console.log(interpolator.map(0))
+console.log(interpolator.map(0.25))
+console.log(interpolator.map(0.5))
+console.log(interpolator.map(1))
   
 
          

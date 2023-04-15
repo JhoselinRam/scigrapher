@@ -7627,3 +7627,207 @@ The resulting values will be equally (linearly) spaced, hence the name.
     linspace(1, 1, 5)    //[1, 1, 1, 1, 1]
 
 ___
+
+### Meshgrid:
+
+This function generates two matrices of numbers representing the rectangular two-dimensional domain given by the `x` and `y` arguments.
+
+The values returned by this function are compatible with the `meshX()` and `meshY()` methods.
+
+*Function:*
+
+    meshgrid(x, y)
+
+*Where:*
+
+* `x`: represents the `x` domain. It can be one of the following options:
+  * An array of numbers, with each value representing one `x` coordinate.
+  * An object with the properties:
+    * `start`: a number representing the `start` of the `x` domain.
+    * `end`: a number representing the `end` of the `x` domain.
+    * `n`: a number representing the number of times the `x` domain will be divided into.
+* `y`: represents the `y` domain. It can be one of the following options:
+  * An array of numbers, with each value representing one `y` coordinate.
+  * An object with the properties:
+    * `start`: a number representing the `start` of the `y` domain.
+    * `end`: a number representing the `end` of the `y` domain.
+    * `n`: a number representing the number of times the `y` domain will be divided into.
+
+> Note: If the `x` or `y` arguments are defined as an object, the `linspace()` function will be used to generate the domain.
+
+A two-dimensional matrix can be acces by two indices `M[i][j]`. 
+
+For example:
+
+    M = [
+          [M11, M12, M13],
+          [M21, M22, M23],
+          [M31, M32, M33],
+        ]
+
+Where `i` represents the row and `j` the column of the value.
+
+*Returns:*
+
+* An array with two values, the first being the `meshX` matrix and the second the `meshY`.
+
+*Example:*
+
+    const x = linspace(1, 5, 5);    //[1, 2, 3, 4, 5]
+    const y = linspace(6, 10, 5);   //[6, 7, 8, 9, 10]
+    
+    const [x_mesh, y_mesh] = meshgrid(x, y);
+
+The resulting values will be:
+
+    x_Mesh = [
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+      [1, 2, 3, 4, 5],
+    ]
+    
+    y_Mesh = [
+      [10, 10, 10, 10, 10],
+      [9, 9, 9, 9, 9], 
+      [8, 8, 8, 8, 8], 
+      [7, 7, 7, 7, 7], 
+      [6, 6, 6, 6, 6],
+    ]
+
+As shown, the `meshX` matrix contains the `x` array as its rows and the `meshY` contains the `y` array as its columns.
+
+> Note: The final dimension of `meshX` and `meshY` depend directly on the lenght of `x` and `y`.
+
+___
+
+### Mappign:
+
+This function lets you create a `mapping` object. These objects are primarily used to translate screen coordinates to inner graph coordinates.
+
+This offers a way to pass values from one domain to another using some transformation.
+
+*Function:*
+
+    mapping(options)
+
+*Where:*
+
+* `options`: is an object that contains the following properties:
+  * `from`: an array of two numbers representing the `mapping` `domain`.
+  * `to`: an array of two numbers representing the `mapping` `range`.
+  * `type`: a string representing the `mapping` `type`. It can be one of the following options:
+    * `"linear"`.
+    * `"log"`.
+    * `"sqr"`.
+  * `base`: a number representing the `base` if using a `log` transformation.
+
+*Returns:*
+
+A `mapping` object with the following properties:
+
+* `map`: a funtion that takes a number from the `domain` and returns the corresponding `range` value.
+* `invert`: a function that takes a number from the `range` and returns the corresponding `domain` value.
+* `domain`: an array of two numbes reprenting the `domain`. 
+* `range`: an array of two numbes reprenting the `range`.
+* `type`: a string representing the `mapping` `type`.
+* `base`: a number representing the `mapping` `base`.
+
+*Example:*
+
+    const linear_map = mapping({
+      from : [0, 1],
+      to : [0, 10]
+    });
+
+    console.log( linear_map.map(0) );
+    console.log( linear_map.map(1) );
+    console.log( linear_map.map(2) );
+
+    console.log( linear_map.invert(10) );
+    console.log( linear_map.invert(5) );
+    console.log( linear_map.invert(-5) );
+
+*Result:*
+
+    0
+    10
+    20
+
+    1
+    0.5
+    -0.5
+
+As shown, values outside the `damain` (and `range`) are extrapolated correctly.
+
+> Warning: When using the `log` type the `domain` must be strictly positive or negative and dont contain the zero.
+
+> Warning: When using the `str` type, the `domain` must be strictly positive or negative but in this case the zero is allow.
+
+*Default Values:*
+
+Only the `type` and `base` have default values, those values are:
+
+    {
+      type : "linear",
+      base : 10
+    }
+
+
+___
+
+### Color Interpolator:
+
+This function creates a simple color interpolator between two color.
+
+This object functions similarly as the `mapping` object, but this time it maps a number to a color.
+
+> Note: Unlike the `mapping`, the inverse function is not implemented.
+
+*Function:*
+
+    colorInterpolator(options)
+
+*Where:*
+
+* `options`: is an object with the following properties:
+  * `from`: an array of two numbers representing the `domain`.
+  * `to`: an array of two color strings representing the `range`.
+  * `space`: the color space in which the interpolation will be made. Ir can be one of the following options:
+    * `"rgb"`.
+    * `"hsv"`.
+    * `"xyx"`.
+    * `"lab"`.
+    * `"lch"`.
+
+> Warning: Interpolation of number outside the `domain` is indeterminate.
+
+> Note: The colors defined in the `range` must be in the format `"#rrggbb"`. Standard color names are not supported.
+
+*Returns:*
+
+A `interpolator` object with the following properties:
+  
+  * `map`: a funtion that takes a number from the `domain` and returns the corresponding color.
+  * `domain`: an array of two numbes reprenting the `domain`. 
+  * `range`: an array of two color strings reprenting the `range`.
+  * `space`: a string representing the color space used.
+
+*Example:*
+
+    const interpolator = colorInterpolator({
+      from : [0, 1],
+      to : ["#000000", "#ffffff"]
+    });
+
+    console.log(interpolator.map(0));
+    console.log(interpolator.map(0.25));
+    console.log(interpolator.map(0.5));
+    console.log(interpolator.map(1));
+
+*Result:*
+
+    #000000
+    #3b3b3b
+    #777777
+    #ffffff
+
