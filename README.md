@@ -7186,6 +7186,18 @@ A disabled dataset will not appear in a legend even if is part of its data.
 
 > Note: A `linechart` will not appear in a legend if both the line and markers are disabled. The error bars are not shown in the legend.
 
+Each dataset type has a unique marker.
+
+| Type   |  Marker    |  Type    |  Marker   |
+|:------:|:----------:|:--------:|:---------:|
+| `"linechart"`| ![legend-linechart](/assets/images/legend-linechart.jpg) |  `"linechart"`| ![legend-linechart-marker](/assets/images/legend-linechart-marker.jpg) | 
+| `"area"`| ![legend-area](/assets/images/legend-area.jpg) |  `"heatmap"`| ![legend-heatmap](/assets/images/legend-heatmap.jpg) | 
+| `"vectorfield"`| ![legend-vectorfield](/assets/images/legend-vectorfield.jpg) |  |  | 
+
+The marker takes the color and style from the corresponding dataset.
+
+> Note: If the dataset has a dynamic property, the marker will take the first value of that property.
+
 ___
 
 ### ID:
@@ -7269,7 +7281,7 @@ This method lets you set or get the `legend` `data`.
 
 *Default Values:*
 
-* The default value for the `data` is an empty array, but the entries do have default values.
+The default value for the `data` is an empty array, but the entries do have default values.
 
     {
       dataset : "",
@@ -7610,6 +7622,8 @@ The resulting values will be equally (linearly) spaced, hence the name.
 *Examples:*
 
     linspace(1, 10, 10)  //[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    linspace(-5, 5, 7)   //
+    linspace(-6, 6, 9)   //[-6, -4.5, -3, -1.5, 0, 1.5, 3, 4.5, 6]
     linspace(10, 1, 10)  //[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     linspace(1, 1, 5)    //[1, 1, 1, 1, 1]
+
+___
