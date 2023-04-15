@@ -7425,3 +7425,191 @@ The default values for the properties of the `title` method are as follow:
     }
 
 ___
+
+### Background:
+
+This method lets you set or get the `background` properties of the `legend`.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    background()
+    background(options)
+    background(options, callback)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `color`: a string representing the `background` color.
+  * `opacity`: a number representing the `background` opacity.
+* `callback`: is a function that is run after the `background` is set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The color can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The opacity must be a number between 0 and 1.
+
+*Returns:*
+
+* An object with the `background` property values of the `legend` if no argument is pass.
+* A reference to the `legend` object from which the method is called upon.
+
+*Default Value:*
+
+The default values for the properties of the `background` method are as follow:
+
+    {
+      color : "#ffffff",
+      opacity : 1
+    }
+
+___
+
+### Border:
+
+This method lets you set or get the `border` properties of the `legend`.
+
+It is only necessary to define the values that you want to change and only that values will be updated, leaving the rest as they are.
+
+*Method:*
+
+    border()
+    border(options)
+    border(options, callback)
+
+*Where:*
+
+* `options`: is an object with the following properties:
+  * `color`: a string representing the color of the border.
+  * `opacity`: a number representing the opacity of the border.
+  * `style`: a string representing the style of the border.
+  * `width`: a number representing the line width of the border.
+* `callback`: is a function that is run after the `border` properties are set but before the next render, this callback accept two optional arguments that represents the colorbar object from which the method is called upon and the graph object that is bound to, in that order.
+
+> Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
+
+> Note: The opacity must be a number between 0 and 1.
+
+> Note: The width must be a positive integer.
+
+The style can be represented with one of the following options:
+
+|Style   |Result   |
+|:-------:|:-------:|
+|`"solid"`|![solid_line](/assets/images/solid_line.jpg)|
+|`"dot"`|![dot_line](/assets/images/dot_line.jpg)|
+|`"dash"`|![dash_line](/assets/images/dash_line.jpg)|
+|`"long-dash"`|![long-dash_line](/assets/images/long-dash_line.jpg)|
+|`"dash-dot"`|![dash-dot_line](/assets/images/dash-dot_line.jpg)|
+|`"dash-2dot"`|![dash-2dot_line](/assets/images/dash-2dot_line.jpg)|
+
+Also, the string can be a list of space separated integers representing line and space length in pixel to form a custom pattern. 
+
+For example, the string `"3 2 10 2 3"` forms a pattern of 3 pixels line, 2 pixels space, 10 pixels line, etc.
+
+![custom_line](/assets/images/custom_line.jpg)
+
+*Returns:*
+
+* An object with the `border` properties if no argument is pass.
+* A reference to the `legend` object from which the method is called upon.
+
+*Default Values:*
+
+The default values for the properties of the `border` method are as follow:
+
+    {
+      color : "#000000",
+      opacity : 1,
+      style : "solid", 
+      width : 1
+    }
+
+___
+
+### Metrics:
+
+This method returns the metrics of the `legend`.
+
+*Method:*
+
+    metrics()
+
+*Returns:*
+
+* An object with the following properties:
+  * `x`: The `x` coordinate of the `legend`.
+  * `y`: The `y` coordinate of the `legend`.
+  * `width`: The `width` of the `legend`.
+  * `height`: The `height` of the `legend`.
+
+> Note: The `x` and `y` coordinates make reference to the top left corner of the `legend`.
+
+> Note: The `x` and `y` coordinates are relatives to the `graph rect`.
+
+> Note: The `width` and `height` values make reference to the width and height of the `legend`.
+
+___
+
+# Extras
+
+This library includes some extra functionality to make the use of the graphs easier.
+
+___
+
+### Restore Graph
+
+This function allows you to recreate any graph saved with the `graph2D` `save()` method.
+
+*Function:*
+
+    restoreGraph(options)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `container`: a div element.
+  * `data`: the object returned by `save()`.
+
+The `container` is the div element that is going to host the new graph. It acts as the `element` argument when creating a graph using the `graph2D()` function.
+
+*Returns:*
+
+An object with the following properties:
+
+* `graph`: the new `graph2D` object.
+* `linechart`: An array with all `linechart` objects present in the graph.
+* `area`: An array with all `area` objects present in the graph.
+* `heatmap`: An array with all `heatmap` objects present in the graph.
+* `vectorfield`: An array with all `vectorfield` objects present in the graph.
+* `colorbar`: An array with all `colorbar` objects present in the graph.
+* `legend`: An array with all `legend` objects present in the graph.
+
+All these objects are ready to go. So you can call the `draw()` method on the `graph` object to show the graph.
+
+___
+
+### linspace:
+
+This function creates an array of numbers with `n` elements from `start` to `end` (inclusive).
+
+The resulting values will be equally (linearly) spaced, hence the name.
+
+*Function:*
+
+    linspace(`start`, `end`, `n`)
+
+> Note: `n` must be a positive integer.
+
+> Note: The `start` and `end` arguments can hold the same vale, the result will be an array with `n` copies of that value.
+
+*Returns:*
+
+* An array of numbers.
+
+*Examples:*
+
+    linspace(1, 10, 10)  //[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    linspace(-5, 5, 7)   //
+    linspace(10, 1, 10)  //[10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+    linspace(1, 1, 5)    //[1, 1, 1, 1, 1]
