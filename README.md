@@ -7799,7 +7799,7 @@ This object functions similarly as the `mapping` object, but this time it maps a
     * `"lab"`.
     * `"lch"`.
 
-> Warning: Interpolation of number outside the `domain` is indeterminate.
+> Warning: Interpolation of numbers outside the `domain` will be indeterminate.
 
 > Note: The colors defined in the `range` must be in the format `"#rrggbb"`. Standard color names are not supported.
 
@@ -7831,3 +7831,136 @@ A `interpolator` object with the following properties:
     #777777
     #ffffff
 
+The color space used determines the path follow by the interpolator. 
+
+For example, consider the interpolation between `"#440154"` and `"#fde724"`:
+
+| space    |  Interpolation   |
+|:--------:|:----------------:|
+| `"rgb"`  | ![interpolation-rgb](/assets/images/interpolation-rgb.jpg) |
+| `"hsv"`  | ![interpolation-hsv](/assets/images/interpolation-hsv.jpg) |
+| `"xyz"`  | ![interpolation-xyz](/assets/images/interpolation-xyz.jpg) |
+| `"lab"`  | ![interpolation-lab](/assets/images/interpolation-lab.jpg) |
+| `"lch"`  | ![interpolation-lch](/assets/images/interpolation-lch.jpg) |
+
+Computation in the `rgb` space is less expensive than those made in `lch` space. In general, the complexity follows the last table, being the most 'expensive' spaces at the bottom.
+
+*Default Values:*
+
+Only the `space` have default value, this value are:
+
+    {
+      space : "lch",
+    }
+
+___
+
+### Color Map:
+
+This function creates a ready to use general purpose color interpolator.
+
+*Function:*
+
+    colorMap(options)
+
+*Where:*
+
+* `options`: is an object containing the following properties:
+  * `from`: a number indicating the `domain` start.
+  * `to`: a number indicating the `domain` end.
+  * `type`: a string representing the `colorMap` type. It can be one of the following options:
+    * `"viridis"`.
+    * `"plasma"`.
+    * `"magma"`.
+    * `"magnet"`.
+    * `"inv_magnet"`.
+    * `"fairy"`.
+    * `"inv_fairy"`.
+    * `"swamp"`.
+    * `"inv_swamp"`.
+    * `"fire"`.
+    * `"royal"`.
+    * `"hsv"`.
+
+> Warning: Interpolation of numbers outside the `domain` will be indeterminate.
+
+*Returns:*
+
+* A function that takes a number from the domain and returns the corresponding color.
+
+*Example:*
+
+    const color_map = colorMap({
+      from : 0,
+      to : 1,
+      type : "plasma"
+    });
+
+    console.log(color_map(0));
+    console.log(color_map(0.25));
+    console.log(color_map(0.5));
+    console.log(color_map(1));
+
+*Result:*
+
+    #440154
+    #9e0059
+    #e24648
+    #fde724
+
+The `colormap` types are organized in the following categories.
+
+#### Sequential
+
+|  type   |    Result    |
+|:-------:|:------------:|
+| `"viridis"` | ![colormap-viridis](/assets/images/colormap-viridis.jpg) |
+| `"plasma"` | ![colormap-plasma](/assets/images/colormap-plasma.jpg) |
+| `"magma"` | ![colormap-magma](/assets/images/colormap-magma.jpg) |
+
+#### Diverging
+
+|  type   |    Result    |
+|:-------:|:------------:|
+| `"magnet"` | ![colormap-magnet](/assets/images/colormap-magnet.jpg) |
+| `"swamp"` | ![colormap-swamp](/assets/images/colormap-swamp.jpg) |
+| `"fairy"` | ![colormap-fairy](/assets/images/colormap-fairy.jpg) |
+| `"inv-magnet"` | ![colormap-inv_magnet](/assets/images/colormap-inv_magnet.jpg) |
+| `"inv-swamp"` | ![colormap-inv_swamp](/assets/images/colormap-inv_swamp.jpg) |
+| `"inv-fairy"` | ![colormap-inv_fairy](/assets/images/colormap-inv_fairy.jpg) |
+
+#### Cyclic
+
+|  type   |    Result    |
+|:-------:|:------------:|
+| `"fire"` | ![colormap-fire](/assets/images/colormap-fire.jpg) |
+| `"royal"` | ![colormap-royal](/assets/images/colormap-royal.jpg) |
+| `"hsv"` | ![colormap-hsv](/assets/images/colormap-hsv.jpg) |
+
+___
+
+# License
+
+MIT License
+
+Copyright (c) 2023 Jhoselin Ramirez
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+___
