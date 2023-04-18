@@ -328,7 +328,7 @@ function inClientRect(x:number, y:number) : boolean{
         state.compute.client();
         if(moveState.callback != null) moveState.callback(graphHandler);
         state.dirty.client = true;
-        state.draw.client();
+        state.draw.full();
     }
 
 //---------------------------------------------
@@ -342,10 +342,10 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             
             let [initialX, initialY] = [0,0];
             let [pointerX, pointerY] = clientCoords(x, y);
-            const minX = state.context.clientRect.x+2;
-            const maxX = minX + state.context.clientRect.width-2;
-            const minY = state.context.clientRect.y+2;
-            const maxY = minY + state.context.clientRect.height-2;
+            const minX = 2;
+            const maxX = minX + graphRect.width-2;
+            const minY = 2;
+            const maxY = minY + graphRect.height-2;
             
             pointerX = pointerX<minX? minX : (pointerX>maxX? maxX : pointerX);
             pointerY = pointerY<minY? minY : (pointerY>maxY? maxY : pointerY);
@@ -490,7 +490,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             state.compute.client();
             if(zoomState.callback != null) zoomState.callback(graphHandler);
             state.dirty.client = true;
-            state.draw.client();
+            state.draw.full();
     }
 }
 
@@ -561,7 +561,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         state.compute.client();
         if(zoomState.callback != null) zoomState.callback(graphHandler);
         state.dirty.client = true;
-        state.draw.client();
+        state.draw.full();
     }
 
 //---------------------------------------------
@@ -694,7 +694,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
         state.compute.client();
         if(zoomState.callback != null) zoomState.callback(graphHandler);
         state.dirty.client = true;
-        state.draw.client();
+        state.draw.full();
     }
 
 //---------------------------------------------
@@ -971,7 +971,7 @@ function zoomOnPointer({x, y, type, shiftKey, anchor} : Zoom_Event){
             if(options.strength != null) zoomState.strength = options.strength;
             if(options.anchor != null) zoomState.anchor = options.anchor as "center" | "pointer" | [number, number];
             if(options.type != null) zoomState.type = options.type;
-            zoomState.callback = options.callback as graphCallback;
+            zoomState.callback = options.callback as graphCallback | undefined;
             if(options.rect != null) zoomState.rect = {...zoomState.rect, ...options.rect};
         }
         

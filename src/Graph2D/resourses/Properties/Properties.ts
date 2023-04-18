@@ -82,10 +82,7 @@ function Properties({graphHandler, state} : Method_Generator) : Properties {
     function coordinateMaps() : Graph2D_Mappings{
         return {
             primary : {...state.scale.primary},
-            secondary : {
-                x : state.scale.secondary.x,
-                y : state.scale.secondary.y
-            }
+            secondary : { x : undefined, y : undefined, ...state.scale.secondary}
         }
     }
 

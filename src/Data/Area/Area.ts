@@ -22,7 +22,7 @@ const defaultOptions : Area_Options = {
     id : "auto"
 }
 
-export function Area(options : Partialize<Area_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Area, Draw_Data_Callback, Graph2D_Save_Callback]{
+export function Area_Dataset(options : Partialize<Area_Options>, graphHandler : Graph2D, dirtify:(sort?:boolean)=>void) : [Area, Draw_Data_Callback, Graph2D_Save_Callback]{
 
     //State of the area
     const dataState : Area_State = {
