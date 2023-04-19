@@ -69,18 +69,18 @@ function Border({graphHandler, state}:Method_Generator) : Border{
             return {...state.border}
 
         if(typeof border === "object"){
-            
-            if(border.border != null){
-                state.border.x.start = {...state.border.x.start, ...border.border};
-                state.border.x.end = {...state.border.x.end, ...border.border};
-                state.border.y.start = {...state.border.y.start, ...border.border};
-                state.border.y.end = {...state.border.y.end, ...border.border};
-            }
 
-            if(border.x?.start != null) state.border.x.start = {...state.border.x.start, ...border.x.start};
-            if(border.x?.end != null) state.border.x.end = {...state.border.x.end, ...border.x.end};
-            if(border.y?.start != null) state.border.y.start = {...state.border.y.start, ...border.y.start};
-            if(border.y?.end != null) state.border.y.end = {...state.border.y.end, ...border.y.end};
+            state.border = {
+                x : {
+                    start : {...state.border.x.start, ...border.border, ...border.x?.start},
+                    end : {...state.border.x.start, ...border.border, ...border.x?.end},
+                },
+                y : {
+                    start : {...state.border.y.start, ...border.border, ...border.y?.start},
+                    end : {...state.border.y.start, ...border.border, ...border.y?.end},
+                },
+            }
+            
 
             if(callback != null) callback(graphHandler);
             state.dirty.client = true;

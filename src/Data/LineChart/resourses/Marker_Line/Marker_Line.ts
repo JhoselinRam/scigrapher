@@ -1,5 +1,5 @@
 import { isCallable } from "../../../../tools/Helplers/Helplers.js";
-import { Line_Chart, Line_Chart_Callback, Line_Chart_Method_Generator, Property_Generator, Property_Modifier } from "../../LineChart_Types";
+import { Line_Chart, Line_Chart_Callback, Line_Chart_Method_Generator, Marker_Type, Property_Generator, Property_Modifier } from "../../LineChart_Types";
 import { Marker_Line, Marker_Properties } from "./Marker_Line_Types";
 
 function MarkerLine({dataHandler, dataState, graphHandler} : Line_Chart_Method_Generator) : Marker_Line{
@@ -11,7 +11,7 @@ const markerColor = generateMarkerModifier<string>("color");
 const markerOpacity = generateMarkerModifier<number>("opacity");
 const markerWidth = generateMarkerModifier<number>("width");
 const markerStyle = generateMarkerModifier<string>("style");
-const markerType = generateMarkerModifier<string>("type");
+const markerType = generateMarkerModifier<Marker_Type>("type");
 const markerFilled = generateMarkerModifier<boolean>("filled");
 
 //---------------------------------------------

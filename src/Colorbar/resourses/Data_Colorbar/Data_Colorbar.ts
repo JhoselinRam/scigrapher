@@ -9,7 +9,7 @@ function ColorbarData({barHandler, barState, graphHandler, state} : Colorbar_Met
     function data(arg:void) : Colorbar_Entries;
     function data(data:Colorbar_Data | void, callback?:Colorbar_Callback) : Colorbar | Colorbar_Entries | undefined{
         if(typeof data === "undefined" && callback == null)
-            return {...barState.gradient.entries};
+            return [...barState.gradient.entries.sort((a,b)=>a.position-b.position)];
 
         if(typeof data !== "undefined"){
             if(typeof data === "string" && barState.data === data) return barHandler;

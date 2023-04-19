@@ -12,7 +12,7 @@ export interface Colorbar_Properties_Methods {
     border : Colorbar_Object_Generator<Colorbar_Line>, 
     ticks : Colorbar_Object_Generator<Colorbar_Marker>, 
     position : {
-        (position:Colorbar_Position, callback?:Colorbar_Callback) : Colorbar,
+        (position:Partial<Colorbar_Position>, callback?:Colorbar_Callback) : Colorbar,
         (arg:void) : string
     },
     metrics : ()=>Rect,

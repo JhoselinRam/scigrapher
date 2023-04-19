@@ -36,7 +36,7 @@ function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_M
         //Title
         state.context.data.fillStyle = legendState.title.color;
         state.context.data.globalAlpha = legendState.title.opacity;
-        state.context.data.font = `${legendState.title.size} ${legendState.title.font}`;
+        state.context.data.font = `bold ${legendState.title.size} ${legendState.title.font}`;
         state.context.data.fillText(legendState.title.text, legendState.metrics.titleCoord, legendState.metrics.textOffset);
 
         //Entries

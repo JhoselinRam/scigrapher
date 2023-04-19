@@ -20,9 +20,9 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
 //---------------------------------------------
 //-------------- Position ---------------------
 
-    function position(position:Colorbar_Position, callback?:Colorbar_Callback) : Colorbar;
+    function position(position:Partial<Colorbar_Position>, callback?:Colorbar_Callback) : Colorbar;
     function position(arg:void) : string;
-    function position(position:Colorbar_Position | void, callback?:Colorbar_Callback) : Colorbar | string | undefined{
+    function position(position:Partial<Colorbar_Position> | void, callback?:Colorbar_Callback) : Colorbar | string | undefined{
         if(typeof position === "undefined" && callback == null){
             if(typeof props.barState.position === "string")
                 return props.barState.position;

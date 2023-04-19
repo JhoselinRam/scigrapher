@@ -16,8 +16,8 @@ export interface Draw_Border {
 }
 
 export interface Border_Modifier extends RecursivePartial<Axis_Property<{
-    start : BorderProperties,
-    end : BorderProperties
+    start : Partial<BorderProperties>,
+    end : Partial<BorderProperties>
 }>> {
-    border ?: BorderProperties,
+    border ?: Partial<BorderProperties>,
 }
