@@ -25,6 +25,7 @@ const defaultOptions : Legend_Options = {
         color : "#000000",
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "12px",
+        specifier : "bold",
         opacity : 1,
         position : "start"
     },

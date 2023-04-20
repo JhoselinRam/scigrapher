@@ -31,6 +31,7 @@ const defaultOptions : Colorbar_Options = {
         color : "#000000",
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "10px",
+        specifier : "",
         opacity : 1,
         position : "end"
         },
@@ -39,6 +40,7 @@ const defaultOptions : Colorbar_Options = {
         color : "#000000",
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "12px",
+        specifier : "",
         opacity : 1,
         position : "end",
         reverse : false

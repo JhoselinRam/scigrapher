@@ -415,13 +415,15 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
                     color : state.axis.x.textColor,
                     opacity : state.axis.x.textOpacity,
                     font : state.axis.x.textFont,
-                    size : state.axis.x.textSize
+                    size : state.axis.x.textSize,
+                    specifier : state.axis.x.textSpecifier
                 },
                 y : {
                     color : state.axis.y.textColor,
                     opacity : state.axis.y.textOpacity,
                     font : state.axis.y.textFont,
-                    size : state.axis.y.textSize
+                    size : state.axis.y.textSize,
+                    specifier : state.axis.y.textSpecifier
                 },
             }
 
@@ -431,9 +433,11 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
                 text.x?.font === state.axis.x.textFont &&
                 text.x?.opacity === state.axis.x.textOpacity &&
                 text.x?.size === state.axis.x.textSize &&
+                text.x?.specifier === state.axis.x.textSpecifier &&
                 text.y?.color === state.axis.y.textColor && 
                 text.y?.font === state.axis.y.textFont &&
                 text.y?.opacity === state.axis.y.textOpacity &&
+                text.y?.specifier === state.axis.y.textSpecifier &&
                 text.y?.size === state.axis.y.textSize) return graphHandler;
 
             if(text.x?.color != null) state.axis.x.textColor = text.x.color;
@@ -441,11 +445,13 @@ function axisOpacity(opacity : Axis_Modifier_Props<number> | void, callback?:gra
             if(text.x?.opacity != null)
                 state.axis.x.textOpacity = text.x.opacity<0?0:(text.x.opacity>1?1:text.x?.opacity);
             if(text.x?.size != null) state.axis.x.textSize = text.x.size;
+            if(text.x?.specifier != null) state.axis.x.textSpecifier = text.x.specifier;
             if(text.y?.color != null) state.axis.y.textColor = text.y.color;
             if(text.y?.font != null) state.axis.y.textFont = text.y.font;
             if(text.y?.opacity != null)
                 state.axis.y.textOpacity = text.y.opacity<0?0:(text.y.opacity>1?1:text.y?.opacity);
             if(text.y?.size != null) state.axis.y.textSize = text.y.size;
+            if(text.y?.specifier != null) state.axis.y.textSpecifier = text.y.specifier;
 
 
             state.compute.client();

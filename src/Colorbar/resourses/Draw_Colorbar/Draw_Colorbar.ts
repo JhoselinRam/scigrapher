@@ -86,7 +86,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.strokeStyle = barState.label.color;
     state.context.data.fillStyle = barState.label.color;
     state.context.data.globalAlpha = barState.label.opacity;
-    state.context.data.font = `${barState.label.size} ${barState.label.font}`;
+    state.context.data.font = `${barState.label.specifier} ${barState.label.size} ${barState.label.font}`;
     state.context.data.textBaseline = "middle";
     state.context.data.textAlign = barState.label.position==="start"? "right" : "left";
    
@@ -101,7 +101,7 @@ function drawVertical(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.strokeStyle = barState.title.color;
     state.context.data.fillStyle = barState.title.color;
     state.context.data.globalAlpha = barState.title.opacity;
-    state.context.data.font = `${barState.title.size} ${barState.title.font}`;
+    state.context.data.font = `${barState.title.specifier} ${barState.title.size} ${barState.title.font}`;
     state.context.data.textBaseline = baseline as "top"|"bottom";
     state.context.data.textAlign = "center";
     state.context.data.translate(barState.metrics.titleCoord, barState.metrics.height/2);
@@ -145,7 +145,7 @@ function drawHorizontal(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.strokeStyle = barState.label.color;
     state.context.data.fillStyle = barState.label.color;
     state.context.data.globalAlpha = barState.label.opacity;
-    state.context.data.font = `${barState.label.size} ${barState.label.font}`;
+    state.context.data.font = `${barState.label.specifier} ${barState.label.size} ${barState.label.font}`;
     state.context.data.textBaseline = "top";
     state.context.data.textAlign = "center";
    
@@ -159,7 +159,7 @@ function drawHorizontal(state:Graph2D_State, barState:Colorbar_State){
     state.context.data.strokeStyle = barState.title.color;
     state.context.data.fillStyle = barState.title.color;
     state.context.data.globalAlpha = barState.title.opacity;
-    state.context.data.font = `${barState.title.size} ${barState.title.font}`;
+    state.context.data.font = `${barState.title.specifier} ${barState.title.size} ${barState.title.font}`;
     state.context.data.textBaseline = "top";
     state.context.data.textAlign = "center";
     state.context.data.translate(barState.metrics.width/2, barState.metrics.titleCoord);

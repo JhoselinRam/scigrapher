@@ -37,6 +37,7 @@ export type Colorbar_Data = string | Colorbar_Entries;
 export interface Colorbar_Text {
     font : string,
     size : string,
+    specifier : string,
     color : string,
     opacity : number,
     position : "start" | "end"

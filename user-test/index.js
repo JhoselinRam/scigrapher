@@ -17,22 +17,14 @@ const heat = graph.addDataset("heatmap")
 .meshY(Y)
 .data((x,y)=>Math.sin(x +y))
 
-graph.addColorbar()
+const bar = graph.addColorbar()
 .data(heat.id())
 .ticks({density:6})
-.position({x:50, y:0})
+.title({text:"Colorbar Title"})
 
-  
+graph.addLegend().data([{dataset:heat.id(), label:"sin(x+y)"}]).title({text:"Function"})
 
-const interpolator = colorInterpolator({
-    from : [0, 1],
-    to : ["#000000", "#ffffff"]
-  });
-
-console.log(interpolator.map(0))
-console.log(interpolator.map(0.25))
-console.log(interpolator.map(0.5))
-console.log(interpolator.map(1))
+console.dir(bar.title())
   
 
          

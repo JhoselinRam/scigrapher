@@ -6,8 +6,8 @@ function ColorbarText({barHandler, barState, graphHandler, state} : Colorbar_Met
 
 //------------- Title & Label -----------------
 
-const label = generateTextMethod<Colorbar_Text>(barState.label, "label", {barHandler, barState, graphHandler, state});
-const title = generateTextMethod<Colorbar_Title>(barState.title, "title", {barHandler, barState, graphHandler, state});
+const label = generateTextMethod<Colorbar_Text>("label", {barHandler, barState, graphHandler, state});
+const title = generateTextMethod<Colorbar_Title>("title", {barHandler, barState, graphHandler, state});
 
 //---------------------------------------------
 //----------------- Text ----------------------
@@ -23,7 +23,8 @@ const title = generateTextMethod<Colorbar_Title>(barState.title, "title", {barHa
                     opacity : barState.title.opacity,
                     size : barState.title.size,
                     font : barState.title.font,
-                    position : barState.title.position
+                    position : barState.title.position,
+                    specifier : barState.title.specifier
                 }
             }
         }
@@ -68,16 +69,16 @@ export default ColorbarText;
 
 //---------------- Generator ------------------
 
-function generateTextMethod<T>(container:T, option:Colorbar_Text_Option, {barHandler, barState, graphHandler, state}:Colorbar_Method_Generator) : Colorbar_Text_Generated<T>{
+function generateTextMethod<T>(option:Colorbar_Text_Option, {barHandler, barState, graphHandler, state}:Colorbar_Method_Generator) : Colorbar_Text_Generated<T>{
 
     function method(text:Partial<T>, callback?:Colorbar_Callback) : Colorbar;
     function method(arg:void) : T;
     function method(text:Partial<T> | void, callback?:Colorbar_Callback) : Colorbar | T | undefined{
         if(typeof text === "undefined" && callback==null)
-            return {...container}
+            return {...barState[option] as T}
 
         if(typeof text === "object"){
-            (barState[option] as T) = {...container, ...text};
+            (barState[option] as T) = {...barState[option] as T, ...text};
 
             state.compute.client();
             if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));

@@ -36,14 +36,14 @@ function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_M
         //Title
         state.context.data.fillStyle = legendState.title.color;
         state.context.data.globalAlpha = legendState.title.opacity;
-        state.context.data.font = `bold ${legendState.title.size} ${legendState.title.font}`;
+        state.context.data.font = `${legendState.title.specifier} ${legendState.title.size} ${legendState.title.font}`;
         state.context.data.fillText(legendState.title.text, legendState.metrics.titleCoord, legendState.metrics.textOffset);
 
         //Entries
         legendState.metrics.data.forEach((entrie, i)=>{
             state.context.data.fillStyle = entrie.text.color;
             state.context.data.globalAlpha = entrie.text.opacity;
-            state.context.data.font = `${entrie.text.size} ${entrie.text.font}`;
+            state.context.data.font = `${entrie.text.specifier} ${entrie.text.size} ${entrie.text.font}`;
             state.context.data.fillText(entrie.label, legendState.metrics.items[i].x, legendState.metrics.items[i].y);
 
             legendState.metrics.items[i].drawIcon({

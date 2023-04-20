@@ -102,7 +102,7 @@ function CreateAxis({state, axis, scale}:CreateAxis_Props) : Axis_Obj{
 
         //Text
         state.context.canvas.textBaseline = "top";
-        state.context.canvas.font = `${axisUsed.textSize} ${axisUsed.textFont}`;
+        state.context.canvas.font = `${axisUsed.textSpecifier} ${axisUsed.textSize} ${axisUsed.textFont}`;
         rects.forEach((item, index)=>{
             if(positions[index] === 0 && state.axis.position === "center") return;
 
@@ -254,9 +254,10 @@ export function createLabels(positions:Array<number>, axis:"x"|"y", state:Graph2
 
     const textSizeUsed = scale==="primary"? state.axis[axis].textSize : (state.secondary[axis] as Secondary_Axis).textSize;
     const textFontUsed = scale==="primary"? state.axis[axis].textFont : (state.secondary[axis] as Secondary_Axis).textFont;
+    const textSpecifierUsed = scale==="primary"? state.axis[axis].textSpecifier : (state.secondary[axis] as Secondary_Axis).textSpecifier;
 
     state.context.canvas.save();
-    state.context.canvas.font = `${textSizeUsed} ${textFontUsed}`;
+    state.context.canvas.font = `${textSpecifierUsed} ${textSizeUsed} ${textFontUsed}`;
 
     const labels = positions.map(position=>{
         let label = formatNumber(position, maxDecimals);
@@ -430,11 +431,12 @@ function computeRects(positions:Array<number>, labels:Array<string>, axis:"x"|"y
     function getTextSize(text:string, axis:"x"|"y", state:Graph2D_State, scale:"primary"|"secondary") : {width:number, height:number}{
         const textSizeUsed = scale==="primary"? state.axis[axis].textSize : (state.secondary[axis] as Secondary_Axis).textSize;
         const textFontUsed = scale==="primary"? state.axis[axis].textFont : (state.secondary[axis] as Secondary_Axis).textFont;
+        const textSpecifierUsed = scale==="primary"? state.axis[axis].textSpecifier : (state.secondary[axis] as Secondary_Axis).textSpecifier;
         let width = 0;
         let height = 0;
         
         state.context.canvas.save();
-        state.context.canvas.font = `${textSizeUsed} ${textFontUsed}`;
+        state.context.canvas.font = `${textSpecifierUsed} ${textSizeUsed} ${textFontUsed}`;
         
         if(!text.includes("x10")){
             const metrics = state.context.canvas.measureText(text);

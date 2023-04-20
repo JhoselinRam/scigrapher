@@ -33,7 +33,8 @@ export interface Legend_Text {
     font : string,
     size : string,
     color : string,
-    opacity : number
+    opacity : number,
+    specifier : string
 }
 
 export interface Legend_Data_Entrie {

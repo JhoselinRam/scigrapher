@@ -79,6 +79,7 @@ const defaultSecondaryAxis : Secondary_Axis = {
     textOpacity : 1,
     textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
     textSize : "10px",
+    textSpecifier : "",
     ticks : "auto",
     minSpacing : 45
 };
@@ -638,7 +639,8 @@ function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?
                 color : state.secondary.x.textColor,
                 font : state.secondary.x.textFont,
                 opacity : state.secondary.x.textOpacity,
-                size : state.secondary.x.textSize
+                size : state.secondary.x.textSize,
+                specifier : state.secondary.x.textSpecifier
             }
         }
         if(state.secondary.y != null){
@@ -646,7 +648,8 @@ function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?
                 color : state.secondary.y.textColor,
                 font : state.secondary.y.textFont,
                 opacity : state.secondary.y.textOpacity,
-                size : state.secondary.y.textSize
+                size : state.secondary.y.textSize,
+                specifier : state.secondary.y.textSpecifier
             }
         }
         
@@ -673,6 +676,10 @@ function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?
                 state.secondary.x.textSize = text.x.size;
                 changeX = true;
             }
+            if(text.x?.specifier != null && text.x.specifier !== state.secondary.x.textSpecifier){
+                state.secondary.x.textSpecifier = text.x.specifier;
+                changeX = true;
+            }
             if(text.x?.font != null && text.x.font !== state.secondary.x.textFont){
                 state.secondary.x.textFont = text.x.font;
                 changeX = true;
@@ -690,6 +697,10 @@ function secondaryAxisText(text : RecursivePartial<Text_Props> | void, callback?
             }
             if(text.y?.size != null && text.y.size !== state.secondary.y.textSize){
                 state.secondary.y.textSize = text.y.size;
+                changeY = true;
+            }
+            if(text.y?.specifier != null && text.y.specifier !== state.secondary.y.textSpecifier){
+                state.secondary.y.textSpecifier = text.y.specifier;
                 changeY = true;
             }
             if(text.y?.font != null && text.y.font !== state.secondary.y.textFont){

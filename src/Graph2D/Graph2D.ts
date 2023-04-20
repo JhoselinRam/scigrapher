@@ -38,6 +38,7 @@ const defaultOptions : Graph2D_Options = {
             textOpacity : 1,
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
+            textSpecifier : "",
             dynamic : true,
             contained : true,
             ticks : "auto",
@@ -59,6 +60,7 @@ const defaultOptions : Graph2D_Options = {
             textOpacity : 1,
             textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
             textSize : "10px",
+            textSpecifier : "",
             dynamic : true,
             contained : true,
             ticks : "auto",
@@ -162,6 +164,7 @@ const defaultSecondaryAxis : Secondary_Axis = {
     textOpacity : 1,
     textFont : "Arial, Helvetica Neue, Helvetica, sans-serif",
     textSize : "10px",
+    textSpecifier : "",
     ticks : "auto",
     minSpacing : 45
 };
@@ -169,6 +172,7 @@ const defaultSecondaryAxis : Secondary_Axis = {
 const defaultLabel : LabelProperties = {
     font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
     size : "15px",
+    specifier : "",
     color : "#000000",
     filled : true,
     opacity : 1,

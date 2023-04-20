@@ -85,7 +85,8 @@ export type Text_Props = Axis_Property<{
     color : string,
     opacity : number,
     font : string,
-    size : string
+    size : string,
+    specifier : string
 }>
 
 export type Dynamic_Props = Axis_Property<{

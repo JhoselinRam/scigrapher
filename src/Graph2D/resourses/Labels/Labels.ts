@@ -18,38 +18,44 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             titleHeight = getTextHeight({
                 text : state.labels.title.text,
                 size : state.labels.title.size, 
-                font : state.labels.title.font
+                font : state.labels.title.font,
+                specifier : state.labels.title.specifier
             });
         if(state.labels.subtitle != null && state.labels.subtitle.enable) 
             subtitleHeight = getTextHeight({
                 text : state.labels.subtitle.text,
                 size : state.labels.subtitle.size, 
-                font : state.labels.subtitle.font
+                font : state.labels.subtitle.font,
+                specifier : state.labels.subtitle.specifier
             });
         if(state.axis.position !== "center"){
             if(state.labels.xPrimary != null && state.labels.xPrimary.enable) 
                 xPrimaryHeight = getTextHeight({
                     text : state.labels.xPrimary.text,
                     size : state.labels.xPrimary.size,
-                    font : state.labels.xPrimary.font
+                    font : state.labels.xPrimary.font,
+                    specifier : state.labels.xPrimary.specifier
                 });
             if(state.labels.yPrimary != null && state.labels.yPrimary.enable) 
                 yPrimaryHeight = getTextHeight({
                     text : state.labels.yPrimary.text,
                     size : state.labels.yPrimary.size,
-                    font : state.labels.yPrimary.font
+                    font : state.labels.yPrimary.font,
+                    specifier : state.labels.yPrimary.specifier
                 });
             if(state.labels.xSecondary != null && state.labels.xSecondary.enable) 
                 xSecondaryHeight = getTextHeight({
                     text : state.labels.xSecondary.text,
                     size : state.labels.xSecondary.size,
-                    font : state.labels.xSecondary.font
+                    font : state.labels.xSecondary.font,
+                    specifier : state.labels.xSecondary.specifier
                 });
             if(state.labels.ySecondary != null && state.labels.ySecondary.enable)
                 ySecondaryHeight = getTextHeight({
                     text : state.labels.ySecondary.text,
                     size : state.labels.ySecondary.size,
-                    font : state.labels.ySecondary.font
+                    font : state.labels.ySecondary.font,
+                    specifier : state.labels.ySecondary.specifier
                 });
         }
         
@@ -88,8 +94,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         
     }
 
-    function getTextHeight({text, size, font} : Text_Height_Props) : number {
-        state.context.canvas.font = `${size} ${font}`;
+    function getTextHeight({text, size, font, specifier} : Text_Height_Props) : number {
+        state.context.canvas.font = `${specifier} ${size} ${font}`;
         const metrics = state.context.canvas.measureText(text);
         const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
         
@@ -115,7 +121,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.title = getTextHeight({
                 text : state.labels.title.text,
                 size : state.labels.title.size, 
-                font : state.labels.title.font
+                font : state.labels.title.font,
+                specifier : state.labels.title.specifier
             });
             const position = state.labels.title.position;
             const [x, y, angle] = getCoords({heights, position, label:"title"});
@@ -126,7 +133,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.subtitle = getTextHeight({
                 text : state.labels.subtitle.text,
                 size : state.labels.subtitle.size, 
-                font : state.labels.subtitle.font
+                font : state.labels.subtitle.font,
+                specifier : state.labels.subtitle.specifier
             });
             const position = state.labels.subtitle.position;
             const [x, y, angle] = getCoords({heights, position, label:"subtitle"});
@@ -137,7 +145,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.xPrimary = getTextHeight({
                 text : state.labels.xPrimary.text,
                 size : state.labels.xPrimary.size,
-                font : state.labels.xPrimary.font
+                font : state.labels.xPrimary.font,
+                specifier : state.labels.xPrimary.specifier
             });
             const position = state.labels.xPrimary.position;
             const [x, y, angle] = getCoords({heights, position, label:"xPrimary"});
@@ -148,7 +157,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.yPrimary = getTextHeight({
                 text : state.labels.yPrimary.text,
                 size : state.labels.yPrimary.size,
-                font : state.labels.yPrimary.font
+                font : state.labels.yPrimary.font,
+                specifier : state.labels.yPrimary.specifier
             });
             const position = state.labels.yPrimary.position;
             const [x, y, angle] = getCoords({heights, position, label:"yPrimary"});
@@ -159,8 +169,9 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.xSecondary = getTextHeight({
                 text : state.labels.xSecondary.text,
                 size : state.labels.xSecondary.size,
-                font : state.labels.xSecondary.font
-            });;
+                font : state.labels.xSecondary.font,
+                specifier : state.labels.xSecondary.specifier
+            });
             const position = state.labels.xSecondary.position;
             const [x, y, angle] = getCoords({heights, position, label:"xSecondary"});
             
@@ -170,7 +181,8 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
             heights.ySecondary = getTextHeight({
                 text : state.labels.ySecondary.text,
                 size : state.labels.ySecondary.size,
-                font : state.labels.ySecondary.font
+                font : state.labels.ySecondary.font,
+                specifier : state.labels.ySecondary.specifier
             });
             const position = state.labels.ySecondary.position;
             const [x, y, angle] = getCoords({heights, position, label:"ySecondary"});
@@ -185,7 +197,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
         state.context.canvas.save();
         state.context.canvas.translate(x, y);
         state.context.canvas.rotate(angle);
-        state.context.canvas.font = `${params.size} ${params.font}`;
+        state.context.canvas.font = `${params.specifier} ${params.size} ${params.font}`;
         state.context.canvas.textAlign = params.position;
         state.context.canvas.globalAlpha = params.opacity;
         if(params.filled){
@@ -305,6 +317,7 @@ function Labels({state, graphHandler}:Method_Generator) : Labels{
     const defaultLabel : LabelProperties = {
         font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
         size : "15px",
+        specifier  : "",
         color : "#000000",
         filled : true,
         opacity : 1,

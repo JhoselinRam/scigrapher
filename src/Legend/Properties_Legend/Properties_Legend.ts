@@ -25,7 +25,8 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
             color : "#000000",
             opacity : 1,
             font : "Arial, Helvetica Neue, Helvetica, sans-serif",
-            size : "12px"
+            size : "12px",
+            specifier : ""
         }
     }
 

@@ -1,4 +1,4 @@
-import { Area_Dataset } from "../../../Data/Area/Area";
+import { Area_Dataset } from "../../../Data/Area/Area.js";
 import { Area, Area_Options } from "../../../Data/Area/Area_Types";
 import { Datasets, Dataset_Options, Dataset_Types, Partialize } from "../../../Data/Data_Types";
 import { HeatMap } from "../../../Data/HeatMap/Heat_Map.js";
