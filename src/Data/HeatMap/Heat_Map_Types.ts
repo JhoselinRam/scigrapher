@@ -34,7 +34,7 @@ export interface Heat_Map_Method_Generator {
 
 export type Heat_Map_Callback = Dataset_Callback<Heat_Map>
 
-export type Heat_Property_Generator<T> = (value?:number, x?:number, y?:number, i?:number, j?:number, data?:Field_Property<number>, meshX?:Field_Property<number>, meshY?:Field_Property<number>, dataset?:Heat_Map, graph?:Graph2D)=>T
+export type Heat_Property_Generator<T> = (value:number, x:number, y:number, i:number, j:number, data:Field_Property<number>, meshX:Field_Property<number>, meshY:Field_Property<number>, dataset:Heat_Map, graph:Graph2D)=>T
 
 export type Heat_Map_Color = Color_Map_types | Field_Property<string> | Heat_Property_Generator<string>;
 export type Heat_Map_Opacity = number | Field_Property<number> | Heat_Property_Generator<number>

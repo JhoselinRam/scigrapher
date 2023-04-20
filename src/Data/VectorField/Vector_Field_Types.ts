@@ -29,7 +29,7 @@ export interface Vector_Field_State extends Data_Object_State, Vector_Field_Opti
     datasetType : Datasets
 }
 
-export type Vector_Property_Generator<T> = T | Field_Property<T> | ((vectorX?:number, vectorY?:number, positionX?:number, positionY?:number, i?:number, j?:number, valuesX?:Field_Property<number>, valuesY?:Field_Property<number>, meshX?:Field_Property<number>, meshY?:Field_Property<number>, dataset?:Vector_Field, graph?:Graph2D)=>T);
+export type Vector_Property_Generator<T> = T | Field_Property<T> | ((vectorX:number, vectorY:number, positionX:number, positionY:number, i:number, j:number, valuesX:Field_Property<number>, valuesY:Field_Property<number>, meshX:Field_Property<number>, meshY:Field_Property<number>, dataset:Vector_Field, graph:Graph2D)=>T);
 
 type Make_Generator<T> = {
     [P in keyof T] : Vector_Property_Generator<T[P]>

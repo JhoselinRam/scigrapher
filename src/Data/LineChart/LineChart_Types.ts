@@ -8,7 +8,7 @@ import { Properties_Line } from "./resourses/Properties_Line/Properties_Line_Typ
 
 export type Marker_Type = "circle" | "square" | "v-rect" | "h-rect" | "cross" | "star" | "triangle" | "inv-triangle";
 export type Error_Bar_Types = "rectangle" | "cross" | "corner" | "tail-cross"
-export type Line_Char_Data = Array<number> | ((dataset?:Line_Chart, graph?:Graph2D)=>Array<number>);
+export type Line_Char_Data = Array<number> | ((dataset:Line_Chart, graph:Graph2D)=>Array<number>);
 
 export interface Line_Chart extends 
 Data_General<Line_Chart>,
@@ -67,14 +67,14 @@ export interface Line_Chart_Method_Generator {
     graphHandler : Graph2D
 }
 
-export type Property_Generator<T> = T | Array<T> | ((x?:number, y?:number, index?:number, arrayX?:Array<number>, arrayY?:Array<number>, dataset?:Line_Chart, graph?:Graph2D)=>T);
+export type Property_Generator<T> = T | Array<T> | ((x:number, y:number, index:number, arrayX:Array<number>, arrayY:Array<number>, dataset:Line_Chart, graph:Graph2D)=>T);
 
 export type Make_Generator<T> = {
     [P in keyof T] : Property_Generator<T[P]>
 }
 
 export type Property_Modifier<T> = {
-    (property : Property_Generator<T>, callback?:(handler?:Line_Chart)=>void):Line_Chart,
+    (property : Property_Generator<T>, callback?:Line_Chart_Callback):Line_Chart,
     (arg:void) : T | Array<T>
 }
 

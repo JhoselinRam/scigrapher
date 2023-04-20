@@ -33,4 +33,4 @@ export interface Area_Method_Generator {
     graphHandler : Graph2D
 }
 
-export type Area_Data = number[] | ((dataset?: Area, graph?: Graph2D) => Array<number>)
+export type Area_Data = number[] | ((dataset: Area, graph: Graph2D) => Array<number>)
