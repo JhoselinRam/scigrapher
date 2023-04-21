@@ -7,7 +7,7 @@ export interface Vector_Field extends
 Data_General<Vector_Field>,
 Data_Vector,
 Omit<Properties_Vector, "save">{
-    datasetType : ()=>Datasets
+    datasetType : ()=>"vectorfield"
 }
 
 export interface Vector_Field_Options extends Make_Generator<{

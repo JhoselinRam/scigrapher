@@ -1,12 +1,7 @@
-import { Area } from "./Area/Area_Types";
-import { Dataset_Callback, Dataset_States, Dataset_Types, Data_General, Data_General_Generator } from "./Data_Types";
-import { Heat_Map } from "./HeatMap/Heat_Map_Types";
-import { Line_Chart } from "./LineChart/LineChart_Types";
-import { Vector_Field } from "./VectorField/Vector_Field_Types";
-
+import { Dataset_Callback, Dataset_States, Dataset_Types, Data_General, Data_General_Generator} from "./Data_Types";
 function DataGeneral<T extends Dataset_Types, P extends Dataset_States>({dataHandler, dataState, graphHandler} : Data_General_Generator<T,P>) : Data_General<T>{
 
-//------------------- Id ----------------------
+    //------------------- Id ----------------------
 
     function id(id:string, callback?:Dataset_Callback<T>):T;
     function id(arg:void):string;
@@ -44,5 +39,7 @@ function DataGeneral<T extends Dataset_Types, P extends Dataset_States>({dataHan
         index
     }
 }
+
+//---------------------------------------------
 
 export default DataGeneral;

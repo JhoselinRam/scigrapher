@@ -17,7 +17,7 @@ Marker_Line,
 Error_Line,
 Line,
 Omit<Properties_Line, "save">{
-    datasetType : ()=>Datasets
+    datasetType : ()=>"linechart"
 }
 
 export interface Line_Chart_Options {

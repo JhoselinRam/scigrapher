@@ -8,7 +8,7 @@ export interface Heat_Map extends
 Data_General<Heat_Map>,
 Data_Heat,
 Omit<Properties_Heat, "save">{
-    datasetType : ()=>Datasets
+    datasetType : ()=>"heatmap"
 }
 
 export interface Heat_Map_Options{

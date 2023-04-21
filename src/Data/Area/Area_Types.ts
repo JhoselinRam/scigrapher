@@ -7,7 +7,7 @@ export interface Area extends
 Data_General<Area>,
 Area_Data_Methods,
 Omit<Area_Properties_Methods, "save">{
-    datasetType : ()=>Datasets
+    datasetType : ()=>"area"
 }
 
 export interface Area_Options{
