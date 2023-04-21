@@ -6974,6 +6974,7 @@ It is only necessary to define the values that you want to change and only that 
 * `options`: is an object containing the following properties:
   * `font`: a string representing the font of the `label`.
   * `size`: a string representing the size of the `label`.
+  * `specifier`: a string representing the font specifier of the `label`.
   * `color`: a string representing the color of the `label`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `label`.
   * `position`: a string representing the positioning of the `label`. It can be one of the following values:
@@ -6988,6 +6989,16 @@ It is only necessary to define the values that you want to change and only that 
 > Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
 
 > Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
 
 The `position` property has different meaning depending upon the `colorbar` orientation.
 
@@ -7014,6 +7025,7 @@ The default values for the properties of the `label` method are as follow:
       color : "#000000",
       font : "Arial, Helvetica Neue, Helvetica, sans-serif",
       size : "10px",
+      specifier : "",
       opacity : 1,
       position : "end"
     }
@@ -7038,6 +7050,7 @@ It is only necessary to define the values that you want to change and only that 
   * `text`: a string representing the text of the `title`.
   * `font`: a string representing the font of the `title`.
   * `size`: a string representing the size of the `title`.
+  * `specifier`: a string representing the font specifier of the `title`.
   * `color`: a string representing the color of the `title`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `title`.
   * `position`: a string representing the positioning of the `title`. It can be one of the following values:
@@ -7053,6 +7066,16 @@ It is only necessary to define the values that you want to change and only that 
 > Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
 
 > Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
 
 The `position` property has different meaning depending upon the `colorbar` orientation.
 
@@ -7084,6 +7107,7 @@ The default values for the properties of the `title` method are as follow:
       color : "#000000",
       font : "Arial, Helvetica Neue, Helvetica, sans-serif",
       size : "12px",
+      specifier : "",
       opacity : 1,
       position : "end",
       reverse : false
@@ -7110,6 +7134,7 @@ It is only necessary to define the values that you want to change and only that 
 * `options`: is an object containing the following properties:
   * `font`: a string representing the font of both `text`.
   * `size`: a string representing the size of both `text`.
+  * `specifier`: a string representing the font specifier of both `text`.
   * `color`: a string representing the color of both `text`.
   * `opacity`: a number between 0 and 1 representing the opacity of both `text`.
   * `position`: a string representing the positioning of both `text`. It can be one of the following values:
@@ -7124,6 +7149,16 @@ It is only necessary to define the values that you want to change and only that 
 > Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
 
 > Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
 
 The `position` property has different meaning depending upon the `colorbar` orientation.
 
@@ -7151,6 +7186,7 @@ The default values for the properties of the `text` method are as follows:
         color : "#000000",
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "10px",
+        specifier : "",
         opacity : 1,
         position : "end"
       },
@@ -7158,6 +7194,7 @@ The default values for the properties of the `text` method are as follows:
         color : "#000000",
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
         size : "12px",
+        specifier : "",
         opacity : 1,
         position : "end"
       }
@@ -7375,6 +7412,7 @@ This method lets you set or get the `legend` `data`.
   * `text`: an object with the `text` properties of the labels:
     * `font`: a string representing the font of the `label`.
     * `size`: a string representing the size of the `label`.
+    * `specifier`: a string representing the font specifier of the `label`.
     * `color`: a string representing the color of the `label`.
     * `opacity`: a number between 0 and 1 representing the opacity of the `label`.
 * `callback`: is a function that is run after the `data` is set but before the next render, this callback accept two optional arguments that represents the legend object from which the method is called upon and the graph object that is bound to, in that order.
@@ -7395,7 +7433,8 @@ The default value for the `data` is an empty array, but the entries do have defa
         color : "#000000",
         opacity : 1,
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
-        size : "12px"
+        size : "12px",
+        specifier : ""
       }
     }
 
@@ -7515,6 +7554,7 @@ The `title` will apear at the top of the `legend`.
   * `text`: a string representing the text of the `title`.
   * `font`: a string representing the font of the `title`.
   * `size`: a string representing the size of the `title`.
+  * `specifier`: a string representing the font specifier of the `title`.
   * `color`: a string representing the color of the `title`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `title`.
   * `position`: a string representing the `position` of the `legend`. It can be one of the following options:
@@ -7537,6 +7577,7 @@ The default values for the properties of the `title` method are as follow:
       color : "#000000",
       font : "Arial, Helvetica Neue, Helvetica, sans-serif",
       size : "12px",
+      specifier : "bold",
       opacity : 1,
       position : "start"
     }
