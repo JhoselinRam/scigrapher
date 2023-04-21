@@ -23,7 +23,7 @@ export interface Heat_Map_Options{
 }
 
 export interface Heat_Map_State extends Data_Object_State, Heat_Map_Options{
-    datasetType  : Datasets
+    datasetType  : "heatmap"
 }
 
 export interface Heat_Map_Method_Generator {

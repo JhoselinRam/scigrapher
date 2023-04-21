@@ -22,7 +22,7 @@ export interface Area_Options{
 
 export interface Area_State extends
 Data_Object_State, Area_Options{
-    datasetType : Datasets
+    datasetType : "area"
 }
 
 export type Area_Callback = Dataset_Callback<Area>;

@@ -58,7 +58,7 @@ interface Line_Error_Atributes extends Axis_Property<Make_Generator<{
 
 
 export interface Line_Chart_State extends Data_Object_State, Line_Chart_Options{
-    datasetType : Datasets
+    datasetType : "linechart"
 }
 
 export interface Line_Chart_Method_Generator {
