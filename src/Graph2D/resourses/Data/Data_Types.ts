@@ -10,5 +10,12 @@ export interface Data {
         <T extends Datasets>(type:T, options?:Partialize<Dataset_Options>, callback?:graphCallback) : T extends "linechart" ? Line_Chart : T extends "area"? Area : T extends "heatmap"? Heat_Map : Vector_Field
     },
     removeDataset : (id:string, callback?:graphCallback) => Graph2D,
-    getDatasets : ()=>Array<Dataset_Types>
+    getDatasets : ()=>Datasets_Get
+}
+
+export interface Datasets_Get {
+    linechart : Array<Line_Chart>,
+    area : Array<Area>,
+    heatmap : Array<Heat_Map>,
+    vectorfield : Array<Vector_Field>
 }

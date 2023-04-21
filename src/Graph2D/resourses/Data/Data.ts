@@ -8,7 +8,7 @@ import { Line_Chart, Line_Chart_Options } from "../../../Data/LineChart/LineChar
 import { VectorField } from "../../../Data/VectorField/Vector_Field.js";
 import { Vector_Field, Vector_Field_Options } from "../../../Data/VectorField/Vector_Field_Types";
 import { Graph2D, graphCallback, Method_Generator } from "../../Graph2D_Types";
-import { Data } from "./Data_Types";
+import { Data, Datasets_Get } from "./Data_Types";
 
 function Data({state, graphHandler}:Method_Generator) : Data{
 
@@ -78,8 +78,35 @@ function Data({state, graphHandler}:Method_Generator) : Data{
 //---------------------------------------------
 //-------------- Get Datasets -----------------
 
-    function getDatasets() : Array<Dataset_Types>{
-        return state.data.map(item=>item.dataset);
+    function getDatasets() : Datasets_Get{
+        const linechart : Array<Line_Chart> = [];
+        const area : Array<Area> = [];
+        const heatmap : Array<Heat_Map> = [];
+        const vectorfield : Array<Vector_Field> = [];
+
+        state.data.forEach(set=>{
+            switch(set.dataset.datasetType()){
+                case "linechart":
+                    linechart.push(set.dataset as Line_Chart);
+                    break;
+                case "area":
+                    area.push(set.dataset as Area);
+                    break;
+                case "heatmap":
+                    heatmap.push(set.dataset as Heat_Map);
+                    break;
+                case "vectorfield":
+                    vectorfield.push(set.dataset as Vector_Field);
+                    break;
+            }
+        })
+
+        return {
+            linechart,
+            area, 
+            heatmap,
+            vectorfield
+        }
     }
 
 //---------------------------------------------

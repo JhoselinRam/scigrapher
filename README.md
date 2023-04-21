@@ -600,18 +600,30 @@ It is only necessary to define the values that you want to change and only that 
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `x` axis.
     * `font`: a string representing the font of the text in the `x` axis.
     * `size`: a string representing the size of the text in the `x` axis.
+    * `specifier`: a string representing the font specifier of the text in the `x` axis.
   * `y`: and object with the following properties:
     * `color`: a string representing the color of the text in the `y` axis.
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `y` axis.
     * `font`: a string representing the font of the text in the `y` axis.
     * `size`: a string representing the size of the text in the `y` axis.
+    * `specifier`: a string representing the font specifier of the text in the `y` axis.
 * `callback` is a function that is run after the properties of the axis text are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
 
 > Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
 
->Note: The `size` value can be any valid css size including em, rem, etc.
+> Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
 
 *Returns:*
 
@@ -627,13 +639,15 @@ The defaul values for the properties of the axis text are as follows:
         color : "#000000",
         opacity : 1,
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
-        size : "10px"
+        size : "10px",
+        specifier : ""
       },
       y : {
         color : "#000000",
         opacity : 1,
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
-        size : "10px"
+        size : "10px",
+        specifier : ""
       }
     }
 
@@ -1154,11 +1168,13 @@ It is only necessary to define the values that you want to change and only that 
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `x` axis.
     * `font`: a string representing the font of the text in the `x` axis.
     * `size`: a string representing the size of the text in the `x` axis.
+    * `specifier`: a string representing the font specifier of the text in the `x` axis.
   * `y`: and object with the following properties:
     * `color`: a string representing the color of the text in the `y` axis.
     * `opacity`: a number between 0 and 1 representing the opacity of the text in the `y` axis.
     * `font`: a string representing the font of the text in the `y` axis.
     * `size`: a string representing the size of the text in the `y` axis.
+    * `specifier`: a string representing the font specifier of the text in the `y` axis.
 * `callback` is a function that is run after the properties of the axis ticks are set but before the next render, this callback accepts an optional argument that represents the graph object from which the method is called upon.
 
 > Note: The color can be in the format "#rrggbb" or be any of the standard color names.
@@ -1170,6 +1186,16 @@ It is only necessary to define the values that you want to change and only that 
 > Note: To change any secondary axis property, the corresponding axis must be enabled first.
 
 > Warning: If any of the axis is not defined yet, the correspondign property will return the value `undefined`.
+
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
 
 *Returns:*
 
@@ -1185,13 +1211,15 @@ The defaul values for the properties of the secondary axis text are as follows:
         color : "#000000",
         opacity : 1,
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
-        size : "10px"
+        size : "10px",
+        specifier : ""
       },
       y : {
         color : "#000000",
         opacity : 1,
         font : "Arial, Helvetica Neue, Helvetica, sans-serif",
-        size : "10px"
+        size : "10px",
+        specifier : ""
       }
     }
 
@@ -1757,7 +1785,8 @@ It is only necessary to define the values that you want to change and only that 
   * `enable`: a boolean that determines whether the `title` must be enabled.
   * `text`: a string representing the text to show as a `title`.
   * `font`: a string representing the font of the `title`.
-  * `size`: a string representing the size off the `title`.
+  * `size`: a string representing the size of the `title`.
+  * `specifier`: a string representing the font specifier of the `title`.
   * `color`: a string representing the color of the `title`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `title`.
   * `filled`: a boolean that determines whether the text must be filled or just outlined.
@@ -1772,6 +1801,16 @@ It is only necessary to define the values that you want to change and only that 
 > Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
 
 > Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
 
 *Returns*:
 
@@ -1789,6 +1828,7 @@ The default values for the properties of the `title` are as follows:
       text : "",
       font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
       size : "25px",
+      specifier : "",
       color : "#000000",
       opacity : 1,
       filled : true,
@@ -1815,7 +1855,8 @@ It is only necessary to define the values that you want to change and only that 
   * `enable`: a boolean that determines whether the `subtitle` must be enabled.
   * `text`: a string representing the text to show as a `subtitle`.
   * `font`: a string representing the font of the `subtitle`.
-  * `size`: a string representing the size off the `subtitle`.
+  * `size`: a string representing the size of the `subtitle`.
+  * `specifier`: a string representing the font specifier of the `subtitle`.
   * `color`: a string representing the color of the `subtitle`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `subtitle`.
   * `filled`: a boolean that determines whether the text must be filled or just outlined.
@@ -1830,6 +1871,16 @@ It is only necessary to define the values that you want to change and only that 
 > Note: The `font` value can be any font or stack of fonts available in the browser. Its advised to use safe web fonts.
 
 > Note: The `size` value can be any valid css size including em, rem, etc.
+
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
 
 *Returns*:
 
@@ -1847,6 +1898,7 @@ The default values for the properties of the `subtitle` are as follows:
       text : "",
       font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
       size : "15px",
+      specifier : "",
       color : "#000000",
       opacity : 1,
       filled : true,
@@ -1873,7 +1925,8 @@ It is only necessary to define the values that you want to change and only that 
   * `enable`: a boolean that determines whether the `x label` must be enabled.
   * `text`: a string representing the text to show as a `x label`.
   * `font`: a string representing the font of the `x label`.
-  * `size`: a string representing the size off the `x label`.
+  * `size`: a string representing the size of the `x label`.
+  * `specifier`: a string representing the font specifier of the `x label`.
   * `color`: a string representing the color of the `x label`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `x label`.
   * `filled`: a boolean that determines whether the text must be filled or just outlined.
@@ -1891,6 +1944,16 @@ It is only necessary to define the values that you want to change and only that 
 
 > Note: The label will render only if the axis `position` is *not* set to `center`.
 
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
+
 *Returns*:
 
 * `undefined` if the `x label` is not defined yet and no arguments are pass.
@@ -1907,6 +1970,7 @@ The default values for the properties of the `x label` are as follows:
       text : "",
       font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
       size : "15px",
+      specifier : "",
       color : "#000000",
       opacity : 1,
       filled : true,
@@ -1933,7 +1997,8 @@ It is only necessary to define the values that you want to change and only that 
   * `enable`: a boolean that determines whether the `y label` must be enabled.
   * `text`: a string representing the text to show as a `y label`.
   * `font`: a string representing the font of the `y label`.
-  * `size`: a string representing the size off the `y label`.
+  * `size`: a string representing the size of the `y label`.
+  * `specifier`: a string representing the font specifier of the `y label`.
   * `color`: a string representing the color of the `y label`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `y label`.
   * `filled`: a boolean that determines whether the text must be filled or just outlined.
@@ -1951,6 +2016,16 @@ It is only necessary to define the values that you want to change and only that 
 
 > Note: The label will render only if the axis `position` is *not* set to `center`.
 
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
+
 *Returns*:
 
 * `undefined` if the `y label` is not defined yet and no arguments are pass.
@@ -1967,6 +2042,7 @@ The default values for the properties of the `y label` are as follows:
       text : "",
       font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
       size : "15px",
+      specifier : "",
       color : "#000000",
       opacity : 1,
       filled : true,
@@ -1993,7 +2069,8 @@ It is only necessary to define the values that you want to change and only that 
   * `enable`: a boolean that determines whether the `secondary x label` must be enabled.
   * `text`: a string representing the text to show as a `secondary x label`.
   * `font`: a string representing the font of the `secondary x label`.
-  * `size`: a string representing the size off the `secondary x label`.
+  * `size`: a string representing the size of the `secondary x label`.
+  * `specifier`: a string representing the font specifier of the `secondary x label`.
   * `color`: a string representing the color of the `secondary x label`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `secondary x label`.
   * `filled`: a boolean that determines whether the text must be filled or just outlined.
@@ -2013,6 +2090,16 @@ It is only necessary to define the values that you want to change and only that 
 
 > Note: This label will not render if the secodary `x` axis is not enabled.
 
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
+
 *Returns*:
 
 * `undefined` if the `secondary x label` is not defined yet and no arguments are pass.
@@ -2029,6 +2116,7 @@ The default values for the properties of the `secondary x label` are as follows:
       text : "",
       font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
       size : "15px",
+      specifier : "",
       color : "#000000",
       opacity : 1,
       filled : true,
@@ -2055,7 +2143,8 @@ It is only necessary to define the values that you want to change and only that 
   * `enable`: a boolean that determines whether the `secondary y label` must be enabled.
   * `text`: a string representing the text to show as a `secondary y label`.
   * `font`: a string representing the font of the `secondary y label`.
-  * `size`: a string representing the size off the `secondary y label`.
+  * `size`: a string representing the size of the `secondary y label`.
+  * `specifier`: a string representing the font specifier of the `secondary y label`.
   * `color`: a string representing the color of the `secondary y label`.
   * `opacity`: a number between 0 and 1 representing the opacity of the `secondary y label`.
   * `filled`: a boolean that determines whether the text must be filled or just outlined.
@@ -2075,6 +2164,16 @@ It is only necessary to define the values that you want to change and only that 
 
 > Note: This label will not render if the secodary `y` axis is not enabled.
 
+> Note: The `specifier` can be any combination of the following css font properties.
+>
+>* font-style.
+>* font-variant.
+>* font-weight.
+>* font-stretch.
+>* line-height.
+>
+> Some fonts may not support all `specifier` options.
+
 *Returns*:
 
 * `undefined` if the `secondary y label` is not defined yet and no arguments are pass.
@@ -2091,6 +2190,7 @@ The default values for the properties of the `secondary y label` are as follows:
       text : "",
       font : "Perpetua, Baskerville, Big Caslon, Palatino Linotype, Palatino, serif",
       size : "15px",
+      specifier : "",
       color : "#000000",
       opacity : 1,
       filled : true,
@@ -2782,7 +2882,7 @@ ___
 
 ### Get Datasets
 
-This method returns an array containing all the datasets associated with the graph.
+This method returns an object containing all the datasets associated with the graph.
 
 *Method:*
 
@@ -2790,7 +2890,12 @@ This method returns an array containing all the datasets associated with the gra
 
 *Returns:*
 
-* An array with all datasets. The datasets are sorted by its inner index in ascending order.
+An object with the following properties:
+
+* `linechart`: an array with all `linechart` objects.
+* `area`: an array with all `area` objects.
+* `heatmap`: an array with all `heatmap` objects.
+* `vectorfield`: an array with all `vectorfield` objects.
 
 ___
 
