@@ -11,6 +11,7 @@ const defaultOptions : Area_Options = {
     color : "#0043e0",
     opacity : 0.3,
     polar : false,
+    useAxis : {x:"primary", y:"primary"},
     data : {
         x : [],
         y : []
@@ -30,8 +31,8 @@ export function Area_Dataset(options : Partialize<Area_Options>, graphHandler : 
         id : (options.id != null && options.id!=="auto")? options.id : crypto.randomUUID(),
         index : 0,
         dirtify,
-        useAxis : {x:"primary", y:"primary"},
         datasetType : "area",
+        useAxis : {...defaultOptions.useAxis, ...options.useAxis},
         base : {
             x : options.base?.x != null ? options.base.x as Area_Data : defaultOptions.base.x,  
             y : options.base?.y != null ? options.base.y as Area_Data : defaultOptions.base.y,  
@@ -59,6 +60,7 @@ export function Area_Dataset(options : Partialize<Area_Options>, graphHandler : 
     dataHandler.dataY = data.dataY;
     dataHandler.baseX = data.baseX;
     dataHandler.baseY = data.baseY;
+    dataHandler.axisUsed = data.axisUsed;
     dataHandler.enable = properties.enable;
     dataHandler.polar = properties.polar;
     dataHandler.color = properties.color;

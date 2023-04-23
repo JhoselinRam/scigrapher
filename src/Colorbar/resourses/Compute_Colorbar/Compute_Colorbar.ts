@@ -47,12 +47,12 @@ function ComputeColorbar({barState, state} : Colorbar_Method_Generator) : Comput
 
         //Compute the absolute sizes and change the margin if needed
         const graphRect = state.context.graphRect();
-        const titleSize = getTextSize(barState.title.text, barState.title.size, barState.title.font, state.context.data);
+        const titleSize = getTextSize(barState.title.text, barState.title.size, barState.title.font, barState.title.specifier, state.context.data);
         let labelWidth = 0;
         let labelHeight = 0;
 
         barState.gradient.entries.forEach(item=>{
-            const size = getTextSize(item.label, barState.label.size, barState.label.font, state.context.data);
+            const size = getTextSize(item.label, barState.label.size, barState.label.font, barState.label.specifier, state.context.data);
             
             if(size.width > labelWidth)
                 labelWidth = size.width;
@@ -343,12 +343,12 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
             entries.push({
                 position : scale.map(values[0].data),
                 color : values[0].color,
-                label : formatNumber(values[0].data, maxDecimals)
+                label : `${formatNumber(values[0].data, maxDecimals)}${barState.unit}`
             })
             entries.push({
                 position : scale.map(values[maxIndex].data),
                 color : values[maxIndex].color,
-                label : formatNumber(values[maxIndex].data, maxDecimals)
+                label : `${formatNumber(values[maxIndex].data, maxDecimals)}${barState.unit}`
             })
 
             //Internal ticks
@@ -373,7 +373,7 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
                 entries.push({
                     position : scale.map(value),
                     color : colorFound,
-                    label : formatNumber(value, maxDecimals)
+                    label : `${formatNumber(value, maxDecimals)}${barState.unit}`
                 });
             }
         }
@@ -387,12 +387,12 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
                 entries.push({
                     position : scale.map(values[0].data),
                     color : values[0].color,
-                    label : labels[0]
+                    label : `${labels[0]}${barState.unit}`
                 })
                 entries.push({
                     position : scale.map(values[maxIndex].data),
                     color : values[maxIndex].color,
-                    label : labels[labels.length - 1]
+                    label : `${labels[labels.length - 1]}${barState.unit}`
                 })
 
             //Internal ticks
@@ -417,7 +417,7 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
                     entries.push({
                         position : scale.map(value),
                         color : colorFound,
-                        label : labels[i]
+                        label : `${labels[i]}${barState.unit}`
                     });
                 }
             }
@@ -448,7 +448,7 @@ function idCompute(id:string) : [Array<{position:number, color:string}>, Colorba
                     entries.push({
                         position : scale.map(value),
                         color : colorFound,
-                        label : entry.label
+                        label : `${entry.label}${barState.unit}`
                     });
                 })
 

@@ -20,6 +20,7 @@ function AreaProperties(props : Area_Method_Generator) : Area_Properties_Methods
             color : props.dataState.color,
             opacity : props.dataState.opacity,
             polar : props.dataState.polar,
+            useAxis : {...props.dataState.useAxis},
             id : props.dataState.id,
             data : {
                 x : props.dataHandler.dataX(),

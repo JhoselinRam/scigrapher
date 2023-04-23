@@ -1,5 +1,5 @@
 import { Graph2D_Save_Asset, Rect } from "../../Graph2D/Graph2D_Types";
-import { Legend, Legend_Border, Legend_Callback, Legend_Data_Entrie, Legend_Position, Legend_Title } from "../Legend_Types";
+import { Legend, Legend_Border, Legend_Callback, Legend_Data_Entrie, Legend_Position, Legend_Text, Legend_Title } from "../Legend_Types";
 
 export interface Legend_Properties {
     enable : Legend_Static_Method<boolean>, 
@@ -10,7 +10,7 @@ export interface Legend_Properties {
     background : Legend_Dynamic_Method<{color:string, opacity:number}>, 
     title : Legend_Dynamic_Method<Legend_Title>, 
     data : {
-        (data:Array<Partial<Legend_Data_Entrie>>, callback?:Legend_Callback) : Legend,
+        (data:Legend_Data_Props, callback?:Legend_Callback) : Legend,
         (arg : void) : Array<Legend_Data_Entrie>
     },
     position : {
@@ -34,3 +34,9 @@ export type Legend_Dynamic_Method<T> = {
     (property : Partial<T>, callback?:Legend_Callback) : Legend,
     (arg : void) : T
 }
+
+export interface Legend_Data_Props extends Array<Partial<{
+    dataset : string,
+    label : string,
+    text : Partial<Legend_Text>,
+}>> {}

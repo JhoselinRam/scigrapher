@@ -64,7 +64,7 @@ export interface Legend_State extends Legend_Options {
     }
 }
 
-export type Legend_Callback = (legend?:Legend, graph?:Graph2D, datasets?:Array<Dataset_Types>)=>void;
+export type Legend_Callback = (legend:Legend, graph:Graph2D)=>void;
 
 export interface Legend_Method_Generator {
     legendState : Legend_State,

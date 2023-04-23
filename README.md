@@ -6729,9 +6729,9 @@ This method lets you set or get the `colorbar` `ticks` properties.
 
 > Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
 
-> Note: The opacity must be a number between 0 and 1.
+> Note: The `opacity` must be a number between 0 and 1.
 
-> Note: The width must be a positive integer.
+> Note: The `width` must be a positive integer.
 
 The style can be represented with one of the following options:
 
@@ -6916,9 +6916,9 @@ It is only necessary to define the values that you want to change and only that 
 
 > Note: The `color` can be in the format "#rrggbb" or be any of the standard color names.
 
-> Note: The opacity must be a number between 0 and 1.
+> Note: The `opacity` must be a number between 0 and 1.
 
-> Note: The width must be a positive integer.
+> Note: The `width` must be a positive integer.
 
 The style can be represented with one of the following options:
 
@@ -7531,7 +7531,7 @@ The `width` value only affects the size of the dataset marker and not the entire
 
 *Default Value:*
 
-* The default value for the `width` property is `30`.
+* The default value for the `width` property is `20`.
 
 ___
 

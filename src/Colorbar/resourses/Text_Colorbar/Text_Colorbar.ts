@@ -36,7 +36,7 @@ const title = generateTextMethod<Colorbar_Title>("title", {barHandler, barState,
             barState.title = {...barState.title, ...text};
 
             state.compute.client();
-            if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(barHandler, graphHandler);
             state.dirty.client = true;
 
             return barHandler;
@@ -81,7 +81,7 @@ function generateTextMethod<T>(option:Colorbar_Text_Option, {barHandler, barStat
             (barState[option] as T) = {...barState[option] as T, ...text};
 
             state.compute.client();
-            if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(barHandler, graphHandler);
             state.dirty.client = true;
 
             return barHandler;

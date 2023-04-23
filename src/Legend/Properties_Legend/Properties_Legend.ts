@@ -1,6 +1,6 @@
 import { Graph2D_Save_Asset, Rect } from "../../Graph2D/Graph2D_Types";
-import { Legend, Legend_Border, Legend_Callback, Legend_Data_Entrie, Legend_Method_Generator, Legend_Options, Legend_Position, Legend_Text, Legend_Title } from "../Legend_Types";
-import { Legend_Dynamic_Method, Legend_Dynamic_Properties_Options, Legend_Properties, Legend_Static_Method, Legend_Static_Properties_Options } from "./Properties_Legend_Types";
+import { Legend, Legend_Border, Legend_Callback, Legend_Data_Entrie, Legend_Method_Generator, Legend_Options, Legend_Position, Legend_Title } from "../Legend_Types";
+import { Legend_Data_Props, Legend_Dynamic_Method, Legend_Dynamic_Properties_Options, Legend_Properties, Legend_Static_Method, Legend_Static_Properties_Options } from "./Properties_Legend_Types";
 
 function LegendProperties({graphHandler, legendHandler, legendState, state} : Legend_Method_Generator) : Legend_Properties{
 
@@ -30,9 +30,9 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
         }
     }
 
-    function data(data:Array<Partial<Legend_Data_Entrie>>, callback?:Legend_Callback) : Legend;
+    function data(data:Legend_Data_Props, callback?:Legend_Callback) : Legend;
     function data(arg : void) : Array<Legend_Data_Entrie>;
-    function data(data:Array<Partial<Legend_Data_Entrie>> | void, callback?:Legend_Callback) : Legend | Array<Legend_Data_Entrie> | undefined{
+    function data(data:Legend_Data_Props | void, callback?:Legend_Callback) : Legend | Array<Legend_Data_Entrie> | undefined{
         if(typeof data === "undefined" && callback == null)
             return legendState.data.slice();
 
@@ -43,7 +43,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
             
             legendState.data = newData as Array<Legend_Data_Entrie>;
             legendState.compute();
-            if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(legendHandler, graphHandler);
             state.dirty.data = true;
 
             return legendHandler;
@@ -70,7 +70,7 @@ function LegendProperties({graphHandler, legendHandler, legendState, state} : Le
         
             legendState.position = position;
             legendState.compute();
-            if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(legendHandler, graphHandler);
             state.dirty.data = true;
 
             return legendHandler;
@@ -160,7 +160,7 @@ function generateStaticMethod<T>(option:Legend_Static_Properties_Options, {graph
 
             (legendState[option] as T) = property;
             legendState.compute();
-            if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(legendHandler, graphHandler);
             state.dirty.data = true;
 
             return legendHandler;
@@ -186,7 +186,7 @@ function generateDynamicMethod<T>(option:Legend_Dynamic_Properties_Options, {gra
         if(typeof property === "object"){
             (legendState[option] as T) = {...legendState[option], ...property} as T;
             legendState.compute();
-            if(callback != null) callback(legendHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(legendHandler, graphHandler);
             state.dirty.data = true;
 
             return legendHandler;

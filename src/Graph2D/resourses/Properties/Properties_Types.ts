@@ -1,5 +1,5 @@
 import { Mapping } from "../../../tools/Mapping/Mapping_Types";
-import { Axis_Property, Graph2D, Graph2D_Options, Graph2D_Save_Graph, graphCallback, Rect } from "../../Graph2D_Types";
+import { Axis_Property, Graph2D, Graph2D_Save_Graph, graphCallback, Rect } from "../../Graph2D_Types";
 
 export interface Properties{
     canvasElements : ()=>Array<HTMLCanvasElement>,

@@ -1,5 +1,5 @@
 import { Axis_Property, Graph2D, Line_Style } from "../../Graph2D/Graph2D_Types";
-import { Datasets, Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Position, Field_Property } from "../Data_Types";
+import { Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Position, Field_Property } from "../Data_Types";
 import { Data_Vector } from "./resourses/Data_Vector/Data_Vector_Types";
 import { Properties_Vector } from "./resourses/Properties_Vector/Properties_Vector_Types";
 

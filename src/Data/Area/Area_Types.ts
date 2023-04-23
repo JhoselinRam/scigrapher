@@ -1,5 +1,5 @@
 import { Axis_Property, Graph2D } from "../../Graph2D/Graph2D_Types";
-import { Datasets, Dataset_Callback, Data_General, Data_Object_State } from "../Data_Types";
+import { Dataset_Callback, Data_General, Data_Object_State } from "../Data_Types";
 import { Area_Data_Methods } from "./resourses/Area_Data/Area_Data_Types";
 import { Area_Properties_Methods } from "./resourses/Area_Properties/Area_Properties_Types";
 
@@ -12,6 +12,7 @@ Omit<Area_Properties_Methods, "save">{
 
 export interface Area_Options{
     enable : boolean,
+    useAxis : Axis_Property<"primary" | "secondary">,
     color : string,
     opacity : number,
     data : Axis_Property<Area_Data>,

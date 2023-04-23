@@ -6,7 +6,7 @@ import { createMarker, getLineDash } from "../../tools/Helplers/Helplers.js";
 import { Draw_Icon_Props, Legend_Method_Generator } from "../Legend_Types";
 import { Legend_Draw } from "./Draw_Legend_Types";
 
-function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_Method_Generator) : Legend_Draw {
+function LegendDraw({legendState, state} : Legend_Method_Generator) : Legend_Draw {
 
 //------------------ Draw ---------------------
 
@@ -18,7 +18,7 @@ function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_M
 
 
         state.context.data.save();
-        state.context.data.translate(graphRect.x + legendState.metrics.x, graphRect.y + legendState.metrics.y);
+        state.context.data.translate(Math.round(graphRect.x + legendState.metrics.x), Math.round(graphRect.y + legendState.metrics.y));
         state.context.data.textBaseline = "top";
 
         //Background
@@ -31,7 +31,7 @@ function LegendDraw({graphHandler, legendState, legendHandler, state} : Legend_M
         state.context.data.globalAlpha = legendState.border.opacity;
         state.context.data.lineWidth = legendState.border.width;
         state.context.data.setLineDash(getLineDash(legendState.border.style));
-        state.context.data.strokeRect(legendState.border.width%2*0.5, legendState.border.width%2*0.5, legendState.metrics.width, legendState.metrics.height);
+        state.context.data.strokeRect(legendState.border.width%2*0.5, legendState.border.width%2*0.5, Math.round(legendState.metrics.width), Math.round(legendState.metrics.height));
 
         //Title
         state.context.data.fillStyle = legendState.title.color;
@@ -95,13 +95,15 @@ export default LegendDraw;
             const width = typeof rawWidth === "number" ? rawWidth : rawWidth[0];
             
             const yCoord = Math.round(y) - width%2*0.5;
+            const xCoord = Math.round(x);
 
             state.context.data.strokeStyle = color;
             state.context.data.globalAlpha = opacity;
             state.context.data.setLineDash(getLineDash(style));
+            state.context.data.lineWidth = width;
             state.context.data.beginPath();
-            state.context.data.moveTo(x,yCoord);
-            state.context.data.lineTo(x + legendState.width, yCoord);
+            state.context.data.moveTo(xCoord,yCoord);
+            state.context.data.lineTo(xCoord + legendState.width, yCoord);
             state.context.data.stroke();
         }
 
@@ -130,6 +132,7 @@ export default LegendDraw;
             state.context.data.translate(xCoord, yCoord);
             state.context.data.strokeStyle = color;
             state.context.data.fillStyle = color;
+            state.context.data.lineWidth = width;
             state.context.data.globalAlpha = opacity;
             state.context.data.setLineDash(getLineDash(style));
             fill ? state.context.data.fill(marker) : state.context.data.stroke(marker);
@@ -152,7 +155,7 @@ export default LegendDraw;
     }
 
 //---------------------------------------------
-//------------ Draw Vecto Field ---------------
+//----------- Draw Vector Field ---------------
 
     export function drawVectorField({dataset, legendState, state, x, y} : Draw_Icon_Props<Vector_Field>){
         const rawColor = dataset.color();
@@ -173,6 +176,7 @@ export default LegendDraw;
 
         state.context.data.strokeStyle = color;
         state.context.data.globalAlpha = opacity;
+        state.context.data.lineWidth = width;
         state.context.data.setLineDash(getLineDash(style));
         state.context.data.beginPath();
         state.context.data.moveTo(xStart, yCoord);

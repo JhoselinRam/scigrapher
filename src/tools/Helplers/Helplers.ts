@@ -1,6 +1,6 @@
 import { Colorbar, Colorbar_Options } from "../../Colorbar/Colorbar_Types";
 import { Area, Area_Options } from "../../Data/Area/Area_Types";
-import { Dataset_Types, Field_Property } from "../../Data/Data_Types";
+import { Field_Property } from "../../Data/Data_Types";
 import { Heat_Map, Heat_Map_Options, Heat_Map_State, Heat_Property_Generator } from "../../Data/HeatMap/Heat_Map_Types";
 import { Line_Chart, Line_Chart_Options, Marker_Type } from "../../Data/LineChart/LineChart_Types";
 import { Vector_Field, Vector_Field_Options } from "../../Data/VectorField/Vector_Field_Types";
@@ -130,10 +130,10 @@ export function getColorFunction({data, dataState} : Get_Color_Function) : Heat_
 
 interface Text_Size {width:number, height:number};
 
-export function getTextSize(text:string, size:string, font:string, context:CanvasRenderingContext2D) : Text_Size{
+export function getTextSize(text:string, size:string, font:string, specifier:string,  context:CanvasRenderingContext2D) : Text_Size{
     context.save();
 
-    context.font = `${size} ${font}`;
+    context.font = `${specifier} ${size} ${font}`;
     const metric = context.measureText(text);
     const width = metric.width;
     const height = metric.actualBoundingBoxAscent + metric.actualBoundingBoxDescent;

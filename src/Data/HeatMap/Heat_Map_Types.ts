@@ -1,6 +1,6 @@
 import { Axis_Property, Graph2D } from "../../Graph2D/Graph2D_Types";
 import { Color_Map_types } from "../../tools/Color_Map/Predefined/Color_Map_Types";
-import { Datasets, Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Position, Field_Property } from "../Data_Types";
+import { Dataset_Callback, Data_General, Data_Object_State, Field_Data, Field_Position, Field_Property } from "../Data_Types";
 import { Data_Heat } from "./resourses/Data_Heat/Data_Heat_Types";
 import { Properties_Heat } from "./resourses/Properties_Heat/Properties_Heat_Types";
 

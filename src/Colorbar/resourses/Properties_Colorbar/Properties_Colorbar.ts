@@ -14,8 +14,8 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
     const width = generateStaticMethod<number>("width", props);
     const id = generateStaticMethod<string>("id", props);
 
-    const border = generateDynamicMethod<Colorbar_Line>(props.barState.border, "border", props);
-    const ticks = generateDynamicMethod<Colorbar_Marker>(props.barState.ticks, "ticks", props);
+    const border = generateDynamicMethod<Colorbar_Line>("border", props);
+    const ticks = generateDynamicMethod<Colorbar_Marker>("ticks", props);
 
 //---------------------------------------------
 //-------------- Position ---------------------
@@ -40,7 +40,7 @@ function ColorbarProperties(props:Colorbar_Method_Generator) : Colorbar_Properti
             }
 
             props.state.compute.client();
-            if(callback != null) callback(props.barHandler, props.graphHandler, props.state.data.map(item=>item.dataset));
+            if(callback != null) callback(props.barHandler, props.graphHandler);
             props.state.dirty.client = true;
 
             return props.barHandler;
@@ -129,7 +129,7 @@ function generateStaticMethod<T>(option:Colorbar_Property_Options, {barHandler, 
 
             (barState[option] as T) = property;
             state.compute.client();
-            if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(barHandler, graphHandler);
             state.dirty.client = true;
 
             return barHandler;
@@ -143,20 +143,20 @@ function generateStaticMethod<T>(option:Colorbar_Property_Options, {barHandler, 
 //---------------------------------------------
 //---------------------------------------------
 
-function generateDynamicMethod<T>(container:T, option:Colorbar_Object_Options ,{barHandler, barState, graphHandler, state}:Colorbar_Method_Generator) : Colorbar_Object_Generator<T> {
+function generateDynamicMethod<T>(option:Colorbar_Object_Options ,{barHandler, barState, graphHandler, state}:Colorbar_Method_Generator) : Colorbar_Object_Generator<T> {
 
     function method(property:Partial<T>, callback?:Colorbar_Callback) : Colorbar;
     function method(arg:void) : T;
     function method(property:Partial<T> | void, callback?:Colorbar_Callback) : Colorbar | T | undefined {
         if(typeof property === "undefined" && callback==null)
-            return {...container};
+            return {...barState[option] as T};
 
         if(typeof property !== "undefined"){
             if(Object.keys(property).length === 0) return barHandler;
 
-            (barState[option] as T) = {...container, ...property};
+            (barState[option] as T) = {...(barState[option] as T), ...property};
             state.compute.client();
-            if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(barHandler, graphHandler);
             state.dirty.data = true;
 
             return barHandler;

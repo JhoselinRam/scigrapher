@@ -1,4 +1,3 @@
-import { Dataset_Types } from "../Data/Data_Types";
 import { Axis_Property, Graph2D, Graph2D_State, Line_Style } from "../Graph2D/Graph2D_Types";
 import { Colorbar_Data_Methods } from "./resourses/Data_Colorbar/Data_Colorbar_Types";
 import { Colorbar_Properties_Methods } from "./resourses/Properties_Colorbar/Properties_Colorbar_Types";
@@ -90,4 +89,4 @@ export interface Colorbar_Method_Generator {
     graphHandler : Graph2D
 }
 
-export type Colorbar_Callback = (bar?:Colorbar, graphHandler?:Graph2D, datasets?:Array<Dataset_Types>)=>void;
+export type Colorbar_Callback = (bar:Colorbar, graphHandler:Graph2D)=>void;

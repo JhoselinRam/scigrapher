@@ -27,7 +27,7 @@ function ColorbarData({barHandler, barState, graphHandler, state} : Colorbar_Met
             
             barState.data = data;
             state.compute.client();
-            if(callback != null) callback(barHandler, graphHandler, state.data.map(item=>item.dataset));
+            if(callback != null) callback(barHandler, graphHandler);
             state.dirty.client = true;
 
             return barHandler;

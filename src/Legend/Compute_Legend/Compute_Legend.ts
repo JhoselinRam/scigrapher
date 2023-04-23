@@ -1,4 +1,3 @@
-import { flattenDiagnosticMessageText } from "typescript";
 import { Area } from "../../Data/Area/Area_Types.js";
 import { Datasets } from "../../Data/Data_Types.js";
 import { Heat_Map } from "../../Data/HeatMap/Heat_Map_Types.js";
@@ -63,7 +62,7 @@ function ComputeLegend({graphHandler, legendHandler, legendState, state} : Legen
         let xStart = 2*legendState.metrics.textOffset + legendState.width;
 
         //If a title exist
-        const titleSize = getTextSize(legendState.title.text, legendState.title.size, legendState.title.font, state.context.data);
+        const titleSize = getTextSize(legendState.title.text, legendState.title.size, legendState.title.font, legendState.title.specifier, state.context.data);
         if(legendState.title.text !== "")
             yStart += titleSize.height + 2*legendState.metrics.textOffset;
 
@@ -90,7 +89,7 @@ function ComputeLegend({graphHandler, legendHandler, legendState, state} : Legen
 
             //Compute label metrics
             dataColumn.forEach(row=>{
-                const textSize = getTextSize(row.label, row.text.size, row.text.font, state.context.data);
+                const textSize = getTextSize(row.label, row.text.size, row.text.font, row.text.specifier, state.context.data);
                 const rowWidth = legendState.width + legendState.metrics.textOffset + textSize.width;
 
                 legendState.metrics.items.push({
@@ -129,7 +128,7 @@ function ComputeLegend({graphHandler, legendHandler, legendState, state} : Legen
     function getTitleCoord() : number{
         if(legendState.title.text === "") return 0;
 
-        const metrics = getTextSize(legendState.title.text, legendState.title.size, legendState.title.font, state.context.data);
+        const metrics = getTextSize(legendState.title.text, legendState.title.size, legendState.title.font, legendState.title.specifier, state.context.data);
 
         switch(legendState.title.position){
             case "start":

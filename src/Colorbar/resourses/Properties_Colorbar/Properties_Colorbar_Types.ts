@@ -1,5 +1,5 @@
 import { Graph2D_Save_Asset, Rect } from "../../../Graph2D/Graph2D_Types";
-import { Colorbar, Colorbar_Callback, Colorbar_Floating, Colorbar_Line, Colorbar_Marker, Colorbar_Position } from "../../Colorbar_Types";
+import { Colorbar, Colorbar_Callback, Colorbar_Line, Colorbar_Marker, Colorbar_Position } from "../../Colorbar_Types";
 
 export interface Colorbar_Properties_Methods {
     enable : Colorbar_Property_Generator<boolean>,

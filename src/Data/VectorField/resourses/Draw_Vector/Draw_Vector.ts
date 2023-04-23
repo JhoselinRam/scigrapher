@@ -1,4 +1,4 @@
-import {  Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
+import { Graph2D_State } from "../../../../Graph2D/Graph2D_Types";
 import { getLineDash, isCallable } from "../../../../tools/Helplers/Helplers.js";
 import { Mapping } from "../../../../tools/Mapping/Mapping_Types";
 import { Field_Property } from "../../../Data_Types";
