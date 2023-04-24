@@ -50,7 +50,11 @@ At the moment, the library offers four chart types, including:
 
 ## Installation
 
-Not available yet. Some minor bugs are being patch.
+To install just type
+
+    npm install scigrapher
+
+In a terminal on your project folder.
 
 ## Usage
 
